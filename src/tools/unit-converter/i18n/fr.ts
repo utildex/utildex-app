@@ -1,0 +1,22 @@
+export default {
+  "LABEL_TYPE": "Type de conversion",
+  "LABEL_FROM": "De",
+  "LABEL_TO": "À",
+  "LABEL_AMOUNT": "Montant",
+  "TYPE_LENGTH": "Longueur",
+  "TYPE_WEIGHT": "Poids",
+  "TYPE_TEMP": "Température",
+  "UNIT_METER": "Mètres (m)",
+  "UNIT_KILOMETER": "Kilomètres (km)",
+  "UNIT_CENTIMETER": "Centimètres (cm)",
+  "UNIT_FOOT": "Pieds (ft)",
+  "UNIT_INCH": "Pouces (in)",
+  "UNIT_MILE": "Miles (mi)",
+  "UNIT_KILOGRAM": "Kilogrammes (kg)",
+  "UNIT_GRAM": "Grammes (g)",
+  "UNIT_POUND": "Livres (lb)",
+  "UNIT_OUNCE": "Onces (oz)",
+  "UNIT_CELSIUS": "Celsius (°C)",
+  "UNIT_FAHRENHEIT": "Fahrenheit (°F)",
+  "UNIT_KELVIN": "Kelvin (K)"
+};

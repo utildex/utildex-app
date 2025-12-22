@@ -1,0 +1,20 @@
+export default {
+  "CONFIG_TITLE": "Configuration",
+  "LABEL_LENGTH": "Length",
+  "LABEL_UPPERCASE": "Uppercase",
+  "DESC_UPPERCASE": "ABC...",
+  "LABEL_LOWERCASE": "Lowercase",
+  "DESC_LOWERCASE": "abc...",
+  "LABEL_NUMBERS": "Numbers",
+  "DESC_NUMBERS": "123...",
+  "LABEL_SYMBOLS": "Symbols",
+  "DESC_SYMBOLS": "!@#...",
+  "STRENGTH_TITLE": "Password Strength",
+  "STRENGTH_WEAK": "Weak",
+  "STRENGTH_FAIR": "Fair",
+  "STRENGTH_GOOD": "Good",
+  "STRENGTH_STRONG": "Strong",
+  "BTN_REGENERATE": "Regenerate",
+  "BTN_COPY": "Copy",
+  "BTN_COPIED": "Copied"
+};

@@ -1,0 +1,29 @@
+{
+  "id": "unit-converter",
+  "name": {
+    "en": "Unit Converter",
+    "fr": "Convertisseur d'unités",
+    "es": "Convertidor de Unidades",
+    "zh": "单位转换器"
+  },
+  "description": {
+    "en": "Convert between common units of length, weight, and temperature.",
+    "fr": "Convertissez entre les unités courantes de longueur, de poids et de température.",
+    "es": "Convierta entre unidades comunes de longitud, peso y temperatura.",
+    "zh": "在长度、重量和温度的常用单位之间进行转换。"
+  },
+  "icon": "scale",
+  "version": "1.0.0",
+  "categories": ["Utility", "Office"],
+  "tags": ["converter", "unit", "length", "weight", "temperature"],
+  "featured": false,
+  "color": "#f43f5e",
+  "routePath": "tools/unit-converter",
+  "widget": {
+    "supported": true,
+    "minCols": 1,
+    "minRows": 1,
+    "defaultCols": 1,
+    "defaultRows": 2
+  }
+}

@@ -1,0 +1,22 @@
+export default {
+  "LABEL_TYPE": "Conversion Type",
+  "LABEL_FROM": "From",
+  "LABEL_TO": "To",
+  "LABEL_AMOUNT": "Amount",
+  "TYPE_LENGTH": "Length",
+  "TYPE_WEIGHT": "Weight",
+  "TYPE_TEMP": "Temperature",
+  "UNIT_METER": "Meters (m)",
+  "UNIT_KILOMETER": "Kilometers (km)",
+  "UNIT_CENTIMETER": "Centimeters (cm)",
+  "UNIT_FOOT": "Feet (ft)",
+  "UNIT_INCH": "Inches (in)",
+  "UNIT_MILE": "Miles (mi)",
+  "UNIT_KILOGRAM": "Kilograms (kg)",
+  "UNIT_GRAM": "Grams (g)",
+  "UNIT_POUND": "Pounds (lb)",
+  "UNIT_OUNCE": "Ounces (oz)",
+  "UNIT_CELSIUS": "Celsius (°C)",
+  "UNIT_FAHRENHEIT": "Fahrenheit (°F)",
+  "UNIT_KELVIN": "Kelvin (K)"
+};

@@ -1,0 +1,34 @@
+export default {
+  "TITLE": "设置",
+  "TAB_GENERAL": "常规",
+  "TAB_DATA": "本地数据",
+  "SECTION_LANGUAGE": "语言",
+  "SECTION_APPEARANCE": "外观",
+  "LABEL_THEME": "主题模式",
+  "LABEL_COLOR": "强调色",
+  "LABEL_FONT": "字体",
+  "LABEL_DENSITY": "紧凑模式",
+  "STATUS_ONLINE": "在线",
+  "STATUS_OFFLINE": "离线",
+
+  "STORAGE_USED": "已用本地存储",
+  "STORAGE_DESC": "所有数据均存储在此设备本地。没有任何内容发送到云端。",
+  "CAT_DASHBOARD": "我的仪表盘",
+  "CAT_FAVORITES": "收藏夹",
+  "CAT_HISTORY": "使用历史",
+  "CAT_PREFS": "偏好设置",
+  "CAT_TOOLS": "工具状态",
+  
+  "BTN_VIEW": "查看详情",
+  "BTN_DELETE": "清除数据",
+  "BTN_BACK": "返回",
+  "NO_DATA": "此类别中没有数据。",
+  
+  "DANGER_ZONE": "危险区域",
+  "DANGER_DESC": "这将删除您的仪表盘、收藏夹和历史记录。此操作无法撤销。",
+  "BTN_RESET_APP": "恢复出厂设置",
+  "BTN_CONFIRM_RESET": "是的，删除所有内容",
+  "BTN_CONFIRM_DELETE": "确认？",
+  "BTN_CANCEL": "取消",
+  "CONFIRM_DELETE_CAT": "您确定要清除此数据类别吗？"
+};

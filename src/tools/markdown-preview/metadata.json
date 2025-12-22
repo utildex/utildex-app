@@ -1,0 +1,18 @@
+{
+  "id": "markdown-preview",
+  "name": {
+    "en": "Markdown Preview",
+    "fr": "Aperçu Markdown"
+  },
+  "description": {
+    "en": "Live editor to write and preview Markdown formatted text instantly.",
+    "fr": "Éditeur en direct pour écrire et prévisualiser instantanément du texte formaté en Markdown."
+  },
+  "icon": "markdown",
+  "version": "1.0.0",
+  "categories": ["Developer"],
+  "tags": ["developer", "markdown", "editor", "preview"],
+  "featured": true,
+  "color": "#f59e0b",
+  "routePath": "tools/markdown-preview"
+}

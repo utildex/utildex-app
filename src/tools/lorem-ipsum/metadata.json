@@ -1,0 +1,24 @@
+{
+  "id": "lorem-ipsum",
+  "name": { 
+    "en": "Lorem Ipsum", 
+    "fr": "Lorem Ipsum" 
+  },
+  "description": { 
+    "en": "Generate placeholder text for your designs with adjustable paragraph counts.", 
+    "fr": "Générez du texte de remplissage pour vos designs avec un nombre de paragraphes ajustable." 
+  },
+  "icon": "description",
+  "version": "1.0.0",
+  "categories": ["Utility"],
+  "tags": ["generator", "text", "lorem", "ipsum"],
+  "color": "#3b82f6",
+  "routePath": "tools/lorem-ipsum",
+  "widget": {
+    "supported": true,
+    "minCols": 1,
+    "minRows": 1,
+    "defaultCols": 2,
+    "defaultRows": 1
+  }
+}

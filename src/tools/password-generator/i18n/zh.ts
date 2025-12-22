@@ -1,0 +1,20 @@
+export default {
+  "CONFIG_TITLE": "配置",
+  "LABEL_LENGTH": "长度",
+  "LABEL_UPPERCASE": "大写字母",
+  "DESC_UPPERCASE": "ABC...",
+  "LABEL_LOWERCASE": "小写字母",
+  "DESC_LOWERCASE": "abc...",
+  "LABEL_NUMBERS": "数字",
+  "DESC_NUMBERS": "123...",
+  "LABEL_SYMBOLS": "符号",
+  "DESC_SYMBOLS": "!@#...",
+  "STRENGTH_TITLE": "密码强度",
+  "STRENGTH_WEAK": "弱",
+  "STRENGTH_FAIR": "一般",
+  "STRENGTH_GOOD": "好",
+  "STRENGTH_STRONG": "强",
+  "BTN_REGENERATE": "重新生成",
+  "BTN_COPY": "复制",
+  "BTN_COPIED": "已复制"
+};

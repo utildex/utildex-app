@@ -1,0 +1,34 @@
+export default {
+  "TITLE": "Configuración",
+  "TAB_GENERAL": "General",
+  "TAB_DATA": "Datos Locales",
+  "SECTION_LANGUAGE": "Idioma",
+  "SECTION_APPEARANCE": "Apariencia",
+  "LABEL_THEME": "Modo Tema",
+  "LABEL_COLOR": "Color de Acento",
+  "LABEL_FONT": "Fuente",
+  "LABEL_DENSITY": "Modo Compacto",
+  "STATUS_ONLINE": "En línea",
+  "STATUS_OFFLINE": "Sin conexión",
+
+  "STORAGE_USED": "Almacenamiento Local",
+  "STORAGE_DESC": "Todos los datos se guardan localmente. No se envía nada a la nube.",
+  "CAT_DASHBOARD": "Mi Tablero",
+  "CAT_FAVORITES": "Favoritos",
+  "CAT_HISTORY": "Historial",
+  "CAT_PREFS": "Preferencias",
+  "CAT_TOOLS": "Estados de Herramientas",
+  
+  "BTN_VIEW": "Inspeccionar",
+  "BTN_DELETE": "Borrar",
+  "BTN_BACK": "Volver",
+  "NO_DATA": "No hay datos en esta categoría.",
+  
+  "DANGER_ZONE": "Zona de Peligro",
+  "DANGER_DESC": "Esto eliminará su tablero, favoritos e historial. Esta acción no se puede deshacer.",
+  "BTN_RESET_APP": "Restablecimiento de Fábrica",
+  "BTN_CONFIRM_RESET": "Sí, Eliminar Todo",
+  "BTN_CONFIRM_DELETE": "¿Confirmar?",
+  "BTN_CANCEL": "Cancelar",
+  "CONFIRM_DELETE_CAT": "¿Está seguro de que desea borrar esta categoría de datos?"
+};

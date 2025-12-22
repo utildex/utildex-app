@@ -1,0 +1,5 @@
+{
+  "name": "Utildex",
+  "description": "A local-first, modular toolbox web application featuring independent utilities like generators and converters.",
+  "requestFramePermissions": []
+}
