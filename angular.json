@@ -24,6 +24,10 @@
                 "input": "src/assets",
                 "output": "assets"
               }
+            ],
+            "styles": [
+              "src/assets/styles/tailwind.css",
+              "src/assets/styles/prism-tomorrow.min.css"
             ]
           },
           "configurations": {

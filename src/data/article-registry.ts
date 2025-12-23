@@ -33,7 +33,7 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
       es: 'Descubra los beneficios de privacidad, velocidad y propiedad que conllevan las aplicaciones local-first.',
       zh: '探索本地优先应用程序带来的隐私、速度和所有权的好处。'
     },
-    thumbnail: 'https://picsum.photos/id/48/800/600',
+    thumbnail: 'https://picsum.photos/id/48/400/300',
     date: '2025-05-15',
     tags: ['Philosophy', 'Dev', 'Privacy'],
     author: 'Utildex Team',
@@ -55,7 +55,7 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
       es: 'Una guía completa para la gestión de estado reactivo en aplicaciones Angular modernas.',
       zh: '现代 Angular 应用程序中响应式状态管理的综合指南。'
     },
-    thumbnail: 'https://picsum.photos/id/180/800/600',
+    thumbnail: 'https://picsum.photos/id/180/400/300',
     date: '2025-06-02',
     tags: ['Dev', 'Angular', 'Tutorial'],
     author: 'Alex Dev',
@@ -77,7 +77,7 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
       es: 'Pequeños cambios en su flujo de trabajo que pueden dar resultados masivos.',
       zh: '工作流程中的微小变化可以随着时间的推移产生巨大的成果。'
     },
-    thumbnail: 'https://picsum.photos/id/3/800/600',
+    thumbnail: 'https://picsum.photos/id/3/400/300',
     date: '2025-06-10',
     tags: ['Tips', 'Productivity'],
     author: 'Sarah Lead',
@@ -99,7 +99,7 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
       es: 'Una inmersión profunda en tipos genéricos y utilitarios. (Enlace Externo)',
       zh: '深入研究泛型类型和实用程序类型。（外部链接）'
     },
-    thumbnail: 'https://picsum.photos/id/20/800/600',
+    thumbnail: 'https://picsum.photos/id/20/400/300',
     date: '2025-04-20',
     tags: ['Dev', 'TypeScript', 'External'],
     author: 'External Source',

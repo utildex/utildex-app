@@ -32,12 +32,6 @@
       "installMode": "prefetch",
       "updateMode": "prefetch",
       "resources": {
-        "urls": [
-          "https://cdn.tailwindcss.com/**",
-          "https://fonts.googleapis.com/**",
-          "https://fonts.gstatic.com/**",
-          "https://cdnjs.cloudflare.com/**"
-        ]
       }
     }
   ]

@@ -81,7 +81,18 @@ export class ActionBarComponent {
 
   download() {
     const val = this.content();
-    const blob = new Blob([val], { type: this.mimeType() });
+    const blob = new Blob(
+        [
+          typeof val === 'string'
+              ? val
+              : val instanceof ArrayBuffer
+                  ? val
+                  : val.buffer instanceof ArrayBuffer
+                      ? val.buffer
+                      : val.slice().buffer
+        ],
+        { type: this.mimeType() }
+    );
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

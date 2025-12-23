@@ -37,7 +37,7 @@ Open `src/data/article-registry.ts` and add a new entry to the `ARTICLE_REGISTRY
     en: 'A deep dive into advanced types.',
     fr: 'Une plongée dans les types avancés.'
   },
-  thumbnail: 'https://picsum.photos/id/1/800/600',
+  thumbnail: 'https://picsum.photos/id/1/400/300',
   date: '2026-01-01', // ISO Format
   tags: ['Dev', 'TypeScript'],
   author: 'John Doe',

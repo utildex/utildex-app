@@ -409,7 +409,14 @@ export class SplitPdfComponent {
           copiedPages.forEach(page => newPdf.addPage(page));
           
           const pdfBytes = await newPdf.save();
-          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+           const blob = new Blob(
+               [
+                   pdfBytes.buffer instanceof ArrayBuffer
+                       ? pdfBytes.buffer
+                       : pdfBytes.slice().buffer
+               ],
+               { type: 'application/pdf' }
+           );
           const url = URL.createObjectURL(blob);
           
           // Suffix: -1, -2, or custom if we had naming logic. 

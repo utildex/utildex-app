@@ -93,8 +93,8 @@
   <!-- We now access the 'index' variable provided by the updated CarouselComponent -->
   <ng-template #articleTemplate let-article let-i="index">
     <div class="h-full">
-      <app-article-card 
-        [article]="article" 
+      <app-article-card
+        [article]="article"
         [priority]="i < 2"
       ></app-article-card>
     </div>
