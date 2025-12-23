@@ -25,7 +25,7 @@ interface GeneratedFile {
 @Component({
   selector: 'app-split-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolLayoutComponent, ActionBarComponent, FileDropDirective],
+  imports: [CommonModule, FormsModule, ToolLayoutComponent, FileDropDirective],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
