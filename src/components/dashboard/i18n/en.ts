@@ -1,3 +1,4 @@
+
 export default {
   "HERO_TITLE_PREFIX": "Your",
   "HERO_TITLE_HIGHLIGHT": "Local-First",
@@ -8,6 +9,7 @@ export default {
   "BTN_HISTORY": "Usage History",
   "SECTION_FAVORITES": "Favorites",
   "SECTION_FEATURED": "Featured Tools",
+  "SECTION_FEATURED_ARTICLES": "Recommended Reading",
   "SECTION_MOST_USED": "Most Used",
   "SECTION_CATEGORIES": "Explore Categories",
   "LINK_VIEW_ALL": "View All",

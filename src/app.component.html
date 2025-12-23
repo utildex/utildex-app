@@ -1,3 +1,4 @@
+
 <div class="flex flex-col h-screen overflow-hidden">
   
   <!-- Navbar -->
@@ -38,6 +39,9 @@
              </a>
              <a routerLink="/categories" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                {{ t.map()['NAV_CATEGORIES'] }}
+             </a>
+             <a routerLink="/articles" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+               {{ t.map()['NAV_ARTICLES'] }}
              </a>
           </nav>
 
@@ -110,6 +114,9 @@
             <a routerLink="/categories" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
               {{ t.map()['NAV_CATEGORIES'] }}
             </a>
+            <a routerLink="/articles" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
+              {{ t.map()['NAV_ARTICLES'] }}
+            </a>
           </nav>
         </div>
       </div>
@@ -154,8 +161,10 @@
 
   <!-- Global Elements -->
   <app-toast></app-toast>
+  <app-network-status></app-network-status>
   <app-command-palette></app-command-palette>
   <app-error-overlay></app-error-overlay>
+  <app-dashboard-modals></app-dashboard-modals>
   @if (settingsOpen()) {
     <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
   }

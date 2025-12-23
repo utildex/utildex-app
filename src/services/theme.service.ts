@@ -1,4 +1,6 @@
-import { Injectable, signal, effect } from '@angular/core';
+
+import { Injectable, signal, effect, inject } from '@angular/core';
+import { DbService } from './db.service';
 
 export type PrimaryColor = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose';
 export type FontFamily = 'inter' | 'roboto' | 'system';
@@ -8,6 +10,8 @@ export type Density = 'comfortable' | 'compact';
   providedIn: 'root'
 })
 export class ThemeService {
+  private db = inject(DbService);
+
   isDark = signal<boolean>(false);
   primaryColor = signal<PrimaryColor>('blue');
   fontFamily = signal<FontFamily>('inter');
@@ -21,6 +25,8 @@ export class ThemeService {
     rose: '244 63 94'      // #f43f5e
   };
 
+  private loaded = false;
+
   constructor() {
     this.loadSettings();
 
@@ -32,7 +38,7 @@ export class ThemeService {
       } else {
         document.documentElement.classList.remove('dark');
       }
-      this.saveSetting('utildex-theme', isDark ? 'dark' : 'light');
+      if (this.loaded) this.saveSetting('utildex-theme', isDark ? 'dark' : 'light');
     });
 
     // Color Effect
@@ -40,7 +46,7 @@ export class ThemeService {
       const color = this.primaryColor();
       const rgb = this.colorMap[color];
       document.documentElement.style.setProperty('--color-primary', rgb);
-      this.saveSetting('utildex-color', color);
+      if (this.loaded) this.saveSetting('utildex-color', color);
     });
 
     // Font Effect
@@ -51,7 +57,7 @@ export class ThemeService {
       if (font === 'system') fontValue = 'system-ui, sans-serif';
       
       document.documentElement.style.setProperty('--font-sans', fontValue);
-      this.saveSetting('utildex-font', font);
+      if (this.loaded) this.saveSetting('utildex-font', font);
     });
 
     // Density Effect
@@ -62,7 +68,7 @@ export class ThemeService {
       } else {
         document.documentElement.classList.remove('density-compact');
       }
-      this.saveSetting('utildex-density', density);
+      if (this.loaded) this.saveSetting('utildex-density', density);
     });
   }
 
@@ -87,38 +93,45 @@ export class ThemeService {
      this.primaryColor.set('blue');
      this.fontFamily.set('inter');
      this.density.set('comfortable');
-     // Effects will run and save to localStorage
+     // Effects will run and save
   }
 
-  private loadSettings() {
-    // Theme
-    const savedTheme = localStorage.getItem('utildex-theme');
-    if (savedTheme) {
-      this.isDark.set(savedTheme === 'dark');
-    } else {
-      this.isDark.set(window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
+  private async loadSettings() {
+    try {
+      // Theme
+      const savedTheme = await this.db.get<string>('utildex-theme');
+      if (savedTheme) {
+        this.isDark.set(savedTheme === 'dark');
+      } else {
+        this.isDark.set(window.matchMedia('(prefers-color-scheme: dark)').matches);
+      }
 
-    // Color
-    const savedColor = localStorage.getItem('utildex-color') as PrimaryColor;
-    if (savedColor && this.colorMap[savedColor]) {
-      this.primaryColor.set(savedColor);
-    }
+      // Color
+      const savedColor = await this.db.get<PrimaryColor>('utildex-color');
+      if (savedColor && this.colorMap[savedColor]) {
+        this.primaryColor.set(savedColor);
+      }
 
-    // Font
-    const savedFont = localStorage.getItem('utildex-font') as FontFamily;
-    if (savedFont) {
-      this.fontFamily.set(savedFont);
-    }
+      // Font
+      const savedFont = await this.db.get<FontFamily>('utildex-font');
+      if (savedFont) {
+        this.fontFamily.set(savedFont);
+      }
 
-    // Density
-    const savedDensity = localStorage.getItem('utildex-density') as Density;
-    if (savedDensity) {
-      this.density.set(savedDensity);
+      // Density
+      const savedDensity = await this.db.get<Density>('utildex-density');
+      if (savedDensity) {
+        this.density.set(savedDensity);
+      }
+      
+      this.loaded = true;
+    } catch (e) {
+      console.warn('Failed to load theme settings', e);
+      this.loaded = true; // enable saving even if load failed
     }
   }
 
   private saveSetting(key: string, value: string) {
-    localStorage.setItem(key, value);
+    this.db.set(key, value);
   }
 }

@@ -1,3 +1,4 @@
+
 export default {
   "TITLE": "Paramètres",
   "TAB_GENERAL": "Général",
@@ -30,5 +31,12 @@ export default {
   "BTN_CONFIRM_RESET": "Oui, tout supprimer",
   "BTN_CONFIRM_DELETE": "Confirmer ?",
   "BTN_CANCEL": "Annuler",
-  "CONFIRM_DELETE_CAT": "Êtes-vous sûr de vouloir effacer cette catégorie de données ?"
+  "CONFIRM_DELETE_CAT": "Êtes-vous sûr de vouloir effacer cette catégorie de données ?",
+
+  "BTN_EXPORT": "Exporter la sauvegarde",
+  "BTN_IMPORT": "Importer une sauvegarde",
+  "MSG_BACKUP_READY": "Sauvegarde téléchargée",
+  "MSG_EXPORT_FAIL": "Échec de l'exportation",
+  "MSG_IMPORT_SUCCESS": "Données importées avec succès. Rechargement...",
+  "MSG_IMPORT_FAIL": "Fichier de sauvegarde invalide"
 };

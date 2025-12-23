@@ -1,3 +1,4 @@
+
 import { Component, input, TemplateRef, ElementRef, viewChild, OnDestroy, effect } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
@@ -14,18 +15,19 @@ import { NgTemplateOutlet } from '@angular/common';
       (touchend)="resume()"
     >
       <!-- Scroll Container -->
+      <!-- Increased padding (py-10) to accommodate hover animations and shadows without clipping -->
       <div 
         #scrollContainer
-        class="flex gap-4 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 scroll-pl-4 sm:mx-0 sm:px-0 sm:scroll-pl-0"
+        class="flex gap-4 overflow-x-auto py-10 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 scroll-pl-4 sm:mx-0 sm:px-0 sm:scroll-pl-0"
         style="scrollbar-width: none; -ms-overflow-style: none;"
       >
-        @for (item of items(); track trackByFn($index, item)) {
+        @for (item of items(); track trackByFn($index, item); let i = $index) {
           <!-- 
              Mobile: snap-start (aligns left), w-[85%] (shows peek of next item)
              Desktop: responsive column widths
           -->
           <div class="snap-start flex-shrink-0 w-[85%] sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] xl:w-[calc(25%-1rem)] transition-opacity duration-300">
-            <ng-container *ngTemplateOutlet="itemTemplate() || defaultTemplate; context: { $implicit: item }"></ng-container>
+            <ng-container *ngTemplateOutlet="itemTemplate() || defaultTemplate; context: { $implicit: item, index: i }"></ng-container>
           </div>
         }
         
@@ -34,7 +36,7 @@ import { NgTemplateOutlet } from '@angular/common';
       </div>
 
       <!-- Fade edges for visual cue on desktop -->
-      <div class="hidden sm:block absolute top-0 bottom-6 right-0 w-24 bg-gradient-to-l from-slate-50 dark:from-slate-950 to-transparent pointer-events-none opacity-50"></div>
+      <div class="hidden sm:block absolute top-0 bottom-10 right-0 w-24 bg-gradient-to-l from-slate-50 dark:from-slate-950 to-transparent pointer-events-none opacity-50"></div>
     </div>
 
     <ng-template #defaultTemplate let-item>
@@ -99,24 +101,18 @@ export class CarouselComponent<T> implements OnDestroy {
     const el = this.container()?.nativeElement;
     if (!el) return;
 
-    // Determine the scroll step based on the first item's width + gap
     const firstItem = el.firstElementChild as HTMLElement;
     if (!firstItem) return;
 
     const itemWidth = firstItem.offsetWidth;
-    const gap = 16; // gap-4 is 1rem = 16px usually
+    const gap = 16; 
     const step = itemWidth + gap;
 
-    // Check if we are near the end
-    // scrollLeft + clientWidth ~= scrollWidth
     const maxScroll = el.scrollWidth - el.clientWidth;
     
-    // Allow a small buffer for float precision
     if (el.scrollLeft >= maxScroll - 10) {
-      // Loop back to start
       el.scrollTo({ left: 0, behavior: 'smooth' });
     } else {
-      // Scroll to next
       el.scrollBy({ left: step, behavior: 'smooth' });
     }
   }

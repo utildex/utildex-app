@@ -1,3 +1,4 @@
+
 export default {
   "TITLE": "Mon Tableau de Bord",
   "DESC": "Votre espace personnel.",
@@ -23,5 +24,9 @@ export default {
   "BTN_MOVE": "Déplacer",
   "BTN_DELETE": "Supprimer",
   "BTN_CANCEL": "Annuler",
-  "SIZE_PREFIX": "taille(s)"
+  "SIZE_PREFIX": "taille(s)",
+  "FILLER_NOTE": "Note (1x1)",
+  "FILLER_NOTE_WIDE": "Note Large (2x1)",
+  "FILLER_IMAGE": "Image (2x2)",
+  "FILLER_SPACER": "Espaceur (1x1)"
 };

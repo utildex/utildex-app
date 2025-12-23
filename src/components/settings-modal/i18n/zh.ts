@@ -1,3 +1,4 @@
+
 export default {
   "TITLE": "设置",
   "TAB_GENERAL": "常规",
@@ -30,5 +31,12 @@ export default {
   "BTN_CONFIRM_RESET": "是的，删除所有内容",
   "BTN_CONFIRM_DELETE": "确认？",
   "BTN_CANCEL": "取消",
-  "CONFIRM_DELETE_CAT": "您确定要清除此数据类别吗？"
+  "CONFIRM_DELETE_CAT": "您确定要清除此数据类别吗？",
+
+  "BTN_EXPORT": "导出备份",
+  "BTN_IMPORT": "导入备份",
+  "MSG_BACKUP_READY": "备份已下载",
+  "MSG_EXPORT_FAIL": "导出失败",
+  "MSG_IMPORT_SUCCESS": "数据导入成功。正在重新加载...",
+  "MSG_IMPORT_FAIL": "无效的备份文件"
 };

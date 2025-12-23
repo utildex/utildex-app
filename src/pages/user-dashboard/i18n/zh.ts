@@ -1,3 +1,4 @@
+
 export default {
   "TITLE": "我的仪表盘",
   "DESC": "您的个人空间。",
@@ -23,5 +24,9 @@ export default {
   "BTN_MOVE": "移动",
   "BTN_DELETE": "删除",
   "BTN_CANCEL": "取消",
-  "SIZE_PREFIX": "种尺寸"
+  "SIZE_PREFIX": "种尺寸",
+  "FILLER_NOTE": "便签 (1x1)",
+  "FILLER_NOTE_WIDE": "宽便签 (2x1)",
+  "FILLER_IMAGE": "图片 (2x2)",
+  "FILLER_SPACER": "间隔 (1x1)"
 };

@@ -1,3 +1,4 @@
+
 import { Component, inject, signal, computed, ElementRef, viewChild, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,7 +15,7 @@ import zh from './i18n/zh';
 
 interface CommandResult {
   id: string;
-  type: 'tool' | 'action';
+  type: 'tool' | 'action' | 'smart';
   icon: string;
   title: string;
   subtitle?: string;
@@ -73,6 +74,7 @@ interface CommandResult {
                   <div 
                     class="p-2 rounded-lg bg-white dark:bg-slate-700 shadow-sm text-slate-500 group-hover:text-primary transition-colors"
                     [class.text-primary]="i === selectedIndex()"
+                    [class.text-indigo-500]="result.type === 'smart'"
                   >
                     <span class="material-symbols-outlined">{{ result.icon }}</span>
                   </div>
@@ -81,7 +83,9 @@ interface CommandResult {
                     <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ result.subtitle }}</p>
                   </div>
                   @if (i === selectedIndex()) {
-                    <span class="material-symbols-outlined text-slate-400 text-sm animate-fade-in">keyboard_return</span>
+                    <span class="material-symbols-outlined text-slate-400 text-sm animate-fade-in">
+                        {{ result.type === 'smart' ? 'content_copy' : 'keyboard_return' }}
+                    </span>
                   }
                 </button>
               }
@@ -124,7 +128,48 @@ export class CommandPaletteComponent {
     const q = this.query().toLowerCase();
     const list: CommandResult[] = [];
 
-    // 1. Actions
+    // --- Smart Instant Actions ---
+    // UUID
+    if ('uuid'.includes(q) || 'guid'.includes(q)) {
+        list.push({
+            id: 'smart-uuid',
+            type: 'smart',
+            icon: 'fingerprint',
+            title: this.t.map()['SMART_UUID_TITLE'],
+            subtitle: this.t.map()['SMART_UUID_DESC'],
+            action: () => this.clipboard.copy(crypto.randomUUID(), this.t.get('SRC_CMD_PALETTE'))
+        });
+    }
+    // Password
+    if ('password'.includes(q) || 'pwd'.includes(q) || 'pass'.includes(q)) {
+        list.push({
+            id: 'smart-pwd',
+            type: 'smart',
+            icon: 'key',
+            title: this.t.map()['SMART_PWD_TITLE'],
+            subtitle: this.t.map()['SMART_PWD_DESC'],
+            action: () => {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+                let pwd = '';
+                for(let i=0; i<16; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+                this.clipboard.copy(pwd, this.t.get('SRC_CMD_PALETTE'));
+            }
+        });
+    }
+    // Date/Time
+    if ('time'.includes(q) || 'date'.includes(q) || 'now'.includes(q)) {
+        const now = new Date();
+        list.push({
+            id: 'smart-iso',
+            type: 'smart',
+            icon: 'schedule',
+            title: this.t.map()['SMART_ISO_TITLE'],
+            subtitle: now.toISOString(),
+            action: () => this.clipboard.copy(now.toISOString(), this.t.get('SRC_CMD_PALETTE'))
+        });
+    }
+
+    // --- Static Actions ---
     const actions: CommandResult[] = [
       {
         id: 'act-home',
@@ -152,15 +197,13 @@ export class CommandPaletteComponent {
       }
     ];
 
-    // Filter Actions
     if (!q) {
-      // Show some default useful actions if no query
       list.push(...actions);
     } else {
       list.push(...actions.filter(a => a.title.toLowerCase().includes(q)));
     }
 
-    // 2. Tools
+    // --- Tools ---
     const tools = this.toolService.tools();
     const matchingTools = tools.filter(tool => {
       const name = this.i18n.resolve(tool.name).toLowerCase();
@@ -177,11 +220,10 @@ export class CommandPaletteComponent {
 
     list.push(...matchingTools);
 
-    return list.slice(0, 10); // Limit results
+    return list.slice(0, 10);
   });
 
   constructor() {
-    // Register Global Shortcut (Cmd/Ctrl + K)
     this.shortcuts.register('open-palette', {
       key: 'k',
       ctrlOrMeta: true,
@@ -189,7 +231,6 @@ export class CommandPaletteComponent {
       action: () => this.open()
     });
 
-    // Register Navigation Shortcuts (Only active when open)
     effect(() => {
       if (this.isOpen()) {
         this.shortcuts.register('palette-down', {
@@ -213,7 +254,6 @@ export class CommandPaletteComponent {
           action: () => this.close()
         });
 
-        // Focus input
         setTimeout(() => this.inputRef()?.nativeElement.focus(), 50);
       } else {
         this.shortcuts.unregister('palette-down');

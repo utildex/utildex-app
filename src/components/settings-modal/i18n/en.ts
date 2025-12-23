@@ -1,3 +1,4 @@
+
 export default {
   "TITLE": "Settings",
   "TAB_GENERAL": "General",
@@ -30,5 +31,12 @@ export default {
   "BTN_CONFIRM_RESET": "Yes, Delete Everything",
   "BTN_CONFIRM_DELETE": "Confirm?",
   "BTN_CANCEL": "Cancel",
-  "CONFIRM_DELETE_CAT": "Are you sure you want to clear this data category?"
+  "CONFIRM_DELETE_CAT": "Are you sure you want to clear this data category?",
+
+  "BTN_EXPORT": "Export Backup",
+  "BTN_IMPORT": "Import Backup",
+  "MSG_BACKUP_READY": "Backup downloaded",
+  "MSG_EXPORT_FAIL": "Export failed",
+  "MSG_IMPORT_SUCCESS": "Data imported successfully. Reloading...",
+  "MSG_IMPORT_FAIL": "Invalid backup file"
 };

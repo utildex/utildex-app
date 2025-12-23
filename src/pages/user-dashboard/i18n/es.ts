@@ -1,3 +1,4 @@
+
 export default {
   "TITLE": "Mi Tablero",
   "DESC": "Tu espacio personal.",
@@ -23,5 +24,9 @@ export default {
   "BTN_MOVE": "Mover",
   "BTN_DELETE": "Eliminar",
   "BTN_CANCEL": "Cancelar",
-  "SIZE_PREFIX": "tamaños"
+  "SIZE_PREFIX": "tamaños",
+  "FILLER_NOTE": "Nota (1x1)",
+  "FILLER_NOTE_WIDE": "Nota Ancha (2x1)",
+  "FILLER_IMAGE": "Imagen (2x2)",
+  "FILLER_SPACER": "Espaciador (1x1)"
 };

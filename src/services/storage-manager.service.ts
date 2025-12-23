@@ -1,4 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+
+import { Injectable, inject } from '@angular/core';
+import { DbService } from './db.service';
 
 export interface StorageCategory {
   id: string;
@@ -18,6 +20,7 @@ export interface StorageStats {
   providedIn: 'root'
 })
 export class StorageManagerService {
+  private db = inject(DbService);
   
   // Categorization Logic
   private readonly DEFINITIONS = [
@@ -53,7 +56,7 @@ export class StorageManagerService {
     }
   ];
 
-  getStats(): StorageStats {
+  async getStats(): Promise<StorageStats> {
     const stats: StorageStats = {
       totalBytes: 0,
       categories: this.DEFINITIONS.map(def => ({
@@ -66,67 +69,73 @@ export class StorageManagerService {
       }))
     };
 
-    // Iterate LocalStorage
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (!key) continue;
+    try {
+      const keys = await this.db.keys();
 
-      const val = localStorage.getItem(key) || '';
-      // Approx size (UTF-16 chars * 2 bytes)
-      const size = (key.length + val.length) * 2; 
+      for (const key of keys) {
+        // Fetch value to calculate size
+        const value = await this.db.get(key);
+        const valStr = typeof value === 'string' ? value : JSON.stringify(value);
+        // Approx size (UTF-16 chars * 2 bytes)
+        const size = (key.length + (valStr?.length || 0)) * 2; 
 
-      let matched = false;
+        let matched = false;
 
-      for (const cat of stats.categories) {
-        const def = this.DEFINITIONS.find(d => d.id === cat.id);
-        if (def && def.patterns.some(p => p.test(key))) {
-          cat.keys.push(key);
-          cat.sizeBytes += size;
-          cat.count++;
-          matched = true;
-          break;
+        for (const cat of stats.categories) {
+          const def = this.DEFINITIONS.find(d => d.id === cat.id);
+          if (def && def.patterns.some(p => p.test(key))) {
+            cat.keys.push(key);
+            cat.sizeBytes += size;
+            cat.count++;
+            matched = true;
+            break;
+          }
+        }
+
+        if (matched) {
+          stats.totalBytes += size;
         }
       }
-
-      // If it's a utildex key but didn't match specific categories, bundle into 'tools' or ignore?
-      // For now, only track known patterns to avoid deleting non-app data (if run on localhost shared port)
-      if (matched) {
-        stats.totalBytes += size;
-      }
+    } catch (e) {
+      console.error('Failed to calculate stats', e);
     }
 
     return stats;
   }
 
-  getCategoryDetails(categoryId: string): { key: string; value: string }[] {
-    const stats = this.getStats();
+  async getCategoryDetails(categoryId: string): Promise<{ key: string; value: string }[]> {
+    const stats = await this.getStats();
     const cat = stats.categories.find(c => c.id === categoryId);
     if (!cat) return [];
 
-    return cat.keys.map(key => ({
-      key,
-      value: localStorage.getItem(key) || ''
-    }));
+    const details: { key: string; value: string }[] = [];
+    for (const key of cat.keys) {
+      const val = await this.db.get(key);
+      details.push({
+        key,
+        value: typeof val === 'string' ? val : JSON.stringify(val)
+      });
+    }
+    return details;
   }
 
-  clearCategory(categoryId: string) {
-    const stats = this.getStats();
+  async clearCategory(categoryId: string) {
+    const stats = await this.getStats();
     const cat = stats.categories.find(c => c.id === categoryId);
     if (!cat) return;
 
-    cat.keys.forEach(key => localStorage.removeItem(key));
+    for (const key of cat.keys) {
+      await this.db.delete(key);
+    }
   }
 
-  factoryReset() {
-    // Only clear Utildex keys to be safe
-    const keysToRemove: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith('utildex-')) {
-        keysToRemove.push(key);
+  async factoryReset() {
+    const keys = await this.db.keys();
+    for (const key of keys) {
+      if (key.startsWith('utildex-')) {
+        await this.db.delete(key);
       }
     }
-    keysToRemove.forEach(k => localStorage.removeItem(k));
   }
 
   formatBytes(bytes: number): string {
@@ -135,5 +144,49 @@ export class StorageManagerService {
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  // --- Export / Import ---
+
+  async exportData(): Promise<Blob> {
+    const keys = await this.db.keys();
+    const exportObj: Record<string, any> = {};
+    exportObj['meta'] = {
+      version: 1,
+      date: new Date().toISOString(),
+      appName: 'Utildex'
+    };
+
+    for (const key of keys) {
+      // Only export app keys
+      if (key.startsWith('utildex-')) {
+        exportObj[key] = await this.db.get(key);
+      }
+    }
+
+    const json = JSON.stringify(exportObj, null, 2);
+    return new Blob([json], { type: 'application/json' });
+  }
+
+  async importData(jsonContent: string): Promise<boolean> {
+    try {
+      const data = JSON.parse(jsonContent);
+      if (!data.meta || data.meta.appName !== 'Utildex') {
+        throw new Error('Invalid backup file');
+      }
+
+      // Clear existing state to avoid conflicts
+      await this.factoryReset();
+
+      for (const key in data) {
+        if (key !== 'meta' && key.startsWith('utildex-')) {
+          await this.db.set(key, data[key]);
+        }
+      }
+      return true;
+    } catch (e) {
+      console.error('Import failed', e);
+      throw e;
+    }
   }
 }

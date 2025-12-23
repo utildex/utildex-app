@@ -1,3 +1,4 @@
+
 import { Component, input, inject } from '@angular/core';
 import { ClipboardService } from '../../services/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -58,7 +59,8 @@ import zh from './i18n/zh';
   `
 })
 export class ActionBarComponent {
-  content = input.required<string>();
+  // Allow string (text) or Uint8Array (binary)
+  content = input.required<string | Uint8Array>();
   filename = input<string>('result.txt');
   mimeType = input<string>('text/plain');
   source = input<string>('Tool');
@@ -68,11 +70,18 @@ export class ActionBarComponent {
   t = inject(ScopedTranslationService);
 
   copy() {
-    this.clipboard.copy(this.content(), this.source());
+    const val = this.content();
+    if (typeof val === 'string') {
+      this.clipboard.copy(val, this.source());
+    } else {
+      // Binary copy not supported by simple clipboard text API
+      console.warn('Binary content cannot be copied to text clipboard');
+    }
   }
 
   download() {
-    const blob = new Blob([this.content()], { type: this.mimeType() });
+    const val = this.content();
+    const blob = new Blob([val], { type: this.mimeType() });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -84,12 +93,15 @@ export class ActionBarComponent {
   }
 
   print() {
+    const val = this.content();
+    if (typeof val !== 'string') return; // Only print text
+
     const printWindow = window.open('', '', 'height=600,width=800');
     if (printWindow) {
       printWindow.document.write('<html><head><title>' + this.filename() + '</title>');
       printWindow.document.write('<style>body{font-family:sans-serif;white-space:pre-wrap;padding:20px;}</style>');
       printWindow.document.write('</head><body>');
-      printWindow.document.write('<pre>' + this.content() + '</pre>'); // Use pre for text content preservation
+      printWindow.document.write('<pre>' + val + '</pre>');
       printWindow.document.write('</body></html>');
       printWindow.document.close();
       printWindow.print();

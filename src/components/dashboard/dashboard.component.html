@@ -1,3 +1,4 @@
+
 <div class="space-y-12 pb-12">
   
   <!-- Hero Section -->
@@ -22,6 +23,19 @@
     </div>
   </section>
 
+  <!-- Featured Articles Carousel -->
+  <section>
+    <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">auto_stories</span>
+        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FEATURED_ARTICLES'] }}</h2>
+      </div>
+      <a routerLink="/articles" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
+    </div>
+    
+    <app-carousel [items]="featuredArticles()" [itemTemplate]="articleTemplate" [autoplay]="true" [interval]="6000"></app-carousel>
+  </section>
+
   <!-- Favorites Carousel (Conditional) -->
   @if (favoriteTools().length > 0) {
     <section>
@@ -30,19 +44,9 @@
         <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FAVORITES'] }}</h2>
       </div>
       
-      <app-carousel [items]="favoriteTools()" [itemTemplate]="toolTemplate" [autoplay]="true" [interval]="5000"></app-carousel>
+      <app-carousel [items]="favoriteTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
     </section>
   }
-
-  <!-- Featured Carousel -->
-  <section>
-    <div class="flex items-center gap-2 mb-6 px-4 sm:px-0">
-      <span class="material-symbols-outlined text-primary">verified</span>
-      <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FEATURED'] }}</h2>
-    </div>
-    
-    <app-carousel [items]="featuredTools()" [itemTemplate]="toolTemplate" [autoplay]="true" [interval]="4000"></app-carousel>
-  </section>
 
   <!-- Most Used Carousel (Conditional) -->
   @if (mostUsedTools().length > 0) {
@@ -52,7 +56,7 @@
         <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_MOST_USED'] }}</h2>
       </div>
       
-      <app-carousel [items]="mostUsedTools()" [itemTemplate]="toolTemplate" [autoplay]="true"></app-carousel>
+      <app-carousel [items]="mostUsedTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
     </section>
   }
 
@@ -63,7 +67,7 @@
        <a routerLink="/categories" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
     </div>
     
-    <app-carousel [items]="categories()" [itemTemplate]="catTemplate" [autoplay]="true" [interval]="6000"></app-carousel>
+    <app-carousel [items]="categories()" [itemTemplate]="catTemplate" [autoplay]="false"></app-carousel>
 
     <ng-template #catTemplate let-cat>
       <a [routerLink]="['/categories', cat]" class="block h-full p-6 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-primary/50 transition-all group">
@@ -74,7 +78,7 @@
     </ng-template>
   </section>
 
-  <!-- Shared Template for Tool Cards in Carousel -->
+  <!-- Shared Template for Tool Cards -->
   <ng-template #toolTemplate let-tool>
     <div class="h-full">
       <app-tool-card 
@@ -82,6 +86,17 @@
         [isFavorite]="isFav(tool.id)" 
         (toggleFavorite)="toggleFav($event)">
       </app-tool-card>
+    </div>
+  </ng-template>
+
+  <!-- Shared Template for Article Cards -->
+  <!-- We now access the 'index' variable provided by the updated CarouselComponent -->
+  <ng-template #articleTemplate let-article let-i="index">
+    <div class="h-full">
+      <app-article-card 
+        [article]="article" 
+        [priority]="i < 2"
+      ></app-article-card>
     </div>
   </ng-template>
 

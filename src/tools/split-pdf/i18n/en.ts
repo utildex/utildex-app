@@ -1,0 +1,22 @@
+
+export default {
+  "DROP_LABEL": "Drop PDF here",
+  "SELECT_FILE": "Select PDF File",
+  "LOADED_FILE": "Loaded:",
+  "PAGES_COUNT": "pages",
+  "RANGE_LABEL": "Split Configuration",
+  "RANGE_PLACEHOLDER": "e.g., 1-5; 6-10; 11",
+  "RANGE_HINT": "Use ; to create multiple files (e.g., '1-5; 6-10'). Use , for pages in same file.",
+  "BTN_SPLIT": "Split PDF",
+  "BTN_RESET": "Reset",
+  "PROCESSING": "Processing...",
+  "SUCCESS": "Processing Complete!",
+  "ERR_NO_FILE": "Please select a file first.",
+  "ERR_INVALID_PDF": "Invalid PDF file.",
+  "ERR_INVALID_RANGE": "Invalid page range syntax.",
+  "WIDGET_EMPTY": "Drop PDF",
+  "RESULTS_TITLE": "Generated Files",
+  "BTN_DOWNLOAD_ALL": "Download All (ZIP)",
+  "BTN_DOWNLOAD": "Download",
+  "BTN_START_OVER": "Start Over"
+};

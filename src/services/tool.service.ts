@@ -1,5 +1,7 @@
+
 import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { I18nService, I18nText } from './i18n.service';
+import { DbService } from './db.service';
 
 export interface WidgetPreset {
   label: I18nText;
@@ -45,6 +47,15 @@ export interface DashboardWidget {
   layout: WidgetLayout;
 }
 
+// Defines what we are currently trying to place
+export interface PendingPlacement {
+  type: DashboardWidget['type'];
+  toolId?: string;
+  w: number;
+  h: number;
+  data?: any;
+}
+
 interface ToolUsageStats {
   [toolId: string]: {
     count: number;
@@ -66,9 +77,10 @@ const CATEGORY_TRANSLATIONS: Record<string, I18nText> = {
 })
 export class ToolService {
   private i18n = inject(I18nService);
+  private db = inject(DbService);
 
-  // Hardcoded registry
-  private readonly toolsRegistry: ToolMetadata[] = [
+  // Registry defined without explicit routePath (it will be generated)
+  private readonly rawRegistry: Omit<ToolMetadata, 'routePath'>[] = [
     {
       "id": "lorem-ipsum",
       "name": { 
@@ -88,7 +100,6 @@ export class ToolService {
       "categories": ["Utility"],
       "tags": ["generator", "text", "lorem", "ipsum"],
       "color": "#3b82f6",
-      "routePath": "tools/lorem-ipsum",
       "widget": {
         "supported": true,
         "defaultCols": 2,
@@ -118,7 +129,6 @@ export class ToolService {
       "tags": ["security", "password", "random"],
       "featured": true,
       "color": "#10b981",
-      "routePath": "tools/password-generator",
       "widget": {
         "supported": true,
         "defaultCols": 2,
@@ -149,7 +159,6 @@ export class ToolService {
       "tags": ["developer", "markdown", "editor", "preview"],
       "featured": true,
       "color": "#f59e0b",
-      "routePath": "tools/markdown-preview",
       "widget": {
         "supported": true,
         "defaultCols": 2,
@@ -176,7 +185,6 @@ export class ToolService {
       "tags": ["json", "format", "prettify", "minify", "developer"],
       "featured": false,
       "color": "#8b5cf6",
-      "routePath": "tools/json-formatter",
       "widget": {
         "supported": true,
         "defaultCols": 2,
@@ -203,14 +211,44 @@ export class ToolService {
       "tags": ["converter", "unit", "length", "weight", "temperature"],
       "featured": false,
       "color": "#f43f5e",
-      "routePath": "tools/unit-converter",
       "widget": {
         "supported": true,
         "defaultCols": 1,
         "defaultRows": 2
       }
+    },
+    {
+      "id": "split-pdf",
+      "name": { 
+        "en": "Split PDF", 
+        "fr": "Diviser PDF",
+        "es": "Dividir PDF",
+        "zh": "拆分 PDF"
+      },
+      "description": { 
+        "en": "Extract specific pages from a PDF document. Processed 100% locally.", 
+        "fr": "Extrayez des pages spécifiques d'un document PDF. Traité 100% localement.",
+        "es": "Extraiga páginas específicas de un documento PDF. Procesado 100% localmente.",
+        "zh": "从 PDF 文档中提取特定页面。100% 本地处理。"
+      },
+      "icon": "picture_as_pdf",
+      "version": "1.0.0",
+      "categories": ["Office", "Utility"],
+      "tags": ["pdf", "split", "extract", "pages", "document"],
+      "color": "#ef4444",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 2
+      }
     }
   ];
+
+  // Dynamically attach route paths based on ID
+  private readonly toolsRegistry: ToolMetadata[] = this.rawRegistry.map(t => ({
+    ...t,
+    routePath: `tools/${t.id}`
+  }));
 
   // Core State
   readonly tools = signal<ToolMetadata[]>(this.toolsRegistry);
@@ -219,6 +257,11 @@ export class ToolService {
   
   // Dashboard State
   dashboardWidgets = signal<DashboardWidget[]>([]);
+  
+  // Modal State (Global placement to solve z-index issues)
+  addModalOpen = signal(false);
+  fillerModalOpen = signal(false);
+  placementRequest = signal<PendingPlacement | null>(null);
   
   // Search/Filter State
   searchQuery = signal<string>('');
@@ -232,7 +275,7 @@ export class ToolService {
     this.loadDashboard();
   }
 
-  // ... (Previous computed properties and basic actions same as before)
+  // ... (Computed properties unchanged)
   categories = computed(() => {
     const allCats = this.tools().flatMap(t => t.categories);
     return [...new Set(allCats)].sort();
@@ -280,6 +323,27 @@ export class ToolService {
     const usedTools = this.tools().filter(t => stats[t.id]?.lastUsed > 0);
     return usedTools.sort((a, b) => (stats[b.id].lastUsed || 0) - (stats[a.id].lastUsed || 0));
   });
+
+  // --- Modal Actions ---
+  openAddToolModal() { this.addModalOpen.set(true); }
+  openFillerModal() { this.fillerModalOpen.set(true); }
+  closeModals() { 
+    this.addModalOpen.set(false); 
+    this.fillerModalOpen.set(false);
+  }
+  
+  // Called by the modal when user makes a selection
+  requestPlacement(p: PendingPlacement) {
+    this.closeModals();
+    this.placementRequest.set(p);
+  }
+  
+  // Called by Dashboard to consume the event
+  consumePlacementRequest(): PendingPlacement | null {
+    const p = this.placementRequest();
+    this.placementRequest.set(null);
+    return p;
+  }
 
   trackToolUsage(toolId: string) {
     this.usageStats.update(current => {
@@ -349,26 +413,19 @@ export class ToolService {
    * Checks if a rectangle overlaps with any existing widget.
    */
   isPositionValid(x: number, y: number, w: number, h: number, existingWidgets: DashboardWidget[], ignoreId?: string): boolean {
-    // Basic bounds check (if we had a fixed height, but we have infinite scroll)
     if (x < 0 || y < 0) return false;
 
-    // Check collision with every other widget
     for (const widget of existingWidgets) {
       if (widget.instanceId === ignoreId) continue;
-
       const wl = widget.layout;
-      
-      // Standard AABB collision check
       const overlaps = (
         x < wl.x + wl.w &&
         x + w > wl.x &&
         y < wl.y + wl.h &&
         y + h > wl.y
       );
-
       if (overlaps) return false;
     }
-
     return true;
   }
 
@@ -400,22 +457,46 @@ export class ToolService {
     });
   }
 
-  // --- Persistence ---
-  private loadFavorites() {
-    const saved = localStorage.getItem('utildex-favorites');
-    if (saved) { try { this.favorites.set(new Set<string>(JSON.parse(saved) as string[])); } catch (e) {} }
+  // --- Persistence (Async) ---
+  private async loadFavorites() {
+    try {
+      const saved = await this.db.get<string[]>('utildex-favorites');
+      if (saved) this.favorites.set(new Set<string>(saved));
+    } catch (e) {
+      console.warn('Failed to load favorites', e);
+    }
   }
-  private persistFavorites(favs: Set<string>) { localStorage.setItem('utildex-favorites', JSON.stringify([...favs])); }
-  private loadUsageStats() {
-    const saved = localStorage.getItem('utildex-usage');
-    if (saved) { try { this.usageStats.set(JSON.parse(saved)); } catch (e) {} }
+
+  private persistFavorites(favs: Set<string>) { 
+    this.db.set('utildex-favorites', [...favs]); 
   }
-  private persistUsageStats(stats: ToolUsageStats) { localStorage.setItem('utildex-usage', JSON.stringify(stats)); }
-  private loadDashboard() {
-    const saved = localStorage.getItem('utildex-dashboard-v2');
-    if (saved) { try { this.dashboardWidgets.set(JSON.parse(saved)); } catch (e) {} }
+
+  private async loadUsageStats() {
+    try {
+      const saved = await this.db.get<ToolUsageStats>('utildex-usage');
+      if (saved) this.usageStats.set(saved);
+    } catch (e) {
+      console.warn('Failed to load usage', e);
+    }
   }
-  private persistDashboard(items: DashboardWidget[]) { localStorage.setItem('utildex-dashboard-v2', JSON.stringify(items)); }
+
+  private persistUsageStats(stats: ToolUsageStats) { 
+    this.db.set('utildex-usage', stats); 
+  }
+
+  private async loadDashboard() {
+    try {
+      const saved = await this.db.get<DashboardWidget[]>('utildex-dashboard-v2');
+      if (saved) this.dashboardWidgets.set(saved);
+    } catch (e) {
+      console.warn('Failed to load dashboard', e);
+    }
+  }
+
+  private persistDashboard(items: DashboardWidget[]) { 
+    this.db.set('utildex-dashboard-v2', items); 
+  }
+
   private resolveSearchText(text: I18nText): string {
     if (typeof text === 'string') return text.toLowerCase();
     return Object.values(text).join(' ').toLowerCase();

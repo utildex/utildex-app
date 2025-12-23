@@ -1,3 +1,4 @@
+
 export default {
   "HERO_TITLE_PREFIX": "Votre Boîte à Outils",
   "HERO_TITLE_HIGHLIGHT": "Locale",
@@ -8,6 +9,7 @@ export default {
   "BTN_HISTORY": "Historique",
   "SECTION_FAVORITES": "Favoris",
   "SECTION_FEATURED": "Outils en vedette",
+  "SECTION_FEATURED_ARTICLES": "Lectures Recommandées",
   "SECTION_MOST_USED": "Les plus utilisés",
   "SECTION_CATEGORIES": "Explorer les catégories",
   "LINK_VIEW_ALL": "Tout voir",

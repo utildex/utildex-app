@@ -1,3 +1,4 @@
+
 export default {
   "TITLE": "My Dashboard",
   "DESC": "Your personal workspace.",
@@ -23,5 +24,9 @@ export default {
   "BTN_MOVE": "Move Widget",
   "BTN_DELETE": "Remove Widget",
   "BTN_CANCEL": "Cancel",
-  "SIZE_PREFIX": "sizes"
+  "SIZE_PREFIX": "sizes",
+  "FILLER_NOTE": "Note (1x1)",
+  "FILLER_NOTE_WIDE": "Wide Note (2x1)",
+  "FILLER_IMAGE": "Image (2x2)",
+  "FILLER_SPACER": "Spacer (1x1)"
 };

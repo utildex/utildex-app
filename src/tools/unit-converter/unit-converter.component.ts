@@ -1,3 +1,4 @@
+
 import { Component, inject, signal, computed, effect, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -213,7 +214,7 @@ export class UnitConverterComponent {
           this.fromUnit.set(units[0].id);
           this.toUnit.set(units[1]?.id || units[0].id);
        }
-    }, { allowSignalWrites: true });
+    });
   }
 
   setType(type: UnitType) {

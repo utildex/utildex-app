@@ -1,4 +1,5 @@
-import { Component, inject, output, signal, computed, effect } from '@angular/core';
+
+import { Component, inject, output, signal, effect, ElementRef, viewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ThemeService, PrimaryColor, FontFamily, Density } from '../../services/theme.service';
 import { I18nService, Language } from '../../services/i18n.service';
@@ -7,6 +8,7 @@ import { ToolService } from '../../services/tool.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { StorageManagerService, StorageStats } from '../../services/storage-manager.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
+import { ToastService } from '../../services/toast.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -269,12 +271,25 @@ interface ParsedData {
                <!-- Main Data List -->
                @else {
                   <div class="space-y-8">
+                     <!-- Backup/Restore Buttons -->
+                     <div class="flex gap-3">
+                        <button (click)="exportData()" class="flex-1 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
+                           <span class="material-symbols-outlined text-lg">download</span>
+                           {{ t.map()['BTN_EXPORT'] }}
+                        </button>
+                        <button (click)="triggerImport()" class="flex-1 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2">
+                           <span class="material-symbols-outlined text-lg">upload</span>
+                           {{ t.map()['BTN_IMPORT'] }}
+                        </button>
+                        <input #importInput type="file" class="hidden" accept=".json" (change)="handleImport($event)">
+                     </div>
+
                      <!-- Storage Summary -->
                      <div class="bg-slate-100 dark:bg-slate-800 rounded-xl p-4">
                         <div class="flex justify-between items-end mb-2">
                            <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ t.map()['STORAGE_USED'] }}</span>
                            <span class="text-xs font-mono text-primary bg-white dark:bg-slate-900 px-2 py-1 rounded shadow-sm">
-                              {{ storage.formatBytes(stats().totalBytes) }}
+                              {{ storage.formatBytes(stats()?.totalBytes || 0) }}
                            </span>
                         </div>
                         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
@@ -283,89 +298,95 @@ interface ParsedData {
                         <p class="text-[10px] text-slate-500 mt-2 text-center">{{ t.map()['STORAGE_DESC'] }}</p>
                      </div>
 
-                     <!-- Categories List -->
-                     <div class="space-y-3">
-                        @for (cat of stats().categories; track cat.id) {
-                           <div class="flex items-center gap-4 p-3 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-slate-300 dark:hover:border-slate-600 transition-colors bg-white dark:bg-slate-900/50">
-                              <div class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500">
-                                 <span class="material-symbols-outlined">{{ cat.icon }}</span>
-                              </div>
-                              <div class="flex-1 min-w-0">
-                                 <h4 class="font-bold text-slate-900 dark:text-white text-sm">{{ t.map()[cat.labelKey] }}</h4>
-                                 <p class="text-xs text-slate-500 truncate">{{ cat.count }} items • {{ storage.formatBytes(cat.sizeBytes) }}</p>
-                              </div>
-                              <div class="flex items-center gap-1">
-                                 <button 
-                                    (click)="inspect(cat.id)" 
-                                    class="p-2 text-slate-400 hover:text-primary transition-colors"
-                                    [title]="t.map()['BTN_VIEW']"
-                                    [disabled]="cat.count === 0"
-                                    [class.opacity-50]="cat.count === 0"
-                                 >
-                                    <span class="material-symbols-outlined">visibility</span>
-                                 </button>
-                                 
-                                 <!-- Inline Confirmation Logic -->
-                                 @if (deleteConfirmId() === cat.id) {
+                     @if (loading()) {
+                        <div class="flex justify-center py-4">
+                           <div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                     } @else {
+                        <!-- Categories List -->
+                        <div class="space-y-3">
+                           @for (cat of stats()?.categories || []; track cat.id) {
+                              <div class="flex items-center gap-4 p-3 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-slate-300 dark:hover:border-slate-600 transition-colors bg-white dark:bg-slate-900/50">
+                                 <div class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-500">
+                                    <span class="material-symbols-outlined">{{ cat.icon }}</span>
+                                 </div>
+                                 <div class="flex-1 min-w-0">
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-sm">{{ t.map()[cat.labelKey] }}</h4>
+                                    <p class="text-xs text-slate-500 truncate">{{ cat.count }} items • {{ storage.formatBytes(cat.sizeBytes) }}</p>
+                                 </div>
+                                 <div class="flex items-center gap-1">
                                     <button 
-                                      (click)="confirmDelete(cat.id)"
-                                      class="px-3 py-1 bg-red-500 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-red-600 animate-fade-in flex items-center gap-1"
-                                    >
-                                       {{ t.map()['BTN_CONFIRM_DELETE'] }}
-                                    </button>
-                                    <button 
-                                      (click)="deleteConfirmId.set(null)"
-                                      class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                                    >
-                                       <span class="material-symbols-outlined text-lg">close</span>
-                                    </button>
-                                 } @else {
-                                    <button 
-                                       (click)="requestDelete(cat.id)" 
-                                       class="p-2 text-slate-400 hover:text-red-500 transition-colors"
-                                       [title]="t.map()['BTN_DELETE']"
+                                       (click)="inspect(cat.id)" 
+                                       class="p-2 text-slate-400 hover:text-primary transition-colors"
+                                       [title]="t.map()['BTN_VIEW']"
                                        [disabled]="cat.count === 0"
                                        [class.opacity-50]="cat.count === 0"
                                     >
-                                       <span class="material-symbols-outlined">delete</span>
+                                       <span class="material-symbols-outlined">visibility</span>
                                     </button>
-                                 }
-                              </div>
-                           </div>
-                        }
-                     </div>
-
-                     <!-- Danger Zone -->
-                     <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
-                        <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-xl p-4 flex flex-col items-center text-center gap-3">
-                           <div class="text-red-800 dark:text-red-200 font-bold text-sm">{{ t.map()['DANGER_ZONE'] }}</div>
-                           <p class="text-xs text-red-600 dark:text-red-300 opacity-80 max-w-xs">{{ t.map()['DANGER_DESC'] }}</p>
-                           
-                           @if (!resetConfirm()) {
-                              <button 
-                                 (click)="resetConfirm.set(true)" 
-                                 class="px-4 py-2 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-800 text-red-600 font-bold rounded-lg text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                              >
-                                 {{ t.map()['BTN_RESET_APP'] }}
-                              </button>
-                           } @else {
-                              <div class="flex gap-2 animate-fade-in">
-                                 <button 
-                                    (click)="performFactoryReset()" 
-                                    class="px-4 py-2 bg-red-600 text-white font-bold rounded-lg text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30"
-                                 >
-                                    {{ t.map()['BTN_CONFIRM_RESET'] }}
-                                 </button>
-                                 <button 
-                                    (click)="resetConfirm.set(false)" 
-                                    class="px-4 py-2 bg-transparent text-slate-500 font-bold rounded-lg text-sm hover:text-slate-700 dark:hover:text-slate-300"
-                                 >
-                                    {{ t.map()['BTN_CANCEL'] }}
-                                 </button>
+                                    
+                                    <!-- Inline Confirmation Logic -->
+                                    @if (deleteConfirmId() === cat.id) {
+                                       <button 
+                                       (click)="confirmDelete(cat.id)"
+                                       class="px-3 py-1 bg-red-500 text-white rounded-lg text-xs font-bold shadow-sm hover:bg-red-600 animate-fade-in flex items-center gap-1"
+                                       >
+                                          {{ t.map()['BTN_CONFIRM_DELETE'] }}
+                                       </button>
+                                       <button 
+                                       (click)="deleteConfirmId.set(null)"
+                                       class="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                                       >
+                                          <span class="material-symbols-outlined text-lg">close</span>
+                                       </button>
+                                    } @else {
+                                       <button 
+                                          (click)="requestDelete(cat.id)" 
+                                          class="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                                          [title]="t.map()['BTN_DELETE']"
+                                          [disabled]="cat.count === 0"
+                                          [class.opacity-50]="cat.count === 0"
+                                       >
+                                          <span class="material-symbols-outlined">delete</span>
+                                       </button>
+                                    }
+                                 </div>
                               </div>
                            }
                         </div>
-                     </div>
+
+                        <!-- Danger Zone -->
+                        <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
+                           <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-xl p-4 flex flex-col items-center text-center gap-3">
+                              <div class="text-red-800 dark:text-red-200 font-bold text-sm">{{ t.map()['DANGER_ZONE'] }}</div>
+                              <p class="text-xs text-red-600 dark:text-red-300 opacity-80 max-w-xs">{{ t.map()['DANGER_DESC'] }}</p>
+                              
+                              @if (!resetConfirm()) {
+                                 <button 
+                                    (click)="resetConfirm.set(true)" 
+                                    class="px-4 py-2 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-800 text-red-600 font-bold rounded-lg text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                 >
+                                    {{ t.map()['BTN_RESET_APP'] }}
+                                 </button>
+                              } @else {
+                                 <div class="flex gap-2 animate-fade-in">
+                                    <button 
+                                       (click)="performFactoryReset()" 
+                                       class="px-4 py-2 bg-red-600 text-white font-bold rounded-lg text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30"
+                                    >
+                                       {{ t.map()['BTN_CONFIRM_RESET'] }}
+                                    </button>
+                                    <button 
+                                       (click)="resetConfirm.set(false)" 
+                                       class="px-4 py-2 bg-transparent text-slate-500 font-bold rounded-lg text-sm hover:text-slate-700 dark:hover:text-slate-300"
+                                    >
+                                       {{ t.map()['BTN_CANCEL'] }}
+                                    </button>
+                                 </div>
+                              }
+                           </div>
+                        </div>
+                     }
                   </div>
                }
              </div>
@@ -391,21 +412,21 @@ export class SettingsModalComponent {
   storage = inject(StorageManagerService);
   tools = inject(ToolService); 
   clipboard = inject(ClipboardService);
+  toast = inject(ToastService);
 
   // UI State
   activeTab = signal<Tab>('general');
   inspectingCategory = signal<string | null>(null);
   resetConfirm = signal(false);
   deleteConfirmId = signal<string | null>(null);
+  loading = signal(false);
+
+  // File Import Ref
+  importInput = viewChild<ElementRef>('importInput');
 
   // Data State
-  stats = signal<StorageStats>(this.storage.getStats());
-
-  inspectionData = computed(() => {
-    const cat = this.inspectingCategory();
-    if (!cat) return [];
-    return this.storage.getCategoryDetails(cat);
-  });
+  stats = signal<StorageStats | null>(null);
+  inspectionData = signal<ParsedData[]>([]);
 
   languages: { code: Language; flagCode: string; label: string }[] = [
     { code: 'en', flagCode: 'us', label: 'English' },
@@ -422,10 +443,27 @@ export class SettingsModalComponent {
            this.refreshStats();
         }
      });
+
+     effect(() => {
+       const cat = this.inspectingCategory();
+       if (cat) {
+         this.loadInspection(cat);
+       } else {
+         this.inspectionData.set([]);
+       }
+     });
   }
 
-  refreshStats() {
-     this.stats.set(this.storage.getStats());
+  async refreshStats() {
+     this.loading.set(true);
+     const s = await this.storage.getStats();
+     this.stats.set(s);
+     this.loading.set(false);
+  }
+
+  async loadInspection(catId: string) {
+    const details = await this.storage.getCategoryDetails(catId);
+    this.inspectionData.set(details as any);
   }
 
   switchTab(tab: Tab) {
@@ -441,7 +479,6 @@ export class SettingsModalComponent {
 
   requestDelete(catId: string) {
     this.deleteConfirmId.set(catId);
-    // Auto cancel after 3 seconds
     setTimeout(() => {
        if (this.deleteConfirmId() === catId) {
          this.deleteConfirmId.set(null);
@@ -449,14 +486,13 @@ export class SettingsModalComponent {
     }, 3000);
   }
 
-  confirmDelete(catId: string) {
+  async confirmDelete(catId: string) {
      this.deleteConfirmId.set(null);
      
-     // 1. Reset In-Memory State
      switch (catId) {
        case 'history':
          this.tools.resetUsage();
-         this.clipboard.clearHistory();
+         await this.clipboard.clearHistory();
          break;
        case 'favorites':
          this.tools.resetFavorites();
@@ -470,19 +506,59 @@ export class SettingsModalComponent {
          break;
      }
 
-     // 2. Clear Storage
-     this.storage.clearCategory(catId);
-     
-     // 3. Update UI
+     await this.storage.clearCategory(catId);
      this.refreshStats();
      if (this.inspectingCategory() === catId) {
        this.inspectingCategory.set(null);
      }
   }
 
-  performFactoryReset() {
-     this.storage.factoryReset();
+  async performFactoryReset() {
+     await this.storage.factoryReset();
      window.location.reload();
+  }
+
+  // --- Import / Export ---
+
+  async exportData() {
+    try {
+      const blob = await this.storage.exportData();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `utildex-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      this.toast.show(this.t.get('MSG_BACKUP_READY'), 'success');
+    } catch (e) {
+      console.error(e);
+      this.toast.show(this.t.get('MSG_EXPORT_FAIL'), 'error');
+    }
+  }
+
+  triggerImport() {
+    this.importInput()?.nativeElement.click();
+  }
+
+  async handleImport(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const content = e.target?.result as string;
+        await this.storage.importData(content);
+        this.toast.show(this.t.get('MSG_IMPORT_SUCCESS'), 'success');
+        setTimeout(() => window.location.reload(), 1500);
+      } catch (err) {
+        console.error(err);
+        this.toast.show(this.t.get('MSG_IMPORT_FAIL'), 'error');
+      }
+    };
+    reader.readAsText(file);
   }
 
   // --- Data Parsing Helpers ---

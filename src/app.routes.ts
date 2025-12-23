@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
@@ -26,34 +27,25 @@ export const routes: Routes = [
     title: 'All Tools - Utildex'
   },
   {
+    path: 'articles',
+    loadComponent: () => import('./pages/articles/articles.component').then(m => m.ArticlesComponent),
+    title: 'Articles - Utildex'
+  },
+  {
+    path: 'articles/:id',
+    loadComponent: () => import('./pages/article-reader/article-reader.component').then(m => m.ArticleReaderComponent),
+    title: 'Reader - Utildex'
+  },
+  {
     path: 'history',
     loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent),
     title: 'History - Utildex'
   },
+  // Dynamic Tool Route
   {
-    path: 'tools/lorem-ipsum',
-    loadComponent: () => import('./tools/lorem-ipsum/lorem-ipsum.component').then(m => m.LoremIpsumComponent),
-    title: 'Lorem Ipsum - Utildex'
-  },
-  {
-    path: 'tools/password-generator',
-    loadComponent: () => import('./tools/password-generator/password-generator.component').then(m => m.PasswordGeneratorComponent),
-    title: 'Password Gen - Utildex'
-  },
-  {
-    path: 'tools/markdown-preview',
-    loadComponent: () => import('./tools/markdown-preview/markdown-preview.component').then(m => m.MarkdownPreviewComponent),
-    title: 'Markdown - Utildex'
-  },
-  {
-    path: 'tools/json-formatter',
-    loadComponent: () => import('./tools/json-formatter/json-formatter.component').then(m => m.JsonFormatterComponent),
-    title: 'JSON Formatter - Utildex'
-  },
-  {
-    path: 'tools/unit-converter',
-    loadComponent: () => import('./tools/unit-converter/unit-converter.component').then(m => m.UnitConverterComponent),
-    title: 'Unit Converter - Utildex'
+    path: 'tools/:id',
+    loadComponent: () => import('./pages/tool-host/tool-host.component').then(m => m.ToolHostComponent)
+    // Title is handled dynamically by SeoService
   },
   {
     path: '**',

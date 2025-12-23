@@ -1,3 +1,4 @@
+
 export default {
   "HERO_TITLE_PREFIX": "您的",
   "HERO_TITLE_HIGHLIGHT": "本地优先",
@@ -8,6 +9,7 @@ export default {
   "BTN_HISTORY": "使用历史",
   "SECTION_FAVORITES": "收藏",
   "SECTION_FEATURED": "精选工具",
+  "SECTION_FEATURED_ARTICLES": "推荐阅读",
   "SECTION_MOST_USED": "最常使用",
   "SECTION_CATEGORIES": "探索分类",
   "LINK_VIEW_ALL": "查看全部",

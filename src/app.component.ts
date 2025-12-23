@@ -1,3 +1,4 @@
+
 import { Component, inject, signal, computed, ViewChild, OnInit } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { ThemeService } from './services/theme.service';
@@ -5,12 +6,15 @@ import { ToolService } from './services/tool.service';
 import { I18nService } from './services/i18n.service';
 import { ShortcutService } from './services/shortcut.service';
 import { SeoService } from './services/seo.service';
+import { NetworkService } from './services/network.service'; 
 import { provideTranslation, ScopedTranslationService } from './core/i18n';
 import { ToastComponent } from './components/toast/toast.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
 import { ClipboardHistoryComponent } from './components/clipboard-history/clipboard-history.component';
 import { CommandPaletteComponent } from './components/command-palette/command-palette.component';
 import { ErrorOverlayComponent } from './components/error-overlay/error-overlay.component';
+import { NetworkStatusComponent } from './components/network-status/network-status.component';
+import { DashboardModalsComponent } from './components/dashboard-modals/dashboard-modals.component'; // Added
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -23,7 +27,8 @@ import { filter } from 'rxjs/operators';
   imports: [
     RouterOutlet, RouterLink, RouterLinkActive, 
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
-    CommandPaletteComponent, ErrorOverlayComponent
+    CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
+    DashboardModalsComponent
   ],
   templateUrl: './app.component.html',
   providers: [
@@ -35,7 +40,8 @@ export class AppComponent implements OnInit {
   toolService = inject(ToolService);
   i18nService = inject(I18nService);
   shortcutService = inject(ShortcutService);
-  seoService = inject(SeoService); // Injection starts SEO monitoring
+  seoService = inject(SeoService); 
+  networkService = inject(NetworkService); 
   t = inject(ScopedTranslationService);
   router: Router = inject(Router);
 
