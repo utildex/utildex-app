@@ -407,9 +407,10 @@ export class SplitPdfComponent {
           const newPdf = await PDFDocument.create();
           const copiedPages = await newPdf.copyPages(doc, indices);
           copiedPages.forEach(page => newPdf.addPage(page));
-          
+
           const pdfBytes = await newPdf.save();
-          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const safeBytes = new Uint8Array(pdfBytes);
+          const blob = new Blob([safeBytes], { type: 'application/pdf' });
           const url = URL.createObjectURL(blob);
           
           // Suffix: -1, -2, or custom if we had naming logic. 
