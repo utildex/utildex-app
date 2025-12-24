@@ -70,7 +70,6 @@ const zh = { "READ_MORE": "阅读文章", "OPEN_LINK": "访问链接" };
             [alt]="i18n.resolve(article().title)"
             fill
             [priority]="priority()"
-            [loading]="loading()"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             class="object-cover transition-transform duration-500 group-hover/article:scale-105"
         />
@@ -130,7 +129,6 @@ export class ArticleCardComponent {
   article = input.required<ArticleMetadata>();
   layout = input<'grid' | 'list'>('grid');
   priority = input<boolean>(false);
-  loading = input<'lazy' | 'eager'>('lazy');
 
   i18n = inject(I18nService);
   t = inject(ScopedTranslationService);
