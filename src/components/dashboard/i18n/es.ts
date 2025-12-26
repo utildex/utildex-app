@@ -4,6 +4,7 @@ export default {
   "HERO_TITLE_HIGHLIGHT": "Local",
   "HERO_TITLE_SUFFIX": "",
   "HERO_DESC": "Una colección modular de utilidades que se ejecutan completamente en tu navegador. Privada, sin conexión y de código abierto.",
+  "AVAILABLE_TOOLS": "{0}+ Herramientas Disponibles",
   "BTN_BROWSE": "Explorar herramientas",
   "BTN_QUICK_SEARCH": "Búsqueda Rápida",
   "BTN_HISTORY": "Historial",

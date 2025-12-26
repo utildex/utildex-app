@@ -1,0 +1,18 @@
+
+export default {
+  "TITLE": "合并 PDF",
+  "TITLE_SHORT": "合并",
+  "DROP_LABEL": "将 PDF 拖到此处",
+  "DROP_EXPLICIT": "拖入以合并",
+  "ADD_FILES": "添加文件",
+  "BTN_MERGE": "合并 PDF",
+  "BTN_MERGE_SHORT": "合并",
+  "BTN_RESET": "重置",
+  "BTN_DOWNLOAD": "下载合并文件",
+  "EMPTY_STATE": "未选择文件。",
+  "PROCESSING": "合并中...",
+  "SUCCESS": "合并完成！",
+  "ERR_INVALID": "无效文件类型。仅支持 PDF。",
+  "FILES": "个文件",
+  "UPLOAD_PDF": "上传 PDF"
+};

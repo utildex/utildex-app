@@ -1,0 +1,32 @@
+
+{
+  "id": "qr-studio",
+  "name": { 
+    "en": "QR Code Studio", 
+    "fr": "Studio QR Code", 
+    "es": "Estudio Código QR",
+    "zh": "二维码工作室"
+  },
+  "description": { 
+    "en": "Generate static, private QR codes for URLs, WiFi, and text. No tracking, never expires.", 
+    "fr": "Générez des QR codes statiques et privés pour URL, WiFi et texte. Pas de suivi, n'expire jamais.",
+    "es": "Genere códigos QR estáticos y privados. Sin rastreo, nunca caducan.",
+    "zh": "生成用于 URL、WiFi 和文本的静态隐私二维码。无跟踪，永不过期。"
+  },
+  "icon": "qr_code_2",
+  "version": "1.0.0",
+  "categories": ["Utility", "Design", "Office"],
+  "tags": ["qr", "code", "generator", "wifi", "2d", "barcode"],
+  "color": "#0ea5e9",
+  "routePath": "tools/qr-studio",
+  "widget": {
+    "supported": true,
+    "defaultCols": 1,
+    "defaultRows": 1,
+    "presets": [
+      { "label": { "en": "Small", "fr": "Petit", "es": "Pequeño", "zh": "小" }, "cols": 1, "rows": 1 },
+      { "label": { "en": "Wide", "fr": "Large", "es": "Ancho", "zh": "宽" }, "cols": 2, "rows": 1 },
+      { "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" }, "cols": 2, "rows": 2 }
+    ]
+  }
+}

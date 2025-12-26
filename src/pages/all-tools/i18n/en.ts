@@ -4,9 +4,12 @@ export default {
   "SEARCH_PLACEHOLDER": "Filter tools...",
   "TAGS_LABEL": "TAGS",
   "RESET": "Reset",
-  "SHOWING_PREFIX": "Showing",
+  "SHOWING_RANGE": "Showing {0}-{1} of {2}",
   "SHOWING_SUFFIX": "results",
   "NO_TOOLS_TITLE": "No tools found",
   "NO_TOOLS_DESC": "Try adjusting your search or filters.",
-  "RESET_FILTERS": "Reset all filters"
+  "RESET_FILTERS": "Reset all filters",
+  "PAGE_PREV": "Previous",
+  "PAGE_NEXT": "Next",
+  "PAGE_INFO": "Page {0} of {1}"
 };

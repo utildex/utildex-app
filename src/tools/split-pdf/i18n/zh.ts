@@ -1,6 +1,9 @@
 
 export default {
+  "TITLE": "拆分 PDF",
+  "TITLE_SHORT": "拆分 PDF",
   "DROP_LABEL": "将 PDF 拖到此处",
+  "DROP_EXPLICIT": "拖入以拆分",
   "SELECT_FILE": "选择 PDF 文件",
   "LOADED_FILE": "已加载：",
   "PAGES_COUNT": "页",
@@ -18,5 +21,8 @@ export default {
   "RESULTS_TITLE": "生成的文件",
   "BTN_DOWNLOAD_ALL": "全部下载 (ZIP)",
   "BTN_DOWNLOAD": "下载",
-  "BTN_START_OVER": "重新开始"
+  "BTN_START_OVER": "重新开始",
+  "FILES": "个文件",
+  "FILES_READY": "文件就绪",
+  "UPLOAD_PDF": "上传 PDF"
 };

@@ -1,6 +1,9 @@
 
 export default {
+  "TITLE": "Split PDF",
+  "TITLE_SHORT": "Split PDF",
   "DROP_LABEL": "Drop PDF here",
+  "DROP_EXPLICIT": "Drop PDF to split",
   "SELECT_FILE": "Select PDF File",
   "LOADED_FILE": "Loaded:",
   "PAGES_COUNT": "pages",
@@ -18,5 +21,8 @@ export default {
   "RESULTS_TITLE": "Generated Files",
   "BTN_DOWNLOAD_ALL": "Download All (ZIP)",
   "BTN_DOWNLOAD": "Download",
-  "BTN_START_OVER": "Start Over"
+  "BTN_START_OVER": "Start Over",
+  "FILES": "Files",
+  "FILES_READY": "Files Ready",
+  "UPLOAD_PDF": "Upload PDF"
 };

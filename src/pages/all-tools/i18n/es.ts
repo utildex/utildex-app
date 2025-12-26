@@ -4,9 +4,12 @@ export default {
   "SEARCH_PLACEHOLDER": "Filtrar herramientas...",
   "TAGS_LABEL": "ETIQUETAS",
   "RESET": "Restablecer",
-  "SHOWING_PREFIX": "Mostrando",
+  "SHOWING_RANGE": "Mostrando {0}-{1} de {2}",
   "SHOWING_SUFFIX": "resultados",
   "NO_TOOLS_TITLE": "No se encontraron herramientas",
   "NO_TOOLS_DESC": "Intente ajustar su búsqueda o filtros.",
-  "RESET_FILTERS": "Restablecer todos los filtros"
+  "RESET_FILTERS": "Restablecer todos los filtros",
+  "PAGE_PREV": "Anterior",
+  "PAGE_NEXT": "Siguiente",
+  "PAGE_INFO": "Página {0} de {1}"
 };

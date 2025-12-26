@@ -1,0 +1,31 @@
+
+export default {
+  "TITLE": "文本差异对比",
+  "ORIGINAL_LABEL": "原文",
+  "MODIFIED_LABEL": "修改后",
+  "PLACEHOLDER_ORIG": "在此粘贴原始内容...",
+  "PLACEHOLDER_MOD": "在此粘贴修改后的内容...",
+  "MODE_LABEL": "对比模式",
+  "MODE_CHARS": "字符",
+  "MODE_WORDS": "单词",
+  "MODE_LINES": "行",
+  "OPT_WHITESPACE": "忽略空格",
+  "OPT_TRIM": "去除首尾空格",
+  "STATS_CHANGES": "处变更",
+  "STATS_ADD": "新增",
+  "STATS_DEL": "删除",
+  "NO_DIFF": "文本完全相同",
+  "BTN_CLEAR": "清空",
+  "BTN_SWAP": "交换",
+
+  // Widget
+  "W_TITLE": "快速对比",
+  "W_TAB_INPUT": "输入",
+  "W_TAB_DIFF": "对比",
+  "W_PASTE_ORIG": "粘贴原文...",
+  "W_PASTE_MOD": "粘贴修改版...",
+  "W_IDENTICAL": "相同",
+  "W_DIFFERENT": "不同",
+  "W_EMPTY": "空",
+  "W_HINT": "粘贴文本以进行比较"
+};

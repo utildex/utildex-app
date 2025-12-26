@@ -1,6 +1,9 @@
 
 export default {
+  "TITLE": "Diviser PDF",
+  "TITLE_SHORT": "Diviser PDF",
   "DROP_LABEL": "Déposer le PDF ici",
+  "DROP_EXPLICIT": "Déposer pour diviser",
   "SELECT_FILE": "Choisir un fichier PDF",
   "LOADED_FILE": "Chargé :",
   "PAGES_COUNT": "pages",
@@ -18,5 +21,8 @@ export default {
   "RESULTS_TITLE": "Fichiers Générés",
   "BTN_DOWNLOAD_ALL": "Tout télécharger (ZIP)",
   "BTN_DOWNLOAD": "Télécharger",
-  "BTN_START_OVER": "Recommencer"
+  "BTN_START_OVER": "Recommencer",
+  "FILES": "Fichiers",
+  "FILES_READY": "Fichiers prêts",
+  "UPLOAD_PDF": "Importer PDF"
 };

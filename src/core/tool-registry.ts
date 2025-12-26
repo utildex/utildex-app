@@ -10,6 +10,13 @@ export const TOOL_COMPONENT_MAP: Record<string, () => Promise<any>> = {
   'json-formatter': () => import('../tools/json-formatter/json-formatter.component').then(m => m.JsonFormatterComponent),
   'unit-converter': () => import('../tools/unit-converter/unit-converter.component').then(m => m.UnitConverterComponent),
   'split-pdf': () => import('../tools/split-pdf/split-pdf.component').then(m => m.SplitPdfComponent),
+  'merge-pdf': () => import('../tools/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
+  'img-to-pdf': () => import('../tools/img-to-pdf/img-to-pdf.component').then(m => m.ImgToPdfComponent),
+  'rotate-pdf': () => import('../tools/rotate-pdf/rotate-pdf.component').then(m => m.RotatePdfComponent),
+  'pdf-to-img': () => import('../tools/pdf-to-img/pdf-to-img.component').then(m => m.PdfToImgComponent),
+  'image-converter': () => import('../tools/image-converter/image-converter.component').then(m => m.ImageConverterComponent),
+  'qr-studio': () => import('../tools/qr-studio/qr-studio.component').then(m => m.QrStudioComponent),
+  'diff-checker': () => import('../tools/diff-checker/diff-checker.component').then(m => m.DiffCheckerComponent),
 };
 
 export function getToolComponent(id: string): (() => Promise<any>) | null {
