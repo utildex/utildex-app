@@ -1,0 +1,31 @@
+
+{
+  "id": "image-converter",
+  "name": { 
+    "en": "Image Converter", 
+    "fr": "Convertisseur Image",
+    "es": "Convertidor de Imagen",
+    "zh": "图片转换器"
+  },
+  "description": { 
+    "en": "Batch convert images (JPG, PNG, WEBP, HEIC) locally. Resize and compress securely.", 
+    "fr": "Convertissez des images (JPG, PNG, WEBP, HEIC) localement par lots. Redimensionnez et compressez en toute sécurité.",
+    "es": "Convierta imágenes (JPG, PNG, WEBP, HEIC) localmente por lotes. Redimensione y comprima de forma segura.",
+    "zh": "本地批量转换图片（JPG, PNG, WEBP, HEIC）。安全地调整大小和压缩。"
+  },
+  "icon": "photo_library",
+  "version": "1.0.0",
+  "categories": ["Media", "Utility"],
+  "tags": ["image", "converter", "heic", "webp", "jpg", "png", "compression"],
+  "color": "#ec4899",
+  "routePath": "tools/image-converter",
+  "widget": {
+    "supported": true,
+    "defaultCols": 2,
+    "defaultRows": 2,
+    "presets": [
+      { "label": { "en": "Icon", "fr": "Icône" }, "cols": 1, "rows": 1 },
+      { "label": { "en": "Standard", "fr": "Standard" }, "cols": 2, "rows": 2 }
+    ]
+  }
+}

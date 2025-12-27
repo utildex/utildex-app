@@ -1,0 +1,19 @@
+
+export default {
+  "DROP_LABEL": "Déposer PDF",
+  "BTN_ROTATE_RIGHT": "90° Hor.",
+  "BTN_ROTATE_LEFT": "90° Anti-hor.",
+  "BTN_ROTATE_180": "180°",
+  "BTN_SAVE": "Sauvegarder",
+  "BTN_RESET": "Réinitialiser",
+  "SUCCESS": "Rotation enregistrée !",
+  "PROCESSING": "Traitement...",
+  "WIDGET_EMPTY": "Déposer PDF",
+  "LABEL_MODE": "Mode de rotation",
+  "MODE_ALL": "Toutes les pages",
+  "MODE_ODD": "Pages impaires",
+  "MODE_EVEN": "Pages paires",
+  "MODE_SPECIFIC": "Pages spécifiques",
+  "PLACEHOLDER_RANGE": "ex : 1-5, 8",
+  "UPLOAD_PDF": "Importer PDF"
+};

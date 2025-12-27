@@ -171,7 +171,7 @@ export class ArticleReaderComponent implements OnInit {
   
   articleService = inject(ArticleService);
   i18n = inject(I18nService);
-  sanitizer = inject(DomSanitizer);
+  sanitizer = inject(DomSanitizer) as DomSanitizer;
   clipboard = inject(ClipboardService);
   el = inject(ElementRef);
 

@@ -39,7 +39,7 @@ export class ToolHostComponent {
   id = input.required<string>();
 
   toolService = inject(ToolService);
-  router = inject(Router);
+  router = inject(Router) as Router;
 
   componentType = signal<any>(null);
   error = signal<boolean>(false);

@@ -140,6 +140,37 @@ export class ToolService {
       }
     },
     {
+      "id": "qr-studio",
+      "name": { 
+        "en": "QR Code Studio", 
+        "fr": "Studio QR Code", 
+        "es": "Estudio Código QR",
+        "zh": "二维码工作室"
+      },
+      "description": { 
+        "en": "Generate static, private QR codes for URLs, WiFi, and text. No tracking, never expires.", 
+        "fr": "Générez des QR codes statiques et privés pour URL, WiFi et texte. Pas de suivi, n'expire jamais.",
+        "es": "Genere códigos QR estáticos y privados. Sin rastreo, nunca caducan.",
+        "zh": "生成用于 URL、WiFi 和文本的静态隐私二维码。无跟踪，永不过期。"
+      },
+      "icon": "qr_code_2",
+      "version": "1.0.0",
+      "categories": ["Utility", "Design", "Office"],
+      "tags": ["qr", "code", "generator", "wifi", "2d", "barcode"],
+      "color": "#0ea5e9",
+      "featured": true,
+      "widget": {
+        "supported": true,
+        "defaultCols": 1,
+        "defaultRows": 1,
+        "presets": [
+          { "label": { "en": "Small", "fr": "Petit", "es": "Pequeño", "zh": "小" }, "cols": 1, "rows": 1 },
+          { "label": { "en": "Wide", "fr": "Large", "es": "Ancho", "zh": "宽" }, "cols": 2, "rows": 1 },
+          { "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" }, "cols": 2, "rows": 2 }
+        ]
+      }
+    },
+    {
       "id": "markdown-preview",
       "name": {
         "en": "Markdown Preview",
@@ -192,6 +223,35 @@ export class ToolService {
       }
     },
     {
+      "id": "diff-checker",
+      "name": { 
+        "en": "Diff Checker", 
+        "fr": "Comparateur de Texte",
+        "es": "Comparador de Texto",
+        "zh": "文本差异对比"
+      },
+      "description": { 
+        "en": "Compare text or code to find differences. Runs locally for privacy.", 
+        "fr": "Comparez du texte ou du code pour trouver les différences. Fonctionne localement pour la confidentialité.",
+        "es": "Compare texto o código para encontrar diferencias. Ejecución local para privacidad.",
+        "zh": "对比文本或代码以查找差异。本地运行，保护隐私。"
+      },
+      "icon": "difference",
+      "version": "1.0.0",
+      "categories": ["Developer", "Office"],
+      "tags": ["diff", "compare", "code", "text", "check"],
+      "color": "#6366f1",
+      "widget": {
+        "supported": true,
+        "defaultCols": 3,
+        "defaultRows": 1,
+        "presets": [
+          { "label": { "en": "Wide Compare", "fr": "Large", "es": "Ancho", "zh": "宽屏对比" }, "cols": 3, "rows": 1 },
+          { "label": { "en": "Mini Editor", "fr": "Mini Éditeur", "es": "Mini Editor", "zh": "迷你编辑器" }, "cols": 2, "rows": 2 }
+        ]
+      }
+    },
+    {
       "id": "unit-converter",
       "name": {
         "en": "Unit Converter",
@@ -218,6 +278,35 @@ export class ToolService {
       }
     },
     {
+      "id": "image-converter",
+      "name": { 
+        "en": "Image Converter", 
+        "fr": "Convertisseur Image",
+        "es": "Convertidor de Imagen",
+        "zh": "图片转换器"
+      },
+      "description": { 
+        "en": "Batch convert images (JPG, PNG, WEBP, HEIC) locally. Resize and compress securely.", 
+        "fr": "Convertissez des images (JPG, PNG, WEBP, HEIC) localement par lots. Redimensionnez et compressez en toute sécurité.",
+        "es": "Convierta imágenes (JPG, PNG, WEBP, HEIC) localmente por lotes. Redimensione y comprima de forma segura.",
+        "zh": "本地批量转换图片（JPG, PNG, WEBP, HEIC）。安全地调整大小和压缩。"
+      },
+      "icon": "photo_library",
+      "version": "1.0.0",
+      "categories": ["Media", "Utility"],
+      "tags": ["image", "converter", "heic", "webp", "jpg", "png", "compression"],
+      "color": "#ec4899",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 2,
+        "presets": [
+          { "label": { "en": "Icon", "fr": "Icône", "es": "Icono", "zh": "图标" }, "cols": 1, "rows": 1 },
+          { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 }
+        ]
+      }
+    },
+    {
       "id": "split-pdf",
       "name": { 
         "en": "Split PDF", 
@@ -239,7 +328,129 @@ export class ToolService {
       "widget": {
         "supported": true,
         "defaultCols": 2,
-        "defaultRows": 2
+        "defaultRows": 2,
+        "presets": [
+          { "label": { "en": "Icon", "fr": "Icône", "es": "Icono", "zh": "图标" }, "cols": 1, "rows": 1 },
+          { "label": { "en": "Wide", "fr": "Large", "es": "Ancho", "zh": "宽" }, "cols": 2, "rows": 1 },
+          { "label": { "en": "Tall", "fr": "Haut", "es": "Alto", "zh": "高" }, "cols": 1, "rows": 2 },
+          { "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" }, "cols": 2, "rows": 2 }
+        ]
+      }
+    },
+    {
+      "id": "merge-pdf",
+      "name": { 
+        "en": "Merge PDF", 
+        "fr": "Fusionner PDF",
+        "es": "Unir PDF",
+        "zh": "合并 PDF"
+      },
+      "description": { 
+        "en": "Combine multiple PDF files into a single document. Reorder easily.", 
+        "fr": "Combinez plusieurs fichiers PDF en un seul document. Réorganisez facilement.",
+        "es": "Combine múltiples archivos PDF en un solo documento. Reordene fácilmente.",
+        "zh": "将多个 PDF 文件合并为一个文档。轻松重新排序。"
+      },
+      "icon": "join_full",
+      "version": "1.0.0",
+      "categories": ["Office", "Utility"],
+      "tags": ["pdf", "merge", "combine", "join", "document"],
+      "color": "#8b5cf6",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 2,
+        "presets": [
+          { "label": { "en": "Icon", "fr": "Icône", "es": "Icono", "zh": "图标" }, "cols": 1, "rows": 1 },
+          { "label": { "en": "Wide", "fr": "Large", "es": "Ancho", "zh": "宽" }, "cols": 2, "rows": 1 },
+          { "label": { "en": "Tall", "fr": "Haut", "es": "Alto", "zh": "高" }, "cols": 1, "rows": 2 },
+          { "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" }, "cols": 2, "rows": 2 }
+        ]
+      }
+    },
+    {
+      "id": "img-to-pdf",
+      "name": { 
+        "en": "Images to PDF", 
+        "fr": "Images en PDF",
+        "es": "Imágenes a PDF",
+        "zh": "图片转 PDF"
+      },
+      "description": { 
+        "en": "Convert PNG, JPG, or WEBP images into a single PDF document.", 
+        "fr": "Convertissez des images PNG, JPG ou WEBP en un seul document PDF.",
+        "es": "Convierta imágenes PNG, JPG o WEBP en un solo documento PDF.",
+        "zh": "将 PNG、JPG 或 WEBP 图片转换为单个 PDF 文档。"
+      },
+      "icon": "picture_as_pdf",
+      "version": "1.0.0",
+      "categories": ["Office", "Media"],
+      "tags": ["pdf", "image", "convert", "jpg", "png"],
+      "color": "#ec4899",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 2,
+        "presets": [
+          { "label": { "en": "Icon", "fr": "Icône", "es": "Icono", "zh": "图标" }, "cols": 1, "rows": 1 },
+          { "label": { "en": "Wide", "fr": "Large", "es": "Ancho", "zh": "宽" }, "cols": 2, "rows": 1 },
+          { "label": { "en": "Tall", "fr": "Haut", "es": "Alto", "zh": "高" }, "cols": 1, "rows": 2 },
+          { "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" }, "cols": 2, "rows": 2 }
+        ]
+      }
+    },
+    {
+      "id": "rotate-pdf",
+      "name": { 
+        "en": "Rotate PDF", 
+        "fr": "Pivoter PDF",
+        "es": "Rotar PDF",
+        "zh": "旋转 PDF"
+      },
+      "description": { 
+        "en": "Rotate all or selected pages of a PDF document permanently.", 
+        "fr": "Faites pivoter toutes ou certaines pages d'un document PDF de façon permanente.",
+        "es": "Rote todas o las páginas seleccionadas de un documento PDF permanentemente.",
+        "zh": "永久旋转 PDF 文档的所有或选定页面。"
+      },
+      "icon": "rotate_right",
+      "version": "1.0.0",
+      "categories": ["Office", "Utility"],
+      "tags": ["pdf", "rotate", "turn", "orientation", "document"],
+      "color": "#f59e0b",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 1
+      }
+    },
+    {
+      "id": "pdf-to-img",
+      "name": { 
+        "en": "PDF to Image", 
+        "fr": "PDF en Image",
+        "es": "PDF a Imagen",
+        "zh": "PDF 转图片"
+      },
+      "description": { 
+        "en": "Convert PDF pages to JPG, PNG, or WebP images. High resolution supported.", 
+        "fr": "Convertissez des pages PDF en images JPG, PNG ou WebP. Haute résolution supportée.",
+        "es": "Convierta páginas PDF a imágenes JPG, PNG o WebP. Alta resolución soportada.",
+        "zh": "将 PDF 页面转换为 JPG、PNG 或 WebP 图片。支持高分辨率。"
+      },
+      "icon": "image",
+      "version": "1.0.0",
+      "categories": ["Office", "Media"],
+      "tags": ["pdf", "image", "convert", "jpg", "png", "webp"],
+      "color": "#10b981",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 2,
+        "presets": [
+          { "label": { "en": "Icon", "fr": "Icône", "es": "Icono", "zh": "图标" }, "cols": 1, "rows": 1 },
+          { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 }
+        ]
       }
     }
   ];

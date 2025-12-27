@@ -4,6 +4,7 @@ export default {
   "HERO_TITLE_HIGHLIGHT": "本地优先",
   "HERO_TITLE_SUFFIX": "工具箱",
   "HERO_DESC": "完全在浏览器中运行的模块化实用程序集合。隐私、离线可用且开源。",
+  "AVAILABLE_TOOLS": "{0}+ 可用工具",
   "BTN_BROWSE": "浏览所有工具",
   "BTN_QUICK_SEARCH": "快速搜索",
   "BTN_HISTORY": "使用历史",

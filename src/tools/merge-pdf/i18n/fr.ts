@@ -1,0 +1,18 @@
+
+export default {
+  "TITLE": "Fusionner PDF",
+  "TITLE_SHORT": "Fusionner",
+  "DROP_LABEL": "Déposer les PDF ici",
+  "DROP_EXPLICIT": "Déposer pour fusionner",
+  "ADD_FILES": "Ajouter des fichiers",
+  "BTN_MERGE": "Fusionner PDF",
+  "BTN_MERGE_SHORT": "Fusionner",
+  "BTN_RESET": "Réinitialiser",
+  "BTN_DOWNLOAD": "Télécharger",
+  "EMPTY_STATE": "Aucun fichier sélectionné.",
+  "PROCESSING": "Fusion en cours...",
+  "SUCCESS": "Fusion terminée !",
+  "ERR_INVALID": "Fichier invalide. Seuls les PDF sont autorisés.",
+  "FILES": "fichiers",
+  "UPLOAD_PDF": "Ajouter PDFs"
+};

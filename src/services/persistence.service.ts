@@ -45,7 +45,7 @@ export class PersistenceService {
    */
   url<T>(targetSignal: WritableSignal<T>, paramName: string, type: 'string' | 'number' | 'boolean' = 'string') {
     // Inject ActivatedRoute here, so it uses the Component's context
-    const route = inject(ActivatedRoute);
+    const route = inject(ActivatedRoute) as ActivatedRoute;
 
     // 1. Restore from URL
     const params = route.snapshot.queryParams;

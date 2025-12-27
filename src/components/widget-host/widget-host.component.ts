@@ -1,3 +1,4 @@
+
 import { Component, input, inject, signal, computed, OnInit, ElementRef, viewChild } from '@angular/core';
 import { NgComponentOutlet, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -96,7 +97,6 @@ export class WidgetHostComponent implements OnInit {
   
   fileInput = viewChild<ElementRef>('fileInput');
 
-  // Simple localized placeholder
   notePlaceholder = computed(() => {
     const lang = this.i18n.currentLang();
     switch (lang) {
@@ -111,14 +111,20 @@ export class WidgetHostComponent implements OnInit {
     if (this.widget().type === 'tool' && this.widget().toolId) {
        this.loadComponent();
     }
-    
     this.updateInputs();
   }
 
+  // Update inputs whenever widget changes to pass fresh data
   updateInputs() {
+     // Pass the entire data object + instanceId to the child tool
      this.widgetInputs.set({
         isWidget: true,
-        widgetConfig: { cols: this.widget().layout.w, rows: this.widget().layout.h }
+        widgetConfig: { 
+            cols: this.widget().layout.w, 
+            rows: this.widget().layout.h,
+            instanceId: this.widget().instanceId,
+            ...this.widget().data 
+        }
      });
   }
 
@@ -147,7 +153,6 @@ export class WidgetHostComponent implements OnInit {
   }
 
   promptImage() {
-      // Trigger file input
       this.fileInput()?.nativeElement.click();
   }
 

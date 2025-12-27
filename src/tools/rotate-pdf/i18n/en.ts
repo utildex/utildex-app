@@ -1,0 +1,19 @@
+
+export default {
+  "DROP_LABEL": "Drop PDF",
+  "BTN_ROTATE_RIGHT": "90° CW",
+  "BTN_ROTATE_LEFT": "90° CCW",
+  "BTN_ROTATE_180": "180°",
+  "BTN_SAVE": "Save PDF",
+  "BTN_RESET": "Reset",
+  "SUCCESS": "Rotation Saved!",
+  "PROCESSING": "Processing...",
+  "WIDGET_EMPTY": "Drop PDF",
+  "LABEL_MODE": "Rotation Mode",
+  "MODE_ALL": "All Pages",
+  "MODE_ODD": "Odd Pages",
+  "MODE_EVEN": "Even Pages",
+  "MODE_SPECIFIC": "Specific Pages",
+  "PLACEHOLDER_RANGE": "e.g., 1-5, 8",
+  "UPLOAD_PDF": "Upload PDF"
+};

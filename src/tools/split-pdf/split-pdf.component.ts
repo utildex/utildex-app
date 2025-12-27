@@ -43,6 +43,9 @@ interface GeneratedFile {
       >
          <!-- 1x1 Compact Layout -->
          @if (isSize(1, 1)) {
+            <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-center">
+               <span class="text-[9px] font-bold uppercase text-slate-500 truncate px-1">{{ t.map()['TITLE_SHORT'] }}</span>
+            </div>
             <div class="flex-1 flex flex-col items-center justify-center p-1 text-center relative">
                @if (generatedFiles().length > 0) {
                   <!-- Success State -->
@@ -50,82 +53,90 @@ interface GeneratedFile {
                      <span class="material-symbols-outlined text-2xl">download</span>
                      <span class="text-[10px] font-bold uppercase leading-tight mt-1">{{ generatedFiles().length > 1 ? 'ZIP' : 'Save' }}</span>
                   </button>
-                  <button (click)="reset()" class="absolute top-1 right-1 text-slate-400 hover:text-slate-600 p-1 bg-white/50 dark:bg-black/50 rounded-full z-10">
+                  <button (click)="reset()" class="absolute top-0 right-0 text-slate-400 hover:text-slate-600 p-0.5 bg-white/50 dark:bg-black/50 rounded-full z-10">
                      <span class="material-symbols-outlined text-[10px]">close</span>
                   </button>
                } @else if (pdfFile()) {
                   <!-- Ready State -->
-                  <div class="flex flex-col items-center w-full h-full justify-between py-2 px-1">
-                     <div class="text-[9px] font-bold text-slate-500 truncate w-full text-center">{{ pageCount() }} p.</div>
+                  <div class="flex flex-col items-center w-full h-full justify-between py-1 px-1">
+                     <div class="text-[8px] font-bold text-slate-500 truncate w-full text-center">{{ pageCount() }} {{ t.map()['PAGES_COUNT'] }}</div>
                      <input 
                        type="text" 
                        [(ngModel)]="pageRange" 
                        class="w-full text-center text-[10px] border rounded bg-slate-50 dark:bg-slate-900 p-0.5 focus:ring-1 focus:ring-primary outline-none" 
                        placeholder="1-2"
                      >
-                     <button (click)="splitPdf()" [disabled]="isProcessing()" class="text-red-500 hover:text-red-600 p-1">
-                        <span class="material-symbols-outlined text-xl">{{ isProcessing() ? 'hourglass_top' : 'content_cut' }}</span>
+                     <button (click)="splitPdf()" [disabled]="isProcessing()" class="text-primary hover:text-blue-600 p-1">
+                        <span class="material-symbols-outlined text-lg">{{ isProcessing() ? 'hourglass_top' : 'content_cut' }}</span>
                      </button>
                   </div>
                } @else {
                   <!-- Empty State -->
-                  <button (click)="triggerUpload()" class="w-full h-full flex flex-col items-center justify-center text-slate-400 hover:text-red-500 transition-colors gap-1">
+                  <button (click)="triggerUpload()" class="w-full h-full flex flex-col items-center justify-center text-slate-400 hover:text-primary transition-colors gap-1 p-1">
                      <span class="material-symbols-outlined text-2xl">picture_as_pdf</span>
-                     <span class="text-[9px] font-bold uppercase">{{ t.map()['WIDGET_EMPTY'] }}</span>
+                     <span class="text-[8px] font-bold uppercase leading-tight">{{ t.map()['DROP_EXPLICIT'] }}</span>
                   </button>
                }
             </div>
          } 
          <!-- 2x1 Wide Layout -->
          @else if (isSize(2, 1)) {
-            <div class="flex flex-row h-full">
+            <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between px-2">
+               <span class="text-[10px] font-bold uppercase text-slate-500">{{ t.map()['TITLE'] }}</span>
+               @if (pdfFile() || generatedFiles().length > 0) {
+                  <button (click)="reset()" class="text-[9px] text-slate-400 hover:text-primary uppercase font-bold">{{ t.map()['BTN_RESET'] }}</button>
+               }
+            </div>
+            <div class="flex flex-row flex-1 overflow-hidden">
                <!-- Left: Info/Upload -->
-               <div class="w-1/2 p-3 border-r border-slate-100 dark:border-slate-700 flex flex-col justify-center items-center text-center bg-slate-50 dark:bg-slate-900/50 relative">
+               <div class="w-1/2 p-2 border-r border-slate-100 dark:border-slate-700 flex flex-col justify-center items-center text-center bg-slate-50 dark:bg-slate-900/50 relative hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                   @if (generatedFiles().length > 0) {
-                     <span class="material-symbols-outlined text-3xl text-green-500 mb-1">check_circle</span>
-                     <div class="text-xs font-bold text-slate-700 dark:text-slate-200">{{ generatedFiles().length }} Files</div>
+                     <span class="material-symbols-outlined text-2xl text-green-500 mb-1">check_circle</span>
+                     <div class="text-[10px] font-bold text-slate-700 dark:text-slate-200">{{ generatedFiles().length }} {{ t.map()['FILES'] }}</div>
                   } @else if (pdfFile()) {
-                     <span class="material-symbols-outlined text-3xl text-red-500 mb-1">description</span>
-                     <div class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate w-full">{{ pdfFile()?.name }}</div>
-                     <div class="text-[10px] text-slate-500">{{ pageCount() }} {{ t.map()['PAGES_COUNT'] }}</div>
+                     <span class="material-symbols-outlined text-2xl text-primary mb-1">description</span>
+                     <div class="text-[10px] font-bold text-slate-700 dark:text-slate-200 truncate w-full">{{ pdfFile()?.name }}</div>
+                     <div class="text-[9px] text-slate-500">{{ pageCount() }} {{ t.map()['PAGES_COUNT'] }}</div>
                   } @else {
-                     <span class="material-symbols-outlined text-3xl text-slate-300 mb-1">upload_file</span>
-                     <div class="text-xs text-slate-500 font-medium">Upload PDF</div>
+                     <span class="material-symbols-outlined text-2xl text-slate-300 mb-1">upload_file</span>
+                     <div class="text-[9px] text-slate-500 font-medium">{{ t.map()['UPLOAD_PDF'] }}</div>
                      <button (click)="triggerUpload()" class="absolute inset-0 z-10 w-full h-full"></button>
                   }
                </div>
                
                <!-- Right: Controls -->
-               <div class="w-1/2 p-3 flex flex-col justify-center gap-2">
+               <div class="w-1/2 p-2 flex flex-col justify-center gap-2">
                   @if (generatedFiles().length > 0) {
-                     <button (click)="downloadAllOrFirst()" class="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold shadow-sm transition-colors">
-                        Download {{ generatedFiles().length > 1 ? 'All' : '' }}
+                     <button (click)="downloadAllOrFirst()" class="w-full py-1.5 bg-green-600 hover:bg-green-700 text-white rounded text-[10px] font-bold shadow-sm transition-colors">
+                        Download
                      </button>
-                     <button (click)="reset()" class="text-xs text-slate-400 hover:text-slate-600 underline">Reset</button>
                   } @else if (pdfFile()) {
-                     <input type="text" [(ngModel)]="pageRange" class="w-full text-xs border rounded px-2 py-1 bg-white dark:bg-slate-900" placeholder="1-5; 6-10">
-                     <button (click)="splitPdf()" [disabled]="isProcessing() || !pageRange()" class="w-full py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-bold flex items-center justify-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">content_cut</span> Split
+                     <input type="text" [(ngModel)]="pageRange" class="w-full text-[10px] border rounded px-1 py-1 bg-white dark:bg-slate-900" placeholder="1-5; 6-10">
+                     <button (click)="splitPdf()" [disabled]="isProcessing() || !pageRange()" class="w-full py-1 bg-primary hover:opacity-90 text-white rounded text-[10px] font-bold flex items-center justify-center gap-1">
+                        <span class="material-symbols-outlined text-[12px]">content_cut</span> {{ t.map()['BTN_SPLIT'] }}
                      </button>
                   } @else {
-                     <div class="text-[10px] text-slate-400 text-center italic">Waiting for file...</div>
+                     <div class="text-[9px] text-slate-400 text-center italic leading-tight">{{ t.map()['DROP_EXPLICIT'] }}</div>
                   }
                </div>
             </div>
          }
          <!-- 1x2 Tall Layout -->
          @else if (isSize(1, 2)) {
-            <div class="flex flex-col h-full">
-               <div class="flex-1 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-900/50 relative">
+            <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-center">
+               <span class="text-[10px] font-bold uppercase text-slate-500">{{ t.map()['TITLE_SHORT'] }}</span>
+            </div>
+            <div class="flex flex-col flex-1 overflow-hidden">
+               <div class="flex-1 flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-900/50 relative hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                   @if (generatedFiles().length > 0) {
                      <span class="material-symbols-outlined text-4xl text-green-500 mb-2">task_alt</span>
-                     <div class="text-xs font-bold text-center">{{ generatedFiles().length }} Files Ready</div>
+                     <div class="text-xs font-bold text-center">{{ generatedFiles().length }} {{ t.map()['FILES_READY'] }}</div>
                   } @else if (pdfFile()) {
-                     <span class="material-symbols-outlined text-4xl text-red-500 mb-2">picture_as_pdf</span>
+                     <span class="material-symbols-outlined text-4xl text-primary mb-2">picture_as_pdf</span>
                      <div class="text-xs font-bold text-center truncate w-full px-2">{{ pdfFile()?.name }}</div>
                   } @else {
                      <span class="material-symbols-outlined text-4xl text-slate-300 mb-2">upload</span>
-                     <div class="text-xs text-slate-500 font-bold uppercase">Drop PDF</div>
+                     <div class="text-[10px] text-slate-500 font-bold uppercase text-center leading-tight">{{ t.map()['DROP_EXPLICIT'] }}</div>
                      <button (click)="triggerUpload()" class="absolute inset-0 z-10 w-full h-full"></button>
                   }
                </div>
@@ -133,11 +144,11 @@ interface GeneratedFile {
                <div class="p-3 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
                   @if (generatedFiles().length > 0) {
                      <button (click)="downloadAllOrFirst()" class="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded text-xs font-bold mb-2">Save</button>
-                     <button (click)="reset()" class="w-full text-xs text-slate-400">Reset</button>
+                     <button (click)="reset()" class="w-full text-xs text-slate-400">{{ t.map()['BTN_RESET'] }}</button>
                   } @else if (pdfFile()) {
                      <div class="flex flex-col gap-2">
                         <input type="text" [(ngModel)]="pageRange" class="w-full text-xs border rounded p-1.5" placeholder="1-5; 6-10">
-                        <button (click)="splitPdf()" [disabled]="isProcessing()" class="w-full py-1.5 bg-red-500 text-white rounded text-xs font-bold">Split</button>
+                        <button (click)="splitPdf()" [disabled]="isProcessing()" class="w-full py-1.5 bg-primary text-white rounded text-xs font-bold">{{ t.map()['BTN_SPLIT'] }}</button>
                      </div>
                   }
                </div>
@@ -146,13 +157,13 @@ interface GeneratedFile {
          <!-- Default / Large Layout -->
          @else {
             <div class="flex flex-col h-full">
-               <div class="bg-red-50 dark:bg-red-900/20 border-b border-red-100 dark:border-red-900/30 p-2 flex justify-between items-center shrink-0">
-                  <div class="flex items-center gap-1 text-red-600 dark:text-red-400">
+               <div class="bg-primary/5 border-b border-primary/10 p-2 flex justify-between items-center shrink-0">
+                  <div class="flex items-center gap-1 text-primary">
                      <span class="material-symbols-outlined text-sm">picture_as_pdf</span>
-                     <span class="text-xs font-bold uppercase">Split PDF</span>
+                     <span class="text-xs font-bold uppercase">{{ t.map()['TITLE'] }}</span>
                   </div>
                   @if (pdfFile() || generatedFiles().length > 0) {
-                     <button (click)="reset()" class="text-slate-400 hover:text-red-500 transition-colors" title="Reset">
+                     <button (click)="reset()" class="text-slate-400 hover:text-primary transition-colors" title="Reset">
                         <span class="material-symbols-outlined text-sm">refresh</span>
                      </button>
                   }
@@ -173,18 +184,18 @@ interface GeneratedFile {
                   } @else if (pdfFile()) {
                      <div class="w-full max-w-[200px] text-center space-y-3">
                         <div class="flex items-center justify-center gap-2 text-slate-700 dark:text-slate-200">
-                           <span class="material-symbols-outlined text-red-500">description</span>
+                           <span class="material-symbols-outlined text-primary">description</span>
                            <span class="text-xs font-bold truncate">{{ pdfFile()?.name }}</span>
                         </div>
-                        <input type="text" [(ngModel)]="pageRange" class="w-full text-sm border rounded p-2 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-red-500 outline-none" [placeholder]="t.map()['RANGE_PLACEHOLDER']">
-                        <button (click)="splitPdf()" [disabled]="isProcessing() || !pageRange()" class="w-full py-2 bg-red-500 hover:bg-red-600 text-white rounded font-bold shadow-sm transition-colors text-xs uppercase tracking-wide">
-                           {{ isProcessing() ? 'Processing...' : 'Split PDF' }}
+                        <input type="text" [(ngModel)]="pageRange" class="w-full text-sm border rounded p-2 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-primary outline-none" [placeholder]="t.map()['RANGE_PLACEHOLDER']">
+                        <button (click)="splitPdf()" [disabled]="isProcessing() || !pageRange()" class="w-full py-2 bg-primary hover:opacity-90 text-white rounded font-bold shadow-sm transition-colors text-xs uppercase tracking-wide">
+                           {{ isProcessing() ? 'Processing...' : t.map()['BTN_SPLIT'] }}
                         </button>
                      </div>
                   } @else {
-                     <div (click)="triggerUpload()" class="cursor-pointer text-center group">
-                        <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 group-hover:scale-110 transition-transform group-hover:text-red-400">upload_file</span>
-                        <p class="text-xs text-slate-500 font-medium">{{ t.map()['WIDGET_EMPTY'] }}</p>
+                     <div (click)="triggerUpload()" class="cursor-pointer text-center group p-4">
+                        <span class="material-symbols-outlined text-4xl text-slate-300 mb-2 group-hover:scale-110 transition-transform group-hover:text-primary">upload_file</span>
+                        <p class="text-xs text-slate-500 font-medium uppercase font-bold">{{ t.map()['DROP_EXPLICIT'] }}</p>
                      </div>
                   }
                </div>
@@ -222,7 +233,7 @@ interface GeneratedFile {
              <!-- Header Info -->
              <div class="flex items-center justify-between gap-4 mb-8 p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-700">
                 <div class="flex items-center gap-4">
-                   <div class="w-10 h-10 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-lg flex items-center justify-center">
+                   <div class="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">
                       <span class="material-symbols-outlined text-xl">picture_as_pdf</span>
                    </div>
                    <div>
@@ -230,7 +241,7 @@ interface GeneratedFile {
                       <p class="text-xs text-slate-500">{{ pageCount() }} {{ t.map()['PAGES_COUNT'] }}</p>
                    </div>
                 </div>
-                <button (click)="reset()" class="text-slate-400 hover:text-red-500 transition-colors p-2" title="Reset">
+                <button (click)="reset()" class="text-slate-400 hover:text-primary transition-colors p-2" title="Reset">
                    <span class="material-symbols-outlined">close</span>
                 </button>
              </div>
@@ -285,7 +296,7 @@ interface GeneratedFile {
                       @for (file of generatedFiles(); track file.id) {
                          <div class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-sm group hover:border-primary/50 transition-colors">
                             <div class="flex items-center gap-3 overflow-hidden">
-                               <div class="w-8 h-8 bg-red-50 dark:bg-red-900/20 text-red-500 rounded flex items-center justify-center shrink-0">
+                               <div class="w-8 h-8 bg-primary/10 text-primary rounded flex items-center justify-center shrink-0">
                                   <span class="material-symbols-outlined text-lg">description</span>
                                </div>
                                <div class="min-w-0">
@@ -409,7 +420,8 @@ export class SplitPdfComponent {
           copiedPages.forEach(page => newPdf.addPage(page));
           
           const pdfBytes = await newPdf.save();
-          const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+          const safeBytes = new Uint8Array(pdfBytes);
+          const blob = new Blob([safeBytes], { type: 'application/pdf' });
           const url = URL.createObjectURL(blob);
           
           // Suffix: -1, -2, or custom if we had naming logic. 

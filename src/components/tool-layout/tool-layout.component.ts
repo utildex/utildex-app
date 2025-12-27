@@ -1,25 +1,34 @@
+
 import { Component, input, inject, computed, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ToolService } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
+import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import en from './i18n/en';
+import fr from './i18n/fr';
+import es from './i18n/es';
+import zh from './i18n/zh';
 
 @Component({
   selector: 'app-tool-layout',
   standalone: true,
   imports: [RouterLink],
+  providers: [
+    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
+  ],
   template: `
     <div class="max-w-5xl mx-auto">
       <!-- Breadcrumb -->
       <nav class="mb-6 flex items-center text-sm text-slate-500 font-medium">
         <a routerLink="/tools" class="hover:text-primary transition-colors flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">arrow_back</span>
-          All Tools
+          {{ t.map()['BACK_TO_TOOLS'] }}
         </a>
         <span class="mx-2 text-slate-300 dark:text-slate-600">/</span>
         <span class="text-slate-900 dark:text-slate-200 truncate">{{ name() }}</span>
       </nav>
 
-      @if (tool(); as t) {
+      @if (tool(); as tInfo) {
         <!-- Standardized Header -->
         <header class="mb-8 animate-fade-in">
            <div class="flex items-start justify-between gap-4">
@@ -27,7 +36,7 @@ import { I18nService } from '../../services/i18n.service';
                <div class="relative group">
                  <div class="absolute inset-0 bg-primary/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                  <div class="relative p-4 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm text-primary">
-                   <span class="material-symbols-outlined text-4xl">{{ t.icon }}</span>
+                   <span class="material-symbols-outlined text-4xl">{{ tInfo.icon }}</span>
                  </div>
                </div>
                <div>
@@ -35,13 +44,13 @@ import { I18nService } from '../../services/i18n.service';
                  <p class="text-slate-500 dark:text-slate-400 mt-1 text-lg">{{ description() }}</p>
                  
                  <div class="flex flex-wrap gap-2 mt-3">
-                   @for (cat of t.categories; track cat) {
+                   @for (cat of tInfo.categories; track cat) {
                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                        {{ toolService.getCategoryName(cat) }}
                      </span>
                    }
                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-50 dark:bg-slate-900 text-slate-400 border border-slate-100 dark:border-slate-800 font-mono">
-                     v{{ t.version }}
+                     v{{ tInfo.version }}
                    </span>
                  </div>
                </div>
@@ -53,7 +62,7 @@ import { I18nService } from '../../services/i18n.service';
                [class.text-yellow-400]="isFav()"
                [class.text-slate-300]="!isFav()"
                [class.dark:text-slate-600]="!isFav()"
-               [attr.aria-label]="isFav() ? 'Remove from favorites' : 'Add to favorites'"
+               [attr.aria-label]="isFav() ? t.map()['REMOVE_FAV'] : t.map()['ADD_FAV']"
              >
                <span class="material-symbols-outlined text-3xl group-hover:scale-110 transition-transform" [class.fill-current]="isFav()">star</span>
              </button>
@@ -88,6 +97,7 @@ export class ToolLayoutComponent {
   toolId = input.required<string>();
   toolService = inject(ToolService);
   i18n = inject(I18nService);
+  t = inject(ScopedTranslationService);
 
   tool = computed(() => this.toolService.tools().find(t => t.id === this.toolId()));
   name = computed(() => this.tool() ? this.i18n.resolve(this.tool()!.name) : '');

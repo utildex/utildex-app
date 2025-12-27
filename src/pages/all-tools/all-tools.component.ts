@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, computed, effect, ElementRef, viewChild } from '@angular/core';
 import { ToolService } from '../../services/tool.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
 import { FormsModule } from '@angular/forms';
@@ -59,11 +59,11 @@ import zh from './i18n/zh';
       </aside>
 
       <!-- Grid -->
-      <div class="flex-1 space-y-6">
+      <div class="flex-1 space-y-6" #gridTop>
         <div class="flex items-center justify-between">
           <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['TITLE'] }}</h1>
           <div class="text-sm text-slate-500">
-            {{ t.map()['SHOWING_PREFIX'] }} {{ filteredTools().length }} {{ t.map()['SHOWING_SUFFIX'] }}
+             {{ getShowingText() }}
           </div>
         </div>
 
@@ -75,25 +75,118 @@ import zh from './i18n/zh';
             <button (click)="toolService.resetFilters()" class="mt-4 text-primary hover:underline">{{ t.map()['RESET_FILTERS'] }}</button>
           </div>
         } @else {
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for (tool of filteredTools(); track tool.id) {
+          <!-- Tools Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+            @for (tool of paginatedTools(); track tool.id) {
               <app-tool-card [tool]="tool" [isFavorite]="isFav(tool.id)" (toggleFavorite)="toggleFav($event)"></app-tool-card>
             }
           </div>
+
+          <!-- Pagination Controls -->
+          @if (totalPages() > 1) {
+             <div class="flex justify-center items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button 
+                  (click)="prevPage()" 
+                  [disabled]="currentPage() === 1"
+                  class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-bold transition-colors"
+                >
+                   <span class="material-symbols-outlined text-sm">arrow_back</span>
+                   {{ t.map()['PAGE_PREV'] }}
+                </button>
+                
+                <span class="text-sm font-medium text-slate-500">
+                   {{ getPageInfo() }}
+                </span>
+
+                <button 
+                  (click)="nextPage()" 
+                  [disabled]="currentPage() === totalPages()"
+                  class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-bold transition-colors"
+                >
+                   {{ t.map()['PAGE_NEXT'] }}
+                   <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+             </div>
+          }
         }
       </div>
     </div>
-  `
+  `,
+  styles: [`
+    .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  `]
 })
 export class AllToolsComponent {
   toolService = inject(ToolService);
   t = inject(ScopedTranslationService);
+
+  gridTop = viewChild<ElementRef>('gridTop');
 
   searchQuery = this.toolService.searchQuery;
   selectedTags = this.toolService.selectedTags;
   allTags = this.toolService.allTags;
   filteredTools = this.toolService.filteredTools;
   favorites = this.toolService.favorites;
+
+  // Pagination
+  currentPage = signal(1);
+  itemsPerPage = 12;
+
+  totalPages = computed(() => Math.ceil(this.filteredTools().length / this.itemsPerPage));
+
+  paginatedTools = computed(() => {
+    const start = (this.currentPage() - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.filteredTools().slice(start, end);
+  });
+
+  constructor() {
+    // Reset to page 1 when filters change
+    effect(() => {
+      // Dependency tracking
+      this.filteredTools();
+      // Action
+      this.currentPage.set(1);
+    }, { allowSignalWrites: true });
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.update(p => p + 1);
+      this.scrollToTop();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+      this.scrollToTop();
+    }
+  }
+
+  scrollToTop() {
+    this.gridTop()?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  getShowingText(): string {
+    const total = this.filteredTools().length;
+    if (total === 0) return '';
+
+    const start = (this.currentPage() - 1) * this.itemsPerPage + 1;
+    const end = Math.min(start + this.itemsPerPage - 1, total);
+
+    const template = this.t.map()['SHOWING_RANGE'] || 'Showing {0}-{1} of {2}';
+    return template.replace('{0}', start.toString())
+        .replace('{1}', end.toString())
+        .replace('{2}', total.toString());
+  }
+
+  getPageInfo(): string {
+    const template = this.t.map()['PAGE_INFO'] || 'Page {0} of {1}';
+    return template.replace('{0}', this.currentPage().toString())
+        .replace('{1}', this.totalPages().toString());
+  }
 
   toggleFav(id: string) {
     this.toolService.toggleFavorite(id);
