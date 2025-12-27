@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "ng serve",
     "build": "ng build",
-    "preview": "ng serve --configuration=production"
+    "preview": "ng serve --configuration=production",
+    "lint": "eslint src --ext .ts"
   },
   "dependencies": {
     "@angular/build": "^21.0.0",
@@ -31,8 +32,12 @@
     "tailwindcss": "latest"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/node": "^22.14.0",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
     "typescript": "~5.9.0",
+    "typescript-eslint": "^8.50.1",
     "vite": "^6.2.0"
   }
 }
