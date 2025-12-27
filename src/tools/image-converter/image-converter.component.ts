@@ -3,7 +3,6 @@ import { Component, inject, signal, computed, input, ElementRef, viewChild } fro
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
-import { ActionBarComponent } from '../../components/action-bar/action-bar.component';
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';

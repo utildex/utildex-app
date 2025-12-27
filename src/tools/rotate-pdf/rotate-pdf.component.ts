@@ -166,7 +166,7 @@ type RotationMode = 'all' | 'odd' | 'even' | 'specific';
 })
 export class RotatePdfComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null); // Fixed missing input
+  widgetConfig = input<any>(null);
   
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);

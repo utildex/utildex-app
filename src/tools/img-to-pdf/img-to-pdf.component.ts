@@ -223,7 +223,7 @@ interface ImageFile {
 })
 export class ImgToPdfComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null); // Added this
+  widgetConfig = input<any>(null);
   
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
