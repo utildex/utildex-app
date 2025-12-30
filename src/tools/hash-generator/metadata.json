@@ -1,0 +1,32 @@
+{
+}
+  }
+    ]
+      { "label": { "en": "Compact", "fr": "Compact", "es": "Compacto", "zh": "紧凑" }, "cols": 2, "rows": 1 }
+      { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 },
+    "presets": [
+    "defaultRows": 2,
+    "defaultCols": 2,
+    "supported": true,
+  "widget": {
+  "routePath": "tools/hash-generator",
+  "color": "#6366f1",
+  "featured": true,
+  "tags": ["hash", "md5", "sha", "sha256", "checksum", "crypto", "security"],
+  "categories": ["Security", "Developer"],
+  "version": "1.0.0",
+  "icon": "fingerprint",
+  },
+    "zh": "从文本或文件计算 MD5、SHA-1、SHA-256、SHA-384、SHA-512 哈希值。完全离线工作。"
+    "es": "Calcula hashes MD5, SHA-1, SHA-256, SHA-384, SHA-512 desde texto o archivos. Funciona completamente sin conexión.",
+    "fr": "Calculez des hachages MD5, SHA-1, SHA-256, SHA-384, SHA-512 à partir de texte ou de fichiers. Fonctionne entièrement hors ligne.",
+    "en": "Calculate MD5, SHA-1, SHA-256, SHA-384, SHA-512 hashes from text or files. Works entirely offline.",
+  "description": {
+  },
+    "zh": "哈希生成器"
+    "es": "Generador de Hash",
+    "fr": "Générateur de Hash",
+    "en": "Hash Generator",
+  "name": {
+  "id": "hash-generator",
+
