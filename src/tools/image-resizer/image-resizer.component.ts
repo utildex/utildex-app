@@ -12,8 +12,6 @@ import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
-// Lazy load libraries
-declare const JSZip: any;
 
 interface ResizableImage {
     id: string;
@@ -581,6 +579,11 @@ export class ImageResizerComponent {
                         }
                     }
                 };
+                img.onerror = () => {
+                    // Clean up URL and surface failure for debugging
+                    console.error('Failed to load image file:', file.name);
+                    URL.revokeObjectURL(url);
+                };
             }
         });
     }
@@ -634,14 +637,6 @@ export class ImageResizerComponent {
         }
     }
 
-    // Backwards compat for full tool calling logic
-    onDimChange(dim: 'w' | 'h') {
-        // This method was bound to inputs via (input) in full tool
-        // We can just proxy to updateDim, using the signal values
-        const val = dim === 'w' ? this.targetWidth() : this.targetHeight();
-        this.updateDim(dim, val);
-    }
-
     calculateDims(img: ResizableImage): { w: number, h: number } {
         if (this.mode() === 'percent') {
             const p = this.percentage() / 100;
@@ -689,12 +684,14 @@ export class ImageResizerComponent {
     }
 
     async processBatch() {
-        if (this.images().length === 0) return;
+        const images = this.images();
+        if (images.length === 0) return;
         this.isProcessing.set(true);
-
-        // Process sequentially to be safe
-        for (const img of this.images()) {
-            await this.processImage(img);
+        // Process images in batches with limited concurrency for better performance
+        const concurrency = 4;
+        for (let i = 0; i < images.length; i += concurrency) {
+            const batch = images.slice(i, i + concurrency);
+            await Promise.all(batch.map(img => this.processImage(img)));
         }
 
         this.isProcessing.set(false);
@@ -718,7 +715,7 @@ export class ImageResizerComponent {
             canvas.height = h;
             const ctx = canvas.getContext('2d');
 
-            if (!ctx) { reject('No canvas ctx'); return; }
+            if (!ctx) { reject('Failed to get 2D canvas context'); return; }
 
             const imageObj = new Image();
             imageObj.src = img.originalUrl;
@@ -749,7 +746,7 @@ export class ImageResizerComponent {
 
                         resolve();
                     } else {
-                        reject('Blob failed');
+                        reject(`Failed to create blob from canvas (format: ${this.targetFormat()}, size: ${w}x${h})`);
                     }
                 }, this.targetFormat(), this.quality());
             };
@@ -807,7 +804,8 @@ export class ImageResizerComponent {
 
         } catch (e) {
             console.error(e);
-            this.toast.show('Failed to create ZIP', 'error');
+            const errorMessage = e instanceof Error && e.message ? e.message : String(e);
+            this.toast.show(`Failed to create ZIP: ${errorMessage}`, 'error');
         }
     }
 
