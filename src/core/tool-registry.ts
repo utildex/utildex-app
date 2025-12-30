@@ -17,6 +17,7 @@ export const TOOL_COMPONENT_MAP: Record<string, () => Promise<any>> = {
   'image-converter': () => import('../tools/image-converter/image-converter.component').then(m => m.ImageConverterComponent),
   'qr-studio': () => import('../tools/qr-studio/qr-studio.component').then(m => m.QrStudioComponent),
   'diff-checker': () => import('../tools/diff-checker/diff-checker.component').then(m => m.DiffCheckerComponent),
+  'image-resizer': () => import('../tools/image-resizer/image-resizer.component').then(m => m.ImageResizerComponent),
 };
 
 export function getToolComponent(id: string): (() => Promise<any>) | null {
