@@ -482,6 +482,36 @@ export class ToolService {
           { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 }
         ]
       }
+    },
+    {
+      "id": "hash-generator",
+      "name": {
+        "en": "Hash Generator",
+        "fr": "Générateur de Hash",
+        "es": "Generador de Hash",
+        "zh": "哈希生成器"
+      },
+      "description": {
+        "en": "Calculate MD5, SHA-1, SHA-256, SHA-384, SHA-512 hashes from text or files. Works entirely offline.",
+        "fr": "Calculez des hachages MD5, SHA-1, SHA-256, SHA-384, SHA-512 à partir de texte ou de fichiers. Fonctionne entièrement hors ligne.",
+        "es": "Calcula hashes MD5, SHA-1, SHA-256, SHA-384, SHA-512 desde texto o archivos. Funciona completamente sin conexión.",
+        "zh": "从文本或文件计算 MD5、SHA-1、SHA-256、SHA-384、SHA-512 哈希值。完全离线工作。"
+      },
+      "icon": "fingerprint",
+      "version": "1.0.0",
+      "categories": ["Security", "Developer"],
+      "tags": ["hash", "md5", "sha", "sha256", "checksum", "crypto", "security"],
+      "featured": true,
+      "color": "#6366f1",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 2,
+        "presets": [
+          { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 },
+          { "label": { "en": "Compact", "fr": "Compact", "es": "Compacto", "zh": "紧凑" }, "cols": 2, "rows": 1 }
+        ]
+      }
     }
   ];
 
