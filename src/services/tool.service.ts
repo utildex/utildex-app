@@ -512,6 +512,47 @@ export class ToolService {
           { "label": { "en": "Compact", "fr": "Compact", "es": "Compacto", "zh": "紧凑" }, "cols": 2, "rows": 1 }
         ]
       }
+    },
+    {
+      "id": "advanced-image-editor",
+      "name": {
+        "en": "Advanced Image Editor",
+        "fr": "Éditeur d’images avancé",
+        "es": "Editor de imágenes avanzado",
+        "zh": "高级图片编辑器"
+      },
+      "description": {
+        "en": "Advanced offline batch image editor with live preview. Crop, rotate, apply filters, blur or sharpen, adjust brightness, contrast, saturation, exposure and gamma, with robust undo/redo.",
+        "fr": "Éditeur d’images avancé hors ligne avec édition par lots et aperçu en direct. Recadrage, rotation, filtres, flou ou netteté, réglages de luminosité, contraste, saturation, exposition et gamma, avec annulation fiable.",
+        "es": "Editor avanzado de imágenes sin conexión con edición por lotes y vista previa en vivo. Recorte, rotación, filtros, desenfoque o nitidez, ajustes de brillo, contraste, saturación, exposición y gamma, con deshacer/rehacer robusto.",
+        "zh": "支持实时预览的高级本地图像批量编辑器。裁剪、旋转、滤镜、模糊或锐化，并可调整亮度、对比度、饱和度、曝光和伽马，具备可靠的撤销/重做功能。"
+      },
+      "icon": "tune",
+      "version": "1.0.0",
+      "categories": ["Media", "Utility"],
+      "tags": [
+        "image",
+        "editor",
+        "batch",
+        "crop",
+        "rotate",
+        "filters",
+        "blur",
+        "sharpen",
+        "adjustments",
+        "export",
+        "offline"
+      ],
+      "color": "#6366f1",
+      "widget": {
+        "supported": true,
+        "defaultCols": 2,
+        "defaultRows": 2,
+        "presets": [
+          { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 },
+          { "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" }, "cols": 3, "rows": 3 }
+        ]
+      }
     }
   ];
 
