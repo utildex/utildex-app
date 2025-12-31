@@ -9,10 +9,11 @@
     "fr": "Éditeur d’images hors-ligne avec édition par lots et aperçu en direct : recadrage/rotation, filtres, flou/netteté, réglages luminosité/contraste/saturation/exposition/gamma, options d’export et annuler/rétablir robuste."
   },
   "icon": "tune",
-  "categories": ["Productivity", "Media"],
+  "categories": ["Utility", "Media"],
   "tags": ["image", "editor", "crop", "rotate", "filters", "blur", "sharpen", "batch", "export", "offline"],
   "color": "#6366f1",
   "routePath": "tools/advanced-image-editor",
+  "version": "1.0.0",
   "widget": {
     "supported": true,
     "defaultCols": 2,

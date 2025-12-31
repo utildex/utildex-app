@@ -249,8 +249,6 @@ class HistoryManager {
                             type="button"
                             class="w-full h-full border border-dashed border-slate-300 dark:border-slate-600 rounded-lg flex flex-col items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700/30"
                             (click)="openWidgetFilePicker()"
-                            (keydown.enter)="openWidgetFilePicker()"
-                            (keydown.space)="openWidgetFilePicker()"
                     >
                         <span class="material-symbols-outlined text-primary text-3xl">add_photo_alternate</span>
                         <div class="text-xs text-slate-600 dark:text-slate-200 text-center px-2">
@@ -504,8 +502,6 @@ class HistoryManager {
                         type="button"
                         class="flex-1 w-full border border-dashed border-slate-300 dark:border-slate-700 rounded-lg p-3 flex items-center justify-center text-center hover:bg-white dark:hover:bg-slate-800"
                         (click)="openFilePicker()"
-                        (keydown.enter)="openFilePicker()"
-                        (keydown.space)="openFilePicker()"
                 >
                     <div>
                         <span class="material-symbols-outlined text-primary text-3xl">upload</span>
@@ -1164,10 +1160,10 @@ export class AdvancedImageEditorComponent {
         let timer: any = null;
         effect(() => {
             const img = this.activeImage();
-            const r = this.workingRecipe();
-            const _zoom = this.previewZoom();
-            const _before = this.beforeAfter();
-            const _tick = this.renderTick(); // allow manual bump
+            this.workingRecipe();
+            this.previewZoom();
+            this.beforeAfter();
+            this.renderTick(); // allow manual bump
             if (!img) return;
 
             if (timer) clearTimeout(timer);
@@ -1209,7 +1205,7 @@ export class AdvancedImageEditorComponent {
 
     async onDrop(ev: DragEvent) {
         ev.preventDefault();
-        const files = Array.from(ev.dataTransfer?.files ?? []).filter(f => f.type.startsWith('image/'));
+        const files = Array.from(ev.dataTransfer?.files ?? []).filter(f => this.isLikelyImageFile(f));
         if (files.length === 0) return;
         await this.addFiles(files);
     }
@@ -1283,7 +1279,14 @@ export class AdvancedImageEditorComponent {
             } catch {}
             try {
                 img.bitmap?.close();
-            } catch {}
+            } catch (err) {
+                console.error('Failed to revoke object URL for image', img.id, img.name, err);
+            }
+            try {
+                img.bitmap?.close();
+            } catch (err) {
+                console.error('Failed to close bitmap for image', img.id, img.name, err);
+            }
         }
         this.images.set([]);
         this.activeId.set(null);
@@ -2007,7 +2010,7 @@ export class AdvancedImageEditorComponent {
 
     private applyPresetTone(r: number, g: number, b: number, preset: FilterPreset) {
         // Tiny, deterministic transforms (no LUT dependency, robust offline).
-        const mix = (a: number, bb: number, t: number) => a * (1 - t) + bb * t;
+        const mix = (a: number, target: number, t: number) => a * (1 - t) + target * t;
 
         if (preset === 'bw') {
             const l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
