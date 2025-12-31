@@ -369,7 +369,9 @@ export class HashGeneratorComponent {
       hash = this.md5(data);
     } else {
       // Use Web Crypto API for SHA algorithms
-      const hashBuffer = await crypto.subtle.digest(algo, data);
+      // Copy data to a new ArrayBuffer to ensure type compatibility with crypto.subtle.digest
+      const buffer = new Uint8Array(data).buffer as ArrayBuffer;
+      const hashBuffer = await crypto.subtle.digest(algo, buffer);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
