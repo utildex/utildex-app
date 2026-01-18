@@ -3,7 +3,7 @@ import { Component, inject, output, signal, effect, ElementRef, viewChild } from
 import { CommonModule, DatePipe } from '@angular/common';
 import { ThemeService, PrimaryColor, FontFamily, Density } from '../../services/theme.service';
 import { I18nService, Language } from '../../services/i18n.service';
-import { NetworkService } from '../../services/network.service';
+//import { NetworkService } from '../../services/network.service';
 import { ToolService } from '../../services/tool.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { StorageManagerService, StorageStats } from '../../services/storage-manager.service';
@@ -43,6 +43,7 @@ interface ParsedData {
             <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ t.map()['TITLE'] }}</h2>
             
             <!-- Network Status Indicator -->
+<!--            
             <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
               <span class="relative flex h-2 w-2">
                 <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" 
@@ -56,6 +57,7 @@ interface ParsedData {
                 {{ network.isOnline() ? t.map()['STATUS_ONLINE'] : t.map()['STATUS_OFFLINE'] }}
               </span>
             </div>
+-->
           </div>
 
           <button (click)="close.emit()" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
@@ -408,7 +410,7 @@ export class SettingsModalComponent {
   theme = inject(ThemeService);
   i18n = inject(I18nService);
   t = inject(ScopedTranslationService);
-  network = inject(NetworkService);
+  // network = inject(NetworkService);
   storage = inject(StorageManagerService);
   tools = inject(ToolService); 
   clipboard = inject(ClipboardService);
