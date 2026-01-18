@@ -97,4 +97,16 @@ export default {
     WIDGET_OPEN_TOOL: '打开编辑器',
     WIDGET_LABEL_PRESET: '预设',
 
+    WIDGET_TAB_EDIT: '调整',
+    WIDGET_TAB_FILTERS: '滤镜',
+    WIDGET_TAB_EXPORT: '导出',
+
+    WIDGET_PANEL_EDIT: '快速调整',
+    WIDGET_PANEL_FILTERS: '滤镜与效果',
+    WIDGET_PANEL_EXPORT: '导出设置',
+
+    WIDGET_EXPORT_SELECTED: '导出已选',
+    WIDGET_EXPORT_ALL: '全部导出',
+    WIDGET_EXPORT_PROGRESS: '正在导出…',
+
 };

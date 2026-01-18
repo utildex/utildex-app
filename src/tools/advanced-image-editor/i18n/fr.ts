@@ -97,4 +97,16 @@ export default {
     WIDGET_OPEN_TOOL: 'Ouvrir l’éditeur',
     WIDGET_LABEL_PRESET: 'Préset',
 
+    WIDGET_TAB_EDIT: 'Réglages',
+    WIDGET_TAB_FILTERS: 'Filtres',
+    WIDGET_TAB_EXPORT: 'Exporter',
+
+    WIDGET_PANEL_EDIT: 'Réglages rapides',
+    WIDGET_PANEL_FILTERS: 'Filtres & effets',
+    WIDGET_PANEL_EXPORT: 'Paramètres d’export',
+
+    WIDGET_EXPORT_SELECTED: 'Exporter la sélection',
+    WIDGET_EXPORT_ALL: 'Tout exporter',
+    WIDGET_EXPORT_PROGRESS: 'Export en cours…',
+
 };

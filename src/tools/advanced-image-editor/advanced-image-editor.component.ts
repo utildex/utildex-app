@@ -184,12 +184,14 @@ class HistoryManager {
         return op;
     }
 
+    /*
     clearRedoAllImages(images: ImageItem[], ids: string[]) {
         for (const id of ids) {
             const img = images.find(i => i.id === id);
             if (img) img.redoStack = [];
         }
     }
+    */
 }
 
 @Component({
@@ -211,8 +213,8 @@ class HistoryManager {
         <ng-container *ngTemplateOutlet="mainContent"></ng-container>
       </app-tool-layout>
     } @else {
-        <!-- 2x2 WIDGET MODE (compact editor) -->
-        <div class="h-full bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
+        <!-- 2x2/3x3 WIDGET MODE (compact full tool with tabs) -->
+        <div class="h-full bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col min-h-0">
             <!-- Hidden file input for widget -->
             <input #widgetFileInputEl type="file" multiple accept="image/*" class="hidden" (change)="onFilesSelected($event)" />
 
@@ -224,9 +226,11 @@ class HistoryManager {
                         <div class="text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-white truncate">
                             {{ t.map()['TITLE'] }}
                         </div>
-                        <div class="text-[11px] text-slate-500 dark:text-slate-300 truncate">
-                            {{ t.map()['WIDGET_SUBTITLE'] }}
-                        </div>
+                        @if (widgetCols() >= 3 && widgetRows() >= 3) {
+                            <div class="text-[11px] text-slate-500 dark:text-slate-300 truncate">
+                                {{ t.map()['WIDGET_SUBTITLE'] }}
+                            </div>
+                        }
                     </div>
                 </div>
 
@@ -241,14 +245,15 @@ class HistoryManager {
                 </div>
             </div>
 
-            <!-- Body -->
-            <div class="flex-1 p-2 grid grid-rows-[1fr_auto] gap-2">
-                <!-- Preview area -->
+            <!-- Body: keep footer visible -->
+            <div class="flex-1 min-h-0 p-2 grid grid-rows-[minmax(0,1fr)_auto] gap-2">
                 @if (images().length === 0) {
                     <button
                             type="button"
                             class="w-full h-full border border-dashed border-slate-300 dark:border-slate-600 rounded-lg flex flex-col items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-700/30"
                             (click)="openWidgetFilePicker()"
+                            (keydown.enter)="openWidgetFilePicker()"
+                            (keydown.space)="openWidgetFilePicker()"
                     >
                         <span class="material-symbols-outlined text-primary text-3xl">add_photo_alternate</span>
                         <div class="text-xs text-slate-600 dark:text-slate-200 text-center px-2">
@@ -256,9 +261,10 @@ class HistoryManager {
                         </div>
                     </button>
                 } @else {
-                    <div class="grid grid-cols-[1fr_140px] gap-2 h-full min-h-0">
+                    <!-- Main editor area -->
+                    <div class="grid grid-cols-[minmax(0,1fr)_140px] gap-2 h-full min-h-0">
                         <!-- Live preview -->
-                        <div class="relative rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/30 overflow-hidden">
+                        <div class="relative rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/30 overflow-hidden min-h-0">
                             <canvas #widgetPreviewCanvasEl class="absolute inset-0 w-full h-full"></canvas>
 
                             <div class="absolute left-2 top-2 text-[11px] bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white px-2 py-1 rounded">
@@ -268,7 +274,7 @@ class HistoryManager {
                             <div class="absolute right-2 top-2 flex gap-1">
                                 <button
                                         type="button"
-                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90"
+                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90 disabled:opacity-40"
                                         (click)="widgetPrev()"
                                         [disabled]="images().length <= 1"
                                         title="{{ t.map()['WIDGET_PREV'] }}"
@@ -277,7 +283,7 @@ class HistoryManager {
                                 </button>
                                 <button
                                         type="button"
-                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90"
+                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90 disabled:opacity-40"
                                         (click)="widgetNext()"
                                         [disabled]="images().length <= 1"
                                         title="{{ t.map()['WIDGET_NEXT'] }}"
@@ -289,7 +295,7 @@ class HistoryManager {
                             <div class="absolute left-2 bottom-2 flex gap-1">
                                 <button
                                         type="button"
-                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90"
+                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90 disabled:opacity-40"
                                         (click)="undoImage()"
                                         [disabled]="!activeImage() || activeImage()!.undoStack.length === 0"
                                 >
@@ -297,7 +303,7 @@ class HistoryManager {
                                 </button>
                                 <button
                                         type="button"
-                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90"
+                                        class="px-2 py-1 rounded bg-white/80 dark:bg-slate-900/70 text-slate-800 dark:text-white text-[11px] hover:opacity-90 disabled:opacity-40"
                                         (click)="redoImage()"
                                         [disabled]="!activeImage() || activeImage()!.redoStack.length === 0"
                                 >
@@ -306,110 +312,287 @@ class HistoryManager {
                             </div>
                         </div>
 
-                        <!-- Compact controls -->
-                        <div class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 flex flex-col gap-2 min-h-0 overflow-auto">
-                            <div class="text-[11px] font-semibold text-slate-700 dark:text-white">
-                                {{ t.map()['WIDGET_QUICK_EDIT'] }}
-                            </div>
-
-                            <!-- Preset -->
-                            <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
-                                {{ t.map()['FILTERS'] }}
-                                <select
-                                        class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 px-2 py-1 text-[11px] text-slate-700 dark:text-white"
-                                        [ngModel]="workingRecipe().preset"
-                                        (ngModelChange)="setWidgetPreset($event)"
-
+                        <!-- Right panel with tabs -->
+                        <div class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 flex flex-col min-h-0">
+                            <!-- Tab bar -->
+                            <div class="grid grid-cols-3 gap-1 p-1 rounded-lg bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700">
+                                <button
+                                        type="button"
+                                        class="py-1 rounded-md text-[11px] font-medium transition-colors"
+                                        [class.bg-white]="widgetTab() === 'edit'"
+                                        [class.dark:bg-slate-800]="widgetTab() === 'edit'"
+                                        [class.text-slate-900]="widgetTab() === 'edit'"
+                                        [class.dark:text-white]="widgetTab() === 'edit'"
+                                        [class.text-slate-600]="widgetTab() !== 'edit'"
+                                        [class.dark:text-slate-300]="widgetTab() !== 'edit'"
+                                        (click)="widgetTab.set('edit')"
                                 >
-                                    <option value="none">{{ t.map()['NONE'] }}</option>
-                                    <option value="sequoia">{{ t.map()['SEQUOIA'] }}</option>
-                                    <option value="vivid">{{ t.map()['VIVID'] }}</option>
-                                    <option value="matte">{{ t.map()['MATTE'] }}</option>
-                                    <option value="vintage">{{ t.map()['VINTAGE'] }}</option>
-                                    <option value="bw">{{ t.map()['BW'] }}</option>
-                                    <option value="cool">{{ t.map()['COOL'] }}</option>
-                                    <option value="warm">{{ t.map()['WARM'] }}</option>
-                                </select>
-                                <div class="space-y-1">
-                                    <div class="text-[11px] text-slate-600 dark:text-slate-200">
-                                        {{ t.map()['INTENSITY'] }}
+                                    {{ t.map()['WIDGET_TAB_EDIT'] }}
+                                </button>
+
+                                <button
+                                        type="button"
+                                        class="py-1 rounded-md text-[11px] font-medium transition-colors"
+                                        [class.bg-white]="widgetTab() === 'filters'"
+                                        [class.dark:bg-slate-800]="widgetTab() === 'filters'"
+                                        [class.text-slate-900]="widgetTab() === 'filters'"
+                                        [class.dark:text-white]="widgetTab() === 'filters'"
+                                        [class.text-slate-600]="widgetTab() !== 'filters'"
+                                        [class.dark:text-slate-300]="widgetTab() !== 'filters'"
+                                        (click)="widgetTab.set('filters')"
+                                >
+                                    {{ t.map()['WIDGET_TAB_FILTERS'] }}
+                                </button>
+
+                                <button
+                                        type="button"
+                                        class="py-1 rounded-md text-[11px] font-medium transition-colors"
+                                        [class.bg-white]="widgetTab() === 'export'"
+                                        [class.dark:bg-slate-800]="widgetTab() === 'export'"
+                                        [class.text-slate-900]="widgetTab() === 'export'"
+                                        [class.dark:text-white]="widgetTab() === 'export'"
+                                        [class.text-slate-600]="widgetTab() !== 'export'"
+                                        [class.dark:text-slate-300]="widgetTab() !== 'export'"
+                                        (click)="widgetTab.set('export')"
+                                >
+                                    {{ t.map()['WIDGET_TAB_EXPORT'] }}
+                                </button>
+                            </div>
+
+                            <!-- Panel content -->
+                            <div class="flex-1 min-h-0 overflow-auto mt-2 space-y-2">
+                                @if (widgetTab() === 'edit') {
+                                    <div class="text-[11px] font-semibold text-slate-700 dark:text-white">
+                                        {{ t.map()['WIDGET_PANEL_EDIT'] }}
                                     </div>
-                                    <input type="range" min="0" max="100" class="w-full accent-primary"
-                                           [ngModel]="workingRecipe().presetIntensity"
-                                           (ngModelChange)="updateWorking('presetIntensity', $event)"
-                                           (change)="commitWorking(t.map()['INTENSITY'])"
-                                    />
-                                </div>
-                            </label>
 
-                            <!-- Sliders (compact) -->
-                            <div class="space-y-2">
-                                <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['BRIGHTNESS'] }}</div>
-                                <input type="range" min="-100" max="100" class="w-full accent-primary"
-                                       [ngModel]="workingRecipe().brightness"
-                                       (ngModelChange)="updateWorking('brightness', $event)"
-                                       (change)="commitWorking(t.map()['BRIGHTNESS'])"
-                                />
-                            </div>
+                                    <div class="space-y-2">
+                                        <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['BRIGHTNESS'] }}</div>
+                                        <input type="range" min="-100" max="100" class="w-full accent-primary"
+                                               [ngModel]="workingRecipe().brightness"
+                                               (ngModelChange)="updateWorking('brightness', $event)"
+                                               (change)="commitWorking(t.map()['BRIGHTNESS'])"
+                                        />
+                                    </div>
 
-                            <div class="space-y-2">
-                                <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['CONTRAST'] }}</div>
-                                <input type="range" min="-100" max="100" class="w-full accent-primary"
-                                       [ngModel]="workingRecipe().contrast"
-                                       (ngModelChange)="updateWorking('contrast', $event)"
-                                       (change)="commitWorking(t.map()['CONTRAST'])"
-                                />
-                            </div>
+                                    <div class="space-y-2">
+                                        <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['CONTRAST'] }}</div>
+                                        <input type="range" min="-100" max="100" class="w-full accent-primary"
+                                               [ngModel]="workingRecipe().contrast"
+                                               (ngModelChange)="updateWorking('contrast', $event)"
+                                               (change)="commitWorking(t.map()['CONTRAST'])"
+                                        />
+                                    </div>
 
-                            <div class="space-y-2">
-                                <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['SATURATION'] }}</div>
-                                <input type="range" min="-100" max="100" class="w-full accent-primary"
-                                       [ngModel]="workingRecipe().saturation"
-                                       (ngModelChange)="updateWorking('saturation', $event)"
-                                       (change)="commitWorking(t.map()['SATURATION'])"
-                                />
-                            </div>
+                                    <div class="space-y-2">
+                                        <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['SATURATION'] }}</div>
+                                        <input type="range" min="-100" max="100" class="w-full accent-primary"
+                                               [ngModel]="workingRecipe().saturation"
+                                               (ngModelChange)="updateWorking('saturation', $event)"
+                                               (change)="commitWorking(t.map()['SATURATION'])"
+                                        />
+                                    </div>
 
-                            <div class="space-y-2">
-                                <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['EXPOSURE'] }}</div>
-                                <input type="range" min="-100" max="100" class="w-full accent-primary"
-                                       [ngModel]="workingRecipe().exposure"
-                                       (ngModelChange)="updateWorking('exposure', $event)"
-                                       (change)="commitWorking(t.map()['EXPOSURE'])"
-                                />
-                            </div>
+                                    @if (widgetCols() >= 3 && widgetRows() >= 3) {
+                                        <div class="space-y-2">
+                                            <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['EXPOSURE'] }}</div>
+                                            <input type="range" min="-100" max="100" class="w-full accent-primary"
+                                                   [ngModel]="workingRecipe().exposure"
+                                                   (ngModelChange)="updateWorking('exposure', $event)"
+                                                   (change)="commitWorking(t.map()['EXPOSURE'])"
+                                            />
+                                        </div>
 
-                            <div class="space-y-2">
-                                <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['GAMMA'] }}</div>
-                                <input type="range" min="0.2" max="3.0" step="0.01" class="w-full accent-primary"
-                                       [ngModel]="workingRecipe().gamma"
-                                       (ngModelChange)="updateWorking('gamma', $event)"
-                                       (change)="commitWorking(t.map()['GAMMA'])"
-                                />
-                            </div>
+                                        <div class="space-y-2">
+                                            <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['GAMMA'] }}</div>
+                                            <input type="range" min="0.2" max="3.0" step="0.01" class="w-full accent-primary"
+                                                   [ngModel]="workingRecipe().gamma"
+                                                   (ngModelChange)="updateWorking('gamma', $event)"
+                                                   (change)="commitWorking(t.map()['GAMMA'])"
+                                            />
+                                        </div>
+                                    }
+                                }
 
-                            <div class="space-y-2">
-                                <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['BLUR'] }}</div>
-                                <input type="range" min="0" max="20" step="1" class="w-full accent-primary"
-                                       [ngModel]="workingRecipe().blurRadius"
-                                       (ngModelChange)="updateWorking('blurRadius', $event)"
-                                       (change)="commitWorking(t.map()['BLUR'])"
-                                />
-                            </div>
+                                @if (widgetTab() === 'filters') {
+                                    <div class="text-[11px] font-semibold text-slate-700 dark:text-white">
+                                        {{ t.map()['WIDGET_PANEL_FILTERS'] }}
+                                    </div>
 
-                            <div class="space-y-2">
-                                <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['SHARPEN'] }}</div>
-                                <input type="range" min="0" max="100" step="1" class="w-full accent-primary"
-                                       [ngModel]="workingRecipe().sharpenAmount"
-                                       (ngModelChange)="updateWorking('sharpenAmount', $event)"
-                                       (change)="commitWorking(t.map()['SHARPEN'])"
-                                />
+                                    <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                        {{ t.map()['FILTERS'] }}
+                                        <select
+                                                class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 px-2 py-1 text-[11px] text-slate-700 dark:text-white"
+                                                [ngModel]="workingRecipe().preset"
+                                                (ngModelChange)="setWidgetPreset($event)"
+                                        >
+                                            <option value="none">{{ t.map()['NONE'] }}</option>
+                                            <option value="sequoia">{{ t.map()['SEQUOIA'] }}</option>
+                                            <option value="vivid">{{ t.map()['VIVID'] }}</option>
+                                            <option value="matte">{{ t.map()['MATTE'] }}</option>
+                                            <option value="vintage">{{ t.map()['VINTAGE'] }}</option>
+                                            <option value="bw">{{ t.map()['BW'] }}</option>
+                                            <option value="cool">{{ t.map()['COOL'] }}</option>
+                                            <option value="warm">{{ t.map()['WARM'] }}</option>
+                                        </select>
+                                    </label>
+
+                                    <div class="space-y-1">
+                                        <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['INTENSITY'] }}</div>
+                                        <input type="range" min="0" max="100" class="w-full accent-primary"
+                                               [ngModel]="workingRecipe().presetIntensity"
+                                               (ngModelChange)="updateWorking('presetIntensity', $event)"
+                                               (change)="commitWorking(t.map()['INTENSITY'])"
+                                        />
+                                    </div>
+
+                                    @if (widgetCols() >= 3 && widgetRows() >= 3) {
+                                        <div class="space-y-2">
+                                            <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['BLUR'] }}</div>
+                                            <input type="range" min="0" max="20" step="1" class="w-full accent-primary"
+                                                   [ngModel]="workingRecipe().blurRadius"
+                                                   (ngModelChange)="updateWorking('blurRadius', $event)"
+                                                   (change)="commitWorking(t.map()['BLUR'])"
+                                            />
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <div class="text-[11px] text-slate-600 dark:text-slate-200">{{ t.map()['SHARPEN'] }}</div>
+                                            <input type="range" min="0" max="100" step="1" class="w-full accent-primary"
+                                                   [ngModel]="workingRecipe().sharpenAmount"
+                                                   (ngModelChange)="updateWorking('sharpenAmount', $event)"
+                                                   (change)="commitWorking(t.map()['SHARPEN'])"
+                                            />
+                                        </div>
+                                    } @else {
+                                        <div class="text-[11px] text-slate-500 dark:text-slate-300">
+                                            {{ t.map()['WIDGET_OPEN_TOOL'] }}
+                                            <a class="text-primary hover:underline ml-1" href="#/tools/advanced-image-editor">↗</a>
+                                        </div>
+                                    }
+                                }
+
+                                @if (widgetTab() === 'export') {
+                                    <div class="text-[11px] font-semibold text-slate-700 dark:text-white">
+                                        {{ t.map()['WIDGET_PANEL_EXPORT'] }}
+                                    </div>
+
+                                    <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                        {{ t.map()['FORMAT'] }}
+                                        <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 text-slate-700 dark:text-white px-2 py-1 text-[11px]"
+                                                [ngModel]="exportSettings().format"
+                                                (ngModelChange)="setExportFormat($event)"
+                                        >
+                                            <option value="image/png">PNG</option>
+                                            <option value="image/jpeg">JPEG</option>
+                                            <option value="image/webp">WebP</option>
+                                        </select>
+                                    </label>
+
+                                    <div class="space-y-1">
+                                        <div class="text-[11px] text-slate-600 dark:text-slate-200">
+                                            {{ t.map()['QUALITY'] }}: {{ Math.round(exportSettings().quality * 100) }}
+                                        </div>
+                                        <input type="range" min="0.1" max="1" step="0.01" class="w-full accent-primary"
+                                               [ngModel]="exportSettings().quality"
+                                               (ngModelChange)="setExportQuality($event)"
+                                        />
+                                    </div>
+
+                                    <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                        {{ t.map()['RESIZE'] }}
+                                        <select class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 text-slate-700 dark:text-white px-2 py-1 text-[11px]"
+                                                [ngModel]="exportSettings().resizeMode"
+                                                (ngModelChange)="setResizeMode($event)"
+                                        >
+                                            <option value="none">{{ t.map()['NO_RESIZE'] }}</option>
+                                            <option value="longEdge">{{ t.map()['LONG_EDGE'] }}</option>
+                                            <option value="exact">{{ t.map()['EXACT'] }}</option>
+                                            <option value="percent">{{ t.map()['PERCENT'] }}</option>
+                                        </select>
+                                    </label>
+
+                                    @if (exportSettings().resizeMode === 'longEdge') {
+                                        <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                            {{ t.map()['LONG_EDGE'] }}
+                                            <input type="number" min="16" step="1"
+                                                   class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 px-2 py-1 text-[11px] text-slate-700 dark:text-white"
+                                                   [ngModel]="exportSettings().longEdge"
+                                                   (ngModelChange)="setLongEdge($event)"
+                                            />
+                                        </label>
+                                    }
+
+                                    @if (exportSettings().resizeMode === 'exact') {
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                                {{ t.map()['WIDTH'] }}
+                                                <input type="number" min="1" step="1"
+                                                       class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 px-2 py-1 text-[11px] text-slate-700 dark:text-white"
+                                                       [ngModel]="exportSettings().exactW"
+                                                       (ngModelChange)="setExactW($event)"
+                                                />
+                                            </label>
+                                            <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                                {{ t.map()['HEIGHT'] }}
+                                                <input type="number" min="1" step="1"
+                                                       class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 px-2 py-1 text-[11px] text-slate-700 dark:text-white"
+                                                       [ngModel]="exportSettings().exactH"
+                                                       (ngModelChange)="setExactH($event)"
+                                                />
+                                            </label>
+                                        </div>
+                                    }
+
+                                    @if (exportSettings().resizeMode === 'percent') {
+                                        <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                            {{ t.map()['PERCENTAGE'] }}
+                                            <input type="number" min="1" max="400" step="1"
+                                                   class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 px-2 py-1 text-[11px] text-slate-700 dark:text-white"
+                                                   [ngModel]="exportSettings().percent"
+                                                   (ngModelChange)="setPercent($event)"
+                                            />
+                                        </label>
+                                    }
+
+                                    <label class="text-[11px] text-slate-600 dark:text-slate-200 flex flex-col gap-1">
+                                        {{ t.map()['FILENAME_TEMPLATE'] }}
+                                        <input
+                                                class="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/30 px-2 py-1 text-[11px] text-slate-700 dark:text-white"
+                                                [ngModel]="exportSettings().filenameTemplate"
+                                                (ngModelChange)="setFilenameTemplate($event)"
+                                        />
+                                        <span class="text-[10px] text-slate-500 dark:text-slate-300">
+                    Tokens: {{ '{originalName}' }} {{ '{index}' }}
+                  </span>
+                                    </label>
+
+                                    <div class="grid grid-cols-2 gap-2 pt-1">
+                                        <button
+                                                type="button"
+                                                class="px-2 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-[11px] text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700"
+                                                (click)="export(false)"
+                                                [disabled]="exportJob().running"
+                                        >
+                                            {{ t.map()['WIDGET_EXPORT_SELECTED'] }}
+                                        </button>
+
+                                        <button
+                                                type="button"
+                                                class="px-2 py-2 rounded-lg bg-primary text-white hover:opacity-90 text-[11px]"
+                                                (click)="export(true)"
+                                                [disabled]="exportJob().running"
+                                        >
+                                            {{ t.map()['WIDGET_EXPORT_ALL'] }}
+                                        </button>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
 
-                    <!-- Footer actions -->
-                    <div class="grid grid-cols-2 gap-2">
+                    <!-- Footer: add-more + optional open tool -->
+                    <div class="grid grid-cols-2 gap-2 shrink-0">
                         <button
                                 type="button"
                                 class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700"
@@ -419,7 +602,7 @@ class HistoryManager {
                         </button>
 
                         <a
-                                class="px-3 py-2 rounded-lg bg-primary text-white hover:opacity-90 text-xs text-center"
+                                class="px-3 py-2 rounded-lg bg-slate-900 text-white dark:bg-slate-700 hover:opacity-90 text-xs text-center"
                                 href="#/tools/advanced-image-editor"
                                 title="{{ t.map()['WIDGET_OPEN_TOOL'] }}"
                         >
@@ -430,6 +613,7 @@ class HistoryManager {
             </div>
         </div>
     }
+
 
 
     <ng-template #mainContent>
@@ -547,6 +731,7 @@ class HistoryManager {
               >
                 {{ t.map()['ALL'] }}
               </button>
+                <!--
               <button
                 class="flex-1 px-2 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white hover:bg-white dark:hover:bg-slate-800 text-xs"
                 (click)="selectAll(false)"
@@ -554,6 +739,7 @@ class HistoryManager {
               >
                 {{ t.map()['SELECTED'] }}
               </button>
+              -->
             </div>
           </div>
 
@@ -617,7 +803,7 @@ class HistoryManager {
                   (ngModelChange)="applyScope.set($event)"
                 >
                   <option value="this">{{ t.map()['THIS_IMAGE'] }}</option>
-                  <option value="selected">{{ t.map()['SELECTED'] }}</option>
+                  <!-- <option value="selected">{{ t.map()['SELECTED'] }}</option> -->
                   <option value="all">{{ t.map()['ALL'] }}</option>
                 </select>
               </div>
@@ -987,6 +1173,7 @@ class HistoryManager {
                     </label>
 
                     <div class="grid grid-cols-2 gap-2 pt-1">
+                      <!--
                       <button
                         class="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 text-sm"
                         (click)="export(false)"
@@ -994,6 +1181,7 @@ class HistoryManager {
                       >
                         {{ t.map()['EXPORT_SELECTED'] }}
                       </button>
+                      -->
                       <button
                         class="px-3 py-2 rounded-lg bg-primary text-white hover:opacity-90 text-sm"
                         (click)="export(true)"
@@ -1030,10 +1218,14 @@ class HistoryManager {
     </ng-template>
   `
 })
+
+
 export class AdvancedImageEditorComponent {
     // Required inputs (WidgetHost injects these)
     isWidget = input<boolean>(false);
     widgetConfig = input<any>(null);
+
+    widgetTab = signal<WidgetTab>('edit');
 
     t = inject(ScopedTranslationService);
 
@@ -1132,6 +1324,7 @@ export class AdvancedImageEditorComponent {
     });
 
     activeName = computed(() => this.activeImage()?.name ?? '');
+
 
     widgetCols = computed(() => Number(this.widgetConfig()?.cols ?? 1));
     widgetRows = computed(() => Number(this.widgetConfig()?.rows ?? 1));
@@ -1272,6 +1465,8 @@ export class AdvancedImageEditorComponent {
         if (ref) ref.nativeElement.click();
     }
 
+
+
     clearAll() {
         for (const img of this.images()) {
             try {
@@ -1375,7 +1570,7 @@ export class AdvancedImageEditorComponent {
         if (recipeEquals(before, after)) return;
 
         const groupId = uid('op');
-        this.commitOperation(groupId, label, this.scopeImageIds(), (i) => {
+        this.commitOperation(groupId, label, this.scopeImageIds(), () => {
             // For scoped commit, each image gets the same "after" recipe,
             // but based on its current recipe for a robust before snapshot.
             // When applying across many, this is deterministic and conflict-free
@@ -1413,8 +1608,7 @@ export class AdvancedImageEditorComponent {
             const [aw, ah] = aspect.split(':').map(Number);
             const target = aw / ah;
             const w = clamp(next.cropW, 0.01, 1);
-            const h = clamp(w / target, 0.01, 1);
-            next.cropH = h;
+            next.cropH = clamp(w / target, 0.01, 1);
             next.cropEnabled = true;
         }
         this.workingRecipe.set(next);
@@ -2096,8 +2290,7 @@ export class AdvancedImageEditorComponent {
                         1 * s[dn + ch] -
                         1 * s[lf + ch] -
                         1 * s[rt + ch];
-                    const blended = s[c + ch] * (1 - a) + clamp(val, 0, 255) * a;
-                    d[i + ch] = blended;
+                    d[i + ch] = s[c + ch] * (1 - a) + clamp(val, 0, 255) * a;
                 }
                 d[i + 3] = s[i + 3];
             }
@@ -2161,9 +2354,8 @@ export class AdvancedImageEditorComponent {
     private async renderForExport(bitmap: ImageBitmap, recipe: Recipe, settings: ExportSettings): Promise<Blob> {
         // Render at full-ish internal resolution then resize if needed
         // Start with full bitmap render (not preview)
-        const base = await this.renderToCanvas(bitmap, recipe, bitmap.width, bitmap.height, false);
 
-        let outCanvas = base;
+        let outCanvas = await this.renderToCanvas(bitmap, recipe, bitmap.width, bitmap.height, false);
 
         // resize
         const mode = settings.resizeMode;
@@ -2182,15 +2374,13 @@ export class AdvancedImageEditorComponent {
         const mime = settings.format;
         const quality = mime === 'image/png' ? undefined : clamp(settings.quality, 0.1, 1);
 
-        const blob: Blob = await new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             outCanvas.toBlob(
                 b => (b ? resolve(b) : reject(new Error('toBlob failed'))),
                 mime,
                 quality
             );
         });
-
-        return blob;
     }
 
     private computeResize(srcW: number, srcH: number, s: ExportSettings): { w: number; h: number } {
@@ -2237,3 +2427,5 @@ export class AdvancedImageEditorComponent {
 
     protected readonly Math = Math;
 }
+
+type WidgetTab = 'edit' | 'filters' | 'export';
