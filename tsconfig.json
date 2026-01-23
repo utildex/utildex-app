@@ -29,6 +29,9 @@
   "files": [
     "./index.tsx"
   ],
+  "include": [
+    "src/**/*.ts"
+  ],
   "angularCompilerOptions": {
     "disableTypeScriptVersionCheck": true
   }

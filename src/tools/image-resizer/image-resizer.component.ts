@@ -3,7 +3,6 @@ import { Component, inject, signal, computed, input, viewChild, ElementRef } fro
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
-import { ActionBarComponent } from '../../components/action-bar/action-bar.component';
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -498,7 +497,7 @@ type ResizeMode = 'percent' | 'dimensions';
 })
 export class ImageResizerComponent {
     isWidget = input<boolean>(false);
-    widgetConfig = input<any>(null);
+    widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
 
     t = inject(ScopedTranslationService);
     toast = inject(ToastService);
@@ -540,9 +539,10 @@ export class ImageResizerComponent {
         this.fileInput()?.nativeElement.click();
     }
 
-    handleFileSelect(event: any) {
-        if (event.target.files) this.addFiles(event.target.files);
-        event.target.value = '';
+    handleFileSelect(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files) this.addFiles(input.files);
+        input.value = '';
     }
 
     handleFileDrop(files: FileList) {
@@ -550,7 +550,6 @@ export class ImageResizerComponent {
     }
 
     addFiles(list: FileList) {
-        const newImgs: ResizableImage[] = [];
 
         Array.from(list).forEach(file => {
             if (file.type.startsWith('image/')) {

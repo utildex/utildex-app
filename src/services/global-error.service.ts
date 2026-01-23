@@ -12,7 +12,7 @@ export interface AppError {
 export class GlobalErrorService {
   error = signal<AppError | null>(null);
 
-  handleError(error: any) {
+  handleError(error: unknown) {
     console.error('Global Error Caught:', error);
     
     // Extract meaningful message

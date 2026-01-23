@@ -58,7 +58,7 @@ export class PersistenceService {
     }
 
     // 2. Watch for changes and update URL
-    let timeout: any;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
 
     effect(() => {
       const newVal = targetSignal();

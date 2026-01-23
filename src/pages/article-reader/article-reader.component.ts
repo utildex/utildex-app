@@ -192,7 +192,7 @@ export class ArticleReaderComponent implements OnInit {
      if (size) this.fontSize.set(parseInt(size));
      
      const font = localStorage.getItem('utildex-reader-font');
-     if (font) this.fontFamily.set(font as any);
+     if (font) this.fontFamily.set(font as 'sans' | 'serif' | 'mono');
 
      // Save Prefs Effect
      effect(() => {

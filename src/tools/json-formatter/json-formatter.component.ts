@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, input } from '@angular/core';
+import { Component, inject, signal, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
@@ -127,7 +127,7 @@ import zh from './i18n/zh';
 })
 export class JsonFormatterComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
+  widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
@@ -140,11 +140,13 @@ export class JsonFormatterComponent {
     if (!this.content().trim()) return;
     try {
       const obj = JSON.parse(this.content());
-      const space = this.indentSize() === 'tab' ? '\\t' : this.indentSize();
-      this.content.set(JSON.stringify(obj, null, space as any));
+      const indent = this.indentSize();
+      const space = indent === 'tab' ? '\t' : indent;
+      this.content.set(JSON.stringify(obj, null, space));
       this.error.set(null);
-    } catch (e: any) {
-      this.error.set(e.message);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Invalid JSON';
+      this.error.set(message);
     }
   }
 
@@ -154,8 +156,9 @@ export class JsonFormatterComponent {
       const obj = JSON.parse(this.content());
       this.content.set(JSON.stringify(obj));
       this.error.set(null);
-    } catch (e: any) {
-      this.error.set(e.message);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Invalid JSON';
+      this.error.set(message);
     }
   }
 

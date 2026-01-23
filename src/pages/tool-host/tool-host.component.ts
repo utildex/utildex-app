@@ -1,5 +1,5 @@
 
-import { Component, input, inject, signal, effect } from '@angular/core';
+import { Component, input, inject, signal, effect, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { getToolComponent } from '../../core/tool-registry';
@@ -41,7 +41,7 @@ export class ToolHostComponent {
   toolService = inject(ToolService);
   router = inject(Router) as Router;
 
-  componentType = signal<any>(null);
+  componentType = signal<Type<unknown> | null>(null);
   error = signal<boolean>(false);
 
   // Default inputs for full page tools

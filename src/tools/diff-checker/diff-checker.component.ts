@@ -10,8 +10,32 @@ import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
-// Diff library types (loaded lazily)
-declare const Diff: any;
+// Diff library interface
+interface DiffLib {
+  diffChars: (a: string, b: string, options?: { ignoreWhitespace: boolean }) => DiffChange[];
+  diffWords: (a: string, b: string, options?: { ignoreWhitespace: boolean }) => DiffChange[];
+  diffLines: (a: string, b: string, options?: { ignoreWhitespace: boolean }) => DiffChange[];
+}
+
+interface DiffChange {
+  value: string;
+  added?: boolean;
+  removed?: boolean;
+}
+
+interface WindowWithDiff extends Window {
+  Diff?: DiffLib;
+}
+
+interface WidgetConfig {
+  cols?: number;
+  rows?: number;
+  instanceId?: string;
+  diffData?: {
+    a?: string;
+    b?: string;
+  };
+}
 
 interface DiffRow {
   type: 'added' | 'removed' | 'unchanged' | 'header';
@@ -369,7 +393,7 @@ interface DiffRow {
 })
 export class DiffCheckerComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
+  widgetConfig = input<WidgetConfig | null>(null);
 
   t = inject(ScopedTranslationService);
   toolService = inject(ToolService);
@@ -423,10 +447,11 @@ export class DiffCheckerComponent {
   }
 
   async loadLib() {
-     if (typeof window !== 'undefined' && !(window as any).Diff) {
+     const win = window as unknown as WindowWithDiff;
+     if (typeof window !== 'undefined' && !win.Diff) {
         try {
            const module = await import('diff');
-           (window as any).Diff = module.default || module;
+           win.Diff = module.default || module;
         } catch (e) {
            console.error('Failed to load Diff lib', e);
         }
@@ -472,17 +497,18 @@ export class DiffCheckerComponent {
   computeDiff() {
      this.saveState();
      
-     if (typeof window === 'undefined' || !(window as any).Diff) return;
+     const win = window as unknown as WindowWithDiff;
+     if (typeof window === 'undefined' || !win.Diff) return;
      if (!this.textA() && !this.textB()) {
         this.diffRows.set([]);
         return;
      }
 
-     const diffLib = (window as any).Diff;
+     const diffLib = win.Diff;
      const options = { ignoreWhitespace: this.ignoreWhitespace() };
      
-     let changes;
-     
+     let changes: DiffChange[];
+
      if (this.mode() === 'Chars') changes = diffLib.diffChars(this.textA(), this.textB(), options);
      else if (this.mode() === 'Words') changes = diffLib.diffWords(this.textA(), this.textB(), options);
      else changes = diffLib.diffLines(this.textA(), this.textB(), options);
@@ -493,7 +519,7 @@ export class DiffCheckerComponent {
      let additions = 0;
      let deletions = 0;
 
-     changes.forEach((part: any) => {
+     changes.forEach((part: DiffChange) => {
         const lines = part.value.split('\n');
         
         // Fix for trailing newline in diffLines

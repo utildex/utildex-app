@@ -52,7 +52,7 @@ import fr from './i18n/fr';
 export class ToolTemplateComponent {
   // 4. INPUTS: These are automatically injected by the WidgetHost
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null); // Contains { cols: number, rows: number }
+  widgetConfig = input<{ cols?: number; rows?: number } | null>(null); // Contains { cols: number, rows: number }
 
   // 5. SERVICES: Inject the scoped translation service
   t = inject(ScopedTranslationService);
