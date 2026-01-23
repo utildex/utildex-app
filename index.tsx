@@ -2,7 +2,7 @@
 import '@angular/compiler';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideZonelessChangeDetection, isDevMode, ErrorHandler } from '@angular/core';
-import { provideRouter, withHashLocation, withComponentInputBinding } from '@angular/router';
+import { provideRouter, withHashLocation, withComponentInputBinding, withPreloading, PreloadAllModules } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { AppComponent } from './src/app.component';
@@ -12,7 +12,12 @@ import { GlobalErrorHandler } from './src/core/global-error-handler';
 bootstrapApplication(AppComponent, {
   providers: [
     provideZonelessChangeDetection(),
-    provideRouter(routes, withHashLocation(), withComponentInputBinding()),
+    provideRouter(
+      routes, 
+      withHashLocation(), 
+      withComponentInputBinding(),
+      withPreloading(PreloadAllModules) // "Smart" Preloading: Loads other chunks in background
+    ),
     provideHttpClient(withFetch()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),

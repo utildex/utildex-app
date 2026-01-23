@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* 
+   Fonts are now loaded via Google Fonts CDN in index.html for performance 
+   (Parallel download instead of chained @imports)
+*/
+
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+    --font-sans: var(--font-sans);
+    --font-serif: var(--font-serif);
+    --font-mono: var(--font-mono);
+}
+
+@layer base {
+    :root {
+        --color-primary: 59 130 246;
+        --font-sans: "Inter";
+        --font-serif: "Merriweather";
+        --font-mono: "Roboto Mono";
+    }
+
+    html.density-compact { font-size: 14px; }
+}
+
+@layer utilities {
+    .text-primary { color: rgb(var(--color-primary) / 1); }
+    .bg-primary { background-color: rgb(var(--color-primary) / 1); }
+    .border-primary { border-color: rgb(var(--color-primary) / 1); }
+    .ring-primary { --tw-ring-color: rgb(var(--color-primary) / 1); }
+
+    .bg-primary\/5 { background-color: rgb(var(--color-primary) / 0.05); }
+    .bg-primary\/20 { background-color: rgb(var(--color-primary) / 0.20); }
+    .border-primary\/50 { border-color: rgb(var(--color-primary) / 0.50); }
+}
+
+.material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+}

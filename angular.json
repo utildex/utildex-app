@@ -24,10 +24,28 @@
                 "input": "src/assets",
                 "output": "assets"
               }
+            ],
+            "styles": [
+              "src/styles.css",
+              "node_modules/prismjs/themes/prism-tomorrow.css"
+            ],
+            "allowedCommonJsDependencies": [
+              "prismjs",
+              "jszip",
+              "heic2any",
+              "qrcode",
+              "pako",
+              "dijkstrajs",
+              "path2d-polyfill"
             ]
           },
           "configurations": {
             "production": {
+              "serviceWorker": "ngsw-config.json",
+              "optimization": true,
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
               "outputHashing": "all"
             },
             "development": {
@@ -41,7 +59,8 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "port": 3000
+            "port": 3000,
+            "compression": true
           },
           "configurations": {
             "production": {
