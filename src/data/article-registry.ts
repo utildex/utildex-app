@@ -33,34 +33,12 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
       es: 'Descubra los beneficios de privacidad, velocidad y propiedad que conllevan las aplicaciones local-first.',
       zh: '探索本地优先应用程序带来的隐私、速度和所有权的好处。'
     },
-    thumbnail: 'https://picsum.photos/id/48/800/600',
+    thumbnail: '../assets/articles/local-first-philosophy/thumbnail.webp',
     date: '2025-05-15',
     tags: ['Philosophy', 'Dev', 'Privacy'],
     author: 'Utildex Team',
     featured: true,
     readingTime: 5
-  },
-  {
-    id: 'angular-signals-guide',
-    type: 'internal',
-    title: {
-      en: 'Mastering Angular Signals',
-      fr: 'Maîtriser les Signals Angular',
-      es: 'Dominando Angular Signals',
-      zh: '精通 Angular Signals'
-    },
-    summary: {
-      en: 'A comprehensive guide to reactive state management in modern Angular applications.',
-      fr: 'Un guide complet sur la gestion d\'état réactif dans les applications Angular modernes.',
-      es: 'Una guía completa para la gestión de estado reactivo en aplicaciones Angular modernas.',
-      zh: '现代 Angular 应用程序中响应式状态管理的综合指南。'
-    },
-    thumbnail: 'https://picsum.photos/id/180/800/600',
-    date: '2025-06-02',
-    tags: ['Dev', 'Angular', 'Tutorial'],
-    author: 'Alex Dev',
-    featured: true,
-    readingTime: 8
   },
   {
     id: 'productivity-tips',
@@ -77,34 +55,43 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
       es: 'Pequeños cambios en su flujo de trabajo que pueden dar resultados masivos.',
       zh: '工作流程中的微小变化可以随着时间的推移产生巨大的成果。'
     },
-    thumbnail: 'https://picsum.photos/id/3/800/600',
+    thumbnail: '../assets/articles/productivity-tips/thumbnail.webp',
     date: '2025-06-10',
     tags: ['Tips', 'Productivity'],
-    author: 'Sarah Lead',
-    featured: false,
+    author: 'Bogus Author',
+    featured: true,
     readingTime: 4
   },
+
+
+
+/**
+
+    External Zone
+
+*/
   {
-    id: 'external-ts-guide',
+    id: 'external-open-source-redhat',
     type: 'external',
     title: {
-      en: 'Advanced TypeScript Patterns',
-      fr: 'Modèles TypeScript Avancés',
-      es: 'Patrones Avanzados de TypeScript',
-      zh: '高级 TypeScript 模式'
+      en: 'What is Open Source Software ?',
+      fr: 'Qu’est-ce qu’un logiciel open source ?',
+      es: '¿Qué es el software de código abierto?',
+      zh: '什么是开源软件？'
     },
     summary: {
-      en: 'A deep dive into generic types and utility types. (External Link)',
-      fr: 'Une plongée approfondie dans les types génériques et utilitaires. (Lien Externe)',
-      es: 'Una inmersión profunda en tipos genéricos y utilitarios. (Enlace Externo)',
-      zh: '深入研究泛型类型和实用程序类型。（外部链接）'
+      en: 'Red Hat’s definition of open source software and how it is developed and shared.',
+      fr: 'La définition du logiciel open source selon Red Hat et son mode de développement et de collaboration.',
+      es: 'La definición del software de código abierto según Red Hat y cómo se desarrolla y comparte.',
+      zh: 'Red Hat 对开源软件的定义，以及其开发和共享方式。'
     },
-    thumbnail: 'https://picsum.photos/id/20/800/600',
+    thumbnail: '../assets/images/external-thumbnails/external-open-source-redhat-thumbnail.webp',
     date: '2025-04-20',
-    tags: ['Dev', 'TypeScript', 'External'],
-    author: 'External Source',
-    featured: false,
+    tags: ['Open Source', 'Red Hat', 'External'],
+    author: 'Red Hat',
+    featured: true,
     readingTime: 10,
-    url: 'https://www.typescriptlang.org/docs/'
+    url: 'https://www.redhat.com/en/topics/open-source/what-is-open-source'
   }
+
 ];
