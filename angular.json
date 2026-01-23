@@ -24,6 +24,10 @@
                 "input": "src/assets",
                 "output": "assets"
               }
+            ],
+            "styles": [
+              "src/styles.css",
+              "node_modules/prismjs/themes/prism-tomorrow.css"
             ]
           },
           "configurations": {

@@ -1,104 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Utildex - Modular Toolbox</title>
-  <meta name="theme-color" content="#3b82f6">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <title>Utildex - Modular Toolbox</title>
+    <meta name="theme-color" content="#3b82f6" />
 
-  <!-- Image Optimization -->
-  <link rel="preconnect" href="https://picsum.photos">
+    <link
+            rel="icon"
+            type="image/webp"
+            href="/assets/images/utildex_favicon_64x64.webp"
+    />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/webp" href="/assets/images/utildex_favicon_64x64.webp">
+    <link rel="preload" href="/assets/fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin>
 
-
-  <!-- Tailwind with Typography Plugin -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:wght@300;400;700;900&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <!-- PrismJS Theme (Tomorrow Night) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-  
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['var(--font-sans)', 'Inter', 'sans-serif'],
-            serif: ['var(--font-serif)', 'Merriweather', 'serif'],
-            mono: ['var(--font-mono)', 'Roboto Mono', 'monospace'],
-          },
-          colors: {
-            primary: 'rgb(var(--color-primary) / <alpha-value>)',
-            secondary: '#64748b',
-          },
-          animation: {
-            'fade-in': 'fadeIn 0.2s ease-out',
-            'slide-up': 'slideUp 0.3s ease-out',
-            'slide-in-right': 'slideInRight 0.3s ease-out',
-          },
-          keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
-            },
-            slideUp: {
-              '0%': { transform: 'translateY(10px)', opacity: '0' },
-              '100%': { transform: 'translateY(0)', opacity: '1' },
-            },
-            slideInRight: {
-              '0%': { transform: 'translateX(100%)' },
-              '100%': { transform: 'translateX(0)' },
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    :root {
-      --color-primary: 59 130 246; /* Default Blue */
-      --font-sans: 'Inter';
-      --font-serif: 'Merriweather';
-      --font-mono: 'Roboto Mono';
-    }
-    
-    html.density-compact {
-      font-size: 14px;
-    }
-  </style>
-<script type="importmap">
-{
-  "imports": {
-    "rxjs": "https://esm.sh/rxjs@^7.8.2?conditions=es2015",
-    "rxjs/operators": "https://esm.sh/rxjs@^7.8.2/operators?conditions=es2015",
-    "rxjs/ajax": "https://esm.sh/rxjs@^7.8.2/ajax?conditions=es2015",
-    "rxjs/webSocket": "https://esm.sh/rxjs@^7.8.2/webSocket?conditions=es2015",
-    "rxjs/testing": "https://esm.sh/rxjs@^7.8.2/testing?conditions=es2015",
-    "rxjs/fetch": "https://esm.sh/rxjs@^7.8.2/fetch?conditions=es2015",
-    "@angular/router": "https://next.esm.sh/@angular/router@^21.0.6?external=rxjs",
-    "@angular/platform-browser": "https://next.esm.sh/@angular/platform-browser@^21.0.6?external=rxjs",
-    "@angular/core": "https://next.esm.sh/@angular/core@^21.0.6?external=rxjs",
-    "@angular/compiler": "https://next.esm.sh/@angular/compiler@^21.0.6?external=rxjs",
-    "@angular/forms": "https://next.esm.sh/@angular/forms@^21.0.6?external=rxjs",
-    "@angular/common": "https://next.esm.sh/@angular/common@^21.0.6?external=rxjs",
-    "@angular/common/http": "https://next.esm.sh/@angular/common@^21.0.6/http?external=rxjs",
-    "@angular/service-worker": "https://next.esm.sh/@angular/service-worker@^21.0.6?external=rxjs",
-    "marked": "https://esm.sh/marked@12.0.0",
-    "prismjs": "https://esm.sh/prismjs@1.29.0",
-    "pdf-lib": "https://esm.sh/pdf-lib@1.17.1",
-    "jszip": "https://esm.sh/jszip@3.10.1",
-    "pdfjs-dist": "https://esm.sh/pdfjs-dist@4.0.379",
-    "diff": "https://esm.sh/diff@5.2.0"
-  }
-}
-</script>
 </head>
+
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 overflow-x-hidden">
-  <app-root></app-root>
+<app-root></app-root>
 </body>
 </html>
