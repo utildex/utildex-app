@@ -10,10 +10,10 @@
         </div>
 
         <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
-            {{ t.map()['HERO_TITLE_PREFIX'] }} <span class="text-primary">{{ t.map()['HERO_TITLE_HIGHLIGHT'] }}</span> {{ t.map()['HERO_TITLE_SUFFIX'] }}
+            {{ t.map()['HERO_TITLE_PREFIX'] || 'Modular' }} <span class="text-primary">{{ t.map()['HERO_TITLE_HIGHLIGHT'] || 'Developer' }}</span> {{ t.map()['HERO_TITLE_SUFFIX'] || 'Toolbox' }}
         </h1>
         <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
-            {{ t.map()['HERO_DESC'] }}
+            {{ t.map()['HERO_DESC'] || 'A privacy-focused collection of open-source utilities for developers and power users. 100% Local.' }}
         </p>
         <div class="flex justify-center gap-4 flex-wrap">
             <button (click)="app.openCommandPalette()" class="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors flex items-center gap-2">
@@ -27,59 +27,75 @@
     </section>
 
     <!-- Featured Articles Carousel -->
-    <section>
-        <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
-            <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined text-primary">auto_stories</span>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FEATURED_ARTICLES'] }}</h2>
+    @defer (on idle) {
+        <section>
+            <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">auto_stories</span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FEATURED_ARTICLES'] }}</h2>
+                </div>
+                <a routerLink="/articles" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
             </div>
-            <a routerLink="/articles" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
-        </div>
 
-        <app-carousel [items]="featuredArticles()" [itemTemplate]="articleTemplate" [autoplay]="true" [interval]="6000"></app-carousel>
-    </section>
+            <app-carousel [items]="featuredArticles()" [itemTemplate]="articleTemplate" [autoplay]="true" [interval]="6000"></app-carousel>
+        </section>
+    } @placeholder {
+        <div class="h-80 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
+    }
 
     <!-- Favorites Carousel (Conditional) -->
     @if (favoriteTools().length > 0) {
-        <section>
-            <div class="flex items-center gap-2 mb-6 px-4 sm:px-0">
-                <span class="material-symbols-outlined text-yellow-400 fill-current">star</span>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FAVORITES'] }}</h2>
-            </div>
+        @defer (on idle) {
+            <section>
+                <div class="flex items-center gap-2 mb-6 px-4 sm:px-0">
+                    <span class="material-symbols-outlined text-yellow-400 fill-current">star</span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FAVORITES'] }}</h2>
+                </div>
 
-            <app-carousel [items]="favoriteTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
-        </section>
+                <app-carousel [items]="favoriteTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
+            </section>
+        } @placeholder {
+            <div class="h-64 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
+        }
     }
 
     <!-- Most Used Carousel (Conditional) -->
     @if (mostUsedTools().length > 0) {
-        <section>
-            <div class="flex items-center gap-2 mb-6 px-4 sm:px-0">
-                <span class="material-symbols-outlined text-slate-500">trending_up</span>
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_MOST_USED'] }}</h2>
-            </div>
+        @defer (on viewport) {
+            <section>
+                <div class="flex items-center gap-2 mb-6 px-4 sm:px-0">
+                    <span class="material-symbols-outlined text-slate-500">trending_up</span>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_MOST_USED'] }}</h2>
+                </div>
 
-            <app-carousel [items]="mostUsedTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
-        </section>
+                <app-carousel [items]="mostUsedTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
+            </section>
+        } @placeholder {
+             <div class="h-64 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
+        }
     }
 
     <!-- Categories Carousel -->
-    <section>
-        <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_CATEGORIES'] }}</h2>
-            <a routerLink="/categories" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
-        </div>
+    @defer (on viewport) {
+        <section>
+            <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_CATEGORIES'] }}</h2>
+                <a routerLink="/categories" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
+            </div>
 
-        <app-carousel [items]="categories()" [itemTemplate]="catTemplate" [autoplay]="false"></app-carousel>
+            <app-carousel [items]="categories()" [itemTemplate]="catTemplate" [autoplay]="false"></app-carousel>
 
-        <ng-template #catTemplate let-cat>
-            <a [routerLink]="['/categories', cat]" class="block h-full p-6 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-primary/50 transition-all group">
-                <span class="material-symbols-outlined text-4xl text-primary mb-3">folder</span>
-                <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ toolService.getCategoryName(cat) }}</h3>
-                <p class="text-sm text-slate-500 mt-1">{{ t.map()['CAT_BROWSE'] }}</p>
-            </a>
-        </ng-template>
-    </section>
+            <ng-template #catTemplate let-cat>
+                <a [routerLink]="['/categories', cat]" class="block h-full p-6 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-primary/50 transition-all group">
+                    <span class="material-symbols-outlined text-4xl text-primary mb-3">folder</span>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ toolService.getCategoryName(cat) }}</h3>
+                    <p class="text-sm text-slate-500 mt-1">{{ t.map()['CAT_BROWSE'] }}</p>
+                </a>
+            </ng-template>
+        </section>
+    } @placeholder {
+          <div class="h-48 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl"></div>
+    }
 
     <!-- Shared Template for Tool Cards -->
     <ng-template #toolTemplate let-tool>
