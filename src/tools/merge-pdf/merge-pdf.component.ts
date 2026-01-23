@@ -233,8 +233,8 @@ interface PdfFile {
 })
 export class MergePdfComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
-  
+  widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
+
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
   fileInput = viewChild<ElementRef>('fileInput');
@@ -254,10 +254,11 @@ export class MergePdfComponent {
     this.fileInput()?.nativeElement.click();
   }
 
-  handleFileSelect(event: any) {
-    const files = event.target.files;
+  handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const files = input.files;
     if (files) this.addFiles(files);
-    event.target.value = '';
+    input.value = '';
   }
 
   handleFileDrop(files: FileList) {

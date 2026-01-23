@@ -7,7 +7,8 @@
     "dev": "ng serve",
     "build": "ng build",
     "preview": "ng serve --configuration=production",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs",
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs --fix"
   },
   "dependencies": {
     "@angular/build": "^21.0.0",

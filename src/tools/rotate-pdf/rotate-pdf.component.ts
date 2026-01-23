@@ -166,8 +166,8 @@ type RotationMode = 'all' | 'odd' | 'even' | 'specific';
 })
 export class RotatePdfComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
-  
+  widgetConfig = input<Record<string, unknown>>(null);
+
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
   fileInput = viewChild<ElementRef>('fileInput');
@@ -188,10 +188,11 @@ export class RotatePdfComponent {
     this.fileInput()?.nativeElement.click();
   }
 
-  handleFileSelect(event: any) {
-    const file = event.target.files[0];
+  handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) this.loadFile(file);
-    event.target.value = '';
+    input.value = '';
   }
 
   handleFileDrop(files: FileList) {

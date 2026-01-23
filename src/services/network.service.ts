@@ -17,7 +17,7 @@ export class NetworkService implements OnDestroy {
     }
   }
 
-  private intervalId: any;
+  private intervalId: ReturnType<typeof setInterval> | undefined;
 
   constructor() {
     if (typeof window !== 'undefined') {

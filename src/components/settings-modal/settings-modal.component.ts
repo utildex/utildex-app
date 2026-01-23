@@ -1,7 +1,7 @@
 
 import { Component, inject, output, signal, effect, ElementRef, viewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ThemeService, PrimaryColor, FontFamily, Density } from '../../services/theme.service';
+import { ThemeService, PrimaryColor } from '../../services/theme.service';
 import { I18nService, Language } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
 import { ToolService } from '../../services/tool.service';
@@ -17,9 +17,31 @@ import zh from './i18n/zh';
 type Tab = 'general' | 'data';
 
 // Interfaces for structured data viewing
+interface ClipboardItem {
+  text: string;
+  timestamp: number;
+}
+
+interface UsageStat {
+  name: string;
+  count: number;
+  lastUsed: number;
+}
+
+interface DashboardData {
+  count: number;
+}
+
+type ParsedDataContent = ClipboardItem[] | UsageStat[] | string[] | DashboardData | string;
+
 interface ParsedData {
   type: 'clipboard' | 'usage' | 'favorites' | 'dashboard' | 'simple' | 'json';
-  data: any;
+  data: ParsedDataContent;
+}
+
+interface InspectionItem {
+  key: string;
+  value: string;
 }
 
 @Component({
@@ -428,7 +450,7 @@ export class SettingsModalComponent {
 
   // Data State
   stats = signal<StorageStats | null>(null);
-  inspectionData = signal<ParsedData[]>([]);
+  inspectionData = signal<InspectionItem[]>([]);
 
   languages: { code: Language; flagCode: string; label: string }[] = [
     { code: 'en', flagCode: 'us', label: 'English' },
@@ -465,7 +487,7 @@ export class SettingsModalComponent {
 
   async loadInspection(catId: string) {
     const details = await this.storage.getCategoryDetails(catId);
-    this.inspectionData.set(details as any);
+    this.inspectionData.set(details as InspectionItem[]);
   }
 
   switchTab(tab: Tab) {
@@ -544,8 +566,9 @@ export class SettingsModalComponent {
     this.importInput()?.nativeElement.click();
   }
 
-  async handleImport(event: any) {
-    const file = event.target.files[0];
+  async handleImport(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
@@ -582,8 +605,8 @@ export class SettingsModalComponent {
        }
        
        if (key === 'utildex-usage') {
-          const obj = JSON.parse(value);
-          const stats = Object.entries(obj).map(([id, stat]: [string, any]) => ({
+          const obj = JSON.parse(value) as Record<string, { count: number; lastUsed: number }>;
+          const stats = Object.entries(obj).map(([id, stat]) => ({
              name: this.resolveToolName(id),
              count: stat.count,
              lastUsed: stat.lastUsed
@@ -605,7 +628,7 @@ export class SettingsModalComponent {
        if (value.startsWith('{') || value.startsWith('[')) {
           return { type: 'json', data: JSON.stringify(JSON.parse(value), null, 2) };
        }
-    } catch (e) {
+    } catch {
        // Fallback
     }
 

@@ -200,7 +200,7 @@ import zh from './i18n/zh';
 })
 export class PasswordGeneratorComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
+  widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
 
   t = inject(ScopedTranslationService);
   clipboard = inject(ClipboardService);

@@ -3,7 +3,9 @@
 // This is necessary because 'metadata.json' does not store executable code references.
 // We use lazy imports to ensure we don't bundle all tools into the main bundle.
 
-export const TOOL_COMPONENT_MAP: Record<string, () => Promise<any>> = {
+import { Type } from '@angular/core';
+
+export const TOOL_COMPONENT_MAP: Record<string, () => Promise<Type<unknown>>> = {
   'lorem-ipsum': () => import('../tools/lorem-ipsum/lorem-ipsum.component').then(m => m.LoremIpsumComponent),
   'password-generator': () => import('../tools/password-generator/password-generator.component').then(m => m.PasswordGeneratorComponent),
   'markdown-preview': () => import('../tools/markdown-preview/markdown-preview.component').then(m => m.MarkdownPreviewComponent),
@@ -22,6 +24,6 @@ export const TOOL_COMPONENT_MAP: Record<string, () => Promise<any>> = {
   'advanced-image-editor': () => import('../tools/advanced-image-editor/advanced-image-editor.component').then(m => m.AdvancedImageEditorComponent),
 };
 
-export function getToolComponent(id: string): (() => Promise<any>) | null {
+export function getToolComponent(id: string): (() => Promise<Type<unknown>>) | null {
   return TOOL_COMPONENT_MAP[id] || null;
 }

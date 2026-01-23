@@ -51,13 +51,13 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class CarouselComponent<T> implements OnDestroy {
   items = input.required<T[]>();
-  itemTemplate = input<TemplateRef<any>>();
+  itemTemplate = input<TemplateRef<{ $implicit: T; index: number }>>();
   autoplay = input(false);
   interval = input(4000);
   
   container = viewChild<ElementRef>('scrollContainer');
 
-  private intervalId: any;
+  private intervalId: ReturnType<typeof setInterval> | null = null;
   private isPaused = false;
 
   constructor() {
@@ -70,8 +70,8 @@ export class CarouselComponent<T> implements OnDestroy {
     });
   }
 
-  trackByFn(index: number, item: any): any {
-    return item?.id ?? item ?? index;
+  trackByFn(index: number, item: T): string | number {
+    return (item as { id?: string | number })?.id ?? index;
   }
 
   start() {
