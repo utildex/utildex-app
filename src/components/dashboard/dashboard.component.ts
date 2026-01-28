@@ -1,7 +1,6 @@
 
 import { Component, inject, computed } from '@angular/core';
 import { ToolService } from '../../services/tool.service';
-import { ArticleService } from '../../services/article.service';
 import { ToolCardComponent } from '../tool-card/tool-card.component';
 import { ArticleCardComponent } from '../article-card/article-card.component'; // Import new card
 import { CarouselComponent } from '../carousel/carousel.component';
@@ -30,11 +29,9 @@ import { NgTemplateOutlet } from '@angular/common';
 })
 export class DashboardComponent {
   toolService = inject(ToolService);
-  articleService = inject(ArticleService);
   app = inject(AppComponent);
   t = inject(ScopedTranslationService);
 
-  featuredArticles = this.articleService.featuredArticles;
   favorites = this.toolService.favorites;
   favoriteTools = this.toolService.favoriteTools;
   mostUsedTools = this.toolService.mostUsedTools;

@@ -106,7 +106,7 @@ export class CarouselComponent<T> implements OnDestroy {
   container = viewChild<ElementRef>('scrollContainer');
 
   private intervalId: any;
-  private isPaused = false;
+  public isPaused = false;
 
   constructor() {
     effect(() => {

@@ -13,6 +13,7 @@ export default {
   "SECTION_FEATURED_ARTICLES": "Lectures Recommandées",
   "SECTION_MOST_USED": "Les plus utilisés",
   "SECTION_CATEGORIES": "Explorer les catégories",
-  "SECTION_DISCOVER": "Découvrir des outils",  "LINK_VIEW_ALL": "Tout voir",
+  "SECTION_DISCOVER": "Découvrir des outils",
+  "LINK_VIEW_ALL": "Tout voir",
   "CAT_BROWSE": "Voir la collection"
 };
