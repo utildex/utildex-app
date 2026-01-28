@@ -1,6 +1,7 @@
 
 import { Component, inject, signal, computed, ViewChild, OnInit } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
+import { DecimalPipe } from '@angular/common'; // Imported DecimalPipe
 import { ThemeService } from './services/theme.service';
 import { ToolService } from './services/tool.service';
 import { I18nService } from './services/i18n.service';
@@ -15,6 +16,8 @@ import { CommandPaletteComponent } from './components/command-palette/command-pa
 import { ErrorOverlayComponent } from './components/error-overlay/error-overlay.component';
 import { NetworkStatusComponent } from './components/network-status/network-status.component';
 import { DashboardModalsComponent } from './components/dashboard-modals/dashboard-modals.component'; // Added
+import { DownloadStatusComponent } from './components/download-status/download-status.component';
+import { OfflineManagerService } from './services/offline-manager.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -25,10 +28,10 @@ import { filter } from 'rxjs/operators';
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, RouterLink, RouterLinkActive, 
+    RouterOutlet, RouterLink, RouterLinkActive, DecimalPipe, 
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
-    DashboardModalsComponent
+    DashboardModalsComponent, DownloadStatusComponent
   ],
   templateUrl: './app.component.html',
   providers: [
@@ -42,6 +45,7 @@ export class AppComponent implements OnInit {
   shortcutService = inject(ShortcutService);
   seoService = inject(SeoService); 
   networkService = inject(NetworkService); 
+  offline = inject(OfflineManagerService);
   t = inject(ScopedTranslationService);
   router: Router = inject(Router);
 

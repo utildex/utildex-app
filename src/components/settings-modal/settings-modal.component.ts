@@ -9,6 +9,7 @@ import { ClipboardService } from '../../services/clipboard.service';
 import { StorageManagerService, StorageStats } from '../../services/storage-manager.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import { ToastService } from '../../services/toast.service';
+import { OfflineManagerService } from '../../services/offline-manager.service'; // Added
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -97,6 +98,32 @@ interface ParsedData {
           <!-- GENERAL TAB -->
           @if (activeTab() === 'general') {
             <div class="space-y-8 animate-fade-in">
+              <!-- Offline Settings -->
+              <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
+                   {{ t.map()['SECTION_OFFLINE'] }}
+                </label>
+                <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                   <div>
+                      <p class="text-sm font-medium text-slate-900 dark:text-white">{{ t.map()['SETTING_SMART_DL'] }}</p>
+                      <p class="text-xs text-slate-500">{{ t.map()['WARN_MOBILE_DATA'] }}</p>
+                   </div>
+                   <!-- Toggle -->
+                   <button 
+                      type="button"
+                      (click)="offline.smartDownloadEnabled.set(!offline.smartDownloadEnabled())"
+                      class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 bg-slate-200 dark:bg-slate-700"
+                      [class.bg-primary]="offline.smartDownloadEnabled()"
+                   >
+                      <span 
+                         class="inline-block w-4 h-4 transform rounded-full bg-white transition-transform duration-200"
+                         [class.translate-x-6]="offline.smartDownloadEnabled()"
+                         [class.translate-x-1]="!offline.smartDownloadEnabled()"
+                      ></span>
+                   </button>
+                </div>
+              </div>
+
               <!-- Language -->
               <section>
                 <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">{{ t.map()['SECTION_LANGUAGE'] }}</h3>
@@ -415,6 +442,7 @@ export class SettingsModalComponent {
   tools = inject(ToolService); 
   clipboard = inject(ClipboardService);
   toast = inject(ToastService);
+  offline = inject(OfflineManagerService);
 
   // UI State
   activeTab = signal<Tab>('general');
