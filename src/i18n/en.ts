@@ -1,6 +1,8 @@
 
 export default {
   "BTN_DOWNLOAD_LIBRARY": "Download Library for Offline Use",
+  "BTN_PRELOAD": "Preload Library",
+  "BTN_DOWNLOADING": "Downloading...",
   "SECTION_OFFLINE": "Offline & Data",
   "SETTING_SMART_DL": "Smart Background Download",
   "WARN_MOBILE_DATA": "Automatically caches tools when idle. May use mobile data.",

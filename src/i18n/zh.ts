@@ -1,6 +1,8 @@
 
 export default {
   "BTN_DOWNLOAD_LIBRARY": "下载离线库",
+  "BTN_PRELOAD": "预加载库",
+  "BTN_DOWNLOADING": "下载中...",
   "SECTION_OFFLINE": "离线与数据",
   "SETTING_SMART_DL": "智能后台下载",
   "WARN_MOBILE_DATA": "空闲时自动缓存工具。可能会消耗移动数据。",

@@ -78,7 +78,7 @@
             [title]="t.map()['BTN_DOWNLOAD_LIBRARY'] || 'Download Library'"
           >
              <span class="material-symbols-outlined text-lg">cloud_download</span>
-             <span class="text-xs font-bold">{{ offline.isDownloading() ? 'Downloading...' : 'Preload Library' }}</span>
+             <span class="text-xs font-bold">{{ offline.isDownloading() ? t.map()['BTN_DOWNLOADING'] : t.map()['BTN_PRELOAD'] }}</span>
           </button>
 
             <button

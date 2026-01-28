@@ -1,6 +1,8 @@
 
 export default {
   "BTN_DOWNLOAD_LIBRARY": "Descargar biblioteca sin conexión",
+  "BTN_PRELOAD": "Precargar biblioteca",
+  "BTN_DOWNLOADING": "Descargando...",
   "SECTION_OFFLINE": "Sin conexión y datos",
   "SETTING_SMART_DL": "Descarga inteligente en segundo plano",
   "WARN_MOBILE_DATA": "Almacena herramientas automáticamente. Puede usar datos móviles.",
