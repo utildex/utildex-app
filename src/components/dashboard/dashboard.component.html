@@ -123,7 +123,12 @@
                     <a routerLink="/tools" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
                 </div>
 
-                <app-carousel [items]="randomTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
+                <app-carousel 
+                    [items]="randomTools()" 
+                    [itemTemplate]="toolTemplate" 
+                    [marquee]="true" 
+                    marqueeDuration="60s">
+                </app-carousel>
             </section>
         } @placeholder {
             <div class="h-64 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
