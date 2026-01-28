@@ -14,7 +14,6 @@ bootstrapApplication(AppComponent, {
     provideZonelessChangeDetection(),
     provideRouter(
       routes, 
-      withHashLocation(), 
       withComponentInputBinding(),
       withPreloading(PreloadAllModules) // "Smart" Preloading: Loads other chunks in background
     ),
