@@ -23,7 +23,8 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
-              }
+              },
+              "src/_redirects"
             ],
             "styles": [
               "src/styles.css",
