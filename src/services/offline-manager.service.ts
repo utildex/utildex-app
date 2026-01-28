@@ -2,7 +2,7 @@ import { Injectable, inject, signal, computed, effect } from '@angular/core';
 import { TOOL_COMPONENT_MAP } from '../core/tool-registry';
 import { PersistenceService } from './persistence.service';
 import { DbService } from './db.service';
-import { ToastService } from './toast.service';
+import { GuideService } from './guide.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { ToastService } from './toast.service';
 export class OfflineManagerService {
   private persistence = inject(PersistenceService);
   private db = inject(DbService);
-  private toast = inject(ToastService);
+  private guide = inject(GuideService);
 
   // State
   isDownloading = signal(false);
@@ -62,7 +62,7 @@ export class OfflineManagerService {
     const missing = allTools.filter(id => !existing.has(id));
 
     if (missing.length === 0) {
-        this.toast.show('Library is already fully downloaded', 'success');
+        this.guide.notify('NOTIFY_LIB_DOWNLOADED', 4000);
         return;
     }
     
@@ -76,7 +76,7 @@ export class OfflineManagerService {
     try {
       await this.processQueue();
       if (!this.isStopping()) {
-           this.toast.show('Download complete', 'success');
+           this.guide.notify('NOTIFY_LIB_DOWNLOADED', 6000);
       }
     } catch (e) {
       // Stopped

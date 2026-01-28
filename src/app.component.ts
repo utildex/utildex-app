@@ -17,7 +17,9 @@ import { ErrorOverlayComponent } from './components/error-overlay/error-overlay.
 import { NetworkStatusComponent } from './components/network-status/network-status.component';
 import { DashboardModalsComponent } from './components/dashboard-modals/dashboard-modals.component'; // Added
 import { DownloadStatusComponent } from './components/download-status/download-status.component';
+import { GuideComponent } from './components/guide/guide.component';
 import { OfflineManagerService } from './services/offline-manager.service';
+import { BubbleDirective } from './directives/bubble.directive';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -31,7 +33,7 @@ import { filter } from 'rxjs/operators';
     RouterOutlet, RouterLink, RouterLinkActive, DecimalPipe, 
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
-    DashboardModalsComponent, DownloadStatusComponent
+    DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective
   ],
   templateUrl: './app.component.html',
   providers: [
