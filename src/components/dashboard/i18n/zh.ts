@@ -13,6 +13,6 @@ export default {
   "SECTION_FEATURED_ARTICLES": "推荐阅读",
   "SECTION_MOST_USED": "最常使用",
   "SECTION_CATEGORIES": "探索分类",
-  "LINK_VIEW_ALL": "查看全部",
+  "SECTION_DISCOVER": "发现工具",  "LINK_VIEW_ALL": "查看全部",
   "CAT_BROWSE": "浏览集合"
 };

@@ -4,7 +4,7 @@ export default {
   "NAV_CATEGORIES": "Categorías",
   "NAV_HISTORY": "Historial",
   "NAV_DASHBOARD": "Mi Tablero",
-  "NAV_ARTICLES": "Artículos",
+  "NAV_ARTICLES": "Blog",
   "FOOTER_COPYRIGHT": "© 2026 Utildex. Local-first. Código Abierto.",
   "FOOTER_CONTRIBUTE": "Contribuir",
   "FOOTER_PRIVACY": "Privacidad",
