@@ -1,7 +1,6 @@
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { ToolService } from '../../services/tool.service';
-import { ArticleService } from '../../services/article.service';
 import { ToolCardComponent } from '../tool-card/tool-card.component';
 import { ArticleCardComponent } from '../article-card/article-card.component'; // Import new card
 import { CarouselComponent } from '../carousel/carousel.component';
@@ -12,11 +11,12 @@ import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ToolCardComponent, ArticleCardComponent, CarouselComponent, RouterLink],
+  imports: [ToolCardComponent, ArticleCardComponent, CarouselComponent, RouterLink, NgTemplateOutlet],
   templateUrl: './dashboard.component.html',
   providers: [
     provideTranslation({
@@ -29,15 +29,28 @@ import zh from './i18n/zh';
 })
 export class DashboardComponent {
   toolService = inject(ToolService);
-  articleService = inject(ArticleService);
   app = inject(AppComponent);
   t = inject(ScopedTranslationService);
 
-  featuredArticles = this.articleService.featuredArticles;
   favorites = this.toolService.favorites;
   favoriteTools = this.toolService.favoriteTools;
   mostUsedTools = this.toolService.mostUsedTools;
   categories = this.toolService.categories;
+
+  // New logic for random tools
+  randomTools = computed(() => {
+    // Only re-compute if the total number of tools changes (unlikely) or on first load
+    const allTools = this.toolService.tools();
+    if (allTools.length === 0) return [];
+    
+    // Create a shuffled copy
+    const shuffled = [...allTools].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 10);
+  });
+
+  hasUserStats = computed(() => {
+    return this.favoriteTools().length > 0 || this.mostUsedTools().length > 0;
+  });
 
   toggleFav(id: string) {
     this.toolService.toggleFavorite(id);

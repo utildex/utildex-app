@@ -30,7 +30,7 @@ export const routes: Routes = [
   {
     path: 'articles',
     loadComponent: () => import('./pages/articles/articles.component').then(m => m.ArticlesComponent),
-    title: 'Articles - Utildex'
+    title: 'Blog - Utildex'
   },
   {
     path: 'articles/:id',

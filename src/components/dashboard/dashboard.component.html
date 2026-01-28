@@ -26,21 +26,9 @@
         </div>
     </section>
 
-    <!-- Featured Articles Carousel -->
-    @defer (on idle) {
-        <section>
-            <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
-                <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-primary">auto_stories</span>
-                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FEATURED_ARTICLES'] }}</h2>
-                </div>
-                <a routerLink="/articles" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
-            </div>
-
-            <app-carousel [items]="featuredArticles()" [itemTemplate]="articleTemplate" [autoplay]="true" [interval]="6000"></app-carousel>
-        </section>
-    } @placeholder {
-        <div class="h-80 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
+    <!-- Random Tools (If no user stats) -->
+    @if (!hasUserStats()) {
+        <ng-container *ngTemplateOutlet="randomSection"></ng-container>
     }
 
     <!-- Favorites Carousel (Conditional) -->
@@ -73,6 +61,11 @@
         } @placeholder {
             <div class="h-64 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
         }
+    }
+
+    <!-- Random Tools (If has user stats) -->
+    @if (hasUserStats()) {
+        <ng-container *ngTemplateOutlet="randomSection"></ng-container>
     }
 
     <!-- Categories Carousel -->
@@ -116,6 +109,30 @@
                     [priority]="i < 2"
             ></app-article-card>
         </div>
+    </ng-template>
+
+    <!-- Random Tools Template -->
+    <ng-template #randomSection>
+        @defer (on viewport) {
+            <section>
+                <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-purple-500">shuffle</span>
+                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_DISCOVER'] }}</h2>
+                    </div>
+                    <a routerLink="/tools" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
+                </div>
+
+                <app-carousel 
+                    [items]="randomTools()" 
+                    [itemTemplate]="toolTemplate" 
+                    [marquee]="true" 
+                    marqueeDuration="60s">
+                </app-carousel>
+            </section>
+        } @placeholder {
+            <div class="h-64 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
+        }
     </ng-template>
 
 </div>
