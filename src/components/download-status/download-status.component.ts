@@ -1,4 +1,4 @@
-import { Component, inject, computed } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OfflineManagerService } from '../../services/offline-manager.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';

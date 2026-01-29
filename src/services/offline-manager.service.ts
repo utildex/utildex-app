@@ -27,9 +27,12 @@ export class OfflineManagerService {
   // Derived
   totalTools = computed(() => Object.keys(TOOL_COMPONENT_MAP).length);
   progress = computed(() => {
-    // Progress of the current batch
-    if (this.queue.length === 0) return 0;
-    return Math.round((this.downloadedCount() / this.queue.length) * 100);
+      const total = this.totalTools();
+      if (total === 0) {
+          return 0;
+      }
+      const downloaded = this.downloadedTools().size;
+      return Math.round((downloaded / total) * 100);
   });
 
   private abortController: AbortController | null = null;
