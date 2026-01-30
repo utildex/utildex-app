@@ -18,10 +18,28 @@ import zh from './i18n/zh';
 type Tab = 'general' | 'data';
 
 // Interfaces for structured data viewing
-interface ParsedData {
-  type: 'clipboard' | 'usage' | 'favorites' | 'dashboard' | 'simple' | 'json';
-  data: any;
+interface ClipboardItem {
+  text: string;
+  timestamp: number | string;
 }
+
+interface UsageStat {
+  name: string;
+  count: number;
+  lastUsed: number | string;
+}
+
+interface StorageItem {
+  key: string;
+  value: string;
+}
+
+type ParsedData = 
+  | { type: 'clipboard'; data: ClipboardItem[] }
+  | { type: 'usage'; data: UsageStat[] }
+  | { type: 'favorites'; data: string[] }
+  | { type: 'dashboard'; data: { count: number } }
+  | { type: 'json' | 'simple'; data: string };
 
 @Component({
   selector: 'app-settings-modal',
@@ -456,7 +474,7 @@ export class SettingsModalComponent {
 
   // Data State
   stats = signal<StorageStats | null>(null);
-  inspectionData = signal<ParsedData[]>([]);
+  inspectionData = signal<StorageItem[]>([]);
 
   languages: { code: Language; flagCode: string; label: string }[] = [
     { code: 'en', flagCode: 'us', label: 'English' },
@@ -493,7 +511,7 @@ export class SettingsModalComponent {
 
   async loadInspection(catId: string) {
     const details = await this.storage.getCategoryDetails(catId);
-    this.inspectionData.set(details as any);
+    this.inspectionData.set(details as StorageItem[]);
   }
 
   switchTab(tab: Tab) {
@@ -572,8 +590,9 @@ export class SettingsModalComponent {
     this.importInput()?.nativeElement.click();
   }
 
-  async handleImport(event: any) {
-    const file = event.target.files[0];
+  async handleImport(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
@@ -611,7 +630,7 @@ export class SettingsModalComponent {
        
        if (key === 'utildex-usage') {
           const obj = JSON.parse(value);
-          const stats = Object.entries(obj).map(([id, stat]: [string, any]) => ({
+          const stats = Object.entries(obj).map(([id, stat]: [string, { count: number; lastUsed: number }]) => ({
              name: this.resolveToolName(id),
              count: stat.count,
              lastUsed: stat.lastUsed

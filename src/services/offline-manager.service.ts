@@ -132,7 +132,7 @@ export class OfflineManagerService {
   }
 
   private initSmartLoader() {
-    const idx = (window as any).requestIdleCallback;
+    const idx = window.requestIdleCallback;
     if (idx) {
       // Small initial delay to let app startup finish
       idx(() => setTimeout(() => this.backgroundLoadStep(), 2000));
@@ -159,7 +159,7 @@ export class OfflineManagerService {
           } catch(e) { console.error(e); }
           
           // Next step
-           const idx = (window as any).requestIdleCallback;
+           const idx = window.requestIdleCallback;
            if (idx) idx(() => this.backgroundLoadStep());
            else setTimeout(() => this.backgroundLoadStep(), 2000);
       }

@@ -1,7 +1,6 @@
 
 import { Component, inject, signal, computed, ViewChild, OnInit } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
-import { DecimalPipe } from '@angular/common'; // Imported DecimalPipe
 import { ThemeService } from './services/theme.service';
 import { ToolService } from './services/tool.service';
 import { I18nService } from './services/i18n.service';
@@ -30,7 +29,7 @@ import { filter } from 'rxjs/operators';
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, RouterLink, RouterLinkActive, DecimalPipe, 
+    RouterOutlet, RouterLink, RouterLinkActive,
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
     DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective
