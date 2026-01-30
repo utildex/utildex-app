@@ -70,9 +70,23 @@
               </span>
             </button>
           
-          <!-- Sidebar Toggle (History) -->
+          <!-- Preload Library Button -->
+          <button 
+             [appBubble]="'BUBBLE_PRELOAD_INFO'"
+             [bubblePos]="'bottom'"
+            (click)="offline.downloadLibrary()"
+            [disabled]="offline.isDownloading()"
+            class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-primary/50 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all mr-1 disabled:opacity-50 disabled:cursor-not-allowed"
+            [title]="t.map()['BTN_DOWNLOAD_LIBRARY'] || 'Download Library'"
+          >
+             <span class="material-symbols-outlined text-lg">cloud_download</span>
+             <span class="text-xs font-bold">{{ offline.isDownloading() ? t.map()['BTN_DOWNLOADING'] : t.map()['BTN_PRELOAD'] }}</span>
+          </button>
+
             <button
                     (click)="toggleSidebar()"
+                    [appBubble]="'BUBBLE_HISTORY_INFO'"
+                    [bubblePos]="'bottom'"
                     class="h-10 w-10 flex items-center justify-center rounded-full
                      text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800
                      transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
@@ -168,8 +182,10 @@
   </div>
 
   <!-- Global Elements -->
+  <app-guide></app-guide>
   <app-toast></app-toast>
   <app-network-status></app-network-status>
+  <app-download-status></app-download-status>
   <app-command-palette></app-command-palette>
   <app-error-overlay></app-error-overlay>
   <app-dashboard-modals></app-dashboard-modals>
