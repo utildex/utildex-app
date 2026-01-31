@@ -28,5 +28,8 @@ export default {
   "FILLER_NOTE": "Note (1x1)",
   "FILLER_NOTE_WIDE": "Wide Note (2x1)",
   "FILLER_IMAGE": "Image (2x2)",
-  "FILLER_SPACER": "Spacer (1x1)"
+  "FILLER_SPACER": "Spacer (1x1)",
+  "EMPTY_TITLE": "Your Dashboard is Empty",
+  "EMPTY_DESC": "Pin your favorite tools here for quick access.",
+  "BTN_START": "Start Customizing"
 };

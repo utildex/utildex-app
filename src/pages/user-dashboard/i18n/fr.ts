@@ -28,5 +28,8 @@ export default {
   "FILLER_NOTE": "Note (1x1)",
   "FILLER_NOTE_WIDE": "Note Large (2x1)",
   "FILLER_IMAGE": "Image (2x2)",
-  "FILLER_SPACER": "Espaceur (1x1)"
+  "FILLER_SPACER": "Espaceur (1x1)",
+  "EMPTY_TITLE": "Votre Tableau de Bord est Vide",
+  "EMPTY_DESC": "Épinglez vos outils favoris ici pour un accès rapide.",
+  "BTN_START": "Personnaliser"
 };

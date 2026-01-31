@@ -28,5 +28,8 @@ export default {
   "FILLER_NOTE": "Nota (1x1)",
   "FILLER_NOTE_WIDE": "Nota Ancha (2x1)",
   "FILLER_IMAGE": "Imagen (2x2)",
-  "FILLER_SPACER": "Espaciador (1x1)"
+  "FILLER_SPACER": "Espaciador (1x1)",
+  "EMPTY_TITLE": "Tu Tablero está Vacío",
+  "EMPTY_DESC": "Fija tus herramientas favoritas aquí para un acceso rápido.",
+  "BTN_START": "Empezar a Personalizar"
 };

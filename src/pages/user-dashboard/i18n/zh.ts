@@ -28,5 +28,8 @@ export default {
   "FILLER_NOTE": "便签 (1x1)",
   "FILLER_NOTE_WIDE": "宽便签 (2x1)",
   "FILLER_IMAGE": "图片 (2x2)",
-  "FILLER_SPACER": "间隔 (1x1)"
+  "FILLER_SPACER": "间隔 (1x1)",
+  "EMPTY_TITLE": "您的仪表盘是空的",
+  "EMPTY_DESC": "在此固定您最常用的工具以便快速访问。",
+  "BTN_START": "开始自定义"
 };

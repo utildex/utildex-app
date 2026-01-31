@@ -89,10 +89,28 @@ import zh from './i18n/zh';
       <!-- Grid Canvas -->
       <div 
         #gridContainer
-        class="relative w-full transition-all duration-300"
+        class="relative w-full transition-all duration-300 overflow-hidden rounded-2xl"
+        [ngClass]="{ 'bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:20px_20px]': dashboardWidgets().length === 0 }"
         [style.height.px]="containerHeight()"
         (mouseleave)="hoveredSlot.set(null)"
       >
+         <!-- Empty State Hero -->
+         @if (dashboardWidgets().length === 0 && !isEditMode()) {
+            <div class="absolute inset-0 flex flex-col items-center justify-center -mt-20">
+               <div class="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-full mb-6 border border-slate-100 dark:border-slate-700 animate-fade-in-up">
+                  <span class="material-symbols-outlined text-6xl text-slate-300">dashboard_customize</span>
+               </div>
+               <h3 class="text-xl font-bold text-slate-700 dark:text-slate-200 animate-fade-in-up delay-100">{{ t.map()['EMPTY_TITLE'] }}</h3>
+               <p class="text-slate-500 mb-6 animate-fade-in-up delay-200">{{ t.map()['EMPTY_DESC'] }}</p>
+               <button 
+                  (click)="isEditMode.set(true)" 
+                  class="px-6 py-3 bg-primary text-white rounded-xl font-bold shadow-lg shadow-primary/30 hover:bg-blue-600 transition-all hover:scale-105 active:scale-95 animate-fade-in-up delay-300"
+               >
+                  {{ t.map()['BTN_START'] }}
+               </button>
+            </div>
+         }
+
          <!-- Ghost Grid (Sensor Layer) -->
          @if (isEditMode()) {
             <div class="absolute inset-0 grid-container z-0">
