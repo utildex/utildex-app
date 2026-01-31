@@ -41,5 +41,24 @@ export default {
   "MSG_BACKUP_READY": "Copia de seguridad descargada",
   "MSG_EXPORT_FAIL": "Falló la exportación",
   "MSG_IMPORT_SUCCESS": "Datos importados correctamente. Recargando...",
-  "MSG_IMPORT_FAIL": "Archivo de copia inválido"
+  "MSG_IMPORT_FAIL": "Archivo de copia inválido",
+
+  "UNIT_ITEMS": "elementos",
+  "UNIT_USES": "usos",
+  "UNIT_WIDGETS": "widgets configurados",
+  "UNIT_BYTE": "B",
+  "UNIT_KILOBYTE": "KB",
+  "UNIT_MEGABYTE": "MB",
+  "UNIT_GIGABYTE": "GB",
+
+  "KEY_CLIPBOARD_HISTORY": "Historial del portapapeles",
+  "KEY_USAGE": "Estadísticas de uso", 
+  "KEY_FAVORITES": "Lista de favoritos",
+  "KEY_DASHBOARD_V2": "Diseño del tablero",
+  "KEY_THEME": "Ajustes del tema",
+  "KEY_LANG": "Preferencia de idioma",
+  "KEY_COLOR": "Preferencia de color",
+  "KEY_FONT": "Preferencia de fuente",
+  "KEY_DENSITY": "Preferencia de densidad",
+  "KEY_STATE_PREFIX": "Estado: "
 };
