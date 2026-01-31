@@ -161,7 +161,7 @@ interface UnitDef {
 })
 export class UnitConverterComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
+  widgetConfig = input<Record<string, unknown>>(null);
 
   t = inject(ScopedTranslationService);
   persistence = inject(PersistenceService);
@@ -206,7 +206,6 @@ export class UnitConverterComponent {
     
     effect(() => {
        // Reset units when type changes if current units are invalid
-       const type = this.currentType();
        const units = this.availableUnits();
        const from = this.fromUnit();
        

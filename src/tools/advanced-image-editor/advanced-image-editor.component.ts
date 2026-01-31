@@ -1223,7 +1223,7 @@ class HistoryManager {
 export class AdvancedImageEditorComponent {
     // Required inputs (WidgetHost injects these)
     isWidget = input<boolean>(false);
-    widgetConfig = input<any>(null);
+    widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
 
     widgetTab = signal<WidgetTab>('edit');
 
@@ -1350,7 +1350,7 @@ export class AdvancedImageEditorComponent {
         });
 
         // When working recipe changes, render preview (debounced)
-        let timer: any = null;
+        let timer: ReturnType<typeof setTimeout> | null = null;
         effect(() => {
             const img = this.activeImage();
             this.workingRecipe();
@@ -1725,6 +1725,7 @@ export class AdvancedImageEditorComponent {
         }));
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onCanvasPointerUp(ev: PointerEvent) {
         const c = this.cropUi();
         if (!c.enabled || !c.dragging) return;
@@ -2338,9 +2339,10 @@ export class AdvancedImageEditorComponent {
                     this.images.update(list =>
                         list.map(img => (img.id === s.id ? { ...img, status: 'done' } : img))
                     );
-                } catch (e: any) {
+                } catch (e: unknown) {
+                    const errorMessage = e instanceof Error ? e.message : String(e);
                     this.images.update(list =>
-                        list.map(img => (img.id === s.id ? { ...img, status: 'error', error: String(e?.message ?? e) } : img))
+                        list.map(img => (img.id === s.id ? { ...img, status: 'error', error: errorMessage } : img))
                     );
                 }
 

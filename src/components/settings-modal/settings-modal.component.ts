@@ -1,7 +1,7 @@
 
 import { Component, inject, output, signal, effect, ElementRef, viewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ThemeService, PrimaryColor, FontFamily, Density } from '../../services/theme.service';
+import { ThemeService, PrimaryColor } from '../../services/theme.service';
 import { I18nService, Language } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
 import { ToolService } from '../../services/tool.service';
@@ -34,7 +34,7 @@ interface StorageItem {
   value: string;
 }
 
-type ParsedData = 
+type ParsedData =
   | { type: 'clipboard'; data: ClipboardItem[] }
   | { type: 'usage'; data: UsageStat[] }
   | { type: 'favorites'; data: string[] }
@@ -652,7 +652,7 @@ export class SettingsModalComponent {
        if (value.startsWith('{') || value.startsWith('[')) {
           return { type: 'json', data: JSON.stringify(JSON.parse(value), null, 2) };
        }
-    } catch (e) {
+    } catch {
        // Fallback
     }
 

@@ -150,7 +150,7 @@ export class StorageManagerService {
 
   async exportData(): Promise<Blob> {
     const keys = await this.db.keys();
-    const exportObj: Record<string, any> = {};
+    const exportObj: Record<string, unknown> = {};
     exportObj['meta'] = {
       version: 1,
       date: new Date().toISOString(),

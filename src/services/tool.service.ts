@@ -1,5 +1,5 @@
 
-import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { I18nService, I18nText } from './i18n.service';
 import { DbService } from './db.service';
 
@@ -43,7 +43,7 @@ export interface DashboardWidget {
   instanceId: string;
   type: 'tool' | 'note' | 'image' | 'spacer';
   toolId?: string; // Required if type === 'tool'
-  data?: Record<string, any>; // Content for notes, url for images, etc.
+  data?: Record<string, unknown>; // Content for notes, url for images, etc.
   layout: WidgetLayout;
 }
 
@@ -53,7 +53,7 @@ export interface PendingPlacement {
   toolId?: string;
   w: number;
   h: number;
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 interface ToolUsageStats {
@@ -604,7 +604,7 @@ export class ToolService {
     const tags = this.selectedTags();
     const allTools = this.tools();
 
-    let filtered = allTools.filter(tool => {
+    const filtered = allTools.filter(tool => {
       const matchesSearch = 
         !query ||
         this.resolveSearchText(tool.name).includes(query) || 
@@ -749,7 +749,7 @@ export class ToolService {
     });
   }
 
-  updateWidgetData(instanceId: string, data: any) {
+  updateWidgetData(instanceId: string, data: Record<string, unknown>) {
     this.dashboardWidgets.update(widgets => {
        const updated = widgets.map(w =>
          w.instanceId === instanceId

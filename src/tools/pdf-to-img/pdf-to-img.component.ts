@@ -8,6 +8,7 @@ import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import JSZip from 'jszip';
 import * as pdfjsLib from 'pdfjs-dist';
+import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -22,7 +23,7 @@ interface PageThumbnail {
   pageNumber: number;
   dataUrl: string;
   selected: boolean;
-  viewport: any; // PDFPageViewport
+  viewport: ReturnType<PDFPageProxy['getViewport']>;
 }
 
 @Component({
@@ -195,7 +196,7 @@ interface PageThumbnail {
 })
 export class PdfToImgComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
+  widgetConfig = input<Record<string, unknown> | null>(null);
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
@@ -215,16 +216,17 @@ export class PdfToImgComponent {
   selectedCount = computed(() => this.pages().filter(p => p.selected).length);
 
   // Keep reference to PDF document
-  private pdfDoc: any = null;
+  private pdfDoc: PDFDocumentProxy | null = null;
 
   triggerUpload() {
     this.fileInput()?.nativeElement.click();
   }
 
-  handleFileSelect(event: any) {
-    const file = event.target.files[0];
+  handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) this.loadFile(file);
-    event.target.value = '';
+    input.value = '';
   }
 
   handleFileDrop(files: FileList) {

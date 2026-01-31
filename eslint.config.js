@@ -4,6 +4,12 @@ import tseslint from "typescript-eslint";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig([
+
+  // Ignores globaux
+  {
+    ignores: ["dist/", "node_modules/", ".angular/", "*.min.js", "src/**/*.js"]
+  },
+
   // JavaScript files
   {
     files: ["**/*.{js,mjs,cjs}"],

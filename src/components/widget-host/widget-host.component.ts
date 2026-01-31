@@ -1,5 +1,5 @@
 
-import { Component, input, inject, signal, computed, OnInit, ElementRef, viewChild } from '@angular/core';
+import { Component, input, inject, signal, computed, OnInit, ElementRef, viewChild, Type } from '@angular/core';
 import { NgComponentOutlet, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { getToolComponent } from '../../core/tool-registry';
@@ -91,7 +91,7 @@ export class WidgetHostComponent implements OnInit {
   toolService = inject(ToolService);
   i18n = inject(I18nService);
   
-  componentType = signal<any>(null);
+  componentType = signal<Type<unknown> | null>(null);
   error = signal<boolean>(false);
   widgetInputs = signal<Record<string, unknown>>({});
   
@@ -156,8 +156,9 @@ export class WidgetHostComponent implements OnInit {
       this.fileInput()?.nativeElement.click();
   }
 
-  handleFileSelect(event: any) {
-    const file = event.target.files[0];
+  handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {

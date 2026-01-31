@@ -19,7 +19,7 @@ export class GuideService {
     position: 'best'
   });
 
-  private hideTimer: any;
+  private hideTimer: ReturnType<typeof setTimeout> | null = null;
 
   /**
    * Show a context bubble anchored to an element

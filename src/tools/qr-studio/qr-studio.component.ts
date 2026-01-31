@@ -10,11 +10,27 @@ import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
-// Type definitions for the library we lazy load
-declare const QRCode: any;
+// Extend window interface to include QRCode library
+interface WindowWithQRCode extends Window {
+  QRCode?: {
+    toDataURL: (content: string, options: Record<string, unknown>) => Promise<string>;
+  };
+}
 
 type QrType = 'url' | 'text' | 'wifi';
 type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
+
+interface QrStateData {
+  type?: QrType;
+  url?: string;
+  text?: string;
+  ssid?: string;
+  pass?: string;
+  hidden?: boolean;
+  fg?: string;
+  bg?: string;
+  level?: ErrorCorrectionLevel;
+}
 
 @Component({
   selector: 'app-qr-studio',
@@ -395,8 +411,8 @@ type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
 })
 export class QrStudioComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
-  
+  widgetConfig = input<{ cols?: number; rows?: number; instanceId?: string; qrData?: QrStateData } | null>(null);
+
   t = inject(ScopedTranslationService);
   toolService = inject(ToolService);
 
@@ -457,10 +473,11 @@ export class QrStudioComponent {
   }
 
   async loadLib() {
-     if (typeof window !== 'undefined' && !(window as any).QRCode) {
+     const win = window as unknown as WindowWithQRCode;
+     if (typeof window !== 'undefined' && !win.QRCode) {
         try {
            const module = await import('qrcode');
-           (window as any).QRCode = module.default || module;
+           win.QRCode = module.default || module;
            this.generate();
         } catch (e) {
            console.error('Failed to load QRCode lib', e);
@@ -492,8 +509,9 @@ export class QrStudioComponent {
   }
 
   async generate() {
-     if (typeof window === 'undefined' || !(window as any).QRCode) return;
-     
+     const win = window as unknown as WindowWithQRCode;
+     if (typeof window === 'undefined' || !win.QRCode) return;
+
      this.isGenerating.set(true);
      
      // Construct Content
@@ -516,7 +534,7 @@ export class QrStudioComponent {
      }
 
      try {
-        const url = await (window as any).QRCode.toDataURL(content, {
+        const url = await win.QRCode.toDataURL(content, {
            errorCorrectionLevel: this.errorLevel(),
            margin: 1,
            color: {
@@ -569,7 +587,7 @@ export class QrStudioComponent {
      }
   }
 
-  restoreState(data: any) {
+  restoreState(data: QrStateData) {
      this.currentType.set(data.type || 'url');
      this.urlValue.set(data.url || '');
      this.textValue.set(data.text || '');

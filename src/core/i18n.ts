@@ -1,8 +1,11 @@
 import { Injectable, InjectionToken, inject, signal, effect } from '@angular/core';
 import { I18nService } from '../services/i18n.service';
 
+// Type for translation modules (may have a default export)
+type TranslationModule = Record<string, string> | { default: Record<string, string> };
+
 // Change: Loader returns the data directly or a Promise
-export type I18nMap = Record<string, () => Promise<any> | any>;
+export type I18nMap = Record<string, () => Promise<TranslationModule> | TranslationModule>;
 
 export const I18N_MAP = new InjectionToken<I18nMap>('I18N_MAP');
 
@@ -56,7 +59,8 @@ export class ScopedTranslationService {
         // Handle both Promise (dynamic import) and direct value (static import)
         const result = loader();
         const module = result instanceof Promise ? await result : result;
-        this.translations.set(module.default || module);
+        const translations = ('default' in module ? module.default : module) as Record<string, string>;
+        this.translations.set(translations);
       } catch (err) {
         console.error(`[I18n] Failed to load translations for '${lang}'`, err);
         // Try fallback if we haven't already
@@ -64,7 +68,8 @@ export class ScopedTranslationService {
           try {
             const fallbackResult = this.loaders['en']();
             const fallbackModule = fallbackResult instanceof Promise ? await fallbackResult : fallbackResult;
-            this.translations.set(fallbackModule.default || fallbackModule);
+            const fallbackTranslations = ('default' in fallbackModule ? fallbackModule.default : fallbackModule) as Record<string, string>;
+            this.translations.set(fallbackTranslations);
           } catch (fallbackErr) {
              console.error('[I18n] Failed to load fallback english translations', fallbackErr);
           }

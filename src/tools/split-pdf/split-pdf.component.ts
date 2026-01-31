@@ -3,7 +3,6 @@ import { Component, inject, signal, input, ElementRef, viewChild } from '@angula
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
-import { ActionBarComponent } from '../../components/action-bar/action-bar.component';
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -326,7 +325,7 @@ interface GeneratedFile {
 })
 export class SplitPdfComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
+  widgetConfig = input<Record<string, unknown>>(null);
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
@@ -352,10 +351,11 @@ export class SplitPdfComponent {
     this.fileInput()?.nativeElement.click();
   }
 
-  handleFileSelect(event: any) {
-    const file = event.target.files[0];
+  handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (file) this.loadFile(file);
-    event.target.value = '';
+    input.value = '';
   }
 
   handleFileDrop(files: FileList) {
@@ -442,9 +442,10 @@ export class SplitPdfComponent {
        this.generatedFiles.set(results);
        this.toast.show(this.t.get('SUCCESS'), 'success');
 
-    } catch (e: any) {
+    } catch (e: unknown) {
        console.error(e);
-       this.toast.show(e.message || 'Error processing PDF', 'error');
+       const message = e instanceof Error ? e.message : 'Error processing PDF';
+       this.toast.show(message, 'error');
     } finally {
        this.isProcessing.set(false);
     }

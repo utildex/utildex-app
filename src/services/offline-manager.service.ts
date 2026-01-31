@@ -81,7 +81,7 @@ export class OfflineManagerService {
       if (!this.isStopping()) {
            this.guide.notify('NOTIFY_LIB_DOWNLOADED', 6000);
       }
-    } catch (e) {
+    } catch  {
       // Stopped
     } finally {
       this.isDownloading.set(false);

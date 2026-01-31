@@ -11,15 +11,13 @@ import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
-// Lazy load types
-declare const heic2any: any;
-declare const JSZip: any;
+type ImageStatus = 'pending' | 'converting' | 'done' | 'error';
 
 interface QueuedImage {
   id: string;
   file: File;
   previewUrl: string;
-  status: 'pending' | 'converting' | 'done' | 'error';
+  status: ImageStatus;
   resultBlob?: Blob;
   resultUrl?: string;
   resultSize?: number;
@@ -239,7 +237,7 @@ interface QueuedImage {
 })
 export class ImageConverterComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null);
+  widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
@@ -261,9 +259,10 @@ export class ImageConverterComponent {
     this.fileInput()?.nativeElement.click();
   }
 
-  handleFileSelect(event: any) {
-    if (event.target.files) this.addFiles(event.target.files);
-    event.target.value = '';
+  handleFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) this.addFiles(input.files);
+    input.value = '';
   }
 
   handleFileDrop(files: FileList) {
@@ -317,7 +316,7 @@ export class ImageConverterComponent {
 
      // Load libraries lazily
      // Note: We use dynamic import for heic2any only if needed
-     let heicLib: any = null;
+     let heicLib: ((options: { blob: Blob; toType: string }) => Promise<Blob | Blob[]>) | null = null;
      const needsHeic = this.images().some(i => i.file.name.toLowerCase().endsWith('.heic'));
      
      if (needsHeic) {
@@ -341,8 +340,8 @@ export class ImageConverterComponent {
         this.updateStatus(img.id, 'converting');
         
         try {
-           let sourceBlob = img.file;
-           
+           let sourceBlob: Blob = img.file;
+
            // Handle HEIC
            if (img.file.name.toLowerCase().endsWith('.heic')) {
               if (!heicLib) throw new Error('HEIC lib not loaded');
@@ -369,7 +368,7 @@ export class ImageConverterComponent {
      this.toast.show(this.t.get('SUCCESS_MSG'), 'success');
   }
 
-  updateStatus(id: string, status: any) {
+  updateStatus(id: string, status: ImageStatus) {
      this.images.update(curr => curr.map(i => i.id === id ? { ...i, status } : i));
   }
 
