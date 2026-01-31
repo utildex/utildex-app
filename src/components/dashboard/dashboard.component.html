@@ -10,7 +10,9 @@
         </div>
 
         <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
-            {{ t.map()['HERO_TITLE_PREFIX'] || 'Modular' }} <span class="text-primary">{{ t.map()['HERO_TITLE_HIGHLIGHT'] || 'Developer' }}</span> {{ t.map()['HERO_TITLE_SUFFIX'] || 'Toolbox' }}
+            {{ t.map()['HERO_TITLE_PREFIX'] !== undefined ? t.map()['HERO_TITLE_PREFIX'] : 'Modular' }} 
+            <span class="text-primary">{{ t.map()['HERO_TITLE_HIGHLIGHT'] !== undefined ? t.map()['HERO_TITLE_HIGHLIGHT'] : 'Local' }}</span> 
+            {{ t.map()['HERO_TITLE_SUFFIX'] !== undefined ? t.map()['HERO_TITLE_SUFFIX'] : 'Toolbox' }}
         </h1>
         <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8">
             {{ t.map()['HERO_DESC'] || 'A privacy-focused collection of open-source utilities for developers and power users. 100% Local.' }}
