@@ -11,5 +11,10 @@ export default {
   "RESET_FILTERS": "Reset all filters",
   "PAGE_PREV": "Previous",
   "PAGE_NEXT": "Next",
-  "PAGE_INFO": "Page {0} of {1}"
+  "PAGE_INFO": "Page {0} of {1}",
+  "CAT_ALL": "All",
+  "SORT_BY": "Sort by",
+  "SORT_NAME": "Name",
+  "SORT_POPULARITY": "Most Used",
+  "SORT_RELEVANCE": "Relevance"
 };

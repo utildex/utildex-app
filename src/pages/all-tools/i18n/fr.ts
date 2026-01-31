@@ -12,5 +12,10 @@ export default {
   "RESET_FILTERS": "Réinitialiser les filtres",
   "PAGE_PREV": "Précédent",
   "PAGE_NEXT": "Suivant",
-  "PAGE_INFO": "Page {0} sur {1}"
+  "PAGE_INFO": "Page {0} sur {1}",
+  "CAT_ALL": "Tout",
+  "SORT_BY": "Trier par",
+  "SORT_NAME": "Nom",
+  "SORT_POPULARITY": "Mes plus utilisés",
+  "SORT_RELEVANCE": "Pertinence"
 };
