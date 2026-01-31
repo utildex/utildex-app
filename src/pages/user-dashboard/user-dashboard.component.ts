@@ -91,29 +91,62 @@ import zh from './i18n/zh';
         #gridContainer
         class="relative w-full transition-all duration-300"
         [style.height.px]="containerHeight()"
+        (mouseleave)="hoveredSlot.set(null)"
       >
-         <!-- Ghost Grid (Visible in Edit Mode) -->
+         <!-- Ghost Grid (Sensor Layer) -->
          @if (isEditMode()) {
             <div class="absolute inset-0 grid-container z-0">
                @for (row of ghostRows(); track row) {
                   @for (col of ghostCols(); track col) {
                      <div 
-                        class="absolute border border-slate-200 dark:border-slate-800 rounded-xl transition-colors duration-200 flex items-center justify-center cursor-pointer"
-                        [class.hover:bg-primary]="$any(pendingPlacement())"
-                        [class.hover:bg-opacity-20]="$any(pendingPlacement())"
-                        [class.hover:border-primary]="$any(pendingPlacement())"
+                        class="absolute border border-slate-200 dark:border-slate-800 rounded-xl transition-colors duration-200"
                         [style.left.%]="col * (100 / cols)"
                         [style.top.px]="row * rowHeight"
                         [style.width.%]="100 / cols"
                         [style.height.px]="rowHeight"
+                        (mouseenter)="onSlotMouseEnter(col, row)"
                         (click)="onSlotClick(col, row)"
-                     >
-                        @if (pendingPlacement()) {
-                           <div class="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full"></div>
-                        }
-                     </div>
+                     ></div>
                   }
                }
+            </div>
+         }
+
+         <!-- THE PHANTOM WIDGET (Overlay) -->
+         @if (pendingPlacement() && hoveredSlot() && isPositionValid()) {
+            <div 
+               class="absolute z-50 pointer-events-none transition-all duration-100 ease-out"
+               [style.left.%]="hoveredSlot()!.x * (100 / cols)"
+               [style.top.px]="hoveredSlot()!.y * rowHeight"
+               [style.width.%]="pendingPlacement()!.w * (100 / cols)"
+               [style.height.px]="pendingPlacement()!.h * rowHeight"
+            >
+               <div class="w-full h-full p-2 opacity-60 scale-95 origin-center">
+                  <div class="w-full h-full rounded-2xl overflow-hidden shadow-2xl border-2 border-primary bg-white dark:bg-slate-900">
+                     <!-- We recreate a temporary widget host for visual preview -->
+                     <app-widget-host 
+                        [widget]="getPhantomWidget()"
+                        [isEditMode]="true"
+                        [isPhantom]="true"
+                        class="block w-full h-full pointer-events-none"
+                     ></app-widget-host>
+                  </div>
+               </div>
+            </div>
+         }
+
+         <!-- INVALID PLACEMENT INDICATOR (Red Box) -->
+         @if (pendingPlacement() && hoveredSlot() && !isPositionValid()) {
+             <div 
+               class="absolute z-50 pointer-events-none transition-all duration-100 ease-out p-2"
+               [style.left.%]="hoveredSlot()!.x * (100 / cols)"
+               [style.top.px]="hoveredSlot()!.y * rowHeight"
+               [style.width.%]="pendingPlacement()!.w * (100 / cols)"
+               [style.height.px]="pendingPlacement()!.h * rowHeight"
+            >
+                <div class="w-full h-full rounded-2xl bg-red-500/20 border-2 border-red-500 flex items-center justify-center backdrop-blur-sm">
+                   <span class="material-symbols-outlined text-red-500 text-4xl">block</span>
+                </div>
             </div>
          }
 
@@ -174,12 +207,26 @@ export class UserDashboardComponent {
   
   // Placement State
   pendingPlacement = signal<PendingPlacement | null>(null);
+  hoveredSlot = signal<{x: number, y: number} | null>(null);
 
   // Layout Config
   rowHeight = 200; // px
   
   // Signals
   dashboardWidgets = this.toolService.dashboardWidgets;
+
+  // Validation Check
+  isPositionValid = computed(() => {
+    const slot = this.hoveredSlot();
+    const pending = this.pendingPlacement();
+    if (!slot || !pending) return false;
+
+    return this.toolService.isPositionValid(
+        slot.x, slot.y, 
+        pending.w, pending.h, 
+        this.dashboardWidgets()
+    );
+  });
 
   constructor() {
     // Listen for placement requests from the global modal
@@ -192,6 +239,48 @@ export class UserDashboardComponent {
         this.pendingPlacement.set(request);
       }
     });
+  }
+
+  getPhantomWidget(): DashboardWidget {
+     const pending = this.pendingPlacement()!;
+     return {
+        instanceId: 'phantom',
+        type: pending.type,
+        toolId: pending.toolId,
+        data: pending.data,
+        layout: { x: 0, y: 0, w: pending.w, h: pending.h }
+     };
+  }
+
+  onSlotMouseEnter(col: number, row: number) {
+     if (this.pendingPlacement()) {
+        this.hoveredSlot.set({ x: col, y: row });
+     }
+  }
+
+  onSlotClick(col: number, row: number) {
+      const pending = this.pendingPlacement();
+      if (!pending) return;
+
+      if (this.toolService.isPositionValid(col, row, pending.w, pending.h, this.dashboardWidgets())) {
+          this.toolService.placeWidget({
+              instanceId: crypto.randomUUID(),
+              type: pending.type,
+              toolId: pending.toolId,
+              data: pending.data,
+              layout: { x: col, y: row, w: pending.w, h: pending.h }
+          });
+          this.pendingPlacement.set(null);
+          this.hoveredSlot.set(null);
+          this.toast.show(this.t.get('MSG_SUCCESS'), 'success');
+      } else {
+          this.toast.show(this.t.get('MSG_COLLISION'), 'error');
+      }
+  }
+
+  cancelPlacement() {
+      this.pendingPlacement.set(null);
+      this.hoveredSlot.set(null);
   }
 
   // --- Dynamic Layout Calculations ---
@@ -233,40 +322,6 @@ export class UserDashboardComponent {
 
   openFillerModal() {
     this.toolService.openFillerModal();
-  }
-
-  cancelPlacement() {
-    this.pendingPlacement.set(null);
-  }
-
-  onSlotClick(x: number, y: number) {
-    const pending = this.pendingPlacement();
-    if (!pending) return;
-
-    if (this.isMobile()) x = 0;
-
-    if (x + pending.w > this.cols) {
-       this.toast.show(this.t.get('ERR_BOUNDS'), 'error');
-       return;
-    }
-
-    const valid = this.toolService.isPositionValid(x, y, pending.w, pending.h, this.dashboardWidgets());
-
-    if (!valid) {
-       this.toast.show(this.t.get('ERR_COLLISION'), 'error');
-       return;
-    }
-
-    this.toolService.placeWidget({
-       instanceId: crypto.randomUUID(),
-       type: pending.type,
-       toolId: pending.toolId,
-       data: pending.data,
-       layout: { x, y, w: pending.w, h: pending.h }
-    });
-
-    this.pendingPlacement.set(null);
-    this.toast.show('Widget placed', 'success');
   }
 
   pickupWidget(widget: DashboardWidget) {
