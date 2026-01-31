@@ -21,6 +21,43 @@
         --font-sans: "Inter";
         --font-serif: "Merriweather";
         --font-mono: "Roboto Mono";
+
+        /* Scrollbar Config */
+        --sb-track: #f1f5f9;  /* slate-100 */
+        --sb-thumb: #cbd5e1;  /* slate-300 */
+        --sb-hover: #94a3b8;  /* slate-400 */
+    }
+
+    /* Dark Mode Overrides */
+    :root:has(.dark), .dark {
+        --sb-track: #0f172a;  /* slate-900 */
+        --sb-thumb: #334155;  /* slate-700 */
+        --sb-hover: #475569;  /* slate-600 */
+    }
+
+    /* Global Scrollbar Styling */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--sb-thumb) var(--sb-track);
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--sb-track);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: var(--sb-thumb);
+        border-radius: 999px;
+        border: 2px solid var(--sb-track);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--sb-hover);
     }
 
     html.density-compact { font-size: 14px; }
