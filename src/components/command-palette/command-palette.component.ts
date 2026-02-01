@@ -111,7 +111,7 @@ interface CommandResult {
                     [class.dark:text-slate-300]="selectedCategory() !== cat"
                     [class.dark:border-slate-700]="selectedCategory() !== cat"
                   >
-                    {{ t.map()[cat] || cat }}
+                    {{ toolService.getCategoryName(cat) }}
                   </button>
                 }
               </div>
