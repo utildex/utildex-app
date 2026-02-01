@@ -2,6 +2,7 @@
 export default {
   "BTN_DOWNLOAD_LIBRARY": "Télécharger la bibliothèque hors ligne",
   "BTN_PRELOAD": "Précharger la bibliothèque",
+  "EARLY_PREVIEW": "Preview Développeur",
   "BTN_DOWNLOADING": "Téléchargement...",
   "BUBBLE_PRELOAD_INFO": "Enregistre tous les outils sur votre appareil pour une utilisation sans internet.",
   "BUBBLE_HISTORY_INFO": "Historique du texte copié dans les outils Utildex.",
