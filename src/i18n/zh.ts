@@ -2,6 +2,7 @@
 export default {
   "BTN_DOWNLOAD_LIBRARY": "下载离线库",
   "BTN_PRELOAD": "预加载库",
+  "EARLY_PREVIEW": "开发者预览版",
   "BTN_DOWNLOADING": "下载中...",
   "BUBBLE_PRELOAD_INFO": "将所有工具保存到您的设备，以便离线使用。",
   "BUBBLE_HISTORY_INFO": "Utildex 工具内复制文本的历史记录。",

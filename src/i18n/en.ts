@@ -2,6 +2,7 @@
 export default {
   "BTN_DOWNLOAD_LIBRARY": "Download Library for Offline Use",
   "BTN_PRELOAD": "Preload Library",
+  "EARLY_PREVIEW": "Early Developer Preview",
   "BTN_DOWNLOADING": "Downloading...",
   "BUBBLE_PRELOAD_INFO": "Saves all tools to your device so you can use them without internet.",
   "BUBBLE_HISTORY_INFO": "History of text copied within Utildex tools.",
