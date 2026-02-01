@@ -7,10 +7,12 @@ export default {
   "ACT_HOME": "Aller à l'accueil",
   "ACT_THEME": "Basculer Mode Sombre/Clair",
   "ACT_HISTORY": "Effacer l'historique presse-papiers",
-  "SMART_UUID_TITLE": "Copier nouvel UUID",
-  "SMART_UUID_DESC": "Génère instantanément un UUID v4",
-  "SMART_PWD_TITLE": "Copier Mot de Passe fort",
-  "SMART_PWD_DESC": "Génère un mot de passe de 16 caractères",
-  "SMART_ISO_TITLE": "Copier Timestamp ISO",
+  "FILTER_BTN": "Filtrer",
+  "FILTER_TITLE": "Filtres",
+  "SORT_BY": "Trier par",
+  "SORT_RELEVANCE": "Pertinence",
+  "SORT_NAME": "Nom",
+  "RESET_FILTERS": "Réinitialiser",
+  "CAT_ALL": "Tout",
   "SRC_CMD_PALETTE": "Palette de Commandes"
 };

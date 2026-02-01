@@ -41,5 +41,24 @@ export default {
   "MSG_BACKUP_READY": "备份已下载",
   "MSG_EXPORT_FAIL": "导出失败",
   "MSG_IMPORT_SUCCESS": "数据导入成功。正在重新加载...",
-  "MSG_IMPORT_FAIL": "无效的备份文件"
+  "MSG_IMPORT_FAIL": "无效的备份文件",
+
+  "UNIT_ITEMS": "项",
+  "UNIT_USES": "次使用",
+  "UNIT_WIDGETS": "个已配置的小部件",
+  "UNIT_BYTE": "B",
+  "UNIT_KILOBYTE": "KB",
+  "UNIT_MEGABYTE": "MB",
+  "UNIT_GIGABYTE": "GB",
+
+  "KEY_CLIPBOARD_HISTORY": "剪贴板历史",
+  "KEY_USAGE": "工具使用统计", 
+  "KEY_FAVORITES": "收藏列表",
+  "KEY_DASHBOARD_V2": "仪表盘布局",
+  "KEY_THEME": "主题设置",
+  "KEY_LANG": "语言首选项",
+  "KEY_COLOR": "强调色首选项",
+  "KEY_FONT": "字体首选项",
+  "KEY_DENSITY": "显示密度首选项",
+  "KEY_STATE_PREFIX": "状态："
 };

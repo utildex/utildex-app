@@ -21,48 +21,85 @@ import zh from './i18n/zh';
     })
   ],
   template: `
-    <div class="flex flex-col lg:flex-row gap-8">
-      <!-- Sidebar Filters -->
-      <aside class="w-full lg:w-64 flex-shrink-0 space-y-6">
-        <div>
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3">{{ t.map()['SEARCH_LABEL'] }}</h3>
-          <input 
-            type="text" 
-            [ngModel]="searchQuery()"
-            (ngModelChange)="toolService.setSearch($event)"
-            [placeholder]="t.map()['SEARCH_PLACEHOLDER']" 
-            class="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
-          >
+    <div class="flex flex-col gap-8 w-full">
+      <!-- Top Control Bar (Search, Filter, Sort) -->
+      <header class="w-full space-y-6" #gridTop>
+        <div class="flex flex-col md:flex-row gap-4">
+             <!-- Search -->
+             <div class="flex-1 relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                <input 
+                  type="text" 
+                  [ngModel]="searchQuery()"
+                  (ngModelChange)="toolService.setSearch($event)"
+                  [placeholder]="t.map()['SEARCH_PLACEHOLDER']" 
+                  class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-base focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
+                >
+             </div>
+             
+             <!-- Sort Dropdown -->
+             <div class="relative flex-shrink-0">
+                <div class="flex items-center gap-2 h-full bg-white dark:bg-slate-800 px-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                   <select 
+                      [ngModel]="sortOrder()" 
+                      (ngModelChange)="toolService.setSort($event)"
+                      class="bg-transparent border-none text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-0 cursor-pointer pr-8 py-3 outline-none"
+                   >
+                     <option value="name">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_NAME'] }}</option>
+                     <option value="popularity">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_POPULARITY'] }}</option>
+                     <option value="relevance">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_RELEVANCE'] }}</option>
+                   </select>
+                </div>
+             </div>
         </div>
 
-        <div>
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-3 flex justify-between items-center">
-            {{ t.map()['TAGS_LABEL'] }}
-            @if(selectedTags().size > 0) {
-              <button (click)="resetTags()" class="text-xs text-primary hover:underline">{{ t.map()['RESET'] }}</button>
-            }
-          </h3>
-          <div class="flex flex-wrap gap-2">
-            @for (tag of allTags(); track tag) {
+        <!-- Categories (Pills) -->
+        <div class="flex flex-wrap gap-2 pb-2">
+            <button 
+                (click)="toolService.setCategory(null)"
+                class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm"
+                [class.bg-slate-900]="selectedCategory() === null"
+                [class.text-white]="selectedCategory() === null"
+                [class.bg-white]="selectedCategory() !== null"
+                [class.text-slate-600]="selectedCategory() !== null"
+                [class.dark:bg-white]="selectedCategory() === null"
+                [class.dark:text-slate-900]="selectedCategory() === null"
+                [class.dark:bg-slate-800]="selectedCategory() !== null"
+                [class.dark:text-slate-300]="selectedCategory() !== null"
+            >
+               {{ t.map()['CAT_ALL'] }}
+            </button>
+            @for (cat of categories(); track cat) {
               <button 
-                (click)="toggleTag(tag)"
-                class="px-2 py-1 rounded-md text-xs font-medium transition-colors border"
-                [class]="selectedTags().has(tag) 
-                  ? 'bg-primary border-primary text-white' 
-                  : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-600'"
+                (click)="toolService.setCategory(cat)"
+                class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm"
+                [class.bg-slate-900]="selectedCategory() === cat"
+                [class.text-white]="selectedCategory() === cat"
+                [class.bg-white]="selectedCategory() !== cat"
+                [class.text-slate-600]="selectedCategory() !== cat"
+                [class.dark:bg-white]="selectedCategory() === cat"
+                [class.dark:text-slate-900]="selectedCategory() === cat"
+                [class.dark:bg-slate-800]="selectedCategory() !== cat"
+                [class.dark:text-slate-300]="selectedCategory() !== cat"
               >
-                {{ tag }}
+                  {{ toolService.getCategoryName(cat) }}
               </button>
             }
-          </div>
         </div>
-      </aside>
+      </header>
 
-      <!-- Grid -->
-      <div class="flex-1 space-y-6" #gridTop>
-        <div class="flex items-center justify-between">
-          <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['TITLE'] }}</h1>
-          <div class="text-sm text-slate-500">
+      <!-- Grid Results -->
+      <main class="space-y-6">
+        <div class="flex items-center justify-between px-1">
+           <!-- Dynamic Title if needed, or just showing count -->
+           <h2 class="text-xl font-bold text-slate-800 dark:text-slate-200">
+              @if(selectedCategory()) {
+                  {{ toolService.getCategoryName(selectedCategory()!) }}
+              } @else {
+                  {{ t.map()['TITLE'] }}
+              }
+           </h2>
+           <div class="text-sm text-slate-500 font-medium">
              {{ getShowingText() }}
           </div>
         </div>
@@ -76,7 +113,7 @@ import zh from './i18n/zh';
           </div>
         } @else {
           <!-- Tools Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in">
             @for (tool of paginatedTools(); track tool.id) {
               <app-tool-card [tool]="tool" [isFavorite]="isFav(tool.id)" (toggleFavorite)="toggleFav($event)"></app-tool-card>
             }
@@ -84,32 +121,30 @@ import zh from './i18n/zh';
 
           <!-- Pagination Controls -->
           @if (totalPages() > 1) {
-             <div class="flex justify-center items-center gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+             <div class="flex justify-center items-center gap-4 pt-12">
                 <button 
                   (click)="prevPage()" 
                   [disabled]="currentPage() === 1"
-                  class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-bold transition-colors"
+                  class="w-10 h-10 rounded-full flex items-center justify-center border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
                    <span class="material-symbols-outlined text-sm">arrow_back</span>
-                   {{ t.map()['PAGE_PREV'] }}
                 </button>
                 
-                <span class="text-sm font-medium text-slate-500">
+                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">
                    {{ getPageInfo() }}
                 </span>
 
                 <button 
                   (click)="nextPage()" 
                   [disabled]="currentPage() === totalPages()"
-                  class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm font-bold transition-colors"
+                  class="w-10 h-10 rounded-full flex items-center justify-center border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
                 >
-                   {{ t.map()['PAGE_NEXT'] }}
                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
              </div>
           }
         }
-      </div>
+      </main>
     </div>
   `,
   styles: [`
@@ -124,8 +159,9 @@ export class AllToolsComponent {
   gridTop = viewChild<ElementRef>('gridTop');
 
   searchQuery = this.toolService.searchQuery;
-  selectedTags = this.toolService.selectedTags;
-  allTags = this.toolService.allTags;
+  categories = this.toolService.categories;
+  selectedCategory = this.toolService.selectedCategory;
+  sortOrder = this.toolService.sortOrder;
   filteredTools = this.toolService.filteredTools;
   favorites = this.toolService.favorites;
 
@@ -194,13 +230,5 @@ export class AllToolsComponent {
 
   isFav(id: string): boolean {
     return this.favorites().has(id);
-  }
-
-  toggleTag(tag: string) {
-    this.toolService.toggleTag(tag);
-  }
-
-  resetTags() {
-    this.toolService.selectedTags.set(new Set<string>());
   }
 }

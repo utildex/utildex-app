@@ -11,5 +11,10 @@ export default {
   "RESET_FILTERS": "重置所有筛选",
   "PAGE_PREV": "上一页",
   "PAGE_NEXT": "下一页",
-  "PAGE_INFO": "第 {0} 页，共 {1} 页"
+  "PAGE_INFO": "第 {0} 页，共 {1} 页",
+  "CAT_ALL": "全部",
+  "SORT_BY": "排序方式",
+  "SORT_NAME": "名称",
+  "SORT_POPULARITY": "最常用",
+  "SORT_RELEVANCE": "相关性"
 };

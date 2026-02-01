@@ -25,8 +25,8 @@ import { I18nService } from '../../services/i18n.service';
               <span class="text-xs text-slate-400">Loading...</span>
            </div>
         } @else {
-          <!-- Important: pointer-events-auto ensures inputs inside the dynamic component work -->
-          <div class="h-full w-full pointer-events-auto">
+          <!-- Important: pointer-events-auto ensures inputs inside the dynamic component work, BUT NOT if it's a phantom -->
+          <div class="h-full w-full" [class.pointer-events-auto]="!isPhantom()">
              <ng-container *ngComponentOutlet="componentType(); inputs: widgetInputs()" />
           </div>
         }
@@ -38,7 +38,8 @@ import { I18nService } from '../../services/i18n.service';
             <textarea 
                 [ngModel]="widget().data?.['content'] || ''"
                 (ngModelChange)="updateContent($event)"
-                class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-0 text-sm font-medium placeholder-yellow-800/50 dark:placeholder-yellow-100/30 pointer-events-auto"
+                class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-0 text-sm font-medium placeholder-yellow-800/50 dark:placeholder-yellow-100/30"
+                [class.pointer-events-auto]="!isPhantom()"
                 [placeholder]="notePlaceholder()"
             ></textarea>
         </div>
@@ -46,7 +47,7 @@ import { I18nService } from '../../services/i18n.service';
 
     <!-- Case: Image -->
     @else if (widget().type === 'image') {
-        <div class="h-full w-full rounded-xl overflow-hidden relative bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group pointer-events-auto">
+        <div class="h-full w-full rounded-xl overflow-hidden relative bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group" [class.pointer-events-auto]="!isPhantom()">
             @if (widget().data?.['url']) {
                 <img [src]="widget().data?.['url']" class="w-full h-full object-cover pointer-events-none">
             } @else {
@@ -87,6 +88,7 @@ import { I18nService } from '../../services/i18n.service';
 export class WidgetHostComponent implements OnInit {
   widget = input.required<DashboardWidget>();
   isEditMode = input<boolean>(false);
+  isPhantom = input<boolean>(false);
   
   toolService = inject(ToolService);
   i18n = inject(I18nService);

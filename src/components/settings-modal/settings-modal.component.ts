@@ -277,8 +277,8 @@ type ParsedData =
                                                 <span class="font-bold text-slate-900 dark:text-white">{{ stat.name }}</span>
                                               </div>
                                               <div class="text-xs text-slate-500 flex flex-col items-end">
-                                                <span>{{ stat.count }} uses</span>
-                                                <span>{{ stat.lastUsed | date:'mediumDate' }}</span>
+                                                <span>{{ stat.count }} {{ t.map()['UNIT_USES'] }}</span>
+                                                <span>{{ stat.lastUsed | date:'shortDate' }}</span>
                                               </div>
                                            </div>
                                         }
@@ -299,7 +299,7 @@ type ParsedData =
                                   @else if (parsed.type === 'dashboard') {
                                      <div class="flex flex-col gap-2 items-center justify-center py-4 text-slate-500">
                                         <span class="material-symbols-outlined text-3xl">dashboard</span>
-                                        <p>{{ parsed.data.count }} widgets configured</p>
+                                        <p>{{ parsed.data.count }} {{ t.map()['UNIT_WIDGETS'] }}</p>
                                      </div>
                                   }
                                   <!-- Fallback / Simple -->
@@ -336,7 +336,7 @@ type ParsedData =
                         <div class="flex justify-between items-end mb-2">
                            <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ t.map()['STORAGE_USED'] }}</span>
                            <span class="text-xs font-mono text-primary bg-white dark:bg-slate-900 px-2 py-1 rounded shadow-sm">
-                              {{ storage.formatBytes(stats()?.totalBytes || 0) }}
+                              {{ formatBytes(stats()?.totalBytes || 0) }}
                            </span>
                         </div>
                         <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
@@ -359,7 +359,7 @@ type ParsedData =
                                  </div>
                                  <div class="flex-1 min-w-0">
                                     <h4 class="font-bold text-slate-900 dark:text-white text-sm">{{ t.map()[cat.labelKey] }}</h4>
-                                    <p class="text-xs text-slate-500 truncate">{{ cat.count }} items • {{ storage.formatBytes(cat.sizeBytes) }}</p>
+                                    <p class="text-xs text-slate-500 truncate">{{ cat.count }} {{ t.map()['UNIT_ITEMS'] }} • {{ formatBytes(cat.sizeBytes) }}</p>
                                  </div>
                                  <div class="flex items-center gap-1">
                                     <button 
@@ -613,7 +613,42 @@ export class SettingsModalComponent {
   // --- Data Parsing Helpers ---
 
   cleanKey(key: string): string {
+    const map: Record<string, string> = {
+      'utildex-clipboard-history': 'KEY_CLIPBOARD_HISTORY',
+      'utildex-usage': 'KEY_USAGE',
+      'utildex-favorites': 'KEY_FAVORITES',
+      'utildex-dashboard-v2': 'KEY_DASHBOARD_V2',
+      'utildex-theme': 'KEY_THEME',
+      'utildex-lang': 'KEY_LANG',
+      'utildex-color': 'KEY_COLOR',
+      'utildex-font': 'KEY_FONT',
+      'utildex-density': 'KEY_DENSITY'
+    };
+
+    if (map[key]) {
+      return this.t.get(map[key]);
+    }
+
+    if (key.startsWith('utildex-state-')) {
+       // Try to extract tool ID and get name
+       const toolId = key.replace('utildex-state-', '');
+       return this.t.get('KEY_STATE_PREFIX') + this.resolveToolName(toolId);
+    }
+
     return key.replace('utildex-', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  }
+
+  formatBytes(bytes: number): string {
+    if (bytes === 0) return '0 ' + this.t.get('UNIT_BYTE');
+    const k = 1024;
+    const sizes = ['UNIT_BYTE', 'UNIT_KILOBYTE', 'UNIT_MEGABYTE', 'UNIT_GIGABYTE'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    // Fallback if i is out of bounds
+    const sizeKey = sizes[i] || 'UNIT_BYTE';
+    
+    const val = bytes / Math.pow(k, i);
+    // Use current language for number formatting (e.g. 1.5 vs 1,5)
+    return val.toLocaleString(this.i18n.currentLang(), { maximumFractionDigits: 2 }) + ' ' + this.t.get(sizeKey);
   }
 
   resolveToolName(id: string): string {

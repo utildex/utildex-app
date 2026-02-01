@@ -41,5 +41,24 @@ export default {
   "MSG_BACKUP_READY": "Sauvegarde téléchargée",
   "MSG_EXPORT_FAIL": "Échec de l'exportation",
   "MSG_IMPORT_SUCCESS": "Données importées avec succès. Rechargement...",
-  "MSG_IMPORT_FAIL": "Fichier de sauvegarde invalide"
+  "MSG_IMPORT_FAIL": "Fichier de sauvegarde invalide",
+
+  "UNIT_ITEMS": "éléments",
+  "UNIT_USES": "utilisations",
+  "UNIT_WIDGETS": "widgets configurés",
+  "UNIT_BYTE": "o",
+  "UNIT_KILOBYTE": "Ko",
+  "UNIT_MEGABYTE": "Mo",
+  "UNIT_GIGABYTE": "Go",
+
+  "KEY_CLIPBOARD_HISTORY": "Historique du presse-papiers",
+  "KEY_USAGE": "Statistiques d'utilisation", 
+  "KEY_FAVORITES": "Liste des favoris",
+  "KEY_DASHBOARD_V2": "Mise en page du tableau de bord",
+  "KEY_THEME": "Paramètres du thème",
+  "KEY_LANG": "Préférence de langue",
+  "KEY_COLOR": "Couleur d'accentuation",
+  "KEY_FONT": "Préférence de police",
+  "KEY_DENSITY": "Densité d'affichage",
+  "KEY_STATE_PREFIX": "État : "
 };

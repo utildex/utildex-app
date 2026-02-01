@@ -51,9 +51,88 @@ interface CommandResult {
               autocomplete="off"
             >
             <div class="flex gap-2">
-                <span class="text-xs border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5 text-slate-400">Esc</span>
+                 <button 
+                  (click)="toggleFilters()"
+                  class="flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors border"
+                  [class.bg-slate-100]="isFilterOpen()"
+                  [class.text-slate-900]="isFilterOpen()"
+                  [class.text-slate-500]="!isFilterOpen()"
+                  [class.border-slate-200]="!isFilterOpen()"
+                  [class.border-slate-300]="isFilterOpen()"
+                  [class.dark:bg-slate-800]="isFilterOpen()"
+                  [class.dark:text-white]="isFilterOpen()"
+                  [class.dark:border-slate-700]="!isFilterOpen()"
+                  [class.dark:border-slate-600]="isFilterOpen()"
+                >
+                  <span class="material-symbols-outlined text-[16px]">tune</span>
+                  <span class="hidden sm:inline">{{ t.map()['FILTER_BTN'] }}</span>
+                </button>
+                <span class="text-xs border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5 text-slate-400 flex items-center">Esc</span>
             </div>
           </div>
+
+          <!-- Filters & Sorting (Collapsible) -->
+          @if (isFilterOpen()) {
+            <div class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 p-3 flex flex-col gap-3 animate-fade-in">
+              <!-- Categories -->
+              <div class="flex flex-wrap gap-2">
+                <button 
+                  (click)="selectedCategory.set(null)"
+                  class="px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+                  [class.bg-slate-900]="selectedCategory() === null"
+                  [class.text-white]="selectedCategory() === null"
+                  [class.border-slate-900]="selectedCategory() === null"
+                  [class.bg-white]="selectedCategory() !== null"
+                  [class.text-slate-600]="selectedCategory() !== null"
+                  [class.border-slate-200]="selectedCategory() !== null"
+                  [class.dark:bg-white]="selectedCategory() === null"
+                  [class.dark:text-slate-900]="selectedCategory() === null"
+                  [class.dark:border-white]="selectedCategory() === null"
+                  [class.dark:bg-slate-800]="selectedCategory() !== null"
+                  [class.dark:text-slate-300]="selectedCategory() !== null"
+                  [class.dark:border-slate-700]="selectedCategory() !== null"
+                >
+                  {{ t.map()['CAT_ALL'] }}
+                </button>
+                @for (cat of categories(); track cat) {
+                  <button 
+                    (click)="selectedCategory.set(cat)"
+                    class="px-3 py-1 rounded-full text-xs font-medium border transition-colors"
+                    [class.bg-slate-900]="selectedCategory() === cat"
+                    [class.text-white]="selectedCategory() === cat"
+                    [class.border-slate-900]="selectedCategory() === cat"
+                    [class.bg-white]="selectedCategory() !== cat"
+                    [class.text-slate-600]="selectedCategory() !== cat"
+                    [class.border-slate-200]="selectedCategory() !== cat"
+                    [class.dark:bg-white]="selectedCategory() === cat"
+                    [class.dark:text-slate-900]="selectedCategory() === cat"
+                    [class.dark:border-white]="selectedCategory() === cat"
+                    [class.dark:bg-slate-800]="selectedCategory() !== cat"
+                    [class.dark:text-slate-300]="selectedCategory() !== cat"
+                    [class.dark:border-slate-700]="selectedCategory() !== cat"
+                  >
+                    {{ toolService.getCategoryName(cat) }}
+                  </button>
+                }
+              </div>
+
+               <!-- Sorting -->
+               <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2 text-xs text-slate-500">
+                    <span>{{ t.map()['SORT_BY'] }}:</span>
+                    <button (click)="sortBy.set('relevance')" [class.font-bold]="sortBy() === 'relevance'" [class.text-primary]="sortBy() === 'relevance'">{{ t.map()['SORT_RELEVANCE'] }}</button>
+                    <span class="text-slate-300">|</span>
+                    <button (click)="sortBy.set('name')" [class.font-bold]="sortBy() === 'name'" [class.text-primary]="sortBy() === 'name'">{{ t.map()['SORT_NAME'] }}</button>
+                  </div>
+
+                  @if (selectedCategory() || sortBy() !== 'relevance') {
+                    <button (click)="resetFilters()" class="text-xs text-red-500 hover:underline">
+                      {{ t.map()['RESET_FILTERS'] }}
+                    </button>
+                  }
+               </div>
+            </div>
+          }
 
           <!-- Results -->
           <div class="max-h-[60vh] overflow-y-auto p-2">
@@ -114,6 +193,11 @@ export class CommandPaletteComponent {
   query = signal('');
   selectedIndex = signal(0);
   
+  // Filters & Sorting
+  isFilterOpen = signal(false);
+  selectedCategory = signal<string | null>(null);
+  sortBy = signal<'relevance' | 'name'>('relevance');
+  
   inputRef = viewChild<ElementRef>('searchInput');
 
   toolService = inject(ToolService);
@@ -124,50 +208,19 @@ export class CommandPaletteComponent {
   clipboard = inject(ClipboardService);
   t = inject(ScopedTranslationService);
 
+  categories = computed(() => {
+    const cats = new Set<string>();
+    this.toolService.tools().forEach(tool => {
+        tool.categories.forEach(c => cats.add(c));
+    });
+    return Array.from(cats).sort();
+  });
+
   results = computed(() => {
     const q = this.query().toLowerCase();
     const list: CommandResult[] = [];
-
-    // --- Smart Instant Actions ---
-    // UUID
-    if ('uuid'.includes(q) || 'guid'.includes(q)) {
-        list.push({
-            id: 'smart-uuid',
-            type: 'smart',
-            icon: 'fingerprint',
-            title: this.t.map()['SMART_UUID_TITLE'],
-            subtitle: this.t.map()['SMART_UUID_DESC'],
-            action: () => this.clipboard.copy(crypto.randomUUID(), this.t.get('SRC_CMD_PALETTE'))
-        });
-    }
-    // Password
-    if ('password'.includes(q) || 'pwd'.includes(q) || 'pass'.includes(q)) {
-        list.push({
-            id: 'smart-pwd',
-            type: 'smart',
-            icon: 'key',
-            title: this.t.map()['SMART_PWD_TITLE'],
-            subtitle: this.t.map()['SMART_PWD_DESC'],
-            action: () => {
-                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-                let pwd = '';
-                for(let i=0; i<16; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
-                this.clipboard.copy(pwd, this.t.get('SRC_CMD_PALETTE'));
-            }
-        });
-    }
-    // Date/Time
-    if ('time'.includes(q) || 'date'.includes(q) || 'now'.includes(q)) {
-        const now = new Date();
-        list.push({
-            id: 'smart-iso',
-            type: 'smart',
-            icon: 'schedule',
-            title: this.t.map()['SMART_ISO_TITLE'],
-            subtitle: now.toISOString(),
-            action: () => this.clipboard.copy(now.toISOString(), this.t.get('SRC_CMD_PALETTE'))
-        });
-    }
+    const cat = this.selectedCategory();
+    const sort = this.sortBy();
 
     // --- Static Actions ---
     const actions: CommandResult[] = [
@@ -197,30 +250,65 @@ export class CommandPaletteComponent {
       }
     ];
 
-    if (!q) {
+    // If no query and no category selected, ONLY show actions. 
+    // This fixes the "Long List" issue by default.
+    if (!q && !cat) {
       list.push(...actions);
-    } else {
-      list.push(...actions.filter(a => a.title.toLowerCase().includes(q)));
+      return list;
+    }
+
+    // Add matched actions if applicable (only if no category filter is limiting results to tools)
+    if (!cat) {
+        list.push(...actions.filter(a => a.title.toLowerCase().includes(q)));
     }
 
     // --- Tools ---
-    const tools = this.toolService.tools();
-    const matchingTools = tools.filter(tool => {
+    let tools = this.toolService.tools();
+
+    // 1. Filter by Category
+    if (cat) {
+        tools = tools.filter(t => t.categories.includes(cat));
+    }
+
+    // 2. Filter by Query & Score
+    const scoredTools = tools.map(tool => {
       const name = this.i18n.resolve(tool.name).toLowerCase();
       const tags = tool.tags.join(' ');
-      return name.includes(q) || tags.includes(q);
-    }).map(tool => ({
-      id: `tool-${tool.id}`,
+      const desc = this.i18n.resolve(tool.description).toLowerCase();
+      
+      let score = 0;
+      if (q) {
+          if (name.startsWith(q)) score += 100;
+          else if (name.includes(q)) score += 10;
+          if (tags.includes(q)) score += 5;
+          if (desc.includes(q)) score += 1;
+      } else {
+          score = 1; // Base score to include everything if no query
+      }
+
+      return { tool, score, name }; // Return name for sorting usage
+    }).filter(item => item.score > 0);
+
+    // 3. Sort
+    if (sort === 'relevance') {
+        scoredTools.sort((a, b) => b.score - a.score);
+    } else {
+        scoredTools.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    // 4. Transform to CommandResult
+    const toolResults = scoredTools.map(item => ({
+      id: `tool-${item.tool.id}`,
       type: 'tool' as const,
-      icon: tool.icon,
-      title: this.i18n.resolve(tool.name),
-      subtitle: this.i18n.resolve(tool.description),
-      action: () => this.router.navigate([tool.routePath])
+      icon: item.tool.icon,
+      title: this.i18n.resolve(item.tool.name),
+      subtitle: this.i18n.resolve(item.tool.description),
+      action: () => this.router.navigate([item.tool.routePath])
     }));
 
-    list.push(...matchingTools);
+    list.push(...toolResults);
 
-    return list.slice(0, 10);
+    return list.slice(0, 50); // Increased limit as we have better filtering
   });
 
   constructor() {
@@ -264,10 +352,24 @@ export class CommandPaletteComponent {
     });
   }
 
+  toggleFilters() {
+    this.isFilterOpen.update(v => !v);
+  }
+
+  resetFilters() {
+    this.selectedCategory.set(null);
+    this.sortBy.set('relevance');
+  }
+
   open() {
     this.query.set('');
     this.selectedIndex.set(0);
     this.isOpen.set(true);
+    // Reset filters on open if desired, or keep them persistent.
+    // Keeping them persistent allows a user to set "Utility" and keep it.
+    // For now, let's reset to keep it simple and clean on each open.
+    this.resetFilters();
+    this.isFilterOpen.set(false);
   }
 
   close() {

@@ -579,7 +579,7 @@ export class ToolService {
   searchQuery = signal<string>('');
   selectedTags = signal<Set<string>>(new Set<string>());
   selectedCategory = signal<string | null>(null);
-  sortOrder = signal<'name' | 'newest'>('name');
+  sortOrder = signal<'name' | 'relevance' | 'popularity' | 'newest'>('name');
 
   constructor() {
     this.loadFavorites();
@@ -603,8 +603,11 @@ export class ToolService {
     const category = this.selectedCategory();
     const tags = this.selectedTags();
     const allTools = this.tools();
+    const order = this.sortOrder();
+    const stats = this.usageStats(); // For popularity sort
 
-    const filtered = allTools.filter(tool => {
+    // 1. Filter
+    let filtered = allTools.filter(tool => {
       const matchesSearch = 
         !query ||
         this.resolveSearchText(tool.name).includes(query) || 
@@ -614,9 +617,35 @@ export class ToolService {
       return matchesSearch && matchesCategory && matchesTags;
     });
 
-    if (this.sortOrder() === 'name') {
+    // 2. Score (if needed for relevance) or Default Sort
+    if (order === 'relevance' && query.length > 1) {
+      filtered = filtered.map(tool => {
+        const name = this.resolveSearchText(tool.name).toLowerCase();
+        const tagsJoined = tool.tags.join(' ');
+        const desc = this.resolveSearchText(tool.description).toLowerCase();
+        
+        let score = 0;
+        if (name.startsWith(query)) score += 100;
+        else if (name.includes(query)) score += 10;
+        if (tagsJoined.includes(query)) score += 5;
+        if (desc.includes(query)) score += 1;
+
+        return { tool, score };
+      })
+      .filter(item => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(item => item.tool);
+    } else if (order === 'popularity') {
+       filtered.sort((a, b) => (stats[b.id]?.count || 0) - (stats[a.id]?.count || 0));
+    } else if (order === 'name') {
       filtered.sort((a, b) => this.i18n.resolve(a.name).localeCompare(this.i18n.resolve(b.name)));
     }
+    
+    // Fallback if relevance is selected but query is empty or short -> default to Name
+    if (order === 'relevance' && query.length <= 1) {
+         filtered.sort((a, b) => this.i18n.resolve(a.name).localeCompare(this.i18n.resolve(b.name)));
+    }
+
     return filtered;
   });
 
@@ -702,11 +731,15 @@ export class ToolService {
   }
 
   setCategory(category: string | null) { this.selectedCategory.set(category); }
-  setSearch(query: string) { this.searchQuery.set(query); }
+  setSort(order: 'name' | 'newest' | 'relevance' | 'popularity') { this.sortOrder.set(order); }
+  setSearch(query: string) { 
+    this.searchQuery.set(query);
+  }
   resetFilters() {
     this.searchQuery.set('');
     this.selectedCategory.set(null);
     this.selectedTags.set(new Set<string>());
+    this.sortOrder.set('name');
   }
 
   getToolsByCategory(category: string) { return this.tools().filter(t => t.categories.includes(category)); }
@@ -724,8 +757,9 @@ export class ToolService {
   /**
    * Checks if a rectangle overlaps with any existing widget.
    */
-  isPositionValid(x: number, y: number, w: number, h: number, existingWidgets: DashboardWidget[], ignoreId?: string): boolean {
+  isPositionValid(x: number, y: number, w: number, h: number, existingWidgets: DashboardWidget[], maxCols?: number, ignoreId?: string): boolean {
     if (x < 0 || y < 0) return false;
+    if (maxCols !== undefined && x + w > maxCols) return false;
 
     for (const widget of existingWidgets) {
       if (widget.instanceId === ignoreId) continue;

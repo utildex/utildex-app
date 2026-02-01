@@ -41,5 +41,24 @@ export default {
   "MSG_BACKUP_READY": "Backup downloaded",
   "MSG_EXPORT_FAIL": "Export failed",
   "MSG_IMPORT_SUCCESS": "Data imported successfully. Reloading...",
-  "MSG_IMPORT_FAIL": "Invalid backup file"
+  "MSG_IMPORT_FAIL": "Invalid backup file",
+
+  "UNIT_ITEMS": "items",
+  "UNIT_USES": "uses",
+  "UNIT_WIDGETS": "widgets configured",
+  "UNIT_BYTE": "B",
+  "UNIT_KILOBYTE": "KB",
+  "UNIT_MEGABYTE": "MB",
+  "UNIT_GIGABYTE": "GB",
+
+  "KEY_CLIPBOARD_HISTORY": "Clipboard History",
+  "KEY_USAGE": "Tool Usage Statistics", 
+  "KEY_FAVORITES": "Favorites List",
+  "KEY_DASHBOARD_V2": "Dashboard Layout",
+  "KEY_THEME": "Theme Settings",
+  "KEY_LANG": "Language Preference",
+  "KEY_COLOR": "Accent Color Preference",
+  "KEY_FONT": "Font Preference",
+  "KEY_DENSITY": "Density Preference",
+  "KEY_STATE_PREFIX": "State: "
 };
