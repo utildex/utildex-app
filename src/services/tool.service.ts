@@ -579,7 +579,7 @@ export class ToolService {
   searchQuery = signal<string>('');
   selectedTags = signal<Set<string>>(new Set<string>());
   selectedCategory = signal<string | null>(null);
-  sortOrder = signal<'name' | 'newest' | 'relevance' | 'popularity'>('name');
+  sortOrder = signal<'name' | 'relevance' | 'popularity'>('name');
 
   constructor() {
     this.loadFavorites();
