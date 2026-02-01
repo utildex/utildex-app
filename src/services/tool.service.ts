@@ -579,7 +579,7 @@ export class ToolService {
   searchQuery = signal<string>('');
   selectedTags = signal<Set<string>>(new Set<string>());
   selectedCategory = signal<string | null>(null);
-  sortOrder = signal<'name' | 'relevance' | 'popularity'>('name');
+  sortOrder = signal<'name' | 'relevance' | 'popularity' | 'newest'>('name');
 
   constructor() {
     this.loadFavorites();
@@ -757,8 +757,9 @@ export class ToolService {
   /**
    * Checks if a rectangle overlaps with any existing widget.
    */
-  isPositionValid(x: number, y: number, w: number, h: number, existingWidgets: DashboardWidget[], ignoreId?: string): boolean {
+  isPositionValid(x: number, y: number, w: number, h: number, existingWidgets: DashboardWidget[], maxCols?: number, ignoreId?: string): boolean {
     if (x < 0 || y < 0) return false;
+    if (maxCols !== undefined && x + w > maxCols) return false;
 
     for (const widget of existingWidgets) {
       if (widget.instanceId === ignoreId) continue;

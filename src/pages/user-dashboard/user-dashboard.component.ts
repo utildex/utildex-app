@@ -242,7 +242,8 @@ export class UserDashboardComponent {
     return this.toolService.isPositionValid(
         slot.x, slot.y, 
         pending.w, pending.h, 
-        this.dashboardWidgets()
+        this.dashboardWidgets(),
+        this.cols
     );
   });
 
@@ -280,7 +281,7 @@ export class UserDashboardComponent {
       const pending = this.pendingPlacement();
       if (!pending) return;
 
-      if (this.toolService.isPositionValid(col, row, pending.w, pending.h, this.dashboardWidgets())) {
+      if (this.toolService.isPositionValid(col, row, pending.w, pending.h, this.dashboardWidgets(), this.cols)) {
           this.toolService.placeWidget({
               instanceId: crypto.randomUUID(),
               type: pending.type,
