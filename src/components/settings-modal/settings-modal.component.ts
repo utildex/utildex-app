@@ -2,7 +2,7 @@
 import { Component, inject, output, signal, effect, ElementRef, viewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ThemeService, PrimaryColor } from '../../services/theme.service';
-import { I18nService, Language } from '../../services/i18n.service';
+import { I18nService } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
 import { ToolService } from '../../services/tool.service';
 import { ClipboardService } from '../../services/clipboard.service';
