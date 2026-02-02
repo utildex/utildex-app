@@ -1,6 +1,3 @@
-
-# 10 Tips to Boost Developer Productivity
-
 Productivity isn't about working more hours; it's about making every hour count. Here are 10 tips to optimize your workflow.
 
 ## 1. Master Your IDE

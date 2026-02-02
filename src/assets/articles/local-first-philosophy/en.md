@@ -1,6 +1,3 @@
-
-# Why Local-First Software Matters
-
 In an era dominated by cloud services and always-online requirements, a new paradigm is gaining traction: **Local-First Software**.
 
 ## What is Local-First?
