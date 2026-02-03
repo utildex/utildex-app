@@ -24,7 +24,8 @@
                 "input": "src/assets",
                 "output": "assets"
               },
-              "src/_redirects"
+              "src/_redirects",
+              "src/robots.txt"
             ],
             "styles": [
               "src/styles.css",
