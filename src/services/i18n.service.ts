@@ -1,4 +1,5 @@
 import { Injectable, signal, effect } from '@angular/core';
+import languages from '../data/languages.json';
 
 export type Language = 'en' | 'fr' | 'es' | 'zh';
 export type I18nText = string | { [key: string]: string };
@@ -15,12 +16,7 @@ export interface LanguageInfo {
 export class I18nService {
   currentLang = signal<Language>('en');
 
-  readonly supportedLanguages: LanguageInfo[] = [
-    { code: 'en', flagCode: 'us', label: 'English' },
-    { code: 'fr', flagCode: 'fr', label: 'Français' },
-    { code: 'es', flagCode: 'es', label: 'Español' },
-    { code: 'zh', flagCode: 'cn', label: '中文' }
-  ];
+  readonly supportedLanguages = languages as LanguageInfo[];
 
   constructor() {
     // Note: We removed the auto-loader here.
