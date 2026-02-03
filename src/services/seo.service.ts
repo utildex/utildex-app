@@ -42,7 +42,29 @@ export class SeoService {
     this.document.documentElement.lang = this.i18n.currentLang();
   }
 
+  private updateCanonicalUrl() {
+    const head = this.document.head;
+    let link: HTMLLinkElement | null = head.querySelector("link[rel='canonical']");
+    
+    if (!link) {
+      link = this.document.createElement('link');
+      link.setAttribute('rel', 'canonical');
+      head.appendChild(link);
+    }
+    
+    // Construct clean URL (stripping query params for canonical)
+    // We use window.location.origin to support whatever domain we are on, 
+    // unless you want to force 'https://utildex.com' even on dev/staging.
+    // Ideally for SEO we want the production domain.
+    const domain = 'https://utildex.com'; 
+    const path = this.router.url.split('?')[0]; // Simple strip of query params
+    
+    link.setAttribute('href', domain + path);
+  }
+
   private updateSeo() {
+    this.updateCanonicalUrl();
+
     let currentRoute = this.route;
     while (currentRoute.firstChild) {
       currentRoute = currentRoute.firstChild;
