@@ -102,9 +102,88 @@ export class SeoService {
     xDefault.setAttribute('href', domain + enPath);
   }
 
+  private updateJsonLd() {
+    const head = this.document.head;
+    let script: HTMLScriptElement | null = head.querySelector("script[type='application/ld+json']");
+
+    if (!script) {
+      script = this.document.createElement('script');
+      script.setAttribute('type', 'application/ld+json');
+      head.appendChild(script);
+    }
+
+    const url = this.router.url;
+    let schema: any = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Utildex",
+      "url": "https://utildex.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://utildex.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    };
+
+    // 1. Tool Route
+    if (url.startsWith('/tools/')) {
+      const toolId = url.split('/tools/')[1]?.split('?')[0];
+      const tool = this.toolService.tools().find(t => t.id === toolId);
+      
+      if (tool) {
+        schema = {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": this.i18n.resolve(tool.name),
+          "operatingSystem": "Web Browser",
+          "applicationCategory": "UtilityApplication",
+          "description": this.i18n.resolve(tool.description),
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "url": `https://utildex.com${url}`
+        };
+      }
+    } 
+    // 2. Article Route
+    else if (url.startsWith('/articles/')) {
+      const articleId = url.split('/articles/')[1]?.split('?')[0];
+      if (articleId) {
+        const article = this.articleService.getById(articleId);
+        if (article) {
+          schema = {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": this.i18n.resolve(article.title),
+            "image": article.thumbnail,
+            "author": {
+              "@type": "Person",
+              "name": article.author
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Utildex",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://utildex.com/assets/images/logo.png"
+              }
+            },
+            "datePublished": article.date,
+            "description": this.i18n.resolve(article.summary)
+          };
+        }
+      }
+    }
+
+    script.textContent = JSON.stringify(schema);
+  }
+
   private updateSeo() {
     this.updateCanonicalUrl();
     this.updateHreflangTags();
+    this.updateJsonLd();
 
     let currentRoute = this.route;
     while (currentRoute.firstChild) {
