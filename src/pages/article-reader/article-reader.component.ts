@@ -255,10 +255,14 @@ export class ArticleReaderComponent implements OnInit {
   loadError = signal(false);
   currentAppLang = this.i18n.currentLang;
 
+  private readonly VALID_LANGUAGES: Language[] = ['en', 'fr', 'es', 'zh'];
+
   availableLangs = computed(() => {
      const title = this.article()?.title;
      if (!title || typeof title === 'string') return ['en'];
-     return Object.keys(title) as Language[];
+     return (Object.keys(title) as string[]).filter(
+       (key): key is Language => this.VALID_LANGUAGES.includes(key as Language)
+     );
   });
 
   isContentAvailable = computed(() => {
