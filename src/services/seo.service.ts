@@ -62,8 +62,49 @@ export class SeoService {
     link.setAttribute('href', domain + path);
   }
 
+  private updateHreflangTags() {
+    const head = this.document.head;
+    const domain = 'https://utildex.com'; 
+    const currentUrl = this.router.url.split('?')[0]; // Current path without queries
+
+    // 1. Identify the "universal suffix" (path without language prefix)
+    // Regex matches starts with slash, then 2 chars (language), then slash or end of string
+    const langPrefixRegex = /^\/[a-z]{2}(\/|$)/;
+    let urlSuffix = currentUrl.replace(langPrefixRegex, '/');
+    if (!urlSuffix.startsWith('/')) urlSuffix = '/' + urlSuffix;
+
+    // 2. Loop through all supported languages
+    this.i18n.supportedLanguages.forEach(lang => {
+      // Find or create the tag
+      let link: HTMLLinkElement | null = head.querySelector(`link[hreflang='${lang.code}']`);
+      if (!link) {
+        link = this.document.createElement('link');
+        link.setAttribute('rel', 'alternate');
+        link.setAttribute('hreflang', lang.code);
+        head.appendChild(link);
+      }
+
+      // Construct the URL: Domain + /code + suffix
+      // Note: If suffix is '/', we get /en//. We should clean that up.
+      const cleanPath = `/${lang.code}${urlSuffix}`.replace('//', '/');
+      link.setAttribute('href', domain + cleanPath);
+    });
+
+    // 3. Handle x-default (usually 'en')
+    let xDefault: HTMLLinkElement | null = head.querySelector(`link[hreflang='x-default']`);
+    if (!xDefault) {
+      xDefault = this.document.createElement('link');
+      xDefault.setAttribute('rel', 'alternate');
+      xDefault.setAttribute('hreflang', 'x-default');
+      head.appendChild(xDefault);
+    }
+    const enPath = `/en${urlSuffix}`.replace('//', '/');
+    xDefault.setAttribute('href', domain + enPath);
+  }
+
   private updateSeo() {
     this.updateCanonicalUrl();
+    this.updateHreflangTags();
 
     let currentRoute = this.route;
     while (currentRoute.firstChild) {
