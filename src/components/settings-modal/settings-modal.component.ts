@@ -2,7 +2,7 @@
 import { Component, inject, output, signal, effect, ElementRef, viewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ThemeService, PrimaryColor } from '../../services/theme.service';
-import { I18nService, Language } from '../../services/i18n.service';
+import { I18nService } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
 import { ToolService } from '../../services/tool.service';
 import { ClipboardService } from '../../services/clipboard.service';
@@ -476,12 +476,7 @@ export class SettingsModalComponent {
   stats = signal<StorageStats | null>(null);
   inspectionData = signal<StorageItem[]>([]);
 
-  languages: { code: Language; flagCode: string; label: string }[] = [
-    { code: 'en', flagCode: 'us', label: 'English' },
-    { code: 'fr', flagCode: 'fr', label: 'Français' },
-    { code: 'es', flagCode: 'es', label: 'Español' },
-    { code: 'zh', flagCode: 'cn', label: '中文' }
-  ];
+  languages = this.i18n.supportedLanguages;
 
   colors: PrimaryColor[] = ['blue', 'emerald', 'violet', 'amber', 'rose'];
 

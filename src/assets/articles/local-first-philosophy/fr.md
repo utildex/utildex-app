@@ -1,6 +1,3 @@
-
-# Pourquoi le logiciel Local-First est important
-
 Dans une ère dominée par les services cloud et la connexion permanente, un nouveau paradigme gagne du terrain : le **Logiciel Local-First**.
 
 ## Qu'est-ce que le Local-First ?

@@ -24,14 +24,10 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
     title: { 
       en: 'Why Local-First Software Matters',
       fr: 'Pourquoi le logiciel Local-First est important',
-      es: 'Por qué importa el software Local-First',
-      zh: '为什么本地优先软件很重要'
     },
     summary: {
       en: 'Discover the benefits of privacy, speed, and ownership that come with local-first applications.',
       fr: 'Découvrez les avantages de la confidentialité, de la vitesse et de la propriété qu\'apportent les applications local-first.',
-      es: 'Descubra los beneficios de privacidad, velocidad y propiedad que conllevan las aplicaciones local-first.',
-      zh: '探索本地优先应用程序带来的隐私、速度和所有权的好处。'
     },
     thumbnail: '../assets/articles/local-first-philosophy/thumbnail.webp',
     date: '2025-05-15',
@@ -46,14 +42,10 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
     title: {
       en: '10 Tips to Boost Developer Productivity',
       fr: '10 Astuces pour booster la productivité',
-      es: '10 Consejos para aumentar la productividad',
-      zh: '10 个提高开发者生产力的技巧'
     },
     summary: {
       en: 'Small changes in your workflow that can yield massive results over time.',
       fr: 'De petits changements dans votre flux de travail qui peuvent donner des résultats massifs.',
-      es: 'Pequeños cambios en su flujo de trabajo que pueden dar resultados masivos.',
-      zh: '工作流程中的微小变化可以随着时间的推移产生巨大的成果。'
     },
     thumbnail: '../assets/articles/productivity-tips/thumbnail.webp',
     date: '2025-06-10',

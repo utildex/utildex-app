@@ -1,6 +1,3 @@
-
-# 10 Astuces pour la Productivité des Développeurs
-
 La productivité ne consiste pas à travailler plus d'heures, mais à faire compter chaque heure.
 
 ## 1. Maîtrisez votre IDE
