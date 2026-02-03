@@ -7,6 +7,7 @@ import { CarouselComponent } from '../carousel/carousel.component';
 import { RouterLink } from '@angular/router';
 import { AppComponent } from '../../app.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -16,7 +17,7 @@ import { NgTemplateOutlet } from '@angular/common';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ToolCardComponent, ArticleCardComponent, CarouselComponent, RouterLink, NgTemplateOutlet],
+  imports: [ToolCardComponent, ArticleCardComponent, CarouselComponent, RouterLink, NgTemplateOutlet, LocalLinkPipe],
   templateUrl: './dashboard.component.html',
   providers: [
     provideTranslation({

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { getToolComponent } from '../../core/tool-registry';
 import { ToolService } from '../../services/tool.service';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-tool-host',
@@ -40,6 +41,7 @@ export class ToolHostComponent {
 
   toolService = inject(ToolService);
   router = inject(Router) as Router;
+  i18n = inject(I18nService);
 
   componentType = signal<Type<unknown> | null>(null);
   error = signal<boolean>(false);
@@ -76,6 +78,6 @@ export class ToolHostComponent {
   }
 
   goBack() {
-    this.router.navigate(['/tools']);
+    this.router.navigate(['/', this.i18n.currentLang(), 'tools']);
   }
 }

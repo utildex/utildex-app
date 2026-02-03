@@ -1,6 +1,7 @@
 
 import { Component, input, inject, computed, effect } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ToolService } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -12,7 +13,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-tool-layout',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LocalLinkPipe],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
@@ -20,7 +21,7 @@ import zh from './i18n/zh';
     <div class="max-w-5xl mx-auto">
       <!-- Breadcrumb -->
       <nav class="mb-6 flex items-center text-sm text-slate-500 font-medium">
-        <a routerLink="/tools" class="hover:text-primary transition-colors flex items-center gap-1">
+        <a [routerLink]="'/tools' | localLink" class="hover:text-primary transition-colors flex items-center gap-1">
           <span class="material-symbols-outlined text-sm">arrow_back</span>
           {{ t.map()['BACK_TO_TOOLS'] }}
         </a>

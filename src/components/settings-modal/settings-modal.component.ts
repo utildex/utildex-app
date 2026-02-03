@@ -1,6 +1,7 @@
 
 import { Component, inject, output, signal, effect, ElementRef, viewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 import { ThemeService, PrimaryColor } from '../../services/theme.service';
 import { I18nService } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
@@ -148,7 +149,7 @@ type ParsedData =
                 <div class="grid grid-cols-2 gap-3">
                   @for (lang of languages; track lang.code) {
                     <button 
-                      (click)="i18n.setLanguage(lang.code)"
+                      (click)="switchLanguage(lang.code)"
                       class="flex items-center gap-3 p-3 rounded-xl border transition-all text-left"
                       [class]="i18n.currentLang() === lang.code 
                         ? 'border-primary bg-primary/5 ring-1 ring-primary' 
@@ -461,6 +462,7 @@ export class SettingsModalComponent {
   clipboard = inject(ClipboardService);
   toast = inject(ToastService);
   offline = inject(OfflineManagerService);
+  private router = inject(Router);
 
   // UI State
   activeTab = signal<Tab>('general');
@@ -606,6 +608,23 @@ export class SettingsModalComponent {
   }
 
   // --- Data Parsing Helpers ---
+
+  switchLanguage(langCode: string) {
+    // 1. Get current URL structure
+    const urlTree = this.router.parseUrl(this.router.url);
+    const segmentGroup = urlTree.root.children['primary'];
+
+    if (segmentGroup && segmentGroup.segments.length > 0) {
+      // 2. Replace the first segment (language code) with new language
+      segmentGroup.segments[0].path = langCode;
+      
+      // 3. Navigate to the new URL (preserving query params)
+      this.router.navigateByUrl(urlTree);
+    } else {
+      // Fallback for root or weird states
+      this.router.navigate(['/', langCode]);
+    }
+  }
 
   cleanKey(key: string): string {
     const map: Record<string, string> = {

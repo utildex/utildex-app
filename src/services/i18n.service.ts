@@ -23,20 +23,23 @@ export class I18nService {
   ];
 
   constructor() {
-    // Load persisted language
-    const saved = localStorage.getItem('utildex-lang') as Language;
-    if (saved && this.isSupported(saved)) {
-      this.currentLang.set(saved);
-    } else {
-      this.currentLang.set(this.getBrowserLang());
-    }
-
+    // Note: We removed the auto-loader here.
+    // The source of truth is now the URL (via LanguageGuard).
+    // LocalStorage is only used to 'remember' preference in the root redirect.
+    
     // Persist changes
     effect(() => {
+      // When the URL changes the language, we save it for next time
       localStorage.setItem('utildex-lang', this.currentLang());
       // Update html lang attribute
       document.documentElement.lang = this.currentLang();
     });
+  }
+
+  getSavedOrBrowserLang(): Language {
+     const saved = localStorage.getItem('utildex-lang') as Language;
+     if (saved && this.isSupported(saved)) return saved;
+     return this.getBrowserLang();
   }
 
   setLanguage(lang: Language) {

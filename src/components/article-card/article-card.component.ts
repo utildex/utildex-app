@@ -2,6 +2,7 @@
 import { Component, input, inject, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, DatePipe, NgTemplateOutlet, NgOptimizedImage } from '@angular/common';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ArticleMetadata } from '../../data/article-registry';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -14,7 +15,7 @@ const zh = { "READ_MORE": "阅读文章", "OPEN_LINK": "访问链接" };
 @Component({
   selector: 'app-article-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe, NgTemplateOutlet, NgOptimizedImage],
+  imports: [CommonModule, RouterLink, DatePipe, NgTemplateOutlet, NgOptimizedImage, LocalLinkPipe],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
@@ -39,7 +40,7 @@ const zh = { "READ_MORE": "阅读文章", "OPEN_LINK": "访问链接" };
     <!-- Internal Router Link Variant -->
     @else {
       <a 
-        [routerLink]="['/articles', article().id]"
+        [routerLink]="['/articles', article().id] | localLink"
         class="group/article block bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl transition-all duration-300 isolate"
         [class.flex-col]="layout() === 'grid'"
         [class.h-full]="layout() === 'grid'"

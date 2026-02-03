@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ToolService } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
@@ -13,7 +14,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [ToolCardComponent, RouterLink, DatePipe],
+  imports: [ToolCardComponent, RouterLink, DatePipe, LocalLinkPipe],
   providers: [
     provideTranslation({
       en: () => en,
@@ -36,7 +37,7 @@ import zh from './i18n/zh';
         <div class="text-center py-20 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
           <span class="material-symbols-outlined text-5xl text-slate-300 mb-4">schedule</span>
           <p class="text-lg text-slate-500">{{ t.map()['NO_HISTORY_TITLE'] }}</p>
-          <a routerLink="/tools" class="mt-4 inline-block text-primary hover:underline">{{ t.map()['BROWSE_LINK'] }}</a>
+          <a [routerLink]="'/tools' | localLink" class="mt-4 inline-block text-primary hover:underline">{{ t.map()['BROWSE_LINK'] }}</a>
         </div>
       } @else {
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

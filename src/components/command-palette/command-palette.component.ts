@@ -230,7 +230,7 @@ export class CommandPaletteComponent {
         icon: 'home',
         title: this.t.map()['ACT_HOME'],
         subtitle: 'Navigation',
-        action: () => this.router.navigate(['/'])
+        action: () => this.router.navigate(['/', this.i18n.currentLang()])
       },
       {
         id: 'act-theme',
@@ -303,7 +303,11 @@ export class CommandPaletteComponent {
       icon: item.tool.icon,
       title: this.i18n.resolve(item.tool.name),
       subtitle: this.i18n.resolve(item.tool.description),
-      action: () => this.router.navigate([item.tool.routePath])
+      action: () => {
+         const lang = this.i18n.currentLang();
+         const path = item.tool.routePath.split('/');
+         this.router.navigate(['/', lang, ...path]);
+      }
     }));
 
     list.push(...toolResults);
