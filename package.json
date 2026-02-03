@@ -26,6 +26,7 @@
     "@fontsource/roboto-mono": "^5.2.8",
     "diff": "^5.2.0",
     "heic2any": "^0.0.4",
+    "html-to-image": "^1.11.13",
     "jszip": "^3.10.1",
     "marked": "12.0.0",
     "material-symbols": "^0.40.2",

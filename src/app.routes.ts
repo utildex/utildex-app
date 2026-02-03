@@ -1,5 +1,6 @@
 
 import { Routes } from '@angular/router';
+import { isDevMode } from '@angular/core';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
@@ -41,6 +42,13 @@ export const routes: Routes = [
     path: 'history',
     loadComponent: () => import('./pages/history/history.component').then(m => m.HistoryComponent),
     title: 'History - Utildex'
+  },
+  // Dev-Only Banner Generator
+  {
+    path: 'preview-banner',
+    loadComponent: () => import('./pages/preview-banner/preview-banner.component').then(m => m.PreviewBannerComponent),
+    canMatch: [() => isDevMode()],
+    title: 'Banner Generator'
   },
   // Dynamic Tool Route
   {
