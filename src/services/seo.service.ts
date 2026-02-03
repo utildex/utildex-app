@@ -1,6 +1,7 @@
 
 import { Injectable, inject, effect } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
+import { DOCUMENT } from '@angular/common';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ToolService } from './tool.service';
 import { ArticleService } from './article.service';
@@ -18,6 +19,7 @@ export class SeoService {
   private toolService = inject(ToolService);
   private articleService = inject(ArticleService);
   private i18n = inject(I18nService);
+  private document = inject(DOCUMENT);
 
   constructor() {
     // Listen to route changes
@@ -32,7 +34,12 @@ export class SeoService {
       // Access signal to register dependency
       this.i18n.currentLang(); 
       this.updateSeo();
+      this.updateLangAttribute();
     });
+  }
+
+  private updateLangAttribute() {
+    this.document.documentElement.lang = this.i18n.currentLang();
   }
 
   private updateSeo() {
