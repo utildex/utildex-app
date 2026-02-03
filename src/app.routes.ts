@@ -1,9 +1,8 @@
 
 import { Routes } from '@angular/router';
-import { isDevMode, inject } from '@angular/core';
+import { isDevMode } from '@angular/core';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { languageGuard } from './core/guards/language.guard';
-import { I18nService } from './services/i18n.service';
 
 export const routes: Routes = [
   // 1. Root Rerouter: If user hits root '/', send to their preferred language '/en/', '/fr/' etc.

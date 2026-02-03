@@ -113,6 +113,7 @@ export class SeoService {
     }
 
     const url = this.router.url;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let schema: any = {
       "@context": "https://schema.org",
       "@type": "WebSite",

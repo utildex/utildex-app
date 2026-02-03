@@ -10,7 +10,7 @@ import { I18nService } from '../../services/i18n.service';
 export class LocalLinkPipe implements PipeTransform {
   private i18n = inject(I18nService);
 
-  transform(path: string | any[]): any[] {
+  transform(path: string | unknown[]): unknown[] {
     const lang = this.i18n.currentLang();
     
     // Handle string path: "/tools" -> ["/", "en", "tools"]

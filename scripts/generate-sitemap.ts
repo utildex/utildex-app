@@ -1,7 +1,6 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
 
 // 1. Import Data
 // Note: We access these via relative paths from /scripts/ to /src/
@@ -27,7 +26,7 @@ const getUrlEntry = (loc: string, lastmod?: string, changefreq: string = 'weekly
 async function generateSitemap() {
   console.log('🗺️  Generating Sitemap...');
 
-  let urls: string[] = [];
+  const urls: string[] = [];
   const today = new Date().toISOString().split('T')[0];
 
   // A. Static Pages (Home, Tools List, Articles List, Categories)
