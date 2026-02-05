@@ -30,6 +30,11 @@
                 "output": "."
               },
               {
+                "glob": "_headers",
+                "input": "src",
+                "output": "."
+              },
+              {
                 "glob": "robots.txt",
                 "input": "src",
                 "output": "."
