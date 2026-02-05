@@ -610,18 +610,18 @@ export class SettingsModalComponent {
   // --- Data Parsing Helpers ---
 
   switchLanguage(langCode: string) {
-    // 1. Get current URL structure
     const urlTree = this.router.parseUrl(this.router.url);
-    const segmentGroup = urlTree.root.children['primary'];
+    const segments = urlTree.root.children['primary']?.segments;
 
-    if (segmentGroup && segmentGroup.segments.length > 0) {
-      // 2. Replace the first segment (language code) with new language
-      segmentGroup.segments[0].path = langCode;
-      
-      // 3. Navigate to the new URL (preserving query params)
-      this.router.navigateByUrl(urlTree);
+    if (segments && segments.length > 0) {
+      const newPath = segments.map(s => s.path);
+      newPath[0] = langCode;
+
+      this.router.navigate(newPath, {
+        queryParams: urlTree.queryParams,
+        fragment: urlTree.fragment || undefined
+      });
     } else {
-      // Fallback for root or weird states
       this.router.navigate(['/', langCode]);
     }
   }
