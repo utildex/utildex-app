@@ -1,6 +1,7 @@
 
 import { Routes } from '@angular/router';
-import { isDevMode } from '@angular/core';
+import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { languageGuard } from './core/guards/language.guard';
 
@@ -9,11 +10,19 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'en', // Fallback, but using a guard is better. Let's do a simple componentless route with canMatch if we want smart logic, but redirectTo is safer for static build.
-    // Actually, we can use a redirect function to read from I18nService helper
+    redirectTo: () => {
+        const platformId = inject(PLATFORM_ID);
+        // Ensure we're in the browser before accessing navigator
+        if (isPlatformBrowser(platformId)) {
+            const browserLang = navigator.language.split('-')[0];
+            const supportedLangs = ['en', 'fr', 'es', 'zh'];
+            if (supportedLangs.includes(browserLang)) {
+                return browserLang;
+            }
+        }
+        return 'en';
+    },
     resolve: {
-       // We can't easily execute logic in redirectTo string.
-       // So we keep it simple: Default to 'en'. The user can switch later.
     }
   },
   
