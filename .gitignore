@@ -26,3 +26,4 @@ dist-ssr
 
 .angular/*
 package-lock.json
+sitemap.xml

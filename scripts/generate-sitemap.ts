@@ -10,7 +10,7 @@ import { ARTICLE_REGISTRY } from '../src/data/article-registry';
 
 // 2. Configuration
 const BASE_URL = 'https://utildex.com';
-const OUT_DIR = path.join(process.cwd(), 'src/assets');
+const OUT_DIR = path.join(process.cwd(), 'src');
 const OUT_FILE = path.join(OUT_DIR, 'sitemap.xml');
 
 // 3. Helper to format XML
