@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "ng serve",
+    "prebuild": "tsx scripts/generate-sitemap.ts",
     "build": "ng build",
-    "postbuild": "tsx scripts/generate-sitemap.ts",
     "preview": "ng serve --configuration=production",
     "lint": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs --fix"
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@lhci/cli": "^0.15.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^22.14.0",
