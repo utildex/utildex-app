@@ -1,5 +1,6 @@
 import { Component, input, output, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ToolMetadata } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -11,7 +12,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-tool-card',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LocalLinkPipe],
   providers: [
     provideTranslation({
       en: () => en,
@@ -33,7 +34,7 @@ import zh from './i18n/zh';
             </div>
             <div>
                <h3 class="font-bold text-lg text-slate-900 dark:text-white leading-tight">
-                <a [routerLink]="'/' + tool().routePath" class="hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded">
+                <a [routerLink]="('/' + tool().routePath) | localLink" class="hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary rounded">
                   {{ name() }}
                 </a>
                </h3>
@@ -67,7 +68,7 @@ import zh from './i18n/zh';
 
       <!-- Action Footer -->
       <div class="px-5 py-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-700 flex justify-end">
-        <a [routerLink]="'/' + tool().routePath" class="text-sm font-medium text-primary hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1">
+        <a [routerLink]="('/' + tool().routePath) | localLink" class="text-sm font-medium text-primary hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1">
           {{ t.map()['OPEN_TOOL'] }}
           <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </a>

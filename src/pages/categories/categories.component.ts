@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ToolService } from '../../services/tool.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';
@@ -10,7 +11,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-categories',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, LocalLinkPipe],
   providers: [
     provideTranslation({
       en: () => en,
@@ -33,7 +34,7 @@ import zh from './i18n/zh';
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
         @for (cat of categories(); track cat) {
-          <a [routerLink]="['/categories', cat]" class="group block p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary transition-all hover:shadow-md">
+          <a [routerLink]="['/categories', cat] | localLink" class="group block p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary transition-all hover:shadow-md">
             <div class="flex items-center justify-between mb-4">
               <span class="material-symbols-outlined text-4xl text-slate-400 group-hover:text-primary transition-colors">folder</span>
               <span class="material-symbols-outlined text-slate-300 group-hover:translate-x-1 transition-transform">arrow_forward</span>

@@ -1,5 +1,6 @@
 import { Component, inject, input, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ToolService } from '../../services/tool.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -11,7 +12,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-category-detail',
   standalone: true,
-  imports: [ToolCardComponent, RouterLink],
+  imports: [ToolCardComponent, RouterLink, LocalLinkPipe],
   providers: [
     provideTranslation({
       en: () => en,
@@ -23,7 +24,7 @@ import zh from './i18n/zh';
   template: `
     <div class="space-y-8">
       <div class="flex flex-col gap-2">
-        <a routerLink="/categories" class="text-sm text-slate-500 hover:text-primary flex items-center gap-1 mb-2">
+        <a [routerLink]="'/categories' | localLink" class="text-sm text-slate-500 hover:text-primary flex items-center gap-1 mb-2">
           <span class="material-symbols-outlined text-sm">arrow_back</span> {{ t.map()['BACK_LINK'] }}
         </a>
         <h1 class="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">

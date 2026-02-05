@@ -1,5 +1,5 @@
 
-import { I18nText } from '../services/i18n.service';
+import { I18nText } from './types';
 
 export type ArticleType = 'internal' | 'external';
 

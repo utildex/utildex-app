@@ -7,7 +7,7 @@
       <div class="flex justify-between h-16 items-center">
         <!-- Logo -->
         <div class="flex-shrink-0 flex items-center gap-2">
-          <a routerLink="/" class="flex items-center gap-3 focus:outline-none group">
+          <a [routerLink]="'/' | localLink" class="flex items-center gap-3 focus:outline-none group">
             <div class="w-9 h-9 group-hover:scale-105 transition-transform duration-200">
                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-sm">
                   <rect x="0" y="0" width="28" height="28" rx="8" class="fill-red-400" />
@@ -34,18 +34,18 @@
         <div class="flex items-center gap-2">
           <!-- Desktop Nav -->
           <nav class="hidden md:flex gap-1 mr-2">
-             <a routerLink="/my-dashboard" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1">
+             <a [routerLink]="'/my-dashboard' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1">
                <span class="material-symbols-outlined text-sm">dashboard</span>
                {{ t.map()['NAV_DASHBOARD'] }}
              </a>
              <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-             <a routerLink="/tools" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+             <a [routerLink]="'/tools' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                {{ t.map()['NAV_ALL_TOOLS'] }}
              </a>
-             <a routerLink="/categories" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+             <a [routerLink]="'/categories' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                {{ t.map()['NAV_CATEGORIES'] }}
              </a>
-             <a routerLink="/articles" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+             <a [routerLink]="'/articles' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                {{ t.map()['NAV_ARTICLES'] }}
              </a>
           </nav>
@@ -131,17 +131,17 @@
                {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
             </button>
             <div class="h-px bg-slate-100 dark:bg-slate-800 my-2"></div>
-            <a routerLink="/my-dashboard" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium flex items-center gap-2">
+            <a [routerLink]="'/my-dashboard' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium flex items-center gap-2">
               <span class="material-symbols-outlined text-sm">dashboard</span>
               {{ t.map()['NAV_DASHBOARD'] }}
             </a>
-            <a routerLink="/tools" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
+            <a [routerLink]="'/tools' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
               {{ t.map()['NAV_ALL_TOOLS'] }}
             </a>
-            <a routerLink="/categories" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
+            <a [routerLink]="'/categories' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
               {{ t.map()['NAV_CATEGORIES'] }}
             </a>
-            <a routerLink="/articles" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
+            <a [routerLink]="'/articles' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
               {{ t.map()['NAV_ARTICLES'] }}
             </a>
           </nav>

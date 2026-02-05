@@ -22,7 +22,7 @@
                 <span class="material-symbols-outlined text-lg">search</span>
                 {{ t.map()['BTN_QUICK_SEARCH'] }}
             </button>
-            <a routerLink="/tools" class="px-6 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+            <a [routerLink]="'/tools' | localLink" class="px-6 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                 {{ t.map()['BTN_BROWSE'] }}
             </a>
         </div>
@@ -75,13 +75,13 @@
         <section>
             <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
                 <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_CATEGORIES'] }}</h2>
-                <a routerLink="/categories" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
+                <a [routerLink]="'/categories' | localLink" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
             </div>
 
             <app-carousel [items]="categories()" [itemTemplate]="catTemplate" [autoplay]="false"></app-carousel>
 
             <ng-template #catTemplate let-cat>
-                <a [routerLink]="['/categories', cat]" class="block h-full p-6 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-primary/50 transition-all group">
+                <a [routerLink]="['/categories', cat] | localLink" class="block h-full p-6 bg-gradient-to-br from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl hover:border-primary/50 transition-all group">
                     <span class="material-symbols-outlined text-4xl text-primary mb-3">folder</span>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ toolService.getCategoryName(cat) }}</h3>
                     <p class="text-sm text-slate-500 mt-1">{{ t.map()['CAT_BROWSE'] }}</p>
@@ -122,7 +122,7 @@
                         <span class="material-symbols-outlined text-purple-500">shuffle</span>
                         <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_DISCOVER'] }}</h2>
                     </div>
-                    <a routerLink="/tools" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
+                    <a [routerLink]="'/tools' | localLink" class="text-sm font-medium text-primary hover:text-blue-600">{{ t.map()['LINK_VIEW_ALL'] }}</a>
                 </div>
 
                 <app-carousel 

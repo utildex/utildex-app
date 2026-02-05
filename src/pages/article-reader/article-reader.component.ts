@@ -2,6 +2,7 @@
 import { Component, inject, input, signal, effect, computed, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ArticleService } from '../../services/article.service';
 import { ArticleMetadata } from '../../data/article-registry';
@@ -18,7 +19,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-article-reader',
   standalone: true,
-  imports: [CommonModule, RouterLink, DatePipe],
+  imports: [CommonModule, RouterLink, DatePipe, LocalLinkPipe],
   encapsulation: ViewEncapsulation.None, // Required to style injected HTML content
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
@@ -29,7 +30,7 @@ import zh from './i18n/zh';
       
       <!-- Toolbar / Breadcrumb -->
       <div class="flex items-center justify-between py-6 mb-8 border-b border-slate-200 dark:border-slate-800">
-         <a routerLink="/articles" class="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors group">
+         <a [routerLink]="'/articles' | localLink" class="flex items-center gap-2 text-slate-500 hover:text-primary transition-colors group">
             <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
             <span class="font-bold">{{ t.map()['BACK_TO_ARTICLES'] }}</span>
          </a>
@@ -114,7 +115,7 @@ import zh from './i18n/zh';
               <!-- Footer -->
               <div class="mt-20 pt-10 border-t border-slate-100 dark:border-slate-800 text-center">
                  <p class="text-slate-500 mb-4">{{ t.map()['THANKS_READING'] }}</p>
-                 <a routerLink="/articles" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-bold hover:opacity-90 transition-opacity">
+                 <a [routerLink]="'/articles' | localLink" class="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-bold hover:opacity-90 transition-opacity">
                     <span class="material-symbols-outlined">arrow_back</span>
                     {{ t.map()['BACK_TO_ARTICLES'] }}
                  </a>
@@ -165,7 +166,7 @@ import zh from './i18n/zh';
                  </div>
                  
                  <div class="pt-12 relative z-10">
-                    <a routerLink="/articles" class="text-sm font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors uppercase tracking-wider flex items-center gap-2">
+                    <a [routerLink]="'/articles' | localLink" class="text-sm font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors uppercase tracking-wider flex items-center gap-2">
                        <span class="material-symbols-outlined text-lg">arrow_back</span>
                        {{ t.map()['BACK_TO_ARTICLES'] }}
                     </a>

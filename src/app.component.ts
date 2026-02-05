@@ -19,6 +19,7 @@ import { DownloadStatusComponent } from './components/download-status/download-s
 import { GuideComponent } from './components/guide/guide.component';
 import { OfflineManagerService } from './services/offline-manager.service';
 import { BubbleDirective } from './directives/bubble.directive';
+import { LocalLinkPipe } from './core/pipes/local-link.pipe';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -32,7 +33,8 @@ import { filter } from 'rxjs/operators';
     RouterOutlet, RouterLink, RouterLinkActive,
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
-    DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective
+    DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective,
+    LocalLinkPipe
   ],
   templateUrl: './app.component.html',
   providers: [

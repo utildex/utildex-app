@@ -24,7 +24,26 @@
                 "input": "src/assets",
                 "output": "assets"
               },
-              "src/_redirects"
+              {
+                "glob": "_redirects",
+                "input": "src",
+                "output": "."
+              },
+              {
+                "glob": "_headers",
+                "input": "src",
+                "output": "."
+              },
+              {
+                "glob": "robots.txt",
+                "input": "src",
+                "output": "."
+              },
+              {
+                "glob": "sitemap.xml",
+                "input": "src",
+                "output": "."
+              }
             ],
             "styles": [
               "src/styles.css",
