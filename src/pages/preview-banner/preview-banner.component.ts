@@ -32,7 +32,7 @@ import { toJpeg } from 'html-to-image';
           
           <!-- Real Logo -->
           <div class="w-32 h-32 rounded-3xl shadow-2xl mb-6 overflow-hidden bg-white flex items-center justify-center">
-             <img src="/assets/images/logo_utildex_128.jpeg" class="w-full h-full object-cover">
+             <img src="assets/images/logo_utildex_128.jpeg" class="w-full h-full object-cover">
           </div>
 
           <!-- Title -->
