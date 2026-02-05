@@ -1,6 +1,6 @@
 [
-  { "code": "en", "label": "English" },
-  { "code": "fr", "label": "Français" },
-  { "code": "es", "label": "Español" },
-  { "code": "zh", "label": "中文" }
+  { "code": "en", "label": "English", "flagCode": "en" },
+  { "code": "fr", "label": "Français", "flagCode": "fr" },
+  { "code": "es", "label": "Español", "flagCode": "es" },
+  { "code": "zh", "label": "中文", "flagCode": "zh" }
 ]
