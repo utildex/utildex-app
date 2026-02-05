@@ -5,12 +5,13 @@ import { Router } from '@angular/router';
 import { ThemeService, PrimaryColor } from '../../services/theme.service';
 import { I18nService } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
-import { ToolService } from '../../services/tool.service';
-import { ClipboardService } from '../../services/clipboard.service';
-import { StorageManagerService, StorageStats } from '../../services/storage-manager.service';
-import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
-import { ToastService } from '../../services/toast.service';
-import { OfflineManagerService } from '../../services/offline-manager.service';
+import {ToolService} from '../../services/tool.service';
+import {ClipboardService} from '../../services/clipboard.service';
+import {StorageManagerService, StorageStats} from '../../services/storage-manager.service';
+import {ScopedTranslationService, provideTranslation} from '../../core/i18n';
+import {ToastService} from '../../services/toast.service';
+import {OfflineManagerService} from '../../services/offline-manager.service';
+import {VirtualPetsService} from '../../services/virtual-pets.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -18,6 +19,7 @@ import zh from './i18n/zh';
 
 type Tab = 'general' | 'data';
 
+// Interfaces for structured data viewing
 interface ClipboardItem {
   text: string;
   timestamp: number | string;
@@ -656,7 +658,7 @@ export class SettingsModalComponent {
     const sizes = ['UNIT_BYTE', 'UNIT_KILOBYTE', 'UNIT_MEGABYTE', 'UNIT_GIGABYTE'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     const sizeKey = sizes[i] || 'UNIT_BYTE';
-    
+
     const val = bytes / Math.pow(k, i);
     return val.toLocaleString(this.i18n.currentLang(), { maximumFractionDigits: 2 }) + ' ' + this.t.get(sizeKey);
   }
@@ -666,22 +668,25 @@ export class SettingsModalComponent {
     return tool ? this.i18n.resolve(tool.name) : id;
   }
 
-  parseData(key: string, value: string): ParsedData {
-    try {
-       if (key === 'utildex-clipboard-history') {
-          const arr = JSON.parse(value);
-          return { type: 'clipboard', data: Array.isArray(arr) ? arr : [] };
-       }
-       
-       if (key === 'utildex-usage') {
-          const obj = JSON.parse(value);
-          const stats = (Object.entries(obj) as [string, { count: number; lastUsed: number }][]).map(([id, stat]) => ({
-             name: this.resolveToolName(id),
-             count: stat.count,
-             lastUsed: stat.lastUsed
-          })).sort((a, b) => b.lastUsed - a.lastUsed);
-          return { type: 'usage', data: stats };
-       }
+    parseData(key: string, value: string): ParsedData {
+        try {
+            if (key === 'utildex-clipboard-history') {
+                const arr = JSON.parse(value);
+                return {type: 'clipboard', data: Array.isArray(arr) ? arr : []};
+            }
+
+            if (key === 'utildex-usage') {
+                const obj = JSON.parse(value);
+                const stats = Object.entries(obj).map(([id, stat]: [string, {
+                    count: number;
+                    lastUsed: number
+                }]) => ({
+                    name: this.resolveToolName(id),
+                    count: stat.count,
+                    lastUsed: stat.lastUsed
+                })).sort((a, b) => b.lastUsed - a.lastUsed);
+                return {type: 'usage', data: stats};
+            }
 
        if (key === 'utildex-favorites') {
           const arr = JSON.parse(value);

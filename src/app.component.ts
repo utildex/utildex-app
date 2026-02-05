@@ -19,6 +19,7 @@ import { DownloadStatusComponent } from './components/download-status/download-s
 import { GuideComponent } from './components/guide/guide.component';
 import { OfflineManagerService } from './services/offline-manager.service';
 import { BubbleDirective } from './directives/bubble.directive';
+import { VirtualPetsComponent } from './components/virtual-pets/virtual-pets.component';
 import { LocalLinkPipe } from './core/pipes/local-link.pipe';
 import en from './i18n/en';
 import fr from './i18n/fr';
@@ -34,7 +35,7 @@ import { filter } from 'rxjs/operators';
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
     DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective,
-    LocalLinkPipe
+    VirtualPetsComponent, LocalLinkPipe
   ],
   templateUrl: './app.component.html',
   providers: [

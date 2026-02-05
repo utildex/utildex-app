@@ -1,6 +1,5 @@
 
 import { Injectable } from '@angular/core';
-import { DB_STORES } from '../core/storage-keys';
 
 export interface DbRecord {
   id?: number;
@@ -16,7 +15,7 @@ export class DbService {
   private dbName = 'utildex-db';
   private version = 2; // Bumped Schema Version
   private dbPromise: Promise<IDBDatabase> | null = null;
-  
+
   // Failsafe: In-Memory "Degraded Mode"
   private isInMemory = false;
   private memoryStores: Record<string, Map<unknown, unknown>> = {
@@ -247,7 +246,7 @@ export class DbService {
                    (value as { id: unknown }).id = k;
                }
            }
-           
+
            if (storeMap.has(k)) {
                const req = this.mockRequest(undefined);
                setTimeout(() => {
@@ -282,14 +281,14 @@ export class DbService {
       try {
         // Cast to IDBObjectStore is loose but necessary for the mock
         const req = operation(mockStore as unknown as IDBObjectStore);
-        
+
         // Hook into the mock request we created
         const originalOnSuccess = req.onsuccess;
         req.onsuccess = (ev) => {
             if (originalOnSuccess) originalOnSuccess.call(req, ev);
             resolve(req.result as T);
         };
-        
+
         const originalOnError = req.onerror;
         req.onerror = (ev) => {
             if (originalOnError) originalOnError.call(req, ev);
