@@ -3,6 +3,11 @@ import { Injectable, inject, WritableSignal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DbService } from './db.service';
 
+export interface StorageOptions {
+  type?: 'string' | 'number' | 'boolean';
+  strategy?: 'idb' | 'local' | 'hybrid';
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,32 +16,71 @@ export class PersistenceService {
   private db: DbService = inject(DbService);
 
   /**
-   * Syncs a signal with IndexedDB (Async).
-   * - Reads on init (async).
-   * - Writes on change.
+   * Syncs a signal with Storage (IDB or LocalStorage).
+   * Supports 'hybrid' strategy for instant load (reads LocalStorage) + durable save (writes IDB).
    */
-  storage<T>(targetSignal: WritableSignal<T>, key: string, type: 'string' | 'number' | 'boolean' = 'string') {
+  storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' = 'string') {
+    // Normalize Options
+    const options: StorageOptions = typeof optionsOrType === 'object' 
+      ? optionsOrType 
+      : { type: optionsOrType as 'string' | 'number' | 'boolean', strategy: 'idb' };
+    
+    const { type = 'string', strategy = 'idb' } = options;
     const fullKey = `utildex-state-${key}`;
     let isLoaded = false;
 
-    // 1. Restore from DB
-    this.db.get<string>(fullKey).then(stored => {
-      if (stored !== undefined && stored !== null) {
-        if (type === 'number') targetSignal.set(Number(stored) as T);
-        else if (type === 'boolean') targetSignal.set((stored === 'true') as T);
-        else targetSignal.set(stored as T);
+    // --- READ PHASE ---
+    
+    // 1. Hybrid/Local: Read SYNC from LocalStorage
+    if (strategy === 'hybrid' || strategy === 'local') {
+      const stored = localStorage.getItem(fullKey);
+      if (stored !== null) {
+        this.updateSignal(targetSignal, stored, type);
+        isLoaded = true;
       }
-      isLoaded = true;
-    });
+    }
 
-    // 2. Watch for changes
-    effect(() => {
+    // 2. IDB/Hybrid: Read ASYNC from DB 
+    // If hybrid, we use DB as backup if local was empty, or just to ensure consistency later? 
+    // Standard hybrid: Local is cache, DB is truth. But we prioritize Local for speed.
+    // If not loaded yet, try DB.
+    if ((strategy === 'idb' || strategy === 'hybrid') && !isLoaded) {
+      this.db.config.read(fullKey).then(stored => {
+        if (stored !== undefined && stored !== null && !isLoaded) {
+          this.updateSignal(targetSignal, String(stored), type);
+        }
+        isLoaded = true;
+      });
+    } else {
+        isLoaded = true;
+    }
+
+    // --- WRITE PHASE ---
+    
+    effect((onCleanup) => {
       const val = targetSignal();
-      // Only persist if we have finished loading, to avoid overwriting DB with default values
-      if (isLoaded) {
-        this.db.set(fullKey, String(val));
-      }
+      if (!isLoaded) return;
+
+      const timer = setTimeout(() => {
+        const strVal = String(val);
+
+        if (strategy === 'local' || strategy === 'hybrid') {
+          localStorage.setItem(fullKey, strVal);
+        }
+
+        if (strategy === 'idb' || strategy === 'hybrid') {
+          this.db.config.write(fullKey, strVal);
+        }
+      }, 300); // 300ms Debounce
+
+      onCleanup(() => clearTimeout(timer));
     });
+  }
+
+  private updateSignal<T>(signal: WritableSignal<T>, value: string, type: string) {
+      if (type === 'number') signal.set(Number(value) as T);
+      else if (type === 'boolean') signal.set((value === 'true') as T);
+      else signal.set(value as T);
   }
 
   /**

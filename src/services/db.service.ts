@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export interface DbRecord {
   id?: number;
   scope: string; // e.g. 'tools.password-generator'
-  data: any;
+  data: unknown;
   updatedAt: number;
 }
 
@@ -18,7 +18,7 @@ export class DbService {
   
   // Failsafe: In-Memory "Degraded Mode"
   private isInMemory = false;
-  private memoryStores: Record<string, Map<any, any>> = {
+  private memoryStores: Record<string, Map<unknown, unknown>> = {
     sys_config: new Map(),
     user_records: new Map(),
     app_blobs: new Map()
@@ -33,14 +33,14 @@ export class DbService {
 
   /** System Configuration API */
   public readonly config = {
-    read: (key: string) => this.run<any>('readonly', this.STORES.CONFIG, store => store.get(key)),
-    write: (key: string, value: any) => this.run<void>('readwrite', this.STORES.CONFIG, store => store.put(value, key)),
+    read: (key: string) => this.run<unknown>('readonly', this.STORES.CONFIG, store => store.get(key)),
+    write: (key: string, value: unknown) => this.run<void>('readwrite', this.STORES.CONFIG, store => store.put(value, key)),
     delete: (key: string) => this.run<void>('readwrite', this.STORES.CONFIG, store => store.delete(key))
   };
 
   /** User Data API */
   public readonly records = {
-    add: (scope: string, data: any) => 
+    add: (scope: string, data: unknown) => 
       this.run<number>('readwrite', this.STORES.RECORDS, store => 
         store.add({ scope, data, updatedAt: Date.now() })
       ),
@@ -104,23 +104,23 @@ export class DbService {
   // --- INTERNAL ENGINE ---
   
   private async getDB(): Promise<IDBDatabase> {
-    if (this.isInMemory) return null as any; 
+    if (this.isInMemory) return null as unknown as IDBDatabase; 
     if (this.dbPromise) return this.dbPromise;
 
-    this.dbPromise = new Promise((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this.dbPromise = new Promise((resolve, _reject) => {
       let request: IDBOpenDBRequest;
       try {
         request = indexedDB.open(this.dbName, this.version);
-      } catch (e) {
+      } catch {
         console.warn('IDB Access Denied. using Memory.');
         this.isInMemory = true;
-        resolve(null as any);
+        resolve(null as unknown as IDBDatabase);
         return;
       }
       
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        const transaction = (event.target as IDBOpenDBRequest).transaction!;
 
         if (!db.objectStoreNames.contains(this.STORES.CONFIG)) {
           db.createObjectStore(this.STORES.CONFIG); 
@@ -130,6 +130,7 @@ export class DbService {
           const store = db.createObjectStore(this.STORES.RECORDS, { keyPath: 'id', autoIncrement: true });
           store.createIndex('scope', 'scope', { unique: false });
         }
+
 
         if (!db.objectStoreNames.contains(this.STORES.BLOBS)) {
           db.createObjectStore(this.STORES.BLOBS);
@@ -148,13 +149,13 @@ export class DbService {
            db.close();
            this.dbPromise = null;
         };
-
+        
         resolve(db);
       };
 
-      request.onerror = (event) => {
+      request.onerror = () => {
         this.isInMemory = true;
-        resolve(null as any);
+        resolve(null as unknown as IDBDatabase);
       };
     });
 
@@ -167,22 +168,22 @@ export class DbService {
     operation: (store: IDBObjectStore) => IDBRequest
   ): Promise<T> {
     
-    if (this.isInMemory) return this.runInMemory<T>(mode, storeName, operation);
+    if (this.isInMemory) return this.runInMemory<T>();
 
     try {
       const db = await this.getDB();
-      if (this.isInMemory) return this.runInMemory<T>(mode, storeName, operation);
+      if (this.isInMemory) return this.runInMemory<T>();
 
       return new Promise((resolve, reject) => {
         let transaction: IDBTransaction;
         try {
            transaction = db.transaction(storeName, mode);
-        } catch(e) {
+        } catch {
            this.dbPromise = null;
            // Retry once
            this.getDB().then(newDb => {
                if (this.isInMemory) {
-                   resolve(this.runInMemory(mode, storeName, operation));
+                   resolve(this.runInMemory());
                } else {
                    const t2 = newDb.transaction(storeName, mode);
                    this.executeRequest(t2, storeName, operation, resolve, reject);
@@ -193,9 +194,9 @@ export class DbService {
 
         this.executeRequest(transaction, storeName, operation, resolve, reject);
       });
-    } catch (e) {
+    } catch {
       this.isInMemory = true;
-      return this.runInMemory<T>(mode, storeName, operation);
+      return this.runInMemory<T>();
     }
   }
 
@@ -203,8 +204,8 @@ export class DbService {
       transaction: IDBTransaction, 
       storeName: string,
       operation: (store: IDBObjectStore) => IDBRequest,
-      resolve: (val: any) => void,
-      reject: (err: any) => void
+      resolve: (val: unknown) => void,
+      reject: (err: unknown) => void
   ) {
       const store = transaction.objectStore(storeName);
       const request = operation(store);
@@ -212,10 +213,11 @@ export class DbService {
       request.onerror = () => reject(request.error);
   }
 
-  private runInMemory<T>(mode: string, storeName: string, op: any): Promise<T> {
+  private runInMemory<T>(): Promise<T> {
     return new Promise(resolve => {
         // Mock success for in-memory
-        resolve(undefined as any);
+        resolve(undefined as unknown as (T));
     });
   }
 }
+

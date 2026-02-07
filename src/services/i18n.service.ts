@@ -1,5 +1,6 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, signal, effect, inject } from '@angular/core';
 import languages from '../data/languages.json';
+import { PersistenceService } from './persistence.service';
 
 export type Language = 'en' | 'fr' | 'es' | 'zh';
 export type I18nText = string | { [key: string]: string };
@@ -14,6 +15,8 @@ export interface LanguageInfo {
   providedIn: 'root'
 })
 export class I18nService {
+  private persistence = inject(PersistenceService);
+
   currentLang = signal<Language>('en');
 
   readonly supportedLanguages = languages as LanguageInfo[];
@@ -21,22 +24,26 @@ export class I18nService {
   constructor() {
     // Note: We removed the auto-loader here.
     // The source of truth is now the URL (via LanguageGuard).
-    // LocalStorage is only used to 'remember' preference in the root redirect.
+    // But we still persist to LocalStorage via 'hybrid' strategy for root redirects.
     
+    // Set default to browser lang before persistence loads (to avoid 'en' default if nothing saved)
+    this.currentLang.set(this.getBrowserLang());
+
+    this.persistence.storage(this.currentLang, 'lang', { strategy: 'hybrid' });
+
     // Persist changes
     effect(() => {
-      // When the URL changes the language, we save it for next time
-      localStorage.setItem('utildex-lang', this.currentLang());
+      // Manual sync removed (handled by persistence)
       // Update html lang attribute
       document.documentElement.lang = this.currentLang();
     });
   }
 
   getSavedOrBrowserLang(): Language {
-     const saved = localStorage.getItem('utildex-lang') as Language;
-     if (saved && this.isSupported(saved)) return saved;
-     return this.getBrowserLang();
+     // PersistenceService has already loaded the saved value into currentLang synchronously if available
+     return this.currentLang();
   }
+
 
   setLanguage(lang: Language) {
     this.currentLang.set(lang);

@@ -45,8 +45,8 @@
     // Critical Theme Init - Runs before paint to prevent flash and allow correct App Shell rendering
     (function() {
         try {
-            const saved = localStorage.getItem('utildex-theme');
-            const isDark = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            const saved = localStorage.getItem('utildex-state-theme'); // Updated key
+            const isDark = saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
             if (isDark) {
                 document.documentElement.classList.add('dark');
             }
