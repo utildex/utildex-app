@@ -12,7 +12,9 @@ export type Density = 'comfortable' | 'compact';
 export class ThemeService {
   private persistence = inject(PersistenceService);
 
-  isDark = signal<boolean>(false);
+  // Initialize with System Preference immediately so we don't need to force-set it later
+  isDark = signal<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches);
+  
   primaryColor = signal<PrimaryColor>('blue');
   fontFamily = signal<FontFamily>('inter');
   density = signal<Density>('comfortable');
@@ -27,17 +29,11 @@ export class ThemeService {
 
   constructor() {
     // Bind Persistence (Hybrid Strategy for anti-flash)
+    // If a value exists in storage, it will overwrite the system default above.
     this.persistence.storage(this.isDark, 'theme', { type: 'boolean', strategy: 'hybrid' });
     this.persistence.storage(this.primaryColor, 'color', { strategy: 'hybrid' });
     this.persistence.storage(this.fontFamily, 'font', { strategy: 'hybrid' });
     this.persistence.storage(this.density, 'density', { strategy: 'hybrid' });
-
-    // Initialize defaults if not loaded specific logic needed? 
-    // PersistenceService handles loading. If nothing, signals stay default.
-    // However, isDark default needs to match system preference if nothing saved.
-    // PersistenceService doesn't know about system preferences.
-    // Logic: Initialize signal with system pref. Persistence will overwrite if value exists.
-    this.isDark.set(window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     // Theme Effect
     effect(() => {
