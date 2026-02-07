@@ -162,7 +162,7 @@ export class DbService {
     return this.dbPromise;
   }
 
-  private async run<T>(
+  public async run<T>(
     mode: IDBTransactionMode, 
     storeName: string, 
     operation: (store: IDBObjectStore) => IDBRequest
