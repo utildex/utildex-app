@@ -46,13 +46,19 @@ export class StorageManagerService {
       id: 'prefs',
       labelKey: 'CAT_PREFS',
       icon: 'tune',
-      patterns: [/^utildex-theme$/, /^utildex-lang$/, /^utildex-color$/, /^utildex-font$/, /^utildex-density$/]
+      patterns: [
+        /^utildex-state-theme$/, 
+        /^utildex-state-lang$/, 
+        /^utildex-state-color$/, 
+        /^utildex-state-font$/, 
+        /^utildex-state-density$/
+      ]
     },
     {
       id: 'tools',
       labelKey: 'CAT_TOOLS',
       icon: 'construction',
-      patterns: [/^utildex-state-/, /^tools\./] 
+      patterns: [/^utildex-state-(?!theme|lang|color|font|density)/, /^tools\./] 
     },
     {
       id: 'files',
