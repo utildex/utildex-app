@@ -168,11 +168,11 @@ export class DbService {
     operation: (store: IDBObjectStore) => IDBRequest
   ): Promise<T> {
     
-    if (this.isInMemory) return this.runInMemory<T>();
+    if (this.isInMemory) return this.runInMemory<T>(storeName, operation);
 
     try {
       const db = await this.getDB();
-      if (this.isInMemory) return this.runInMemory<T>();
+      if (this.isInMemory) return this.runInMemory<T>(storeName, operation);
 
       return new Promise((resolve, reject) => {
         let transaction: IDBTransaction;
@@ -183,7 +183,7 @@ export class DbService {
            // Retry once
            this.getDB().then(newDb => {
                if (this.isInMemory) {
-                   resolve(this.runInMemory());
+                   resolve(this.runInMemory(storeName, operation));
                } else {
                    const t2 = newDb.transaction(storeName, mode);
                    this.executeRequest(t2, storeName, operation, resolve, reject);
@@ -196,7 +196,7 @@ export class DbService {
       });
     } catch {
       this.isInMemory = true;
-      return this.runInMemory<T>();
+      return this.runInMemory<T>(storeName, operation);
     }
   }
 
@@ -213,11 +213,88 @@ export class DbService {
       request.onerror = () => reject(request.error);
   }
 
-  private runInMemory<T>(): Promise<T> {
-    return new Promise(resolve => {
-        // Mock success for in-memory
-        resolve(undefined as unknown as (T));
+  private runInMemory<T>(storeName: string, operation: (store: IDBObjectStore) => IDBRequest): Promise<T> {
+    return new Promise((resolve, reject) => {
+      const storeMap = this.memoryStores[storeName];
+      if (!storeMap) {
+        reject(new Error(`In-memory store not found: ${storeName}`));
+        return;
+      }
+
+      const mockStore = {
+        get: (key: any) => this.mockRequest(storeMap.get(key)),
+        getAll: () => this.mockRequest(Array.from(storeMap.values())),
+        getAllKeys: () => this.mockRequest(Array.from(storeMap.keys())),
+        put: (value: any, key?: any) => {
+          let k = key;
+          // Auto-increment logic for RECORDS if using put without key
+          if (k === undefined && storeName === this.STORES.RECORDS) {
+            k = (value as any).id || (Date.now() + Math.random());
+            if (typeof value === 'object' && value !== null) (value as any).id = k;
+          }
+          if (k !== undefined) storeMap.set(k, value);
+          return this.mockRequest(k);
+        },
+        add: (value: any, key?: any) => {
+           let k = key;
+           if (k === undefined) { 
+               k = Date.now() + Math.random();
+               if (typeof value === 'object' && value !== null && storeName === this.STORES.RECORDS) {
+                   (value as any).id = k;
+               }
+           }
+           storeMap.set(k, value);
+           return this.mockRequest(k);
+        },
+        delete: (key: any) => {
+           storeMap.delete(key);
+           return this.mockRequest(undefined);
+        },
+        clear: () => {
+           storeMap.clear();
+           return this.mockRequest(undefined);
+        },
+        index: (name: string) => ({
+           getAll: (key: any) => {
+               if (name === 'scope') {
+                   const results = Array.from(storeMap.values()).filter((v: any) => v.scope === key);
+                   return this.mockRequest(results);
+               }
+               return this.mockRequest([]);
+           }
+        })
+      };
+
+      try {
+        const req = operation(mockStore as unknown as IDBObjectStore);
+        req.onsuccess = () => resolve(req.result as T);
+        req.onerror = () => reject(req.error);
+      } catch (err) {
+        reject(err);
+      }
     });
+  }
+
+  private mockRequest(result: any): IDBRequest {
+    const req = {
+      result,
+      error: null,
+      source: null,
+      transaction: null,
+      readyState: 'done',
+      onsuccess: null,
+      onerror: null,
+      dispatchEvent: () => true,
+      addEventListener: () => {},
+      removeEventListener: () => {}
+    };
+    
+    setTimeout(() => {
+      // @ts-ignore
+      if (req.onsuccess) req.onsuccess({ target: req });
+    }, 0);
+    
+    return req as unknown as IDBRequest;
   }
 }
 
