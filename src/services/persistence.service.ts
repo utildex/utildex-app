@@ -33,10 +33,14 @@ export class PersistenceService {
     
     // 1. Hybrid/Local: Read SYNC from LocalStorage
     if (strategy === 'hybrid' || strategy === 'local') {
-      const stored = localStorage.getItem(fullKey);
-      if (stored !== null) {
-        this.updateSignal(targetSignal, stored, type);
-        isLoaded = true;
+      try {
+        const stored = localStorage.getItem(fullKey);
+        if (stored !== null) {
+          this.updateSignal(targetSignal, stored, type);
+          isLoaded = true;
+        }
+      } catch (e) {
+        console.warn('[Persistence] LocalStorage read failed', e);
       }
     }
 
