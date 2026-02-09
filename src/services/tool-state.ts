@@ -61,13 +61,22 @@ export class ToolState<T extends object> {
       // Find existing record for this tool scope
       const records = await this.db.records.list(this.scope);
       if (records && records.length > 0) {
-        // We assume 1 record per tool for the "State" pattern
-        const record = records[0];
-        this.dbId = record.id;
+        // Sort by id descending (latest first) to recover most recent state
+        records.sort((a, b) => (b.id || 0) - (a.id || 0));
+        
+        const latest = records[0];
+        this.dbId = latest.id;
         
         // Merge saved state with defaults (for schema evolution)
-        const savedState = record.data as T;
+        const savedState = latest.data as T;
         this.internalState.set({ ...this.defaultState, ...savedState });
+
+        // Cleanup duplicates (older states) to maintain 1:1 mapping
+        if (records.length > 1) {
+             const duplicates = records.slice(1);
+             Promise.all(duplicates.map(d => d.id ? this.db.records.delete(d.id) : Promise.resolve()))
+                .catch(err => console.warn(`[ToolState] Cleanup failed for ${this.scope}`, err));
+        }
       }
       this.isLoaded = true;
     } catch (e) {
@@ -103,10 +112,19 @@ export class ToolState<T extends object> {
   private saveDebounced(data: T) {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(async () => {
-       if (this.dbId) {
-          await this.db.records.delete(this.dbId);
+       try {
+           // If we have an ID, we delete/re-insert or update. 
+           // Since our DbService.records.add doesn't support "update by ID" easily comfortably without 'put',
+           // and we want to keep the 'append-only' log feel or 'latest state'?
+           // Actually, for State, we want 'put'.
+           
+           if (this.dbId) {
+             await this.db.records.delete(this.dbId);
+           }
+           this.dbId = await this.db.records.add(this.scope, data);
+       } catch (err) {
+           console.error(`[ToolState] Failed to save state for ${this.scope}`, err);
        }
-       this.dbId = await this.db.records.add(this.scope, data);
     }, 500);
   }
 }
