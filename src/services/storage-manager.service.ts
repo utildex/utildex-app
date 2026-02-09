@@ -300,6 +300,19 @@ export class StorageManagerService {
         exportObj['records'] = records;
     }
 
+    // 3. Export Blobs (Files)
+    const blobKeys = await this.db.run<string[]>('readonly', this.db.STORES.BLOBS, s => s.getAllKeys());
+    if (blobKeys) {
+        const filesData: Record<string, string> = {};
+        for(const k of blobKeys) {
+             const blob = await this.db.blobs.get(k);
+             if (blob) {
+                 filesData[k] = await this.blobToBase64(blob);
+             }
+        }
+        exportObj['files'] = filesData;
+    }
+
     const json = JSON.stringify(exportObj, null, 2);
     return new Blob([json], { type: 'application/json' });
   }
@@ -325,12 +338,16 @@ export class StorageManagerService {
           // Import Records
           if (data.records && Array.isArray(data.records)) {
               for (const rec of data.records) {
-                  // Re-add record. ID auto-increments, so we ignore valid ID or force it?
-                  // Better to let IDB assign new ID to avoid collisions, OR preserve if we care about linkage.
-                  // For simple restoring, scope is what matters.
                   await this.db.records.add(rec.scope, rec.data);
               }
           }
+           // Import Files
+           if (data.files) {
+            for (const key in data.files) {
+                const blob = await this.base64ToBlob(data.files[key]);
+                await this.db.blobs.put(key, blob);
+            }
+        }
       } else {
           // V1 Legacy Import (Flat keys)
           for (const key in data) {
@@ -345,5 +362,19 @@ export class StorageManagerService {
       console.error('Import failed', e);
       throw e;
     }
+  }
+
+  private blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  private async base64ToBlob(base64: string): Promise<Blob> {
+    const res = await fetch(base64);
+    return res.blob();
   }
 }

@@ -297,8 +297,10 @@ export class DbService {
     };
     
     setTimeout(() => {
-      // @ts-expect-error Mocking IDB structure
-      if (req.onsuccess) req.onsuccess({ target: req });
+      const request = req as unknown as { onsuccess: ((ev: { target: unknown }) => void) | null };
+      if (request.onsuccess) {
+         request.onsuccess({ target: req });
+      }
     }, 0);
     
     return req as unknown as IDBRequest;
