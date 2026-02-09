@@ -41,12 +41,10 @@ export class PersistenceService {
     }
 
     // 2. IDB/Hybrid: Read ASYNC from DB 
-    // If hybrid, we use DB as backup if local was empty, or just to ensure consistency later? 
-    // Standard hybrid: Local is cache, DB is truth. But we prioritize Local for speed.
-    // If not loaded yet, try DB.
-    if ((strategy === 'idb' || strategy === 'hybrid') && !isLoaded) {
+    // If hybrid, always reconcile with DB (source of truth) even if LocalStorage loaded.
+    if ((strategy === 'idb' && !isLoaded) || strategy === 'hybrid') {
       this.db.config.read(fullKey).then(stored => {
-        if (stored !== undefined && stored !== null && !isLoaded) {
+        if (stored !== undefined && stored !== null) {
           this.updateSignal(targetSignal, String(stored), type);
         }
         isLoaded = true;
@@ -61,15 +59,23 @@ export class PersistenceService {
       const val = targetSignal();
       if (!isLoaded) return;
 
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
         const strVal = String(val);
 
         if (strategy === 'local' || strategy === 'hybrid') {
-          localStorage.setItem(fullKey, strVal);
+          try {
+            localStorage.setItem(fullKey, strVal);
+          } catch (e) {
+            console.warn('[Persistence] LocalStorage write failed', e);
+          }
         }
 
         if (strategy === 'idb' || strategy === 'hybrid') {
-          this.db.config.write(fullKey, strVal);
+          try {
+            await this.db.config.write(fullKey, strVal);
+          } catch (e) {
+            console.error('[Persistence] IDB write failed', e);
+          }
         }
       }, 300); // 300ms Debounce
 
