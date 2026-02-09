@@ -21,8 +21,7 @@ export default {
   "CAT_FAVORITES": "Favoris",
   "CAT_HISTORY": "Historique",
   "CAT_PREFS": "Préférences",
-  "CAT_TOOLS": "États des outils",
-  
+  "CAT_TOOLS": "États des outils",  "CAT_FILES": "Fichiers",  
   "BTN_VIEW": "Inspecter",
   "BTN_DELETE": "Effacer",
   "BTN_BACK": "Retour",

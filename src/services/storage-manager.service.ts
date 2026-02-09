@@ -210,6 +210,21 @@ export class StorageManagerService {
              }
          }
     }
+
+    // App Files (Blobs)
+    if (categoryId === 'files') {
+        const keys = await this.db.run<string[]>('readonly', this.db.STORES.BLOBS, s => s.getAllKeys());
+        if (keys) {
+            for (const key of keys) {
+                // We can't easily show content, but we can show metadata
+                // Since this is just for inspection, showing the key is sufficient
+                const blob = await this.db.blobs.get(key);
+                const size = blob?.size ? this.formatBytes(blob.size) : 'Unknown';
+                const type = blob?.type || 'Unknown Type';
+                details.push({ key: key, value: `[File] ${type} (${size})` });
+            }
+        }
+    }
     
     return details;
   }

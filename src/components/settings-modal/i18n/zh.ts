@@ -22,6 +22,7 @@ export default {
   "CAT_HISTORY": "使用历史",
   "CAT_PREFS": "偏好设置",
   "CAT_TOOLS": "工具状态",
+  "CAT_FILES": "文件",
   
   "BTN_VIEW": "查看详情",
   "BTN_DELETE": "清除数据",
