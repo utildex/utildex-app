@@ -632,11 +632,11 @@ export class SettingsModalComponent {
       'utildex-usage': 'KEY_USAGE',
       'utildex-favorites': 'KEY_FAVORITES',
       'utildex-dashboard-v2': 'KEY_DASHBOARD_V2',
-      'utildex-theme': 'KEY_THEME',
-      'utildex-lang': 'KEY_LANG',
-      'utildex-color': 'KEY_COLOR',
-      'utildex-font': 'KEY_FONT',
-      'utildex-density': 'KEY_DENSITY'
+      'utildex-state-theme': 'KEY_THEME',
+      'utildex-state-lang': 'KEY_LANG',
+      'utildex-state-color': 'KEY_COLOR',
+      'utildex-state-font': 'KEY_FONT',
+      'utildex-state-density': 'KEY_DENSITY'
     };
 
     if (map[key]) {

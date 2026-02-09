@@ -22,6 +22,7 @@ export default {
   "CAT_HISTORY": "Historial",
   "CAT_PREFS": "Preferencias",
   "CAT_TOOLS": "Estados de Herramientas",
+  "CAT_FILES": "Archivos",
   
   "BTN_VIEW": "Inspeccionar",
   "BTN_DELETE": "Borrar",
