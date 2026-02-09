@@ -222,31 +222,38 @@ export class DbService {
       }
 
       const mockStore = {
-        get: (key: any) => this.mockRequest(storeMap.get(key)),
+        get: (key: unknown) => this.mockRequest(storeMap.get(key)),
         getAll: () => this.mockRequest(Array.from(storeMap.values())),
         getAllKeys: () => this.mockRequest(Array.from(storeMap.keys())),
-        put: (value: any, key?: any) => {
+        put: (value: unknown, key?: unknown) => {
           let k = key;
           // Auto-increment logic for RECORDS if using put without key
           if (k === undefined && storeName === this.STORES.RECORDS) {
-            k = (value as any).id || (Date.now() + Math.random());
-            if (typeof value === 'object' && value !== null) (value as any).id = k;
+            k = (typeof value === 'object' && value !== null && 'id' in value) 
+                ? (value as { id: unknown }).id 
+                : undefined;
+
+            if (!k) k = (Date.now() + Math.random());
+            
+            if (typeof value === 'object' && value !== null) {
+                (value as { id: unknown }).id = k;
+            }
           }
           if (k !== undefined) storeMap.set(k, value);
           return this.mockRequest(k);
         },
-        add: (value: any, key?: any) => {
+        add: (value: unknown, key?: unknown) => {
            let k = key;
            if (k === undefined) { 
                k = Date.now() + Math.random();
                if (typeof value === 'object' && value !== null && storeName === this.STORES.RECORDS) {
-                   (value as any).id = k;
+                   (value as { id: unknown }).id = k;
                }
            }
            storeMap.set(k, value);
            return this.mockRequest(k);
         },
-        delete: (key: any) => {
+        delete: (key: unknown) => {
            storeMap.delete(key);
            return this.mockRequest(undefined);
         },
@@ -255,9 +262,9 @@ export class DbService {
            return this.mockRequest(undefined);
         },
         index: (name: string) => ({
-           getAll: (key: any) => {
+           getAll: (key: unknown) => {
                if (name === 'scope') {
-                   const results = Array.from(storeMap.values()).filter((v: any) => v.scope === key);
+                   const results = Array.from(storeMap.values()).filter((v) => (v as { scope?: unknown }).scope === key);
                    return this.mockRequest(results);
                }
                return this.mockRequest([]);
@@ -275,7 +282,7 @@ export class DbService {
     });
   }
 
-  private mockRequest(result: any): IDBRequest {
+  private mockRequest(result: unknown): IDBRequest {
     const req = {
       result,
       error: null,
@@ -290,7 +297,7 @@ export class DbService {
     };
     
     setTimeout(() => {
-      // @ts-ignore
+      // @ts-expect-error Mocking IDB structure
       if (req.onsuccess) req.onsuccess({ target: req });
     }, 0);
     
