@@ -2,6 +2,7 @@
 import { Injectable, inject, WritableSignal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DbService } from './db.service';
+import { STORAGE_KEYS } from '../core/storage-keys';
 
 export interface StorageOptions {
   type?: 'string' | 'number' | 'boolean';
@@ -26,8 +27,8 @@ export class PersistenceService {
       : { type: optionsOrType as 'string' | 'number' | 'boolean', strategy: 'idb' };
     
     const { type = 'string', strategy = 'idb' } = options;
-    const fullKey = `utildex-state-${key}`;
-    let isLoaded = false;
+    const fullKey = `${STORAGE_KEYS.PREFIX_STATE}${key}`;
+    let isIdbHydrated = false;
 
     // --- READ PHASE ---
     
@@ -37,7 +38,8 @@ export class PersistenceService {
         const stored = localStorage.getItem(fullKey);
         if (stored !== null) {
           this.updateSignal(targetSignal, stored, type);
-          isLoaded = true;
+          // If purely local, we are hydrated immediately
+          if (strategy === 'local') isIdbHydrated = true;
         }
       } catch (e) {
         console.warn('[Persistence] LocalStorage read failed', e);
@@ -46,22 +48,28 @@ export class PersistenceService {
 
     // 2. IDB/Hybrid: Read ASYNC from DB 
     // If hybrid, always reconcile with DB (source of truth) even if LocalStorage loaded.
-    if ((strategy === 'idb' && !isLoaded) || strategy === 'hybrid') {
+    if ((strategy === 'idb') || strategy === 'hybrid') {
       this.db.config.read(fullKey).then(stored => {
         if (stored !== undefined && stored !== null) {
           this.updateSignal(targetSignal, String(stored), type);
         }
-        isLoaded = true;
+        isIdbHydrated = true;
       });
     } else {
-        isLoaded = true;
+        // Strategy local, already set true above
     }
 
     // --- WRITE PHASE ---
     
     effect((onCleanup) => {
       const val = targetSignal();
-      if (!isLoaded) return;
+      
+      // CRITICAL FIX: Prevent race condition.
+      // Do not write back to storage until we have finished reading from the source of truth (IDB).
+      // This prevents a fast LocalStorage read from overwriting a slow IDB read.
+      if (!isIdbHydrated && (strategy === 'idb' || strategy === 'hybrid')) {
+           return;
+      }
 
       const timer = setTimeout(async () => {
         const strVal = String(val);

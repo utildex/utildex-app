@@ -1,6 +1,7 @@
 
 import { Injectable, inject } from '@angular/core';
 import { DbService, DbRecord } from './db.service';
+import { STORAGE_KEYS, getPrefKey } from '../core/storage-keys';
 
 export interface StorageCategory {
   id: string;
@@ -28,37 +29,36 @@ export class StorageManagerService {
       id: 'dashboard',
       labelKey: 'CAT_DASHBOARD',
       icon: 'dashboard',
-      patterns: [/^utildex-dashboard-v2$/]
+      patterns: [new RegExp(`^${STORAGE_KEYS.DASHBOARD_V2}$`)]
     },
     {
       id: 'favorites',
       labelKey: 'CAT_FAVORITES',
       icon: 'star',
-      patterns: [/^utildex-favorites$/]
+      patterns: [new RegExp(`^${STORAGE_KEYS.FAVORITES}$`)]
     },
     {
       id: 'history',
       labelKey: 'CAT_HISTORY',
       icon: 'history',
-      patterns: [/^utildex-clipboard-history$/, /^utildex-usage$/]
+      patterns: [new RegExp(`^${STORAGE_KEYS.CLIPBOARD_HISTORY}$`), new RegExp(`^${STORAGE_KEYS.USAGE_STATS}$`)]
     },
     {
       id: 'prefs',
       labelKey: 'CAT_PREFS',
       icon: 'tune',
-      patterns: [
-        /^utildex-state-theme$/, 
-        /^utildex-state-lang$/, 
-        /^utildex-state-color$/, 
-        /^utildex-state-font$/, 
-        /^utildex-state-density$/
-      ]
+      patterns: STORAGE_KEYS.PREFERENCES.map(p => new RegExp(`^${getPrefKey(p)}$`))
     },
     {
       id: 'tools',
       labelKey: 'CAT_TOOLS',
       icon: 'construction',
-      patterns: [/^utildex-state-(?!theme|lang|color|font|density)/, /^tools\./] 
+      // Matches utildex-state-X where X is NOT in PREFERENCES
+      // And matches tools.*
+      patterns: [
+        new RegExp(`^${STORAGE_KEYS.PREFIX_STATE}(?!${STORAGE_KEYS.PREFERENCES.join('|')})`), 
+        new RegExp(`^${STORAGE_KEYS.PREFIX_TOOLS.replace('.', '\\.')}`)
+      ] 
     },
     {
       id: 'files',
@@ -268,7 +268,7 @@ export class StorageManagerService {
         // 2. Clear LocalStorage (Specific Keys or All)
         // We'll be aggressive but safe: Clear utildex keys
         Object.keys(localStorage).forEach(key => {
-            if (key.startsWith('utildex-')) {
+            if (key.startsWith(STORAGE_KEYS.PREFIX_APP)) {
                 localStorage.removeItem(key);
             }
         });
@@ -292,6 +292,10 @@ export class StorageManagerService {
   // --- Export / Import ---
 
   async exportData(): Promise<Blob> {
+    const MAX_EXPORT_SIZE_MB = 100;
+    const MAX_BYTES = MAX_EXPORT_SIZE_MB * 1024 * 1024;
+    let estimatedSize = 0;
+
     const exportObj: Record<string, unknown> = {};
     exportObj['meta'] = {
       version: 2, // Bumped for V2 structure
@@ -304,7 +308,9 @@ export class StorageManagerService {
     if (configKeys) {
         const configData: Record<string, unknown> = {};
         for(const k of configKeys) {
-             configData[k] = await this.db.config.read(k);
+             const val = await this.db.config.read(k);
+             configData[k] = val;
+             estimatedSize += JSON.stringify(val).length;
         }
         exportObj['config'] = configData;
     }
@@ -313,6 +319,7 @@ export class StorageManagerService {
     const records = await this.db.run<DbRecord[]>('readonly', this.db.STORES.RECORDS, s => s.getAll());
     if (records) {
         exportObj['records'] = records;
+        estimatedSize += JSON.stringify(records).length;
     }
 
     // 3. Export Blobs (Files)
@@ -320,8 +327,21 @@ export class StorageManagerService {
     if (blobKeys) {
         const filesData: Record<string, string> = {};
         for(const k of blobKeys) {
+             // Check limit before reading next blob
+             if (estimatedSize > MAX_BYTES) {
+                 throw new Error(`Export exceeds safe size limit of ${MAX_EXPORT_SIZE_MB}MB. Please delete some files and try again.`);
+             }
+
              const blob = await this.db.blobs.get(k);
              if (blob) {
+                 // Base64 overhead is ~33%
+                 const base64Size = blob.size * 1.37; 
+                 estimatedSize += base64Size;
+                 
+                 if (estimatedSize > MAX_BYTES) {
+                    throw new Error(`Export exceeds safe size limit of ${MAX_EXPORT_SIZE_MB}MB. Please delete some files and try again.`);
+                 }
+
                  filesData[k] = await this.blobToBase64(blob);
              }
         }
@@ -366,7 +386,10 @@ export class StorageManagerService {
       } else {
           // V1 Legacy Import (Flat keys)
           for (const key in data) {
-            if (key !== 'meta' && key.startsWith('utildex-')) {
+            if (key !== 'meta' && key.startsWith(STORAGE_KEYS.PREFIX_STATE.replace('-', ''))) {
+              // Note: V1 keys might be different, but assuming old logic 
+              // which used "utildex-" prefix. 
+              // We just replicate what was there: "key.startsWith('utildex-')"
               await this.db.config.write(key, data[key]);
             }
           }
