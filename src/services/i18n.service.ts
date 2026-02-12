@@ -3,7 +3,7 @@ import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from '@
 import { filter } from 'rxjs/operators';
 import languages from '../data/languages.json';
 import { DbService } from './db.service';
-import { STORAGE_KEYS, getPrefKey } from '../core/storage-keys';
+import { getPrefKey } from '../core/storage-keys';
 
 export type Language = 'en' | 'fr' | 'es' | 'zh';
 export type I18nText = string | { [key: string]: string };

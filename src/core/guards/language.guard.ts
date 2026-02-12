@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanMatchFn } from '@angular/router';
-import { I18nService, Language } from '../../services/i18n.service';
+import { I18nService } from '../../services/i18n.service';
 
 export const languageGuard: CanMatchFn = (route, segments) => {
   const i18n = inject(I18nService);
