@@ -26,8 +26,7 @@ import zh from './i18n/zh';
       <!-- Widget Mode -->
       <div class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden relative">
         
-        <!-- Condition based on size -->
-        @if (widgetConfig()?.cols === 1 && widgetConfig()?.rows === 1) {
+        @if (viewMode() === 'compact') {
            <!-- Compact 1x1 Mode -->
            <div class="flex-1 flex flex-col items-center justify-center p-2 text-center relative group cursor-pointer" (click)="copy()">
               <span class="material-symbols-outlined text-3xl text-primary mb-1">key</span>
@@ -213,6 +212,11 @@ export class PasswordGeneratorComponent {
   useSymbols = signal<boolean>(true);
   
   password = signal<string>('');
+
+  viewMode = computed(() => {
+    const config = this.widgetConfig();
+    return (config?.cols === 1 && config?.rows === 1) ? 'compact' : 'full';
+  });
 
   strengthScore = computed(() => {
     let score = 0;
