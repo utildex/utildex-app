@@ -150,8 +150,14 @@ export class WidgetHostComponent implements OnInit {
     }
   }
 
+  private updateTimeout: ReturnType<typeof setTimeout> | null = null;
+
   updateContent(content: string) {
-      this.toolService.updateWidgetData(this.widget().instanceId, { content });
+      if (this.updateTimeout) clearTimeout(this.updateTimeout);
+      
+      this.updateTimeout = setTimeout(() => {
+        this.toolService.updateWidgetData(this.widget().instanceId, { content });
+      }, 500); // 500ms Debounce
   }
 
   promptImage() {
