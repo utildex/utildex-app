@@ -17,15 +17,10 @@ export class NetworkService implements OnDestroy {
     }
   }
 
-  private intervalId: ReturnType<typeof setInterval> | undefined;
-
   constructor() {
     if (typeof window !== 'undefined') {
       window.addEventListener('online', this.updateStatus);
       window.addEventListener('offline', this.updateStatus);
-      
-      // Polling fallback to catch state changes that might miss events (common in some environments)
-      this.intervalId = setInterval(this.updateStatus, 3000);
     }
   }
 
@@ -34,6 +29,5 @@ export class NetworkService implements OnDestroy {
       window.removeEventListener('online', this.updateStatus);
       window.removeEventListener('offline', this.updateStatus);
     }
-    if (this.intervalId) clearInterval(this.intervalId);
   }
 }
