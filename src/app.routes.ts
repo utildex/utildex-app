@@ -4,6 +4,7 @@ import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { languageGuard } from './core/guards/language.guard';
+import { I18nService } from './services/i18n.service';
 
 export const routes: Routes = [
   // 1. Root Rerouter: If user hits root '/', send to their preferred language '/en/', '/fr/' etc.
@@ -12,13 +13,11 @@ export const routes: Routes = [
     pathMatch: 'full',
     redirectTo: () => {
         const platformId = inject(PLATFORM_ID);
-        // Ensure we're in the browser before accessing navigator
+        const i18n = inject(I18nService);
+        
+        // Ensure we're in the browser before accessing navigator/storage
         if (isPlatformBrowser(platformId)) {
-            const browserLang = navigator.language.split('-')[0];
-            const supportedLangs = ['en', 'fr', 'es', 'zh'];
-            if (supportedLangs.includes(browserLang)) {
-                return browserLang;
-            }
+            return i18n.getStartupLanguage();
         }
         return 'en';
     },

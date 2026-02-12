@@ -10,10 +10,8 @@ export const languageGuard: CanMatchFn = (route, segments) => {
   const isValid = i18n.supportedLanguages.some(l => l.code === langCode);
 
   if (isValid) {
-    // If valid, we sync the service with the URL immediately
-    // Ideally the service should probably not be updating signals inside a guard 
-    // but for this simple app structure it ensures state consistency.
-    i18n.setLanguage(langCode as Language);
+    // Refactored: We no longer set state in the guard.
+    // The I18nService listens to Router events to update the source of truth.
     return true;
   }
 
