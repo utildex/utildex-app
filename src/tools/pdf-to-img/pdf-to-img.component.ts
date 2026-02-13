@@ -319,6 +319,8 @@ export class PdfToImgComponent {
         const renderScale = this.scale();
         const baseName = this.pdfFile()?.name.replace('.pdf', '') || 'document';
 
+        if (!this.pdfDoc) throw new Error('PDF Document not loaded');
+
         for (const p of selected) {
            const page = await this.pdfDoc.getPage(p.pageNumber);
            const viewport = page.getViewport({ scale: renderScale });

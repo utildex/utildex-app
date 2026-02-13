@@ -305,7 +305,7 @@ export class CommandPaletteComponent {
       subtitle: this.i18n.resolve(item.tool.description),
       action: () => {
          const lang = this.i18n.currentLang();
-         const path = item.tool.routePath.split('/');
+         const path = (item.tool.routePath || '').split('/');
          this.router.navigate(['/', lang, ...path]);
       }
     }));

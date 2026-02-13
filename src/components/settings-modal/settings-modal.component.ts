@@ -679,7 +679,7 @@ export class SettingsModalComponent {
        
        if (key === 'utildex-usage') {
           const obj = JSON.parse(value);
-          const stats = Object.entries(obj).map(([id, stat]: [string, { count: number; lastUsed: number }]) => ({
+          const stats = (Object.entries(obj) as [string, { count: number; lastUsed: number }][]).map(([id, stat]) => ({
              name: this.resolveToolName(id),
              count: stat.count,
              lastUsed: stat.lastUsed

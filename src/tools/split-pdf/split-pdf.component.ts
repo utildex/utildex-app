@@ -325,7 +325,7 @@ interface GeneratedFile {
 })
 export class SplitPdfComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<Record<string, unknown>>(null);
+  widgetConfig = input<Record<string, unknown> | null>(null);
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);

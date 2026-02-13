@@ -415,7 +415,9 @@ export class ImageConverterComponent {
 
         files.forEach((img, idx) => {
            const name = img.file.name.substring(0, img.file.name.lastIndexOf('.')) || `image-${idx}`;
-           zip.file(`${name}.${ext}`, img.resultBlob);
+           if (img.resultBlob) {
+             zip.file(`${name}.${ext}`, img.resultBlob);
+           }
         });
 
         const content = await zip.generateAsync({ type: 'blob' });

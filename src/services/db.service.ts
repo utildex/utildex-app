@@ -197,11 +197,11 @@ export class DbService {
     }
   }
 
-  private executeRequest(
+  private executeRequest<T>(
       transaction: IDBTransaction, 
       storeName: string,
       operation: (store: IDBObjectStore) => IDBRequest,
-      resolve: (val: unknown) => void,
+      resolve: (val: T) => void,
       reject: (err: unknown) => void
   ) {
       const store = transaction.objectStore(storeName);

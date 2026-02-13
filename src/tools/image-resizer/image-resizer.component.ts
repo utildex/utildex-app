@@ -791,7 +791,9 @@ export class ImageResizerComponent {
 
             files.forEach((img, idx) => {
                 const name = img.file.name.substring(0, img.file.name.lastIndexOf('.')) || `image-${idx}`;
-                zip.file(`${name}-resized.${ext}`, img.resizedBlob);
+                if (img.resizedBlob) {
+                  zip.file(`${name}-resized.${ext}`, img.resizedBlob);
+                }
             });
 
             const content = await zip.generateAsync({ type: 'blob' });
