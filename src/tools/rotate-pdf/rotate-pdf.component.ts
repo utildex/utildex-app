@@ -7,7 +7,7 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { PDFDocument, degrees } from 'pdf-lib';
+// import { PDFDocument, degrees } from 'pdf-lib';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -229,6 +229,7 @@ export class RotatePdfComponent {
 
      try {
         const buffer = await this.pdfFile()!.arrayBuffer();
+        const { PDFDocument, degrees } = await import('pdf-lib');
         const doc = await PDFDocument.load(buffer);
         const pages = doc.getPages();
         const angle = this.totalRotation();

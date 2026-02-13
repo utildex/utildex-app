@@ -7,7 +7,7 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { PDFDocument } from 'pdf-lib';
+// import { PDFDocument } from 'pdf-lib';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -318,6 +318,7 @@ export class MergePdfComponent {
      this.isProcessing.set(true);
 
      try {
+        const { PDFDocument } = await import('pdf-lib');
         const mergedPdf = await PDFDocument.create();
         
         for (const pdf of this.files()) {

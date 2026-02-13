@@ -7,7 +7,7 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { PDFDocument, PageSizes } from 'pdf-lib';
+// import { PDFDocument, PageSizes } from 'pdf-lib';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -312,6 +312,7 @@ export class ImgToPdfComponent {
      this.isProcessing.set(true);
 
      try {
+        const { PDFDocument, PageSizes } = await import('pdf-lib');
         const pdfDoc = await PDFDocument.create();
         
         for (const img of this.images()) {

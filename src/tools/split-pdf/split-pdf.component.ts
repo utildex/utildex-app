@@ -6,7 +6,7 @@ import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.co
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { PDFDocument } from 'pdf-lib';
+// import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
 import en from './i18n/en';
 import fr from './i18n/fr';
@@ -333,7 +333,8 @@ export class SplitPdfComponent {
 
   // State
   pdfFile = signal<File | null>(null);
-  pdfDoc = signal<PDFDocument | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pdfDoc = signal<any | null>(null);
   pageCount = signal(0);
   pageRange = signal('');
   isProcessing = signal(false);
@@ -378,6 +379,7 @@ export class SplitPdfComponent {
 
     try {
        const arrayBuffer = await file.arrayBuffer();
+       const { PDFDocument } = await import('pdf-lib');
        const pdfDoc = await PDFDocument.load(arrayBuffer);
        
        this.pdfFile.set(file);
@@ -412,6 +414,7 @@ export class SplitPdfComponent {
        
        if (groups.length === 0) throw new Error(this.t.get('ERR_INVALID_RANGE'));
 
+       const { PDFDocument } = await import('pdf-lib');
        const results: GeneratedFile[] = [];
        const originalName = this.pdfFile()?.name.replace('.pdf', '') || 'document';
 
