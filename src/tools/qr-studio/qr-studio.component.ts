@@ -56,7 +56,7 @@ interface QrStateData {
       <div class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm">
          
          <!-- 1x1 Flipper Layout -->
-         @if (isSize(1, 1)) {
+         @if (viewMode() === 'compact') {
             <div class="relative w-full h-full perspective-1000 group">
                <!-- Flipper Container -->
                <div class="relative w-full h-full transition-transform duration-500 transform-style-3d" [class.rotate-y-180]="isFlipped()">
@@ -134,7 +134,7 @@ interface QrStateData {
          } 
          
          <!-- 2x1 Wide Layout -->
-         @else if (isSize(2, 1)) {
+         @else if (viewMode() === 'wide') {
             <!-- Header -->
             <div class="flex items-center justify-between p-2 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
                <div class="flex items-center gap-1">
@@ -446,6 +446,16 @@ export class QrStudioComponent {
      return !!cfg?.qrData; 
   });
 
+  viewMode = computed(() => {
+    const config = this.widgetConfig();
+    const w = config?.cols ?? 1;
+    const h = config?.rows ?? 1;
+    
+    if (w === 1 && h === 1) return 'compact';
+    if (w === 2 && h === 1) return 'wide';
+    return 'default';
+  });
+
   constructor() {
      // Lazy load library
      this.loadLib();
@@ -457,19 +467,12 @@ export class QrStudioComponent {
            if (cfg?.qrData) {
               this.restoreState(cfg.qrData);
               // For 1x1, if we have data, start flipped
-              if (this.isSize(1, 1)) {
+              if (this.viewMode() === 'compact') {
                  this.isFlipped.set(true);
               }
            }
         }
      });
-  }
-
-  isSize(w: number, h: number): boolean {
-     const cfg = this.widgetConfig();
-     // If no specific size provided, treat as 1x1 default for widgets
-     if (!cfg) return w === 1 && h === 1;
-     return cfg.cols === w && cfg.rows === h;
   }
 
   async loadLib() {

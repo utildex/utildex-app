@@ -1,5 +1,5 @@
 
-import { Component, inject, signal, input, ElementRef, viewChild } from '@angular/core';
+import { Component, inject, signal, input, ElementRef, viewChild, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
@@ -39,7 +39,7 @@ interface ImageFile {
         class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden relative border border-slate-200 dark:border-slate-700"
       >
          <!-- 1x1 Compact -->
-         @if (isSize(1, 1)) {
+         @if (viewMode() === 'compact') {
             <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-center">
                <span class="text-[9px] font-bold uppercase text-slate-500 truncate px-1">{{ t.map()['TITLE_SHORT'] }}</span>
             </div>
@@ -61,7 +61,7 @@ interface ImageFile {
             </div>
          }
          <!-- 2x1 Wide -->
-         @else if (isSize(2, 1)) {
+         @else if (viewMode() === 'wide') {
             <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between px-2">
                <span class="text-[10px] font-bold uppercase text-slate-500">{{ t.map()['TITLE'] }}</span>
                @if (images().length > 0) {
@@ -236,10 +236,15 @@ export class ImgToPdfComponent {
   resultUrl = signal<string | null>(null);
   resultBytes = signal<Uint8Array | null>(null);
 
-  isSize(w: number, h: number): boolean {
-     const cfg = this.widgetConfig();
-     return cfg && cfg.cols === w && cfg.rows === h;
-  }
+  viewMode = computed(() => {
+    const config = this.widgetConfig();
+    // 1x1 -> compact
+    if (config?.cols === 1 && config?.rows === 1) return 'compact';
+    // 2x1 -> wide
+    if (config?.cols === 2 && config?.rows === 1) return 'wide';
+    // Default
+    return 'default';
+  });
 
   triggerUpload() {
     this.fileInput()?.nativeElement.click();

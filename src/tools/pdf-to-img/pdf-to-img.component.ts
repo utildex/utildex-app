@@ -213,6 +213,8 @@ export class PdfToImgComponent {
   outputFormat = signal<'png' | 'jpeg' | 'webp'>('png');
   scale = signal<number>(2); // Default to High Quality (2x)
 
+  viewMode = computed(() => 'default');
+
   selectedCount = computed(() => this.pages().filter(p => p.selected).length);
 
   // Keep reference to PDF document

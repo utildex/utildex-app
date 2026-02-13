@@ -27,7 +27,7 @@ type InputMode = 'text' | 'file';
     } @else {
       <!-- Widget Mode -->
       <div class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden">
-        @if (widgetConfig()?.cols === 2 && widgetConfig()?.rows === 1) {
+        @if (viewMode() === 'wide') {
           <!-- Compact Widget Mode -->
           <div class="flex items-center justify-between p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
             <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200">
@@ -291,6 +291,11 @@ export class HashGeneratorComponent {
   // Widget inputs
   isWidget = input(false);
   widgetConfig = input<{ cols: number; rows: number } | null>(null);
+
+  viewMode = computed(() => {
+    const config = this.widgetConfig();
+    return (config?.cols === 2 && config?.rows === 1) ? 'wide' : 'default';
+  });
 
   // State
   algorithms: HashAlgorithm[] = ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
