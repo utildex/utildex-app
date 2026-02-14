@@ -7,9 +7,6 @@ import fr from '../../i18n/fr';
 import es from '../../i18n/es';
 import zh from '../../i18n/zh';
 
-// Reuse main app translations + potentially specific guide ones if needed
-// For now we just import the root ones, assuming keys are there.
-
 @Component({
   selector: 'app-guide',
   standalone: true,
@@ -78,7 +75,7 @@ export class GuideComponent {
         // Broadcast Mode: Bottom Center
         return { 
             top: window.innerHeight - 100, 
-            left: (window.innerWidth / 2) - 150 // centeredish (css transform handles exact center usually but here we do simple)
+            left: (window.innerWidth / 2) - 150
         };
     }
 
@@ -86,18 +83,17 @@ export class GuideComponent {
     const gap = 12;
     
     // Default to Above
-    let top = rect.top - gap - 60; // Approximate height of bubble
-    let left = rect.left + (rect.width / 2) - 100; // Center bubble relative to target
+    let top = rect.top - gap - 60;
+    let left = rect.left + (rect.width / 2) - 100;
 
     // Bounds checking (Simplistic)
-    if (top < 20) top = rect.bottom + gap; // Flip to bottom
+    if (top < 20) top = rect.bottom + gap;
     if (left < 10) left = 10;
     if (left > window.innerWidth - 210) left = window.innerWidth - 210;
 
     return { top, left };
   });
   
-  // Calculate if we are above or below target
   isAbove = computed(() => {
       const s = this.state();
       if (!s.targetRect) return true;
@@ -110,11 +106,9 @@ export class GuideComponent {
       const c = this.coords();
       if (!s.targetRect) return 0;
       
-      // Calculate relative position of target center within the bubble
       const centerTarget = s.targetRect.left + (s.targetRect.width / 2);
       const rel = centerTarget - c.left;
       
-      // Clamp triangle so it doesn't detach from corners
-      return Math.max(10, Math.min(180, rel - 8)); // 200 width assumption fallback
+      return Math.max(10, Math.min(180, rel - 8));
   });
 }
