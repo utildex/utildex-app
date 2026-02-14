@@ -99,12 +99,20 @@ export class ActionBarComponent {
 
     const printWindow = window.open('', '', 'height=600,width=800');
     if (printWindow) {
-      printWindow.document.write('<html><head><title>' + this.filename() + '</title>');
-      printWindow.document.write('<style>body{font-family:sans-serif;white-space:pre-wrap;padding:20px;}</style>');
-      printWindow.document.write('</head><body>');
-      printWindow.document.write('<pre>' + val + '</pre>');
-      printWindow.document.write('</body></html>');
-      printWindow.document.close();
+      // Use DOM API instead of document.write for security
+      const doc = printWindow.document;
+      doc.title = this.filename();
+
+      const style = doc.createElement('style');
+      style.textContent = 'body{font-family:sans-serif;white-space:pre-wrap;padding:20px;}';
+      doc.head.appendChild(style);
+
+      const pre = doc.createElement('pre');
+      pre.textContent = val;
+      doc.body.appendChild(pre);
+
+      doc.close();
+      printWindow.focus();
       printWindow.print();
     }
   }
