@@ -1,11 +1,12 @@
 
-import { Component, input, TemplateRef, ElementRef, viewChild, OnDestroy, effect } from '@angular/core';
-import { NgTemplateOutlet } from '@angular/common';
+import { Component, input, TemplateRef, ElementRef, viewChild, OnDestroy, effect, ChangeDetectionStrategy, NgZone, inject, PLATFORM_ID } from '@angular/core';
+import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-carousel',
   standalone: true,
   imports: [NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div 
       class="relative group w-full"
@@ -14,8 +15,6 @@ import { NgTemplateOutlet } from '@angular/common';
       (touchstart)="pause()"
       (touchend)="resume()"
     >
-      <!-- Navigation Buttons (Always available) -->
-      <!-- Prev Button -->
       <button 
         type="button"
         class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105 active:scale-95 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary hidden sm:flex items-center justify-center backdrop-blur-sm"
@@ -25,7 +24,6 @@ import { NgTemplateOutlet } from '@angular/common';
         <span class="material-symbols-outlined text-2xl">chevron_left</span>
       </button>
 
-      <!-- Next Button -->
       <button 
         type="button"
         class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105 active:scale-95 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary hidden sm:flex items-center justify-center backdrop-blur-sm"
@@ -35,7 +33,6 @@ import { NgTemplateOutlet } from '@angular/common';
         <span class="material-symbols-outlined text-2xl">chevron_right</span>
       </button>
 
-      <!-- Scroll Container -->
       <div 
         #scrollContainer
         class="flex gap-4 overflow-x-auto py-10 scrollbar-hide -mx-4 px-4 scroll-pl-4 sm:mx-0 sm:px-0 sm:scroll-pl-0"
@@ -43,7 +40,6 @@ import { NgTemplateOutlet } from '@angular/common';
         [class.snap-mandatory]="!marquee()"
         style="scrollbar-width: none; -ms-overflow-style: none;"
       >
-        <!-- Original Items -->
         @for (item of items(); track trackByFn($index, item); let i = $index) {
           <div 
             class="snap-start flex-shrink-0 transition-opacity duration-300"
@@ -57,7 +53,6 @@ import { NgTemplateOutlet } from '@angular/common';
           </div>
         }
 
-        <!-- Duplicate Items (For Marquee Loop) -->
         @if (marquee()) {
           @for (item of items(); track trackByFn($index, item) + '_dup'; let i = $index) {
             <div 
@@ -68,7 +63,6 @@ import { NgTemplateOutlet } from '@angular/common';
           }
         }
         
-        <!-- Spacer for mobile -->
         <div class="w-1 flex-shrink-0 sm:hidden"></div>
       </div>
 
@@ -95,21 +89,20 @@ export class CarouselComponent<T> implements OnDestroy {
   autoplay = input(false);
   interval = input(4000);
   
-  // Marquee Inputs
   marquee = input(false);
-  marqueeDuration = input('60s'); // kept for API compatibility, though now used as rough speed guide if we wanted
+  marqueeDuration = input('60s'); 
 
   container = viewChild<ElementRef>('scrollContainer');
 
   private intervalId: ReturnType<typeof setInterval> | null = null;
   private rafId: number | null = null;
   protected isPaused = false;
+  private ngZone = inject(NgZone);
+  private platformId = inject(PLATFORM_ID);
 
   constructor() {
     effect(() => {
-      // Re-evaluate whenever inputs change
       const _ = [this.autoplay(), this.marquee(), this.items(), this.container()];
-      // Use setTimeout to ensure view is updated (e.g. duplicates rendered) before measurements
       setTimeout(() => this.start(), 0);
     });
   }
@@ -120,12 +113,20 @@ export class CarouselComponent<T> implements OnDestroy {
 
   start() {
     this.stop();
-    if (typeof window === 'undefined') return;
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Respect reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
     if (this.marquee()) {
-      this.startMarquee();
+      this.ngZone.runOutsideAngular(() => this.startMarquee());
     } else if (this.autoplay()) {
-      this.intervalId = setInterval(() => this.scrollNext(), this.interval());
+      this.ngZone.runOutsideAngular(() => {
+        this.intervalId = setInterval(() => {
+          this.ngZone.run(() => this.scrollNext());
+        }, this.interval());
+      });
     }
   }
 
@@ -142,25 +143,20 @@ export class CarouselComponent<T> implements OnDestroy {
 
   startMarquee() {
     const animate = () => {
-      if (!this.rafId) return; // Stopped
+      if (!this.rafId) return; 
 
       if (!this.isPaused && this.container()) {
         const el = this.container()!.nativeElement;
         
-        // Check if we need to loop
-        // We trigger reset when we've scrolled past the midpoint (start of duplicate set)
-        // Note: scrollWidth / 2 is an approximation that works well for duplicated content
         if (el.scrollLeft >= (el.scrollWidth / 2)) {
            el.scrollLeft = 0; 
         }
 
-        // Move
         el.scrollLeft += 1;
       }
       this.rafId = requestAnimationFrame(animate);
     };
-    
-    // Cancel any existing frame to prevent double-speed
+
     if (this.rafId) cancelAnimationFrame(this.rafId);
     this.rafId = requestAnimationFrame(animate);
   }
