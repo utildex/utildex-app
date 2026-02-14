@@ -1,5 +1,5 @@
 
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToolService, ToolMetadata, WidgetPreset, PendingPlacement } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
@@ -45,7 +45,7 @@ import zh from './i18n/zh';
                 </div>
               }
 
-              <button (click)="close()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
+              <button (click)="close()" aria-label="Close" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -134,7 +134,7 @@ import zh from './i18n/zh';
          <div class="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in border border-slate-200 dark:border-slate-800">
             <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
               <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{ t.map()['MODAL_FILLER_TITLE'] }}</h3>
-              <button (click)="close()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
+              <button (click)="close()" aria-label="Close" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -189,6 +189,11 @@ export class DashboardModalsComponent {
       return name.includes(query) || desc.includes(query);
     });
   });
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.close();
+  }
 
   close() {
     this.toolService.closeModals();
