@@ -1,20 +1,19 @@
 
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolService, ToolMetadata, WidgetPreset, PendingPlacement } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-// Reusing dashboard translations as they contain the necessary keys
-import en from '../../pages/user-dashboard/i18n/en';
-import fr from '../../pages/user-dashboard/i18n/fr';
-import es from '../../pages/user-dashboard/i18n/es';
-import zh from '../../pages/user-dashboard/i18n/zh';
+// Local translations for self-contained component
+import en from './i18n/en';
+import fr from './i18n/fr';
+import es from './i18n/es';
+import zh from './i18n/zh';
 
 @Component({
   selector: 'app-dashboard-modals',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
@@ -63,7 +62,7 @@ import zh from '../../pages/user-dashboard/i18n/zh';
                      <h4 class="font-bold text-slate-900 dark:text-white">{{ i18n.resolve(tool.name) }}</h4>
                      
                      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        @for (preset of tool.widget!.presets; track $index) {
+                        @for (preset of tool.widget?.presets ?? []; track $index) {
                            <button 
                              (click)="selectPreset(tool, preset)"
                              class="flex flex-col items-center gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary hover:shadow-md transition-all group bg-slate-50 dark:bg-slate-800/50"
