@@ -7,7 +7,6 @@ import { languageGuard } from './core/guards/language.guard';
 import { I18nService } from './services/i18n.service';
 
 export const routes: Routes = [
-  // 1. Root Rerouter: If user hits root '/', send to their preferred language '/en/', '/fr/' etc.
   {
     path: '',
     pathMatch: 'full',
@@ -15,7 +14,6 @@ export const routes: Routes = [
         const platformId = inject(PLATFORM_ID);
         const i18n = inject(I18nService);
         
-        // Ensure we're in the browser before accessing navigator/storage
         if (isPlatformBrowser(platformId)) {
             return i18n.getStartupLanguage();
         }
@@ -24,11 +22,9 @@ export const routes: Routes = [
     resolve: {
     }
   },
-  
-  // 2. The Language Wrapper
   {
     path: ':lang',
-    canMatch: [languageGuard], // Ensures :lang is one of 'en', 'fr', etc.
+    canMatch: [languageGuard],
     children: [
         {
             path: '',
@@ -76,7 +72,6 @@ export const routes: Routes = [
             canMatch: [() => isDevMode()],
             title: 'Banner Generator'
         },
-        // Dynamic Tool Route
         {
             path: 'tools/:id',
             loadComponent: () => import('./pages/tool-host/tool-host.component').then(m => m.ToolHostComponent)

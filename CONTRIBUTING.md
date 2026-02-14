@@ -7,7 +7,7 @@ Utildex is a **local-first**, **zoneless** Angular application designed for modu
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 To keep the application fast and lightweight, Utildex uses a specific architectural pattern:
 
@@ -17,7 +17,7 @@ To keep the application fast and lightweight, Utildex uses a specific architectu
 
 ---
 
-## 🚀 Adding a New Tool
+## Adding a New Tool
 
 Follow these steps to integrate a new utility into the system.
 
@@ -107,7 +107,7 @@ Since we don't scan directories at runtime, you must manually register the tool 
 
 ---
 
-## 🎨 Design & Styling Guidelines
+## Design & Styling Guidelines
 
 ### 1. Widget Support
 Your component is responsible for rendering different views based on the `isWidget` signal.
@@ -162,7 +162,7 @@ Tools must work on mobile devices.
 
 ---
 
-## 🌍 Internationalization (i18n)
+## Internationalization (i18n)
 
 Utildex uses a **Scoped Translation** pattern. Each tool carries its own translation dictionary.
 
@@ -184,7 +184,7 @@ Utildex uses a **Scoped Translation** pattern. Each tool carries its own transla
 
 ---
 
-## 🔍 SEO (Search Engine Optimization)
+## SEO (Search Engine Optimization)
 
 SEO is handled **automatically** by the `SeoService` based on your `metadata.json`.
 
@@ -196,7 +196,7 @@ SEO is handled **automatically** by the `SeoService` based on your `metadata.jso
 
 ---
 
-## 💾 Data Persistence (Local-First)
+## Data Persistence (Local-First)
 
 Never send user data to a server.
 *   **Tool State:** Use `ToolState` (wraps `DbService`) to automatically persist component state.

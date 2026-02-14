@@ -7,7 +7,7 @@ This guide explains how to add new articles or translate existing ones.
 
 ---
 
-## 📂 Architecture
+## Architecture
 
 Articles are loaded on-demand via HTTP to keep the application lightweight.
 
@@ -16,7 +16,7 @@ Articles are loaded on-demand via HTTP to keep the application lightweight.
 
 ---
 
-## 🚀 Step-by-Step Guide
+## Step-by-Step Guide
 
 ### 1. Define Metadata
 Open `src/data/article-registry.ts` and add a new entry to the `ARTICLE_REGISTRY` array.
@@ -77,7 +77,7 @@ function identity<T>(arg: T): T {
 
 ---
 
-## ✍️ Markdown Guidelines
+## Markdown Guidelines
 
 The reader uses `marked` for parsing and `PrismJS` for syntax highlighting.
 
@@ -87,6 +87,6 @@ The reader uses `marked` for parsing and `PrismJS` for syntax highlighting.
 
 ---
 
-## 🌍 Internationalization (i18n)
+## Internationalization (i18n)
 
 *   **Fallback:** If a user views an article in a language that doesn't exist (e.g., Spanish), the system will automatically attempt to load the English version (`en.md`).
