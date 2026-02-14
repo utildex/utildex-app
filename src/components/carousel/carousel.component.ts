@@ -66,7 +66,6 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
         <div class="w-1 flex-shrink-0 sm:hidden"></div>
       </div>
 
-      <!-- Fade edges -->
       <div class="hidden sm:block absolute top-0 bottom-10 right-0 w-24 bg-gradient-to-l from-slate-50 dark:from-slate-950 to-transparent pointer-events-none opacity-50"></div>
       @if (marquee()) {
          <div class="hidden sm:block absolute top-0 bottom-10 left-0 w-24 bg-gradient-to-r from-slate-50 dark:from-slate-950 to-transparent pointer-events-none opacity-50"></div>
@@ -119,7 +118,6 @@ export class CarouselComponent<T> implements OnDestroy {
     this.stop();
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Respect reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
