@@ -21,7 +21,6 @@ export class PersistenceService {
    * Supports 'hybrid' strategy for instant load (reads LocalStorage) + durable save (writes IDB).
    */
   storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' = 'string') {
-    // Normalize Options
     const options: StorageOptions = typeof optionsOrType === 'object' 
       ? optionsOrType 
       : { type: optionsOrType as 'string' | 'number' | 'boolean', strategy: 'idb' };
@@ -38,7 +37,6 @@ export class PersistenceService {
         const stored = localStorage.getItem(fullKey);
         if (stored !== null) {
           this.updateSignal(targetSignal, stored, type);
-          // If purely local, we are hydrated immediately
           if (strategy === 'local') isIdbHydrated = true;
         }
       } catch (e) {
@@ -47,7 +45,6 @@ export class PersistenceService {
     }
 
     // 2. IDB/Hybrid: Read ASYNC from DB 
-    // If hybrid, always reconcile with DB (source of truth) even if LocalStorage loaded.
     if ((strategy === 'idb') || strategy === 'hybrid') {
       this.db.config.read(fullKey).then(stored => {
         if (stored !== undefined && stored !== null) {
@@ -64,9 +61,6 @@ export class PersistenceService {
     effect((onCleanup) => {
       const val = targetSignal();
       
-      // CRITICAL FIX: Prevent race condition.
-      // Do not write back to storage until we have finished reading from the source of truth (IDB).
-      // This prevents a fast LocalStorage read from overwriting a slow IDB read.
       if (!isIdbHydrated && (strategy === 'idb' || strategy === 'hybrid')) {
            return;
       }
@@ -106,10 +100,8 @@ export class PersistenceService {
    * Must be called within an Injection Context (e.g. Component Constructor).
    */
   url<T>(targetSignal: WritableSignal<T>, paramName: string, type: 'string' | 'number' | 'boolean' = 'string') {
-    // Inject ActivatedRoute here, so it uses the Component's context
-    const route = inject(ActivatedRoute) as ActivatedRoute;
+    const route = inject(ActivatedRoute);
 
-    // 1. Restore from URL
     const params = route.snapshot.queryParams;
     const val = params[paramName];
     
@@ -119,13 +111,11 @@ export class PersistenceService {
       else if (type === 'string') targetSignal.set(val as T);
     }
 
-    // 2. Watch for changes and update URL
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     effect(() => {
       const newVal = targetSignal();
       
-      // Avoid circular update if signal matches current URL param
       const currentParams = this.router.parseUrl(this.router.url).queryParams;
       if (String(currentParams[paramName]) === String(newVal)) return;
 
@@ -134,7 +124,7 @@ export class PersistenceService {
         this.router.navigate([], {
           relativeTo: route,
           queryParams: { [paramName]: newVal },
-          queryParamsHandling: 'merge', // Keep other params
+          queryParamsHandling: 'merge',
           replaceUrl: true
         });
       }, 300);

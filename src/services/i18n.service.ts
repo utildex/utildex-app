@@ -29,7 +29,7 @@ export class I18nService {
   currentLang = signal<Language>(this.getStartupLanguage());
 
   constructor() {
-    // 1. URL is the Source of Truth
+    // URL is the Source of Truth
     // Listen to navigation events to determine the language from the URL
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -40,15 +40,11 @@ export class I18nService {
       }
     });
 
-    // 2. Persist Preference (Write Only)
-    // We never read from storage to set the active language (except for root redirect)
     effect(() => {
       const lang = this.currentLang();
       
-      // Update HTML immediately
       document.documentElement.lang = lang;
 
-      // Save preference
       try {
         localStorage.setItem(this.storageKey, lang);
         this.db.config.write(this.storageKey, lang);
@@ -58,9 +54,7 @@ export class I18nService {
     });
   }
 
-  /**
-   * Used by AppRoutes to determine where to redirect '/'
-   */
+
   getStartupLanguage(): Language {
      // 1. Try LocalStorage (Sync)
      try {
@@ -70,11 +64,9 @@ export class I18nService {
        }
      } catch { /* ignore */ }
 
-     // 2. Fallback to Browser
      return this.getBrowserLang();
   }
   
-  // Helper to traverse the router tree to find ':lang' param
   private findLangInRoute(snapshot: ActivatedRouteSnapshot): string | null {
     let current: ActivatedRouteSnapshot | null = snapshot;
     while (current) {
@@ -87,22 +79,16 @@ export class I18nService {
   }
 
   setLanguage(lang: Language) {
-    // When manually setting language (e.g. from a picker), we rely on the Router
-    // We don't set the signal directly; we navigate.
     const url = this.router.url;
-    // Replace the current language segment in the URL
-    // Assuming structure /:lang/...
     const currentLang = this.currentLang();
     const newUrl = url.replace(`/${currentLang}`, `/${lang}`);
     
-    // If the URL didn't contain the lang (edge case), just go to root of new lang
     const target = newUrl !== url ? newUrl : `/${lang}`;
     
     this.router.navigateByUrl(target);
   }
 
   reset() {
-    // Resetting usually means going back to default/detected
     const defaultLang = this.getStartupLanguage();
     this.setLanguage(defaultLang);
   }
@@ -113,15 +99,10 @@ export class I18nService {
 
   private getBrowserLang(): Language {
      const browserLang = navigator.language.split('-')[0];
-     // Check if the browser language matches one of our supported codes
      const match = this.supportedLanguages.find(l => l.code === browserLang);
      return match ? match.code : 'en';
   }
 
-  /**
-   * Resolves a localized string based on the current language.
-   * This method is reactive when used within a computed/effect context.
-   */
   resolve(text: I18nText | undefined | null): string {
     if (!text) return '';
     if (typeof text === 'string') return text;

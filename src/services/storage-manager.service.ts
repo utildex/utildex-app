@@ -53,8 +53,6 @@ export class StorageManagerService {
       id: 'tools',
       labelKey: 'CAT_TOOLS',
       icon: 'construction',
-      // Matches utildex-state-X where X is NOT in PREFERENCES
-      // And matches tools.*
       patterns: [
         new RegExp(`^${STORAGE_KEYS.PREFIX_STATE}(?!${STORAGE_KEYS.PREFERENCES.join('|')})`), 
         new RegExp(`^${STORAGE_KEYS.PREFIX_TOOLS.replace('.', '\\.')}`)
@@ -64,7 +62,7 @@ export class StorageManagerService {
       id: 'files',
       labelKey: 'CAT_FILES',
       icon: 'folder',
-      patterns: [/^app_blobs/] // Conceptual pattern
+      patterns: [/^app_blobs/]
     }
   ];
 
@@ -83,17 +81,14 @@ export class StorageManagerService {
 
     try {
       // 1. CONFIG STORE (Settings & Legacy keys)
-      // SysConfig keys are just strings
       const configKeys = await this.db.run<string[]>('readonly', this.db.STORES.CONFIG, s => s.getAllKeys());
       if (configKeys) {
         for (const key of configKeys) {
-            // We can't easily get value size cheaply without reading it. 
-            // For stats, reading config (small) is fine.
             const val = await this.db.config.read(key);
             const valStr = JSON.stringify(val);
             const size = (key.length + (valStr?.length || 0)) * 2;
             
-            this.addToStats(stats, key, size, 'prefs'); // Prefer prefs for config
+            this.addToStats(stats, key, size, 'prefs');
         }
       }
 
@@ -103,9 +98,6 @@ export class StorageManagerService {
       if (records) {
         for (const rec of records) {
              const size = JSON.stringify(rec.data).length * 2;
-             // Use 'scope' as the key equivalent for categorization
-             // e.g. 'diff-checker' -> Tools
-             // Force 'tools' category for all records
              this.addToStats(stats, rec.scope, size, 'tools');
         }
       }
@@ -136,14 +128,6 @@ export class StorageManagerService {
         if (limitToCategory) {
             const cat = stats.categories.find(c => c.id === limitToCategory);
             if (cat) {
-                 // Double check if it matches pattern? 
-                 // Or just trust the store source?
-                 // Trust source, but maybe pattern acts as filter?
-                 // Let's trust source for Records/Blobs, but regex for Config.
-                 
-                 // If category is 'tools' or 'files', we just add it.
-                 // If 'prefs', we still verify regex because Config potentially holds others (like History)
-                 
                  if (limitToCategory === 'tools' || limitToCategory === 'files') {
                       cat.keys.push(key);
                       cat.sizeBytes += size;
@@ -176,23 +160,13 @@ export class StorageManagerService {
   }
 
   async getCategoryDetails(categoryId: string): Promise<{ key: string; value: string }[]> {
-    // This is tricky now because data is in different stores.
-    // We might need to look up where the key came from.
-    // Or we simply search all stores for the keys in that category.
-    
-    // Minimal implementation: Re-scan Config only for now, as that's where most viewable text data is.
-    // Records are objects, Blobs are binary.
     
     const details: { key: string; value: string }[] = [];
     
-    // Basic config scan
     const configKeys = await this.db.run<string[]>('readonly', this.db.STORES.CONFIG, s => s.getAllKeys());
-    // ... filter by category ...
-    // This method is used for the "Inspect" modal.
-    // If likely Config:
+
     if (configKeys) {
         for(const k of configKeys) {
-             // check if k belongs to categoryId (via regex)
              const def = this.DEFINITIONS.find(d => d.id === categoryId);
              if (def && def.patterns.some(p => p.test(k))) {
                  const v = await this.db.config.read(k);
@@ -245,8 +219,6 @@ export class StorageManagerService {
 
     // 2. Clear Records if category is 'tools'
     if (categoryId === 'tools') {
-         // Clear all records? Or just tool-related? 
-         // Records store is 99% tools.
          await this.db.run('readwrite', this.db.STORES.RECORDS, s => s.clear());
     }
 
@@ -298,7 +270,7 @@ export class StorageManagerService {
 
     const exportObj: Record<string, unknown> = {};
     exportObj['meta'] = {
-      version: 2, // Bumped for V2 structure
+      version: 2,
       date: new Date().toISOString(),
       appName: 'Utildex'
     };
@@ -384,12 +356,8 @@ export class StorageManagerService {
             }
         }
       } else {
-          // V1 Legacy Import (Flat keys)
           for (const key in data) {
             if (key !== 'meta' && key.startsWith(STORAGE_KEYS.PREFIX_STATE.replace('-', ''))) {
-              // Note: V1 keys might be different, but assuming old logic 
-              // which used "utildex-" prefix. 
-              // We just replicate what was there: "key.startsWith('utildex-')"
               await this.db.config.write(key, data[key]);
             }
           }

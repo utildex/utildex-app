@@ -13,10 +13,8 @@ export class ArticleService {
   private http: HttpClient = inject(HttpClient);
   private i18n = inject(I18nService);
 
-  // Registry State
   private registry = signal<ArticleMetadata[]>(ARTICLE_REGISTRY);
 
-  // Computed Lists
   featuredArticles = computed(() => {
     return this.registry()
       .filter(a => a.featured)
@@ -38,11 +36,7 @@ export class ArticleService {
     return this.registry().find(a => a.id === id);
   }
 
-  /**
-   * Fetches the markdown content for an article via HTTP.
-   * This allows lazy-loading content only when requested.
-   * Now simpler: fetches exactly what is asked. Logic moves to Component.
-   */
+
   fetchContent(id: string, lang?: Language): Observable<string | null> {
     const targetLang = lang || this.i18n.currentLang();
     const path = `assets/articles/${id}/${targetLang}.md`;
