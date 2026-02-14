@@ -11,7 +11,7 @@ Utildex is a **local-first**, **zoneless** Angular application designed for modu
 
 To keep the application fast and lightweight, Utildex uses a specific architectural pattern:
 
-1.  **Metadata Registry (`src/services/tool.service.ts`):** A lightweight JSON list of all tools is loaded at startup. This enables search, routing, and lists without loading the actual tool code.
+1.  **Metadata Registry (`src/data/tool-registry.ts`):** A lightweight JSON list of all tools is loaded at startup. This enables search, routing, and lists without loading the actual tool code.
 2.  **Lazy Loading (`src/core/tool-registry.ts`):** The actual tool component code is fetched *only* when the user opens the tool or places its widget.
 3.  **Zoneless Angular:** We do not use `Zone.js`. All state changes must be handled via **Signals**.
 
@@ -33,7 +33,6 @@ Copy the contents of `src/templates/tool/` into your new directory. You should h
 ### 3. Configure Metadata (`metadata.json`)
 This file defines how the app "sees" your tool.
 *   **id**: Must be unique and kebab-case.
-*   **routePath**: Must match `tools/[id]`.
 *   **widget**: Configuration for the dashboard grid.
 
 ```json
@@ -45,7 +44,6 @@ This file defines how the app "sees" your tool.
   "categories": ["Developer"],
   "tags": ["uuid", "guid", "generator"],
   "color": "#10b981",
-  "routePath": "tools/uuid-generator",
   "widget": {
     "supported": true,
     "defaultCols": 2,
@@ -59,39 +57,44 @@ This file defines how the app "sees" your tool.
 ```
 
 ### 4. Implement Component Logic
-Rename the class and selector in your component file.
+Rename the class and selector in your component file. Use the **Tool Template** (`src/templates/tool/`) as your base.
 
 **Requirements:**
 *   **Standalone:** Must be `standalone: true`.
 *   **Inputs:** You **MUST** define `isWidget` and `widgetConfig` inputs.
-*   **Zoneless:** Use `signal`, `computed`, and `effect`. Do not rely on automatic change detection.
+*   **State:** Use `ToolState` for managing and persisting data.
+*   **Zoneless:** Use `signal`, `computed`, and `effect`.
 
 ```typescript
 @Component({
   selector: 'app-uuid-generator',
   standalone: true,
-  imports: [CommonModule, ToolLayoutComponent, FormsModule],
+  imports: [CommonModule, ToolLayoutComponent, FormsModule, BubbleDirective],
   providers: [
-    // Register tool-specific translations
     provideTranslation({ en: () => en, fr: () => fr })
   ],
-  template: `...` // See Styling section below
+  template: `...` // See src/templates/tool/template.component.ts
 })
 export class UuidGeneratorComponent {
   // Required Inputs
   isWidget = input<boolean>(false);
-  widgetConfig = input<any>(null); // Access grid dimensions via widgetConfig().cols / .rows
+  widgetConfig = input<Record<string, unknown> | null>(null);
   
+  // Services
   t = inject(ScopedTranslationService);
+  db = inject(DbService);
+
+  // State (Auto-persisted to IndexedDB)
+  private state = new ToolState('uuid-gen', { count: 0 }, this.db);
+  count = this.state.select('count');
 }
 ```
 
 ### 5. Register the Tool (The Wiring)
 Since we don't scan directories at runtime, you must manually register the tool in **2 places**:
 
-1.  **The Registry (`src/services/tool.service.ts`):**
-    Copy the object from your `metadata.json` and paste it into the `rawRegistry` array.
-    *Note: The `routePath` property is automatically generated, but you should define it in metadata for clarity.*
+1.  **The Registry (`src/data/tool-registry.ts`):**
+    Copy the object from your `metadata.json` and paste it into the `TOOL_REGISTRY` array.
 
 2.  **The Lazy Map (`src/core/tool-registry.ts`):**
     Add the dynamic import mapping. **Important:** The key must match your tool's `id`.
@@ -107,16 +110,34 @@ Since we don't scan directories at runtime, you must manually register the tool 
 ## 🎨 Design & Styling Guidelines
 
 ### 1. Widget Support
-Your component is responsible for rendering two different views based on the `isWidget` signal:
+Your component is responsible for rendering different views based on the `isWidget` signal.
+
+**Recommended Pattern:**
+use a `computed` signal to determine the view mode:
+```typescript
+viewMode = computed(() => {
+  const c = this.widgetConfig();
+  if (c?.cols === 1 && c?.rows === 1) return 'compact';
+  if (c?.cols === 2 && c?.rows === 1) return 'wide';
+  if (c?.cols === 1 && c?.rows === 2) return 'tall';
+  return 'default';
+});
+```
+
 *   **Full View (`!isWidget()`):** The complete tool interface. Must be wrapped in `<app-tool-layout toolId="...">`.
 *   **Widget View (`isWidget()`):** A compact, dashboard-friendly version.
     *   **Do NOT** use `<app-tool-layout>` in widget mode.
-    *   Use `widgetConfig()` to check dimensions (e.g., show less info if `cols === 1`).
-    *   Ensure it handles click events or provides quick actions.
-    *   **Header Policy:** Every widget **MUST** include a visual header containing the Tool Icon and Tool Name/Title. This ensures users can identify the widget on their dashboard.
+    *   Use the `viewMode` logic to adapt to grid sizes.
+    *   **Header Policy:** Every widget **MUST** include a visual header containing the Tool Icon and Tool Name/Title.
         *   *Exception:* Purely visual widgets (like an Image Frame) may omit the header if the content is self-explanatory.
 
-### 2. Theming (Accent Color)
+### 2. Help Bubbles
+Use the `BubbleDirective` to show helpful tooltips.
+```html
+<span [appBubble]="'HELP_KEY'" bubblePos="top">help</span>
+```
+
+### 3. Theming (Accent Color)
 The app supports dynamic accent colors (Blue, Green, Purple, etc.) set by the user.
 *   **Text:** Use `text-primary`.
 *   **Background:** Use `bg-primary`.
@@ -128,13 +149,13 @@ The app supports dynamic accent colors (Blue, Green, Purple, etc.) set by the us
 <button class="bg-primary text-white hover:opacity-90">Generate</button>
 ```
 
-### 3. Dark Mode
+### 4. Dark Mode
 All tools must support Dark Mode fully using Tailwind's `dark:` modifier.
 *   Backgrounds: `bg-white dark:bg-slate-800`
 *   Text: `text-slate-900 dark:text-white`
 *   Borders: `border-slate-200 dark:border-slate-700`
 
-### 4. Responsiveness
+### 5. Responsiveness
 Tools must work on mobile devices.
 *   Use `flex-col` on mobile and `flex-row` on desktop.
 *   Avoid fixed widths (e.g., `w-[500px]`). Use `max-w-xl` or percentages.
@@ -178,9 +199,12 @@ SEO is handled **automatically** by the `SeoService` based on your `metadata.jso
 ## 💾 Data Persistence (Local-First)
 
 Never send user data to a server.
-*   **Temporary Data:** Keep it in component state signals.
-*   **User Preferences:** Use `PersistenceService` or `localStorage`.
-*   **Large Data:** Use `DbService` (IndexedDB Wrapper).
+*   **Tool State:** Use `ToolState` (wraps `DbService`) to automatically persist component state.
+    ```typescript
+    state = new ToolState('my-tool', { count: 0 }, inject(DbService));
+    ```
+*   **User Preferences:** Use `PersistenceService` or `localStorage` for simple flags.
+*   **Binary/Large Data:** Use `DbService` directly.
 
 **Example using PersistenceService:**
 ```typescript
