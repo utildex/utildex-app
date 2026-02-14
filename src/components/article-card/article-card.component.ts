@@ -1,16 +1,15 @@
 
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, DatePipe, NgTemplateOutlet, NgOptimizedImage } from '@angular/common';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ArticleMetadata } from '../../data/article-registry';
+import { I18nService } from '../../services/i18n.service';
 
 @Component({
   selector: 'app-article-card',
   standalone: true,
   imports: [CommonModule, RouterLink, DatePipe, NgTemplateOutlet, NgOptimizedImage, LocalLinkPipe],
-  providers: [
-  ],
   template: `
     <!-- External Link Variant -->
     @if (isExternal()) {
@@ -122,5 +121,7 @@ export class ArticleCardComponent {
   layout = input<'grid' | 'list'>('grid');
   priority = input<boolean>(false);
   
+  i18n = inject(I18nService);
+
   isExternal = computed(() => this.article().type === 'external');
 }
