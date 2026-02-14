@@ -102,7 +102,11 @@ export class CarouselComponent<T> implements OnDestroy {
 
   constructor() {
     effect(() => {
-      const _ = [this.autoplay(), this.marquee(), this.items(), this.container()];
+      this.autoplay();
+      this.marquee();
+      this.items();
+      this.container();
+      
       setTimeout(() => this.start(), 0);
     });
   }
