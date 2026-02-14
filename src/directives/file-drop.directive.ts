@@ -6,9 +6,7 @@ import { Directive, HostBinding, HostListener, output, signal } from '@angular/c
 })
 export class FileDropDirective {
   fileDropped = output<FileList>();
-  
-  // State signal that can be read by the host component if they inject the directive,
-  // or simply used for the class binding below.
+
   isDragOver = signal(false);
 
   @HostBinding('class.drag-over') 
