@@ -343,7 +343,7 @@ export class HashGeneratorComponent implements OnDestroy {
 
   private initWorker() {
     if (!this.worker && typeof Worker !== 'undefined') {
-       this.worker = new Worker(new URL('./hash.worker', import.meta.url));
+       this.worker = new Worker(new URL('./hash.worker', import.meta.url), { type: 'module' });
        this.worker.onmessage = ({ data }) => {
           if (data.id === String(this.workerId)) {
              if (data.error) {
@@ -418,6 +418,8 @@ export class HashGeneratorComponent implements OnDestroy {
     if (input.files && input.files.length > 0) {
       this.selectedFile.set(input.files[0]);
       this.calculateHash();
+      // Reset input value to allow selecting the same file again
+      input.value = '';
     }
   }
 

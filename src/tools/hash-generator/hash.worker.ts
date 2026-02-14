@@ -1,15 +1,15 @@
 /// <reference lib="webworker" />
 
-type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
+export type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 
-interface HashRequest {
+export interface HashRequest {
   id: string;
   data: ArrayBuffer | string;
   algorithm: HashAlgorithm;
   inputType: 'text' | 'file';
 }
 
-interface HashResponse {
+export interface HashResponse {
   id: string;
   hash?: string;
   error?: string;
