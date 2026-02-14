@@ -15,7 +15,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(
       routes, 
       withComponentInputBinding(),
-      withPreloading(PreloadAllModules) // "Smart" Preloading: Loads other chunks in background
+      withPreloading(PreloadAllModules)
     ),
     provideHttpClient(withFetch()),
     provideServiceWorker('ngsw-worker.js', {
@@ -28,5 +28,3 @@ bootstrapApplication(AppComponent, {
     }
   ]
 }).catch(err => console.error(err));
-
-// AI Studio always uses an `index.tsx` file for all project types.
