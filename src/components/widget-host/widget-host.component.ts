@@ -116,9 +116,7 @@ export class WidgetHostComponent implements OnInit {
     this.updateInputs();
   }
 
-  // Update inputs whenever widget changes to pass fresh data
   updateInputs() {
-     // Pass the entire data object + instanceId to the child tool
      this.widgetInputs.set({
         isWidget: true,
         widgetConfig: { 
