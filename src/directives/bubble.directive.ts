@@ -14,7 +14,6 @@ export class BubbleDirective {
 
   @HostListener('mouseenter')
   onMouseEnter() {
-    // Only show if we have a key
     if (this.messageKey) {
       this.guide.show(this.messageKey, this.el.nativeElement, this.bubblePos);
     }
@@ -22,15 +21,8 @@ export class BubbleDirective {
 
   @HostListener('mouseleave')
   onMouseLeave() {
-    // Only hide if we are currently showing THIS message
-    // (Prevents hiding if another trigger immediately took over, although rare in hover)
     if (this.guide.state().messageKey === this.messageKey && this.guide.state().targetRect) {
       this.guide.hide();
     }
   }
-
-  // Mobile/Touch Support?
-  // We avoid 'click' because it interferes with button actions.
-  // For now, this is primarily a Desktop Hover enhancement.
-  // Broadcast notifications are the mobile-friendly aspect of the system.
 }
