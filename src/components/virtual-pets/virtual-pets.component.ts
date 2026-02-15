@@ -332,6 +332,14 @@ export class VirtualPetsComponent implements OnDestroy {
      this.removalMode.update(v => !v);
   }
 
+  @HostListener('window:contextmenu', ['$event'])
+  onRightClick(event: MouseEvent) {
+    if (this.removalMode()) {
+      event.preventDefault();
+      this.removalMode.set(false);
+    }
+  }
+
   getPetTranslationKey(id: string): string {
     return id.toUpperCase().replace('-', '_');
   }
