@@ -269,14 +269,12 @@ export class VirtualPetsComponent implements OnDestroy {
         const storedPets = this.petsService.activePets();
 
         if (Array.isArray(storedPets)) {
-           // Update if first load OR if we haven't initialized local pets yet
            const shouldInit = !this.isLoaded || (this.pets().length === 0 && storedPets.length > 0);
            
            if (shouldInit) {
               const petsList = (storedPets as Pet[]).filter(p => p.state !== 'dying');
               this.pets.set(petsList);
               
-              // Restore ID counter
               const maxId = petsList.reduce((max, p) => Math.max(max, p.id || 0), 0);
               this.nextId = Math.max(this.nextId, maxId + 1);
               
@@ -285,24 +283,35 @@ export class VirtualPetsComponent implements OnDestroy {
         }
       });
 
-      // Subscription to clear request
+      effect(() => {
+         if (this.petsService.enabled()) {
+            this.startAnimationLoop();
+         } else {
+            if (this.pets().length > 0) {
+              this.savePets(this.pets());
+            }
+            this.stopAnimationLoop();
+         }
+      });
+
       this.petsService.clearPets$.subscribe(() => {
         this.pets.set([]);
       });
-
-      this.startAnimationLoop();
     }
   }
 
   private savePets(pets: Pet[]) {
-    // Delegate saving to service
-    // Filter out dying pets to avoid saving temporary removal state
     this.petsService.updateActivePets(pets.filter(p => p.state !== 'dying'));
   }
 
   ngOnDestroy() {
+    this.stopAnimationLoop();
+  }
+
+  private stopAnimationLoop() {
     if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
     }
   }
 
@@ -480,14 +489,22 @@ export class VirtualPetsComponent implements OnDestroy {
   }
 
   private startAnimationLoop() {
+    if (this.animationFrameId !== null) return;
+
+    this.lastTime = 0;
+
     const animate = (timestamp: number) => {
-      if (!this.lastTime) this.lastTime = timestamp;
-      const deltaTime = (timestamp - this.lastTime) / 1000; // In seconds
+      if (!this.lastTime) {
+        this.lastTime = timestamp;
+      }
+
+      const rawDeltaTime = (timestamp - this.lastTime) / 1000;
       this.lastTime = timestamp;
+
+      const deltaTime = Math.min(rawDeltaTime, 0.1);
 
       this.updatePets(deltaTime);
 
-      // Periodic save logic directly in loop to avoid signal effect trashing per frame
       if (this.isLoaded && timestamp - this.lastSaveTime > this.SAVE_INTERVAL) {
          this.savePets(this.pets());
          this.lastSaveTime = timestamp;
