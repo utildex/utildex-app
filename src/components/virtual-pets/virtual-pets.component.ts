@@ -43,13 +43,16 @@ import zh from './i18n/zh';
             <div class="relative z-10 flex flex-col items-center group">
                <!-- Name Tag -->
                @if (pet.name && pet.state !== 'dying') {
-                 <div class="absolute -top-6 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                 <div
+                   class="absolute -top-6 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none"
+                   [style.transform]="pet.flipped ? 'scaleX(-1)' : 'none'"
+                 >
                    {{ pet.name }}
                  </div>
                }
                
                <img
-                  [src]="getPetSprite(pet)"
+                  [attr.src]="getPetSprite(pet)"
                   alt="Virtual pet"
                   class="h-16 w-auto image-rendering-pixelated"
                   [class.scale-0]="pet.state === 'dying'"
