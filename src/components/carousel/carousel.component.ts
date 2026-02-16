@@ -39,7 +39,23 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
         [class.snap-x]="!marquee()"
         [class.snap-mandatory]="!marquee()"
         style="scrollbar-width: none; -ms-overflow-style: none;"
+        (scroll)="onScroll()"
       >
+        <!-- Pre-clones for infinite backward scroll -->
+        @for (item of items(); track trackByFn($index, item) + '_pre'; let i = $index) {
+          <div 
+            class="snap-start flex-shrink-0 transition-opacity duration-300"
+            [class.w-[300px]]="marquee()"
+            [class.w-[85%]]="!marquee()"
+            [class.sm:w-[calc(50%-1rem)]]="!marquee()"
+            [class.lg:w-[calc(33.333%-1rem)]]="!marquee()"
+            [class.xl:w-[calc(25%-1rem)]]="!marquee()"
+          >
+            <ng-container *ngTemplateOutlet="itemTemplate() || defaultTemplate; context: { $implicit: item, index: i }"></ng-container>
+          </div>
+        }
+
+        <!-- Original Items -->
         @for (item of items(); track trackByFn($index, item); let i = $index) {
           <div 
             class="snap-start flex-shrink-0 transition-opacity duration-300"
@@ -53,14 +69,18 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
           </div>
         }
 
-        @if (marquee()) {
-          @for (item of items(); track trackByFn($index, item) + '_dup'; let i = $index) {
-            <div 
-              class="snap-start flex-shrink-0 w-[300px] transition-opacity duration-300"
-            >
-              <ng-container *ngTemplateOutlet="itemTemplate() || defaultTemplate; context: { $implicit: item, index: i }"></ng-container>
-            </div>
-          }
+        <!-- Post-clones for infinite forward scroll -->
+        @for (item of items(); track trackByFn($index, item) + '_post'; let i = $index) {
+          <div 
+            class="snap-start flex-shrink-0 transition-opacity duration-300"
+            [class.w-[300px]]="marquee()"
+            [class.w-[85%]]="!marquee()"
+            [class.sm:w-[calc(50%-1rem)]]="!marquee()"
+            [class.lg:w-[calc(33.333%-1rem)]]="!marquee()"
+            [class.xl:w-[calc(25%-1rem)]]="!marquee()"
+          >
+            <ng-container *ngTemplateOutlet="itemTemplate() || defaultTemplate; context: { $implicit: item, index: i }"></ng-container>
+          </div>
         }
         
         <div class="w-1 flex-shrink-0 sm:hidden"></div>
@@ -105,6 +125,10 @@ export class CarouselComponent<T> implements OnDestroy {
       this.marquee();
       this.items();
       this.container();
+
+      if (this.container()) {
+        setTimeout(() => this.initializeScroll(), 0);
+      }
       
       setTimeout(() => this.start(), 0);
     });
@@ -112,6 +136,27 @@ export class CarouselComponent<T> implements OnDestroy {
 
   trackByFn(index: number, item: T): string | number {
     return (item as { id?: string | number })?.id ?? index;
+  }
+
+  initializeScroll() {
+    const el = this.container()?.nativeElement;
+    if (!el) return;
+    el.scrollLeft = el.scrollWidth / 3;
+  }
+
+  onScroll() {
+    const el = this.container()?.nativeElement;
+    if (!el) return;
+
+    const totalWidth = el.scrollWidth;
+    const setWidth = totalWidth / 3;
+    const scrollLeft = el.scrollLeft;
+
+    if (scrollLeft < setWidth * 0.5) {
+      el.scrollLeft = scrollLeft + setWidth;
+    } else if (scrollLeft > setWidth * 2.5) {
+      el.scrollLeft = scrollLeft - setWidth;
+    }
   }
 
   start() {
@@ -149,9 +194,12 @@ export class CarouselComponent<T> implements OnDestroy {
 
       if (!this.isPaused && this.container()) {
         const el = this.container()!.nativeElement;
+        const totalWidth = el.scrollWidth;
+        const setWidth = totalWidth / 3;
         
-        if (el.scrollLeft >= (el.scrollWidth / 2)) {
-           el.scrollLeft = 0; 
+        // Use the same buffer logic as manual scroll: if we go past the end of the middle set, wrap
+        if (el.scrollLeft >= setWidth * 2.5) {
+           el.scrollLeft -= setWidth;
         }
 
         el.scrollLeft += 1;
@@ -182,21 +230,18 @@ export class CarouselComponent<T> implements OnDestroy {
     const gap = 16; 
     const step = itemWidth + gap;
 
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    const currentScroll = el.scrollLeft;
-    
+    const W = el.scrollWidth / 3;
+
     if (direction === 'right') {
-      if (currentScroll >= maxScroll - 10) {
-        el.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        el.scrollBy({ left: step, behavior: 'smooth' });
+      if (el.scrollLeft >= 2 * W - step * 2) {
+          el.scrollLeft -= W;
       }
+      el.scrollBy({ left: step, behavior: 'smooth' });
     } else {
-      if (currentScroll <= 10) {
-        el.scrollTo({ left: maxScroll, behavior: 'smooth' });
-      } else {
-        el.scrollBy({ left: -step, behavior: 'smooth' });
+      if (el.scrollLeft <= W + step * 2) {
+          el.scrollLeft += W;
       }
+      el.scrollBy({ left: -step, behavior: 'smooth' });
     }
   }
 
