@@ -1,12 +1,12 @@
 
-import { Component, inject, signal, input, ElementRef, viewChild } from '@angular/core';
+import { Component, inject, signal, input, ElementRef, viewChild, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { PDFDocument } from 'pdf-lib';
+// import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
 import en from './i18n/en';
 import fr from './i18n/fr';
@@ -41,7 +41,7 @@ interface GeneratedFile {
         class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden relative border border-slate-200 dark:border-slate-700 group transition-all"
       >
          <!-- 1x1 Compact Layout -->
-         @if (isSize(1, 1)) {
+         @if (viewMode() === 'compact') {
             <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-center">
                <span class="text-[9px] font-bold uppercase text-slate-500 truncate px-1">{{ t.map()['TITLE_SHORT'] }}</span>
             </div>
@@ -79,7 +79,7 @@ interface GeneratedFile {
             </div>
          } 
          <!-- 2x1 Wide Layout -->
-         @else if (isSize(2, 1)) {
+         @else if (viewMode() === 'wide') {
             <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between px-2">
                <span class="text-[10px] font-bold uppercase text-slate-500">{{ t.map()['TITLE'] }}</span>
                @if (pdfFile() || generatedFiles().length > 0) {
@@ -121,7 +121,7 @@ interface GeneratedFile {
             </div>
          }
          <!-- 1x2 Tall Layout -->
-         @else if (isSize(1, 2)) {
+         @else if (viewMode() === 'tall') {
             <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-center">
                <span class="text-[10px] font-bold uppercase text-slate-500">{{ t.map()['TITLE_SHORT'] }}</span>
             </div>
@@ -325,7 +325,7 @@ interface GeneratedFile {
 })
 export class SplitPdfComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<Record<string, unknown>>(null);
+  widgetConfig = input<Record<string, unknown> | null>(null);
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
@@ -333,7 +333,8 @@ export class SplitPdfComponent {
 
   // State
   pdfFile = signal<File | null>(null);
-  pdfDoc = signal<PDFDocument | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pdfDoc = signal<any | null>(null);
   pageCount = signal(0);
   pageRange = signal('');
   isProcessing = signal(false);
@@ -342,10 +343,17 @@ export class SplitPdfComponent {
   generatedFiles = signal<GeneratedFile[]>([]);
 
   // Widget helper
-  isSize(w: number, h: number): boolean {
-     const cfg = this.widgetConfig();
-     return cfg && cfg.cols === w && cfg.rows === h;
-  }
+  viewMode = computed(() => {
+    const config = this.widgetConfig();
+    // 1x1 -> compact
+    if (config?.cols === 1 && config?.rows === 1) return 'compact';
+    // 2x1 -> wide
+    if (config?.cols === 2 && config?.rows === 1) return 'wide';
+    // 1x2 -> tall
+    if (config?.cols === 1 && config?.rows === 2) return 'tall';
+    // Default
+    return 'default';
+  });
 
   triggerUpload() {
     this.fileInput()?.nativeElement.click();
@@ -371,6 +379,7 @@ export class SplitPdfComponent {
 
     try {
        const arrayBuffer = await file.arrayBuffer();
+       const { PDFDocument } = await import('pdf-lib');
        const pdfDoc = await PDFDocument.load(arrayBuffer);
        
        this.pdfFile.set(file);
@@ -405,6 +414,7 @@ export class SplitPdfComponent {
        
        if (groups.length === 0) throw new Error(this.t.get('ERR_INVALID_RANGE'));
 
+       const { PDFDocument } = await import('pdf-lib');
        const results: GeneratedFile[] = [];
        const originalName = this.pdfFile()?.name.replace('.pdf', '') || 'document';
 

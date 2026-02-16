@@ -161,7 +161,7 @@ interface UnitDef {
 })
 export class UnitConverterComponent {
   isWidget = input<boolean>(false);
-  widgetConfig = input<Record<string, unknown>>(null);
+  widgetConfig = input<Record<string, unknown> | null>(null);
 
   t = inject(ScopedTranslationService);
   persistence = inject(PersistenceService);

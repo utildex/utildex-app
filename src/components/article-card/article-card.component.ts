@@ -1,24 +1,15 @@
 
-import { Component, input, inject, computed } from '@angular/core';
+import { Component, input, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, DatePipe, NgTemplateOutlet, NgOptimizedImage } from '@angular/common';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ArticleMetadata } from '../../data/article-registry';
 import { I18nService } from '../../services/i18n.service';
-import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-
-const en = { "READ_MORE": "Read Article", "OPEN_LINK": "Visit Link" };
-const fr = { "READ_MORE": "Lire l'article", "OPEN_LINK": "Visiter le lien" };
-const es = { "READ_MORE": "Leer artículo", "OPEN_LINK": "Visitar enlace" };
-const zh = { "READ_MORE": "阅读文章", "OPEN_LINK": "访问链接" };
 
 @Component({
   selector: 'app-article-card',
   standalone: true,
   imports: [CommonModule, RouterLink, DatePipe, NgTemplateOutlet, NgOptimizedImage, LocalLinkPipe],
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
   template: `
     <!-- External Link Variant -->
     @if (isExternal()) {
@@ -65,8 +56,7 @@ const zh = { "READ_MORE": "阅读文章", "OPEN_LINK": "访问链接" };
         [class.h-full]="layout() === 'list'"
         [class.min-h-32]="layout() === 'list'"
       >
-        <!-- Using NgOptimizedImage with fill mode for best container adaptation -->
-        <img 
+      <img 
           [ngSrc]="article().thumbnail" 
           [alt]="i18n.resolve(article().title)" 
           fill
@@ -132,7 +122,6 @@ export class ArticleCardComponent {
   priority = input<boolean>(false);
   
   i18n = inject(I18nService);
-  t = inject(ScopedTranslationService);
 
   isExternal = computed(() => this.article().type === 'external');
 }

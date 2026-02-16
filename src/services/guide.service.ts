@@ -21,9 +21,6 @@ export class GuideService {
 
   private hideTimer: ReturnType<typeof setTimeout> | null = null;
 
-  /**
-   * Show a context bubble anchored to an element
-   */
   show(messageKey: string, element: HTMLElement, position: 'top' | 'bottom' | 'best' = 'best') {
     this.clearTimer();
     const rect = element.getBoundingClientRect();
@@ -35,9 +32,6 @@ export class GuideService {
     });
   }
 
-  /**
-   * Show a global broadcast message (Notification mode)
-   */
   notify(messageKey: string, duration = 5000) {
     this.clearTimer();
     this.state.set({

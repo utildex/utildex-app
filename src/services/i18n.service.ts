@@ -1,6 +1,9 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
+import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import languages from '../data/languages.json';
-import { PersistenceService } from './persistence.service';
+import { DbService } from './db.service';
+import { getPrefKey } from '../core/storage-keys';
 
 export type Language = 'en' | 'fr' | 'es' | 'zh';
 export type I18nText = string | { [key: string]: string };
@@ -15,42 +18,79 @@ export interface LanguageInfo {
   providedIn: 'root'
 })
 export class I18nService {
-  private persistence = inject(PersistenceService);
-
-  currentLang = signal<Language>('en');
+  private db = inject(DbService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
   readonly supportedLanguages = languages as LanguageInfo[];
+  private readonly storageKey = getPrefKey('lang');
+  
+  // Initialize with saved preference to prevent "Flash of Default" overwriting storage
+  currentLang = signal<Language>(this.getStartupLanguage());
 
   constructor() {
-    // Note: We removed the auto-loader here.
-    // The source of truth is now the URL (via LanguageGuard).
-    // But we still persist to LocalStorage via 'hybrid' strategy for root redirects.
-    
-    // Set default to browser lang before persistence loads (to avoid 'en' default if nothing saved)
-    this.currentLang.set(this.getBrowserLang());
+    // URL is the Source of Truth
+    // Listen to navigation events to determine the language from the URL
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      const foundLang = this.findLangInRoute(this.route.snapshot);
+      if (foundLang && this.isSupported(foundLang)) {
+        this.currentLang.set(foundLang as Language);
+      }
+    });
 
-    this.persistence.storage(this.currentLang, 'lang', { strategy: 'hybrid' });
-
-    // Persist changes
     effect(() => {
-      // Manual sync removed (handled by persistence)
-      // Update html lang attribute
-      document.documentElement.lang = this.currentLang();
+      const lang = this.currentLang();
+      
+      document.documentElement.lang = lang;
+
+      try {
+        localStorage.setItem(this.storageKey, lang);
+        this.db.config.write(this.storageKey, lang);
+      } catch (e) {
+        console.warn('Failed to save language preference', e);
+      }
     });
   }
 
-  getSavedOrBrowserLang(): Language {
-     // PersistenceService has already loaded the saved value into currentLang synchronously if available
-     return this.currentLang();
+
+  getStartupLanguage(): Language {
+     // 1. Try LocalStorage (Sync)
+     try {
+       const saved = localStorage.getItem(this.storageKey);
+       if (saved && this.isSupported(saved)) {
+         return saved as Language;
+       }
+     } catch { /* ignore */ }
+
+     return this.getBrowserLang();
+  }
+  
+  private findLangInRoute(snapshot: ActivatedRouteSnapshot): string | null {
+    let current: ActivatedRouteSnapshot | null = snapshot;
+    while (current) {
+      if (current.paramMap.has('lang')) {
+        return current.paramMap.get('lang');
+      }
+      current = current.firstChild;
+    }
+    return null;
   }
 
-
   setLanguage(lang: Language) {
-    this.currentLang.set(lang);
+    const url = this.router.url;
+    const currentLang = this.currentLang();
+    const newUrl = url.replace(`/${currentLang}`, `/${lang}`);
+    
+    const target = newUrl !== url ? newUrl : `/${lang}`;
+    
+    this.router.navigateByUrl(target);
   }
 
   reset() {
-    this.currentLang.set(this.getBrowserLang());
+    const defaultLang = this.getStartupLanguage();
+    this.setLanguage(defaultLang);
   }
 
   private isSupported(lang: string): boolean {
@@ -59,15 +99,10 @@ export class I18nService {
 
   private getBrowserLang(): Language {
      const browserLang = navigator.language.split('-')[0];
-     // Check if the browser language matches one of our supported codes
      const match = this.supportedLanguages.find(l => l.code === browserLang);
      return match ? match.code : 'en';
   }
 
-  /**
-   * Resolves a localized string based on the current language.
-   * This method is reactive when used within a computed/effect context.
-   */
   resolve(text: I18nText | undefined | null): string {
     if (!text) return '';
     if (typeof text === 'string') return text;

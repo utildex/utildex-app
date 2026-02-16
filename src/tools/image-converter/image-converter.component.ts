@@ -43,7 +43,7 @@ interface QueuedImage {
         class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden relative border border-slate-200 dark:border-slate-700"
       >
          <!-- 1x1 -->
-         @if (isSize(1, 1)) {
+         @if (viewMode() === 'compact') {
             <div class="h-6 bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 flex items-center justify-center">
                <span class="text-[9px] font-bold uppercase text-slate-500 truncate px-1">{{ t.map()['TITLE_SHORT'] }}</span>
             </div>
@@ -250,10 +250,13 @@ export class ImageConverterComponent {
 
   isDone = computed(() => this.images().length > 0 && this.images().every(i => i.status === 'done' || i.status === 'error'));
 
-  isSize(w: number, h: number): boolean {
-     const cfg = this.widgetConfig();
-     return cfg && cfg.cols === w && cfg.rows === h;
-  }
+  viewMode = computed(() => {
+    const config = this.widgetConfig();
+    // 1x1 -> compact
+    if (config?.cols === 1 && config?.rows === 1) return 'compact';
+    // Default
+    return 'default';
+  });
 
   triggerUpload() {
     this.fileInput()?.nativeElement.click();
@@ -412,7 +415,9 @@ export class ImageConverterComponent {
 
         files.forEach((img, idx) => {
            const name = img.file.name.substring(0, img.file.name.lastIndexOf('.')) || `image-${idx}`;
-           zip.file(`${name}.${ext}`, img.resultBlob);
+           if (img.resultBlob) {
+             zip.file(`${name}.${ext}`, img.resultBlob);
+           }
         });
 
         const content = await zip.generateAsync({ type: 'blob' });

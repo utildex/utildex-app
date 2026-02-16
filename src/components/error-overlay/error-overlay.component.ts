@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { GlobalErrorService } from '../../services/global-error.service';
+import { DbService } from '../../services/db.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';
 import fr from './i18n/fr';
@@ -52,12 +53,18 @@ import zh from './i18n/zh';
 export class ErrorOverlayComponent {
   errorService = inject(GlobalErrorService);
   t = inject(ScopedTranslationService);
+  private db = inject(DbService);
 
   reload() {
     window.location.reload();
   }
 
-  resetApp() {
+  async resetApp() {
+    try {
+      await this.db.clear();
+    } catch (e) {
+      console.error('Failed to clear DB during reset', e);
+    }
     localStorage.clear();
     window.location.reload();
   }

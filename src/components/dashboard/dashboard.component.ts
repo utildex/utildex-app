@@ -1,8 +1,8 @@
 
-import { Component, inject, computed } from '@angular/core';
-import { ToolService } from '../../services/tool.service';
+import { Component, inject, computed, signal, effect, untracked } from '@angular/core';
+import { ToolService, ToolMetadata } from '../../services/tool.service';
 import { ToolCardComponent } from '../tool-card/tool-card.component';
-import { ArticleCardComponent } from '../article-card/article-card.component'; // Import new card
+import { ArticleCardComponent } from '../article-card/article-card.component';
 import { CarouselComponent } from '../carousel/carousel.component';
 import { RouterLink } from '@angular/router';
 import { AppComponent } from '../../app.component';
@@ -38,16 +38,17 @@ export class DashboardComponent {
   mostUsedTools = this.toolService.mostUsedTools;
   categories = this.toolService.categories;
 
-  // New logic for random tools
-  randomTools = computed(() => {
-    // Only re-compute if the total number of tools changes (unlikely) or on first load
-    const allTools = this.toolService.tools();
-    if (allTools.length === 0) return [];
-    
-    // Create a shuffled copy
-    const shuffled = [...allTools].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 10);
-  });
+  randomTools = signal<ToolMetadata[]>([]);
+
+  constructor() {
+    effect(() => {
+      const allTools = this.toolService.tools();
+      if (untracked(this.randomTools).length === 0 && allTools.length > 0) {
+        const shuffled = [...allTools].sort(() => 0.5 - Math.random());
+        this.randomTools.set(shuffled.slice(0, 10));
+      }
+    }, { allowSignalWrites: true });
+  }
 
   hasUserStats = computed(() => {
     return this.favoriteTools().length > 0 || this.mostUsedTools().length > 0;

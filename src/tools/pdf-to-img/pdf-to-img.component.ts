@@ -213,6 +213,8 @@ export class PdfToImgComponent {
   outputFormat = signal<'png' | 'jpeg' | 'webp'>('png');
   scale = signal<number>(2); // Default to High Quality (2x)
 
+  viewMode = computed(() => 'default');
+
   selectedCount = computed(() => this.pages().filter(p => p.selected).length);
 
   // Keep reference to PDF document
@@ -316,6 +318,8 @@ export class PdfToImgComponent {
         const format = this.outputFormat();
         const renderScale = this.scale();
         const baseName = this.pdfFile()?.name.replace('.pdf', '') || 'document';
+
+        if (!this.pdfDoc) throw new Error('PDF Document not loaded');
 
         for (const p of selected) {
            const page = await this.pdfDoc.getPage(p.pageNumber);

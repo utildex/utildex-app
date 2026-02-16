@@ -1,5 +1,6 @@
 
 import { Injectable } from '@angular/core';
+import { DB_STORES } from '../core/storage-keys';
 
 export interface DbRecord {
   id?: number;
@@ -19,17 +20,13 @@ export class DbService {
   // Failsafe: In-Memory "Degraded Mode"
   private isInMemory = false;
   private memoryStores: Record<string, Map<unknown, unknown>> = {
-    sys_config: new Map(),
-    user_records: new Map(),
-    app_blobs: new Map()
+    [DB_STORES.CONFIG]: new Map(),
+    [DB_STORES.RECORDS]: new Map(),
+    [DB_STORES.BLOBS]: new Map()
   };
 
-  // New Store Constants
-  readonly STORES = {
-    CONFIG: 'sys_config',    // Key-Value (Settings)
-    RECORDS: 'user_records', // Structured (History)
-    BLOBS: 'app_blobs'      // Binary (Files)
-  };
+  // Store Constants
+  readonly STORES = DB_STORES;
 
   /** System Configuration API */
   public readonly config = {
@@ -200,11 +197,11 @@ export class DbService {
     }
   }
 
-  private executeRequest(
+  private executeRequest<T>(
       transaction: IDBTransaction, 
       storeName: string,
       operation: (store: IDBObjectStore) => IDBRequest,
-      resolve: (val: unknown) => void,
+      resolve: (val: T) => void,
       reject: (err: unknown) => void
   ) {
       const store = transaction.objectStore(storeName);
@@ -227,7 +224,7 @@ export class DbService {
         getAllKeys: () => this.mockRequest(Array.from(storeMap.keys())),
         put: (value: unknown, key?: unknown) => {
           let k = key;
-          // Auto-increment logic for RECORDS if using put without key
+          // Auto-increment logic
           if (k === undefined && storeName === this.STORES.RECORDS) {
             k = (typeof value === 'object' && value !== null && 'id' in value) 
                 ? (value as { id: unknown }).id 
@@ -250,6 +247,15 @@ export class DbService {
                    (value as { id: unknown }).id = k;
                }
            }
+           
+           if (storeMap.has(k)) {
+               const req = this.mockRequest(undefined);
+               setTimeout(() => {
+                   if (req.onerror) req.onerror({ target: { error: new DOMException('Key already exists', 'ConstraintError') } } as unknown as Event);
+               }, 0);
+               return req;
+           }
+
            storeMap.set(k, value);
            return this.mockRequest(k);
         },
@@ -263,6 +269,7 @@ export class DbService {
         },
         index: (name: string) => ({
            getAll: (key: unknown) => {
+               // Hardcoded index emulation for 'scope'
                if (name === 'scope') {
                    const results = Array.from(storeMap.values()).filter((v) => (v as { scope?: unknown }).scope === key);
                    return this.mockRequest(results);
@@ -273,9 +280,21 @@ export class DbService {
       };
 
       try {
+        // Cast to IDBObjectStore is loose but necessary for the mock
         const req = operation(mockStore as unknown as IDBObjectStore);
-        req.onsuccess = () => resolve(req.result as T);
-        req.onerror = () => reject(req.error);
+        
+        // Hook into the mock request we created
+        const originalOnSuccess = req.onsuccess;
+        req.onsuccess = (ev) => {
+            if (originalOnSuccess) originalOnSuccess.call(req, ev);
+            resolve(req.result as T);
+        };
+        
+        const originalOnError = req.onerror;
+        req.onerror = (ev) => {
+            if (originalOnError) originalOnError.call(req, ev);
+            reject(req.error);
+        };
       } catch (err) {
         reject(err);
       }

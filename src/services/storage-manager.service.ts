@@ -1,6 +1,7 @@
 
 import { Injectable, inject } from '@angular/core';
 import { DbService, DbRecord } from './db.service';
+import { STORAGE_KEYS, getPrefKey } from '../core/storage-keys';
 
 export interface StorageCategory {
   id: string;
@@ -28,43 +29,40 @@ export class StorageManagerService {
       id: 'dashboard',
       labelKey: 'CAT_DASHBOARD',
       icon: 'dashboard',
-      patterns: [/^utildex-dashboard-v2$/]
+      patterns: [new RegExp(`^${STORAGE_KEYS.DASHBOARD_V2}$`)]
     },
     {
       id: 'favorites',
       labelKey: 'CAT_FAVORITES',
       icon: 'star',
-      patterns: [/^utildex-favorites$/]
+      patterns: [new RegExp(`^${STORAGE_KEYS.FAVORITES}$`)]
     },
     {
       id: 'history',
       labelKey: 'CAT_HISTORY',
       icon: 'history',
-      patterns: [/^utildex-clipboard-history$/, /^utildex-usage$/]
+      patterns: [new RegExp(`^${STORAGE_KEYS.CLIPBOARD_HISTORY}$`), new RegExp(`^${STORAGE_KEYS.USAGE_STATS}$`)]
     },
     {
       id: 'prefs',
       labelKey: 'CAT_PREFS',
       icon: 'tune',
-      patterns: [
-        /^utildex-state-theme$/, 
-        /^utildex-state-lang$/, 
-        /^utildex-state-color$/, 
-        /^utildex-state-font$/, 
-        /^utildex-state-density$/
-      ]
+      patterns: STORAGE_KEYS.PREFERENCES.map(p => new RegExp(`^${getPrefKey(p)}$`))
     },
     {
       id: 'tools',
       labelKey: 'CAT_TOOLS',
       icon: 'construction',
-      patterns: [/^utildex-state-(?!theme|lang|color|font|density)/, /^tools\./] 
+      patterns: [
+        new RegExp(`^${STORAGE_KEYS.PREFIX_STATE}(?!${STORAGE_KEYS.PREFERENCES.join('|')})`), 
+        new RegExp(`^${STORAGE_KEYS.PREFIX_TOOLS.replace('.', '\\.')}`)
+      ] 
     },
     {
       id: 'files',
       labelKey: 'CAT_FILES',
       icon: 'folder',
-      patterns: [/^app_blobs/] // Conceptual pattern
+      patterns: [/^app_blobs/]
     }
   ];
 
@@ -83,17 +81,14 @@ export class StorageManagerService {
 
     try {
       // 1. CONFIG STORE (Settings & Legacy keys)
-      // SysConfig keys are just strings
       const configKeys = await this.db.run<string[]>('readonly', this.db.STORES.CONFIG, s => s.getAllKeys());
       if (configKeys) {
         for (const key of configKeys) {
-            // We can't easily get value size cheaply without reading it. 
-            // For stats, reading config (small) is fine.
             const val = await this.db.config.read(key);
             const valStr = JSON.stringify(val);
             const size = (key.length + (valStr?.length || 0)) * 2;
             
-            this.addToStats(stats, key, size, 'prefs'); // Prefer prefs for config
+            this.addToStats(stats, key, size, 'prefs');
         }
       }
 
@@ -103,9 +98,6 @@ export class StorageManagerService {
       if (records) {
         for (const rec of records) {
              const size = JSON.stringify(rec.data).length * 2;
-             // Use 'scope' as the key equivalent for categorization
-             // e.g. 'diff-checker' -> Tools
-             // Force 'tools' category for all records
              this.addToStats(stats, rec.scope, size, 'tools');
         }
       }
@@ -136,14 +128,6 @@ export class StorageManagerService {
         if (limitToCategory) {
             const cat = stats.categories.find(c => c.id === limitToCategory);
             if (cat) {
-                 // Double check if it matches pattern? 
-                 // Or just trust the store source?
-                 // Trust source, but maybe pattern acts as filter?
-                 // Let's trust source for Records/Blobs, but regex for Config.
-                 
-                 // If category is 'tools' or 'files', we just add it.
-                 // If 'prefs', we still verify regex because Config potentially holds others (like History)
-                 
                  if (limitToCategory === 'tools' || limitToCategory === 'files') {
                       cat.keys.push(key);
                       cat.sizeBytes += size;
@@ -176,23 +160,13 @@ export class StorageManagerService {
   }
 
   async getCategoryDetails(categoryId: string): Promise<{ key: string; value: string }[]> {
-    // This is tricky now because data is in different stores.
-    // We might need to look up where the key came from.
-    // Or we simply search all stores for the keys in that category.
-    
-    // Minimal implementation: Re-scan Config only for now, as that's where most viewable text data is.
-    // Records are objects, Blobs are binary.
     
     const details: { key: string; value: string }[] = [];
     
-    // Basic config scan
     const configKeys = await this.db.run<string[]>('readonly', this.db.STORES.CONFIG, s => s.getAllKeys());
-    // ... filter by category ...
-    // This method is used for the "Inspect" modal.
-    // If likely Config:
+
     if (configKeys) {
         for(const k of configKeys) {
-             // check if k belongs to categoryId (via regex)
              const def = this.DEFINITIONS.find(d => d.id === categoryId);
              if (def && def.patterns.some(p => p.test(k))) {
                  const v = await this.db.config.read(k);
@@ -245,8 +219,6 @@ export class StorageManagerService {
 
     // 2. Clear Records if category is 'tools'
     if (categoryId === 'tools') {
-         // Clear all records? Or just tool-related? 
-         // Records store is 99% tools.
          await this.db.run('readwrite', this.db.STORES.RECORDS, s => s.clear());
     }
 
@@ -268,7 +240,7 @@ export class StorageManagerService {
         // 2. Clear LocalStorage (Specific Keys or All)
         // We'll be aggressive but safe: Clear utildex keys
         Object.keys(localStorage).forEach(key => {
-            if (key.startsWith('utildex-')) {
+            if (key.startsWith(STORAGE_KEYS.PREFIX_APP)) {
                 localStorage.removeItem(key);
             }
         });
@@ -292,9 +264,13 @@ export class StorageManagerService {
   // --- Export / Import ---
 
   async exportData(): Promise<Blob> {
+    const MAX_EXPORT_SIZE_MB = 100;
+    const MAX_BYTES = MAX_EXPORT_SIZE_MB * 1024 * 1024;
+    let estimatedSize = 0;
+
     const exportObj: Record<string, unknown> = {};
     exportObj['meta'] = {
-      version: 2, // Bumped for V2 structure
+      version: 2,
       date: new Date().toISOString(),
       appName: 'Utildex'
     };
@@ -304,7 +280,9 @@ export class StorageManagerService {
     if (configKeys) {
         const configData: Record<string, unknown> = {};
         for(const k of configKeys) {
-             configData[k] = await this.db.config.read(k);
+             const val = await this.db.config.read(k);
+             configData[k] = val;
+             estimatedSize += JSON.stringify(val).length;
         }
         exportObj['config'] = configData;
     }
@@ -313,6 +291,7 @@ export class StorageManagerService {
     const records = await this.db.run<DbRecord[]>('readonly', this.db.STORES.RECORDS, s => s.getAll());
     if (records) {
         exportObj['records'] = records;
+        estimatedSize += JSON.stringify(records).length;
     }
 
     // 3. Export Blobs (Files)
@@ -320,8 +299,21 @@ export class StorageManagerService {
     if (blobKeys) {
         const filesData: Record<string, string> = {};
         for(const k of blobKeys) {
+             // Check limit before reading next blob
+             if (estimatedSize > MAX_BYTES) {
+                 throw new Error(`Export exceeds safe size limit of ${MAX_EXPORT_SIZE_MB}MB. Please delete some files and try again.`);
+             }
+
              const blob = await this.db.blobs.get(k);
              if (blob) {
+                 // Base64 overhead is ~33%
+                 const base64Size = blob.size * 1.37; 
+                 estimatedSize += base64Size;
+                 
+                 if (estimatedSize > MAX_BYTES) {
+                    throw new Error(`Export exceeds safe size limit of ${MAX_EXPORT_SIZE_MB}MB. Please delete some files and try again.`);
+                 }
+
                  filesData[k] = await this.blobToBase64(blob);
              }
         }
@@ -364,9 +356,8 @@ export class StorageManagerService {
             }
         }
       } else {
-          // V1 Legacy Import (Flat keys)
           for (const key in data) {
-            if (key !== 'meta' && key.startsWith('utildex-')) {
+            if (key !== 'meta' && key.startsWith(STORAGE_KEYS.PREFIX_STATE.replace('-', ''))) {
               await this.db.config.write(key, data[key]);
             }
           }

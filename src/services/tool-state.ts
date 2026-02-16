@@ -58,20 +58,16 @@ export class ToolState<T extends object> {
 
   private async init() {
     try {
-      // Find existing record for this tool scope
       const records = await this.db.records.list(this.scope);
       if (records && records.length > 0) {
-        // Sort by id descending (latest first) to recover most recent state
         records.sort((a, b) => (b.id || 0) - (a.id || 0));
         
         const latest = records[0];
         this.dbId = latest.id;
         
-        // Merge saved state with defaults (for schema evolution)
         const savedState = latest.data as T;
         this.internalState.set({ ...this.defaultState, ...savedState });
 
-        // Cleanup duplicates (older states) to maintain 1:1 mapping
         if (records.length > 1) {
              const duplicates = records.slice(1);
              Promise.all(duplicates.map(d => d.id ? this.db.records.delete(d.id) : Promise.resolve()))
@@ -88,23 +84,9 @@ export class ToolState<T extends object> {
 
   private persist() {
     if (!this.isLoaded) return;
-    
-    // Debounce handled by effect/timeout logic? 
-    // For now, naive async save. In high-freq typing, we might want a debouncer here.
+
     const data = this.internalState();
-    
-    // If we have an ID, we delete/re-insert or update. 
-    // Since our DbService.records.add doesn't support "update by ID" easily comfortably without 'put',
-    // and we want to keep the 'append-only' log feel or 'latest state'?
-    // Actually, for State, we want 'put'.
-    
-    // Refinement: DbService.records.add is for appending (History).
-    // But ToolState implies "The Current Configuration".
-    
-    // Strategy: 
-    // If we have an ID, delete it then Add new. (Simple, though ID changes).
-    // Or we rely on 'scope' being the unique key concept for State.
-    
+
     this.saveDebounced(data);
   }
 
@@ -113,10 +95,6 @@ export class ToolState<T extends object> {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(async () => {
        try {
-           // If we have an ID, we delete/re-insert or update. 
-           // Since our DbService.records.add doesn't support "update by ID" easily comfortably without 'put',
-           // and we want to keep the 'append-only' log feel or 'latest state'?
-           // Actually, for State, we want 'put'.
            
            if (this.dbId) {
              await this.db.records.delete(this.dbId);

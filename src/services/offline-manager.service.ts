@@ -142,7 +142,6 @@ export class OfflineManagerService {
   }
 
   private async backgroundLoadStep() {
-      // Smart load: Check one missing tool and download it
       if (!this.smartDownloadEnabled()) return;
       
       const allTools = Object.keys(TOOL_COMPONENT_MAP);
@@ -158,7 +157,6 @@ export class OfflineManagerService {
               }
           } catch(e) { console.error(e); }
           
-          // Next step
            const idx = window.requestIdleCallback;
            if (idx) idx(() => this.backgroundLoadStep());
            else setTimeout(() => this.backgroundLoadStep(), 2000);

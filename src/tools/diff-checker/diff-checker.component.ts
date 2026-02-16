@@ -419,7 +419,7 @@ export class DiffCheckerComponent {
   isWideWidget = computed(() => {
      if (!this.isWidget()) return false;
      const cfg = this.widgetConfig();
-     return cfg && cfg.cols >= 3; // 3x1 is "wide" enough for side-by-side
+     return !!(cfg && cfg.cols && cfg.cols >= 3); // 3x1 is "wide" enough for side-by-side
   });
 
   constructor() {
@@ -451,7 +451,8 @@ export class DiffCheckerComponent {
      if (typeof window !== 'undefined' && !win.Diff) {
         try {
            const module = await import('diff');
-           win.Diff = module.default || module;
+           // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           win.Diff = (module as any).default || module;
         } catch (e) {
            console.error('Failed to load Diff lib', e);
         }

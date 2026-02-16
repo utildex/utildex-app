@@ -48,7 +48,7 @@ type ResizeMode = 'percent' | 'dimensions';
         class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden relative border border-slate-200 dark:border-slate-700 shadow-sm"
       >
          <!-- 1x1 Compact Redesigned -->
-         @if (isSize(1, 1)) {
+         @if (viewMode() === 'compact') {
             <div class="flex flex-col h-full relative">
                
                <!-- 1. EMPTY STATE -->
@@ -524,10 +524,13 @@ export class ImageResizerComponent {
     isProcessing = signal(false);
     isDone = computed(() => this.images().length > 0 && this.images().every(i => i.status === 'done'));
 
-    isSize(w: number, h: number): boolean {
-        const cfg = this.widgetConfig();
-        return cfg && cfg.cols === w && cfg.rows === h;
-    }
+    viewMode = computed(() => {
+        const config = this.widgetConfig();
+        // 1x1 -> compact
+        if (config?.cols === 1 && config?.rows === 1) return 'compact';
+        // Default
+        return 'default';
+    });
 
     getModeClass(m: string) {
         return this.mode() === m
@@ -788,7 +791,9 @@ export class ImageResizerComponent {
 
             files.forEach((img, idx) => {
                 const name = img.file.name.substring(0, img.file.name.lastIndexOf('.')) || `image-${idx}`;
-                zip.file(`${name}-resized.${ext}`, img.resizedBlob);
+                if (img.resizedBlob) {
+                  zip.file(`${name}-resized.${ext}`, img.resizedBlob);
+                }
             });
 
             const content = await zip.generateAsync({ type: 'blob' });

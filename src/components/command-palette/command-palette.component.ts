@@ -193,7 +193,6 @@ export class CommandPaletteComponent {
   query = signal('');
   selectedIndex = signal(0);
   
-  // Filters & Sorting
   isFilterOpen = signal(false);
   selectedCategory = signal<string | null>(null);
   sortBy = signal<'relevance' | 'name'>('relevance');
@@ -222,7 +221,6 @@ export class CommandPaletteComponent {
     const cat = this.selectedCategory();
     const sort = this.sortBy();
 
-    // --- Static Actions ---
     const actions: CommandResult[] = [
       {
         id: 'act-home',
@@ -250,27 +248,21 @@ export class CommandPaletteComponent {
       }
     ];
 
-    // If no query and no category selected, ONLY show actions. 
-    // This fixes the "Long List" issue by default.
     if (!q && !cat) {
       list.push(...actions);
       return list;
     }
 
-    // Add matched actions if applicable (only if no category filter is limiting results to tools)
     if (!cat) {
         list.push(...actions.filter(a => a.title.toLowerCase().includes(q)));
     }
 
-    // --- Tools ---
     let tools = this.toolService.tools();
 
-    // 1. Filter by Category
     if (cat) {
         tools = tools.filter(t => t.categories.includes(cat));
     }
 
-    // 2. Filter by Query & Score
     const scoredTools = tools.map(tool => {
       const name = this.i18n.resolve(tool.name).toLowerCase();
       const tags = tool.tags.join(' ');
@@ -283,20 +275,18 @@ export class CommandPaletteComponent {
           if (tags.includes(q)) score += 5;
           if (desc.includes(q)) score += 1;
       } else {
-          score = 1; // Base score to include everything if no query
+          score = 1;
       }
 
-      return { tool, score, name }; // Return name for sorting usage
+      return { tool, score, name };
     }).filter(item => item.score > 0);
 
-    // 3. Sort
     if (sort === 'relevance') {
         scoredTools.sort((a, b) => b.score - a.score);
     } else {
         scoredTools.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    // 4. Transform to CommandResult
     const toolResults = scoredTools.map(item => ({
       id: `tool-${item.tool.id}`,
       type: 'tool' as const,
@@ -305,14 +295,14 @@ export class CommandPaletteComponent {
       subtitle: this.i18n.resolve(item.tool.description),
       action: () => {
          const lang = this.i18n.currentLang();
-         const path = item.tool.routePath.split('/');
+         const path = (item.tool.routePath || '').split('/');
          this.router.navigate(['/', lang, ...path]);
       }
     }));
 
     list.push(...toolResults);
 
-    return list.slice(0, 50); // Increased limit as we have better filtering
+    return list.slice(0, 50);
   });
 
   constructor() {
@@ -369,9 +359,6 @@ export class CommandPaletteComponent {
     this.query.set('');
     this.selectedIndex.set(0);
     this.isOpen.set(true);
-    // Reset filters on open if desired, or keep them persistent.
-    // Keeping them persistent allows a user to set "Utility" and keep it.
-    // For now, let's reset to keep it simple and clean on each open.
     this.resetFilters();
     this.isFilterOpen.set(false);
   }

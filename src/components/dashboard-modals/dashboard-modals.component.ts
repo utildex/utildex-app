@@ -1,20 +1,19 @@
 
-import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, computed, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToolService, ToolMetadata, WidgetPreset, PendingPlacement } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-// Reusing dashboard translations as they contain the necessary keys
-import en from '../../pages/user-dashboard/i18n/en';
-import fr from '../../pages/user-dashboard/i18n/fr';
-import es from '../../pages/user-dashboard/i18n/es';
-import zh from '../../pages/user-dashboard/i18n/zh';
+// Local translations for self-contained component
+import en from './i18n/en';
+import fr from './i18n/fr';
+import es from './i18n/es';
+import zh from './i18n/zh';
 
 @Component({
   selector: 'app-dashboard-modals',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
@@ -46,7 +45,7 @@ import zh from '../../pages/user-dashboard/i18n/zh';
                 </div>
               }
 
-              <button (click)="close()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
+              <button (click)="close()" aria-label="Close" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -63,7 +62,7 @@ import zh from '../../pages/user-dashboard/i18n/zh';
                      <h4 class="font-bold text-slate-900 dark:text-white">{{ i18n.resolve(tool.name) }}</h4>
                      
                      <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                        @for (preset of tool.widget!.presets; track $index) {
+                        @for (preset of tool.widget?.presets ?? []; track $index) {
                            <button 
                              (click)="selectPreset(tool, preset)"
                              class="flex flex-col items-center gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary hover:shadow-md transition-all group bg-slate-50 dark:bg-slate-800/50"
@@ -135,7 +134,7 @@ import zh from '../../pages/user-dashboard/i18n/zh';
          <div class="relative bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-scale-in border border-slate-200 dark:border-slate-800">
             <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
               <h3 class="text-xl font-bold text-slate-900 dark:text-white">{{ t.map()['MODAL_FILLER_TITLE'] }}</h3>
-              <button (click)="close()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
+              <button (click)="close()" aria-label="Close" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-500">
                 <span class="material-symbols-outlined">close</span>
               </button>
             </div>
@@ -190,6 +189,11 @@ export class DashboardModalsComponent {
       return name.includes(query) || desc.includes(query);
     });
   });
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.close();
+  }
 
   close() {
     this.toolService.closeModals();

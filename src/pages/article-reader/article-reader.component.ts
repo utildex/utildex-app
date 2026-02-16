@@ -267,32 +267,27 @@ export class ArticleReaderComponent implements OnInit {
   });
 
   isContentAvailable = computed(() => {
-     // Is the current app language supported by this article?
      return this.availableLangs().includes(this.currentAppLang());
   });
 
   targetLang = computed(() => this.overrideLang() || this.currentAppLang());
 
-  // Filter out the current language from the available list for the fallback view
   alternativeLangs = computed(() => {
      return this.availableLangs().filter(l => l !== this.targetLang());
   });
 
   constructor() {
-     // Load Prefs from LocalStorage
      const size = localStorage.getItem('utildex-reader-size');
      if (size) this.fontSize.set(parseInt(size));
      
      const font = localStorage.getItem('utildex-reader-font');
      if (font) this.fontFamily.set(font as 'sans' | 'serif' | 'mono');
 
-     // Save Prefs Effect
      effect(() => {
         localStorage.setItem('utildex-reader-size', this.fontSize().toString());
         localStorage.setItem('utildex-reader-font', this.fontFamily());
      });
 
-     // Load Article Logic
      effect(() => {
         const id = this.id();
         const lang = this.targetLang();
@@ -301,8 +296,6 @@ export class ArticleReaderComponent implements OnInit {
            const meta = this.articleService.getById(id);
            this.article.set(meta);
            
-           // Fetch only if it makes sense (it is available), to avoid 404s in console
-           // We rely on registry metadata for availability
            const isAvailable = this.availableLangs().includes(lang);
 
            if (isAvailable) {
@@ -328,13 +321,10 @@ export class ArticleReaderComponent implements OnInit {
               return;
            }
 
-           // Parse Markdown to HTML
            const rawHtml = marked.parse(markdown) as string;
            
-           // Sanitize and set content
            this.content.set(this.sanitizer.bypassSecurityTrustHtml(rawHtml));
 
-           // Trigger Syntax Highlighting & Copy Buttons
            setTimeout(() => {
               Prism.highlightAll();
               this.addCopyButtons();
@@ -350,7 +340,6 @@ export class ArticleReaderComponent implements OnInit {
     const preElements = this.el.nativeElement.querySelectorAll('pre');
     
     preElements.forEach((pre: HTMLPreElement) => {
-       // Avoid adding multiple buttons if called multiple times
        if (pre.querySelector('.copy-code-btn')) return;
 
        const button = document.createElement('button');
@@ -372,7 +361,6 @@ export class ArticleReaderComponent implements OnInit {
     });
   }
 
-  // Helper methods to fix template arrow functions
   togglePrefs() {
     this.showPrefs.update(v => !v);
   }

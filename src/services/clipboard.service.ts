@@ -45,9 +45,8 @@ export class ClipboardService {
     };
 
     this.history.update(prev => {
-      // Remove duplicates of exact same text to keep history clean
       const filtered = prev.filter(item => item.text !== text);
-      const updated = [newItem, ...filtered].slice(0, 20); // Keep last 20
+      const updated = [newItem, ...filtered].slice(0, 20);
       this.persistHistory(updated);
       return updated;
     });

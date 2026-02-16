@@ -31,6 +31,8 @@ export class ShortcutService {
   }
 
   private handleKeydown(event: KeyboardEvent) {
+    if (typeof document === 'undefined') return;
+    
     const target = event.target as HTMLElement;
     // Check if target exists and is an element that accepts input
     const isInput = target && (

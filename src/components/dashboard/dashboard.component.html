@@ -1,6 +1,5 @@
 <div class="space-y-12 pb-12">
 
-    <!-- Hero Section -->
     <section class="text-center py-12 md:py-20">
         <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 animate-fade-in">
             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -28,12 +27,10 @@
         </div>
     </section>
 
-    <!-- Random Tools (If no user stats) -->
     @if (!hasUserStats()) {
         <ng-container *ngTemplateOutlet="randomSection"></ng-container>
     }
 
-    <!-- Favorites Carousel (Conditional) -->
     @if (favoriteTools().length > 0) {
         @defer (on idle) {
             <section>
@@ -49,7 +46,6 @@
         }
     }
 
-    <!-- Most Used Carousel (Conditional) -->
     @if (mostUsedTools().length > 0) {
         @defer (on viewport) {
             <section>
@@ -65,12 +61,10 @@
         }
     }
 
-    <!-- Random Tools (If has user stats) -->
     @if (hasUserStats()) {
         <ng-container *ngTemplateOutlet="randomSection"></ng-container>
     }
 
-    <!-- Categories Carousel -->
     @defer (on viewport) {
         <section>
             <div class="flex items-center justify-between px-4 sm:px-0 mb-6">
@@ -92,7 +86,6 @@
         <div class="h-48 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl"></div>
     }
 
-    <!-- Shared Template for Tool Cards -->
     <ng-template #toolTemplate let-tool>
         <div class="h-full">
             <app-tool-card
@@ -103,7 +96,6 @@
         </div>
     </ng-template>
 
-    <!-- Shared Template for Article Cards -->
     <ng-template #articleTemplate let-article let-i="index">
         <div class="h-full">
             <app-article-card
@@ -113,7 +105,6 @@
         </div>
     </ng-template>
 
-    <!-- Random Tools Template -->
     <ng-template #randomSection>
         @defer (on viewport) {
             <section>

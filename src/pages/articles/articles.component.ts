@@ -6,35 +6,10 @@ import { ArticleService } from '../../services/article.service';
 import { ArticleCardComponent } from '../../components/article-card/article-card.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { I18nService } from '../../services/i18n.service';
-
-const en = { 
-  "TITLE": "Articles & Tutorials", 
-  "DESC": "Guides, tips, and news from the Utildex team.",
-  "SEARCH_PLACEHOLDER": "Search articles...",
-  "NO_RESULTS": "No articles found matching your criteria.",
-  "ALL_TAGS": "All"
-};
-const fr = { 
-  "TITLE": "Articles & Tutoriels", 
-  "DESC": "Guides, astuces et nouvelles de l'équipe Utildex.",
-  "SEARCH_PLACEHOLDER": "Rechercher des articles...",
-  "NO_RESULTS": "Aucun article trouvé correspondant à vos critères.",
-  "ALL_TAGS": "Tous"
-};
-const es = { 
-  "TITLE": "Artículos y Tutoriales", 
-  "DESC": "Guías, consejos y noticias del equipo Utildex.",
-  "SEARCH_PLACEHOLDER": "Buscar artículos...",
-  "NO_RESULTS": "No se encontraron artículos que coincidan con sus criterios.",
-  "ALL_TAGS": "Todos"
-};
-const zh = { 
-  "TITLE": "文章与教程", 
-  "DESC": "来自 Utildex 团队的指南、技巧和新闻。",
-  "SEARCH_PLACEHOLDER": "搜索文章...",
-  "NO_RESULTS": "未找到符合条件的文章。",
-  "ALL_TAGS": "全部"
-};
+import en from './i18n/en';
+import fr from './i18n/fr';
+import es from './i18n/es';
+import zh from './i18n/zh';
 
 @Component({
   selector: 'app-articles',

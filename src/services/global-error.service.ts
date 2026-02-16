@@ -15,7 +15,6 @@ export class GlobalErrorService {
   handleError(error: unknown) {
     console.error('Global Error Caught:', error);
     
-    // Extract meaningful message
     let message = 'An unexpected error occurred.';
     let stack = '';
 

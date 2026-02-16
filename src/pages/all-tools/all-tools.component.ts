@@ -178,11 +178,8 @@ export class AllToolsComponent {
   });
 
   constructor() {
-    // Reset to page 1 when filters change
     effect(() => {
-      // Dependency tracking
       this.filteredTools();
-      // Action
       this.currentPage.set(1);
     }, { allowSignalWrites: true });
   }

@@ -226,7 +226,7 @@ class HistoryManager {
                         <div class="text-xs font-bold uppercase tracking-wide text-slate-700 dark:text-white truncate">
                             {{ t.map()['TITLE'] }}
                         </div>
-                        @if (widgetCols() >= 3 && widgetRows() >= 3) {
+                        @if (viewMode() === 'expanded') {
                             <div class="text-[11px] text-slate-500 dark:text-slate-300 truncate">
                                 {{ t.map()['WIDGET_SUBTITLE'] }}
                             </div>
@@ -1326,8 +1326,13 @@ export class AdvancedImageEditorComponent {
     activeName = computed(() => this.activeImage()?.name ?? '');
 
 
-    widgetCols = computed(() => Number(this.widgetConfig()?.cols ?? 1));
-    widgetRows = computed(() => Number(this.widgetConfig()?.rows ?? 1));
+    viewMode = computed(() => {
+        const config = this.widgetConfig();
+        const c = config?.cols ?? 1;
+        const r = config?.rows ?? 1;
+        if (c >= 3 && r >= 3) return 'expanded';
+        return 'default';
+    });
 
     exportProgressPercent = computed(() => {
         const j = this.exportJob();

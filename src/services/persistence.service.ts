@@ -2,6 +2,7 @@
 import { Injectable, inject, WritableSignal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DbService } from './db.service';
+import { STORAGE_KEYS } from '../core/storage-keys';
 
 export interface StorageOptions {
   type?: 'string' | 'number' | 'boolean';
@@ -20,14 +21,13 @@ export class PersistenceService {
    * Supports 'hybrid' strategy for instant load (reads LocalStorage) + durable save (writes IDB).
    */
   storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' = 'string') {
-    // Normalize Options
     const options: StorageOptions = typeof optionsOrType === 'object' 
       ? optionsOrType 
       : { type: optionsOrType as 'string' | 'number' | 'boolean', strategy: 'idb' };
     
     const { type = 'string', strategy = 'idb' } = options;
-    const fullKey = `utildex-state-${key}`;
-    let isLoaded = false;
+    const fullKey = `${STORAGE_KEYS.PREFIX_STATE}${key}`;
+    let isIdbHydrated = false;
 
     // --- READ PHASE ---
     
@@ -37,7 +37,7 @@ export class PersistenceService {
         const stored = localStorage.getItem(fullKey);
         if (stored !== null) {
           this.updateSignal(targetSignal, stored, type);
-          isLoaded = true;
+          if (strategy === 'local') isIdbHydrated = true;
         }
       } catch (e) {
         console.warn('[Persistence] LocalStorage read failed', e);
@@ -45,23 +45,25 @@ export class PersistenceService {
     }
 
     // 2. IDB/Hybrid: Read ASYNC from DB 
-    // If hybrid, always reconcile with DB (source of truth) even if LocalStorage loaded.
-    if ((strategy === 'idb' && !isLoaded) || strategy === 'hybrid') {
+    if ((strategy === 'idb') || strategy === 'hybrid') {
       this.db.config.read(fullKey).then(stored => {
         if (stored !== undefined && stored !== null) {
           this.updateSignal(targetSignal, String(stored), type);
         }
-        isLoaded = true;
+        isIdbHydrated = true;
       });
     } else {
-        isLoaded = true;
+        // Strategy local, already set true above
     }
 
     // --- WRITE PHASE ---
     
     effect((onCleanup) => {
       const val = targetSignal();
-      if (!isLoaded) return;
+      
+      if (!isIdbHydrated && (strategy === 'idb' || strategy === 'hybrid')) {
+           return;
+      }
 
       const timer = setTimeout(async () => {
         const strVal = String(val);
@@ -98,10 +100,8 @@ export class PersistenceService {
    * Must be called within an Injection Context (e.g. Component Constructor).
    */
   url<T>(targetSignal: WritableSignal<T>, paramName: string, type: 'string' | 'number' | 'boolean' = 'string') {
-    // Inject ActivatedRoute here, so it uses the Component's context
-    const route = inject(ActivatedRoute) as ActivatedRoute;
+    const route = inject(ActivatedRoute);
 
-    // 1. Restore from URL
     const params = route.snapshot.queryParams;
     const val = params[paramName];
     
@@ -111,13 +111,11 @@ export class PersistenceService {
       else if (type === 'string') targetSignal.set(val as T);
     }
 
-    // 2. Watch for changes and update URL
     let timeout: ReturnType<typeof setTimeout> | undefined;
 
     effect(() => {
       const newVal = targetSignal();
       
-      // Avoid circular update if signal matches current URL param
       const currentParams = this.router.parseUrl(this.router.url).queryParams;
       if (String(currentParams[paramName]) === String(newVal)) return;
 
@@ -126,7 +124,7 @@ export class PersistenceService {
         this.router.navigate([], {
           relativeTo: route,
           queryParams: { [paramName]: newVal },
-          queryParamsHandling: 'merge', // Keep other params
+          queryParamsHandling: 'merge',
           replaceUrl: true
         });
       }, 300);

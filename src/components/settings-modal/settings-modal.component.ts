@@ -10,7 +10,7 @@ import { ClipboardService } from '../../services/clipboard.service';
 import { StorageManagerService, StorageStats } from '../../services/storage-manager.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import { ToastService } from '../../services/toast.service';
-import { OfflineManagerService } from '../../services/offline-manager.service'; // Added
+import { OfflineManagerService } from '../../services/offline-manager.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -18,7 +18,6 @@ import zh from './i18n/zh';
 
 type Tab = 'general' | 'data';
 
-// Interfaces for structured data viewing
 interface ClipboardItem {
   text: string;
   timestamp: number | string;
@@ -644,7 +643,6 @@ export class SettingsModalComponent {
     }
 
     if (key.startsWith('utildex-state-')) {
-       // Try to extract tool ID and get name
        const toolId = key.replace('utildex-state-', '');
        return this.t.get('KEY_STATE_PREFIX') + this.resolveToolName(toolId);
     }
@@ -657,11 +655,9 @@ export class SettingsModalComponent {
     const k = 1024;
     const sizes = ['UNIT_BYTE', 'UNIT_KILOBYTE', 'UNIT_MEGABYTE', 'UNIT_GIGABYTE'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    // Fallback if i is out of bounds
     const sizeKey = sizes[i] || 'UNIT_BYTE';
     
     const val = bytes / Math.pow(k, i);
-    // Use current language for number formatting (e.g. 1.5 vs 1,5)
     return val.toLocaleString(this.i18n.currentLang(), { maximumFractionDigits: 2 }) + ' ' + this.t.get(sizeKey);
   }
 
@@ -679,7 +675,7 @@ export class SettingsModalComponent {
        
        if (key === 'utildex-usage') {
           const obj = JSON.parse(value);
-          const stats = Object.entries(obj).map(([id, stat]: [string, { count: number; lastUsed: number }]) => ({
+          const stats = (Object.entries(obj) as [string, { count: number; lastUsed: number }][]).map(([id, stat]) => ({
              name: this.resolveToolName(id),
              count: stat.count,
              lastUsed: stat.lastUsed
@@ -702,7 +698,6 @@ export class SettingsModalComponent {
           return { type: 'json', data: JSON.stringify(JSON.parse(value), null, 2) };
        }
     } catch {
-       // Fallback
     }
 
     return { type: 'simple', data: value };
