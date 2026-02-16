@@ -104,7 +104,7 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
   `]
 })
 export class CarouselComponent<T> implements OnDestroy {
-  private snapTimeout: any = null;
+  private snapTimeout: ReturnType<typeof setTimeout> | null = null;
 
   onWheel(event: WheelEvent) {
     const el = this.container()?.nativeElement;
