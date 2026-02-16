@@ -40,6 +40,7 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
         [class.snap-mandatory]="!marquee()"
         style="scrollbar-width: none; -ms-overflow-style: none;"
         (scroll)="onScroll()"
+        (wheel)="onWheel($event)"
       >
         <!-- Pre-clones for infinite backward scroll -->
         @for (item of items(); track trackByFn($index, item) + '_pre'; let i = $index) {
@@ -103,6 +104,40 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
   `]
 })
 export class CarouselComponent<T> implements OnDestroy {
+  private snapTimeout: any = null;
+
+  onWheel(event: WheelEvent) {
+    const el = this.container()?.nativeElement;
+    if (!el) return;
+
+    event.preventDefault();
+
+
+    let delta = event.deltaY;
+    if (delta === 0) delta = event.deltaX;
+
+    if (event.deltaMode === 1) {
+      delta *= 40;
+    }
+
+    if (delta !== 0) {
+      if (!this.marquee()) {
+        el.style.scrollSnapType = 'none';
+        
+        if (this.snapTimeout) {
+          clearTimeout(this.snapTimeout);
+          this.snapTimeout = null;
+        }
+
+        this.snapTimeout = setTimeout(() => {
+          el.style.scrollSnapType = '';
+          this.snapTimeout = null;
+        }, 150);
+      }
+      
+      el.scrollLeft += delta;
+    }
+  }
   items = input.required<T[]>();
   itemTemplate = input<TemplateRef<{ $implicit: T; index: number }>>();
   autoplay = input(false);
@@ -151,10 +186,11 @@ export class CarouselComponent<T> implements OnDestroy {
     const totalWidth = el.scrollWidth;
     const setWidth = totalWidth / 3;
     const scrollLeft = el.scrollLeft;
-
-    if (scrollLeft < setWidth * 0.5) {
+    
+    if (scrollLeft < setWidth - 50) {
       el.scrollLeft = scrollLeft + setWidth;
-    } else if (scrollLeft > setWidth * 2.5) {
+    } 
+    else if (scrollLeft > 2 * setWidth + 50) {
       el.scrollLeft = scrollLeft - setWidth;
     }
   }
@@ -197,7 +233,6 @@ export class CarouselComponent<T> implements OnDestroy {
         const totalWidth = el.scrollWidth;
         const setWidth = totalWidth / 3;
         
-        // Use the same buffer logic as manual scroll: if we go past the end of the middle set, wrap
         if (el.scrollLeft >= setWidth * 2.5) {
            el.scrollLeft -= setWidth;
         }
