@@ -162,8 +162,11 @@
         <footer class="mt-auto pt-12 pb-6 border-t border-slate-200 dark:border-slate-800">
           <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
             <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
-            <div class="flex gap-4">
-               <a href="#">{{ t.map()['FOOTER_CONTRIBUTE'] }}</a>
+            <div class="flex flex-wrap justify-center md:justify-end gap-4">
+               <a [routerLink]="'/legal' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_LEGAL'] }}</a>
+               <a [routerLink]="'/privacy' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_PRIVACY'] }}</a>
+               <a [routerLink]="'/terms' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_TERMS'] }}</a>
+               <a href="https://github.com/utildex/utildex" target="_blank" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_CONTRIBUTE'] }}</a>
             </div>
           </div>
         </footer>

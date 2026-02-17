@@ -19,5 +19,7 @@ export default {
   "FOOTER_COPYRIGHT": "© 2026 Utildex. 本地优先. 开源.",
   "FOOTER_CONTRIBUTE": "贡献",
   "FOOTER_PRIVACY": "隐私",
+  "FOOTER_LEGAL": "法律声明",
+  "FOOTER_TERMS": "使用条款",
   "FOOTER_ABOUT": "关于"
 };

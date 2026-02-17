@@ -41,6 +41,10 @@ async function generateSitemap() {
       urls.push(getUrlEntry(`${BASE_URL}/${code}/articles`, today, 'weekly', 0.8));
       // Categories Index
       urls.push(getUrlEntry(`${BASE_URL}/${code}/categories`, today, 'weekly', 0.8));
+      // Legal Pages
+      urls.push(getUrlEntry(`${BASE_URL}/${code}/legal`, today, 'monthly', 0.5));
+      urls.push(getUrlEntry(`${BASE_URL}/${code}/privacy`, today, 'monthly', 0.5));
+      urls.push(getUrlEntry(`${BASE_URL}/${code}/terms`, today, 'monthly', 0.5));
   });
 
   // B. Tools
