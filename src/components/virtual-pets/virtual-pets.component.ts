@@ -1,4 +1,5 @@
 import { Component, inject, signal, OnDestroy, HostListener, PLATFORM_ID, effect } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../services/theme.service';
@@ -153,7 +154,7 @@ import zh from './i18n/zh';
                      <div>
                         <label class="block text-sm font-medium text-slate-500 mb-2">{{ t.map()['LABEL_SPECIES'] }}</label>
                         <div class="grid grid-cols-2 gap-2">
-                           @for (pet of AVAILABLE_PETS; track pet.id) {
+                           @for (pet of petsService.AVAILABLE_PETS; track pet.id) {
                               <button 
                                  (click)="selectedPetType.set(pet.id)"
                                  class="relative p-2 rounded-xl border-2 transition-all flex flex-col items-center gap-2"
@@ -241,18 +242,6 @@ export class VirtualPetsComponent implements OnDestroy {
   private lastSaveTime = 0;
   private readonly SAVE_INTERVAL = 1000; // Save every 2 seconds max
 
-  // List of available pets for the interface
-  readonly AVAILABLE_PETS = [
-    { id: 'diplodocus', icon: '/assets/images/virtual-pets/diplodocus/icon.png' },
-    { id: 'dog-akita', icon: '/assets/images/virtual-pets/dog-akita/icon_akita.png' },
-    { id: 'dog-black', icon: '/assets/images/virtual-pets/dog-black/icon_black.png' },
-    { id: 'dog-brown', icon: '/assets/images/virtual-pets/dog-brown/icon.png' },
-    { id: 'dog-red', icon: '/assets/images/virtual-pets/dog-red/icon_red.png' },
-    { id: 'dog-white', icon: '/assets/images/virtual-pets/dog-white/icon_white.png' },
-    { id: 'fox-red', icon: '/assets/images/virtual-pets/fox-red/icon.png' },
-    { id: 'fox-white', icon: '/assets/images/virtual-pets/fox-white/icon_white.png' },
-    { id: 'rubber-duck', icon: '/assets/images/virtual-pets/rubber-duck/icon.png' }
-  ];
 
   isDark = this.themeService.isDark;
 
@@ -297,7 +286,9 @@ export class VirtualPetsComponent implements OnDestroy {
          }
       });
 
-      this.petsService.clearPets$.subscribe(() => {
+      this.petsService.clearPets$
+        .pipe(takeUntilDestroyed())
+        .subscribe(() => {
         this.pets.set([]);
       });
     }

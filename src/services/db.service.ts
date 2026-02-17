@@ -1,5 +1,6 @@
 
 import { Injectable } from '@angular/core';
+import { DB_STORES } from '../core/storage-keys';
 
 export interface DbRecord {
   id?: number;

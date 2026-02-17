@@ -19,12 +19,11 @@ export class PersistenceService {
    * Syncs a signal with Storage (IDB or LocalStorage).
    * Supports 'hybrid' strategy for instant load (reads LocalStorage) + durable save (writes IDB).
    */
-<<<<<<< HEAD
-  storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' = 'string') {
-    const options: StorageOptions = typeof optionsOrType === 'object' 
+  storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' | 'object' = 'string') {
+    const options: StorageOptions = typeof optionsOrType === 'object'
       ? optionsOrType 
-      : { type: optionsOrType as 'string' | 'number' | 'boolean', strategy: 'idb' };
-    
+      : { type: optionsOrType as 'string' | 'number' | 'boolean' | 'object', strategy: 'idb' };
+
     const { type = 'string', strategy = 'idb' } = options;
     const fullKey = `${STORAGE_KEYS.PREFIX_STATE}${key}`;
     let isIdbHydrated = false;
@@ -45,7 +44,7 @@ export class PersistenceService {
     }
 
     // 2. IDB/Hybrid: Read ASYNC from DB 
-    if (strategy === 'idb' || strategy === 'hybrid') {
+    if ((strategy === 'idb') || strategy === 'hybrid') {
       this.db.config.read(fullKey).then(stored => {
         if (stored !== undefined && stored !== null) {
           this.updateSignal(targetSignal, String(stored), type);
@@ -71,7 +70,8 @@ export class PersistenceService {
         // Serialization
         let strVal: string;
         try {
-          strVal = type === 'object' ? JSON.stringify(val) : String(val);
+          const stringified = type === 'object' ? JSON.stringify(val) : String(val);
+          strVal = stringified === undefined ? 'null' : stringified;
         } catch (e) {
           return console.warn('[Persistence] Serialization failed:', fullKey, e);
         }
@@ -97,7 +97,7 @@ export class PersistenceService {
     });
   }
 
-  private updateSignal<T>(signal: WritableSignal<T>, value: string, type: string) {
+  private updateSignal<T>(signal: WritableSignal<T>, value: string, type: NonNullable<StorageOptions['type']>) {
       if (type === 'number') signal.set(Number(value) as T);
       else if (type === 'boolean') signal.set((value === 'true') as T);
       else if (type === 'object') {

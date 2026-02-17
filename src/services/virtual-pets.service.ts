@@ -32,9 +32,14 @@ export class VirtualPetsService implements OnDestroy {
   // Resolved custom sprites map (type -> state -> url)
   private customSprites: Record<string, Record<string, string>> = {};
 
-  // Default mapping (fallback)
-  private readonly DEFAULT_MAP: Record<string, { folder: string; states: Record<string, string> }> = {
+  // Centralized Pet Configuration
+  private readonly PET_CONFIGS: Record<string, {
+    icon: string,
+    folder: string,
+    states: Record<string, string>
+  }> = {
     diplodocus: {
+      icon: '/assets/images/virtual-pets/diplodocus/icon.png',
       folder: 'diplodocus',
       states: {
         idle: 'green_idle_8fps.gif',
@@ -44,96 +49,14 @@ export class VirtualPetsService implements OnDestroy {
         swipe: 'green_swipe_8fps.gif',
         with_ball: 'green_with_ball_8fps.gif'
       }
-    },
-    'dog-akita': {
-      folder: 'dog-akita',
-      states: {
-        idle: 'akita_idle_8fps.gif',
-        walk: 'akita_walk_8fps.gif',
-        walk_fast: 'akita_walk_fast_8fps.gif',
-        run: 'akita_run_8fps.gif',
-        swipe: 'akita_swipe_8fps.gif',
-        with_ball: 'akita_with_ball_8fps.gif'
-      }
-    },
-    'dog-black': {
-      folder: 'dog-black',
-      states: {
-        idle: 'black_idle_8fps.gif',
-        walk: 'black_walk_8fps.gif',
-        walk_fast: 'black_walk_fast_8fps.gif',
-        run: 'black_run_8fps.gif',
-        swipe: 'black_swipe_8fps.gif',
-        with_ball: 'black_with_ball_8fps.gif'
-      }
-    },
-    'dog-brown': {
-      folder: 'dog-brown',
-      states: {
-        idle: 'brown_idle_8fps.gif',
-        walk: 'brown_walk_8fps.gif',
-        walk_fast: 'brown_walk_fast_8fps.gif',
-        run: 'brown_run_8fps.gif',
-        swipe: 'brown_swipe_8fps.gif',
-        with_ball: 'brown_with_ball_8fps.gif'
-      }
-    },
-    'dog-red': {
-      folder: 'dog-red',
-      states: {
-        idle: 'red_idle_8fps.gif',
-        walk: 'red_walk_8fps.gif',
-        walk_fast: 'red_walk_fast_8fps.gif',
-        run: 'red_run_8fps.gif',
-        swipe: 'red_swipe_8fps.gif',
-        with_ball: 'red_with_ball_8fps.gif'
-      }
-    },
-    'dog-white': {
-      folder: 'dog-white',
-      states: {
-        idle: 'white_idle_8fps.gif',
-        walk: 'white_walk_8fps.gif',
-        walk_fast: 'white_walk_fast_8fps.gif',
-        run: 'white_run_8fps.gif',
-        swipe: 'white_swipe_8fps.gif',
-        with_ball: 'white_with_ball_8fps.gif'
-      }
-    },
-    'fox-red': {
-      folder: 'fox-red',
-      states: {
-        idle: 'red_idle_8fps.gif',
-        walk: 'red_walk_8fps.gif',
-        walk_fast: 'red_walk_fast_8fps.gif',
-        run: 'red_run_8fps.gif',
-        swipe: 'red_swipe_8fps.gif',
-        with_ball: 'red_with_ball_8fps.gif'
-      }
-    },
-    'fox-white': {
-      folder: 'fox-white',
-      states: {
-        idle: 'white_idle_8fps.gif',
-        walk: 'white_walk_8fps.gif',
-        walk_fast: 'white_walk_fast_8fps.gif',
-        run: 'white_run_8fps.gif',
-        swipe: 'white_swipe_8fps.gif',
-        with_ball: 'white_with_ball_8fps.gif'
-      }
-    },
-    'rubber-duck': {
-      folder: 'rubber-duck',
-      states: {
-        idle: 'yellow_idle_8fps.gif',
-        walk: 'yellow_walk_8fps.gif',
-        walk_fast: 'yellow_walk_fast_8fps.gif',
-        run: 'yellow_run_8fps.gif',
-        swipe: 'yellow_swipe_8fps.gif',
-        with_ball: 'yellow_with_ball_8fps.gif'
-      }
     }
   };
+
+  // List of available pets for the interface
+  readonly AVAILABLE_PETS = Object.entries(this.PET_CONFIGS).map(([id, config]) => ({
+    id,
+    icon: config.icon
+  }));
 
   constructor() {
     if (this.isBrowser) {
@@ -237,7 +160,7 @@ export class VirtualPetsService implements OnDestroy {
     }
 
     // fallback to default map
-    const cfg = this.DEFAULT_MAP[type];
+    const cfg = this.PET_CONFIGS[type];
     if (cfg && cfg.states && cfg.states[state]) {
       return `/assets/images/virtual-pets/${cfg.folder}/${cfg.states[state]}`;
     }
@@ -260,7 +183,7 @@ export class VirtualPetsService implements OnDestroy {
     this.preloadedImages.push(portalImg);
 
     // 2. Preload built-in sprites
-    Object.values(this.DEFAULT_MAP).forEach(cfg => {
+    Object.values(this.PET_CONFIGS).forEach(cfg => {
       Object.values(cfg.states).forEach(filename => {
         const url = `/assets/images/virtual-pets/${cfg.folder}/${filename}`;
         const img = new Image();
