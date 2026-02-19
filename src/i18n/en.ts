@@ -19,5 +19,7 @@ export default {
   "FOOTER_COPYRIGHT": "© 2026 Utildex. Local-first. Open Source.",
   "FOOTER_CONTRIBUTE": "Contribute",
   "FOOTER_PRIVACY": "Privacy",
+  "FOOTER_LEGAL": "Legal Notice",
+  "FOOTER_TERMS": "Terms of Use",
   "FOOTER_ABOUT": "About"
 };
