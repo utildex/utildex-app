@@ -42,12 +42,6 @@
              <a [routerLink]="'/tools' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                {{ t.map()['NAV_ALL_TOOLS'] }}
              </a>
-             <a [routerLink]="'/categories' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-               {{ t.map()['NAV_CATEGORIES'] }}
-             </a>
-             <a [routerLink]="'/articles' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-               {{ t.map()['NAV_ARTICLES'] }}
-             </a>
           </nav>
 
           <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden md:block mx-1"></div>
@@ -138,12 +132,6 @@
             <a [routerLink]="'/tools' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
               {{ t.map()['NAV_ALL_TOOLS'] }}
             </a>
-            <a [routerLink]="'/categories' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
-              {{ t.map()['NAV_CATEGORIES'] }}
-            </a>
-            <a [routerLink]="'/articles' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
-              {{ t.map()['NAV_ARTICLES'] }}
-            </a>
           </nav>
         </div>
       </div>
@@ -163,6 +151,8 @@
           <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
             <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
             <div class="flex flex-wrap justify-center md:justify-end gap-4">
+               <a [routerLink]="'/categories' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_CATEGORIES'] }}</a>
+               <a [routerLink]="'/articles' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_ARTICLES'] }}</a>
                <a [routerLink]="'/legal' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_LEGAL'] }}</a>
                <a [routerLink]="'/privacy' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_PRIVACY'] }}</a>
                <a [routerLink]="'/terms' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_TERMS'] }}</a>

@@ -12,10 +12,10 @@ export default {
   "WARN_MOBILE_DATA": "Almacena herramientas automáticamente. Puede usar datos móviles.",
 
   "NAV_ALL_TOOLS": "Herramientas",
-  "NAV_CATEGORIES": "Categorías",
+  "FOOTER_CATEGORIES": "Categorías",
   "NAV_HISTORY": "Historial",
   "NAV_DASHBOARD": "Mi Tablero",
-  "NAV_ARTICLES": "Blog",
+  "FOOTER_ARTICLES": "Blog",
   "FOOTER_COPYRIGHT": "© 2026 Utildex. Local-first. Código Abierto.",
   "FOOTER_CONTRIBUTE": "Contribuir",
   "FOOTER_PRIVACY": "Privacidad",
