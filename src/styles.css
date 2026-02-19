@@ -30,15 +30,20 @@
 
     /* Dark Mode Overrides */
     :root:has(.dark), .dark {
-        --sb-track: #0f172a;  /* slate-900 */
+        --sb-track: transparent;  /* slate-900 */
         --sb-thumb: #334155;  /* slate-700 */
         --sb-hover: #475569;  /* slate-600 */
+        background-color: transparent !important;
     }
 
     /* Global Scrollbar Styling */
     * {
         scrollbar-width: thin;
         scrollbar-color: var(--sb-thumb) var(--sb-track);
+    }
+
+    html, body {
+        background-color: transparent !important;
     }
 
     ::-webkit-scrollbar {
