@@ -126,7 +126,8 @@ export class TourOverlayComponent implements OnDestroy {
             targetEl,
             this.bubbleRef.nativeElement,
             () => {
-              computePosition(targetEl, this.bubbleRef!.nativeElement, {
+              if (!this.bubbleRef?.nativeElement) return;
+              computePosition(targetEl, this.bubbleRef.nativeElement, {
                 placement: step.position as Placement,
                 middleware: [
                   offset(24),
