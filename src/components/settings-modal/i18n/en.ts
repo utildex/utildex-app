@@ -61,5 +61,9 @@ export default {
   "KEY_COLOR": "Accent Color Preference",
   "KEY_FONT": "Font Preference",
   "KEY_DENSITY": "Density Preference",
-  "KEY_STATE_PREFIX": "State: "
+  "KEY_STATE_PREFIX": "State: ",
+
+  "SECTION_TOUR": "Quick Tour",
+  "LABEL_REACTIVATE_TOUR": "Reactivate Tour",
+  "BTN_START_TOUR": "Start Tour"
 };

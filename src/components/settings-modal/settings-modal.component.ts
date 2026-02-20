@@ -11,6 +11,8 @@ import { StorageManagerService, StorageStats } from '../../services/storage-mana
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import { ToastService } from '../../services/toast.service';
 import { OfflineManagerService } from '../../services/offline-manager.service';
+import { TourService } from '../../services/tour.service';
+import { TourTargetDirective } from '../../directives/tour-target.directive';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -44,7 +46,7 @@ type ParsedData =
 @Component({
   selector: 'app-settings-modal',
   standalone: true,
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, TourTargetDirective],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
@@ -87,6 +89,7 @@ type ParsedData =
         <!-- Tab Navigation -->
         <div class="flex p-2 gap-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
            <button 
+             appTourTarget="tour-settings-general"
              (click)="switchTab('general')" 
              class="flex-1 py-2 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2"
              [class.bg-slate-100]="activeTab() === 'general'"
@@ -98,6 +101,7 @@ type ParsedData =
              {{ t.map()['TAB_GENERAL'] }}
            </button>
            <button 
+             appTourTarget="tour-settings-data"
              (click)="switchTab('data')" 
              class="flex-1 py-2 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2"
              [class.bg-slate-100]="activeTab() === 'data'"
@@ -222,6 +226,22 @@ type ParsedData =
                       [class.translate-x-6]="theme.density() === 'compact'"
                       [class.translate-x-1]="theme.density() !== 'compact'"
                     ></span>
+                  </button>
+                </div>
+              </section>
+
+              <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+
+              <!-- Tour -->
+              <section class="space-y-6">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider">{{ t.map()['SECTION_TOUR'] }}</h3>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-700 dark:text-slate-300 font-medium">{{ t.map()['LABEL_REACTIVATE_TOUR'] }}</span>
+                  <button 
+                    (click)="reactivateTour()"
+                    class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-sm"
+                  >
+                    {{ t.map()['BTN_START_TOUR'] }}
                   </button>
                 </div>
               </section>
@@ -410,6 +430,7 @@ type ParsedData =
                               
                               @if (!resetConfirm()) {
                                  <button 
+                                    appTourTarget="tour-settings-reset"
                                     (click)="resetConfirm.set(true)" 
                                     class="px-4 py-2 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-800 text-red-600 font-bold rounded-lg text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                                  >
@@ -461,6 +482,7 @@ export class SettingsModalComponent {
   clipboard = inject(ClipboardService);
   toast = inject(ToastService);
   offline = inject(OfflineManagerService);
+  tour = inject(TourService);
   private router = inject(Router);
 
   // UI State
@@ -494,6 +516,17 @@ export class SettingsModalComponent {
          this.loadInspection(cat);
        } else {
          this.inspectionData.set([]);
+       }
+     });
+
+     this.tour.actionEvents$.subscribe(action => {
+       if (action === 'open-settings') {
+         const step = this.tour.steps[this.tour.currentStepIndex()];
+         if (step.id === 'tour-settings-general') {
+           this.switchTab('general');
+         } else if (step.id === 'tour-settings-data' || step.id === 'tour-settings-reset') {
+           this.switchTab('data');
+         }
        }
      });
   }
@@ -560,6 +593,11 @@ export class SettingsModalComponent {
   async performFactoryReset() {
      await this.storage.factoryReset();
      window.location.reload();
+  }
+
+  reactivateTour() {
+    this.close.emit();
+    this.tour.startTour();
   }
 
   // --- Import / Export ---

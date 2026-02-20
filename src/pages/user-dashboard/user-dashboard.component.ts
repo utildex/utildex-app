@@ -7,15 +7,18 @@ import { WidgetHostComponent } from '../../components/widget-host/widget-host.co
 import { I18nService } from '../../services/i18n.service';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { TourTargetDirective } from '../../directives/tour-target.directive';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
+import { TourService } from '../../services/tour.service';
+
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [WidgetHostComponent, CommonModule, FormsModule],
+  imports: [WidgetHostComponent, CommonModule, FormsModule, TourTargetDirective],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
@@ -41,6 +44,7 @@ import zh from './i18n/zh';
             </button>
           } @else {
             <button 
+              appTourTarget="tour-dashboard-edit"
               (click)="isEditMode.set(true)" 
               class="px-4 py-2 rounded-xl text-sm font-medium border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-2"
             >
@@ -56,14 +60,14 @@ import zh from './i18n/zh';
         <div class="sticky top-4 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl flex gap-4 overflow-x-auto animate-fade-in-up items-center">
            <span class="text-xs font-bold text-slate-400 uppercase mr-2 shrink-0">{{ t.map()['LABEL_ADD'] }}</span>
            
-           <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg shadow hover:opacity-90 transition-opacity text-sm font-bold whitespace-nowrap">
+           <button appTourTarget="tour-dashboard-add-widget" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg shadow hover:opacity-90 transition-opacity text-sm font-bold whitespace-nowrap">
               <span class="material-symbols-outlined">add_circle</span>
               {{ t.map()['BTN_ADD_TOOL'] }}
            </button>
            
            <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-2"></div>
            
-           <button (click)="openFillerModal()" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm font-bold whitespace-nowrap">
+           <button appTourTarget="tour-dashboard-add-filler" (click)="openFillerModal()" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm font-bold whitespace-nowrap">
               <span class="material-symbols-outlined">widgets</span>
               {{ t.map()['BTN_ADD_FILLER'] }}
            </button>
@@ -220,9 +224,34 @@ export class UserDashboardComponent {
   i18n = inject(I18nService);
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
+  tour = inject(TourService);
 
   isEditMode = signal(false);
   
+  constructor() {
+    effect(() => {
+      if (this.tour.isActive()) {
+        const step = this.tour.steps[this.tour.currentStepIndex()];
+        if (step.id === 'tour-dashboard-add-widget' || step.id === 'tour-dashboard-add-filler') {
+          this.isEditMode.set(true);
+        } else if (step.id === 'tour-history' || step.id === 'tour-dashboard-edit') {
+          this.isEditMode.set(false);
+        }
+      }
+    }, { allowSignalWrites: true });
+
+    // Listen for placement requests from the global modal
+    effect(() => {
+      const request = this.toolService.consumePlacementRequest();
+      if (request) {
+        if (this.isMobile()) {
+          request.w = 1;
+        }
+        this.pendingPlacement.set(request);
+      }
+    });
+  }
+
   // Placement State
   pendingPlacement = signal<PendingPlacement | null>(null);
   hoveredSlot = signal<{x: number, y: number} | null>(null);
@@ -246,19 +275,6 @@ export class UserDashboardComponent {
         this.cols
     );
   });
-
-  constructor() {
-    // Listen for placement requests from the global modal
-    effect(() => {
-      const request = this.toolService.consumePlacementRequest();
-      if (request) {
-        if (this.isMobile()) {
-          request.w = 1;
-        }
-        this.pendingPlacement.set(request);
-      }
-    });
-  }
 
   getPhantomWidget(): DashboardWidget {
      const pending = this.pendingPlacement()!;

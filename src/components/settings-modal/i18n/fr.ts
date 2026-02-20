@@ -59,5 +59,12 @@ export default {
   "KEY_COLOR": "Couleur d'accentuation",
   "KEY_FONT": "Préférence de police",
   "KEY_DENSITY": "Densité d'affichage",
-  "KEY_STATE_PREFIX": "État : "
+  "KEY_STATE_PREFIX": "État : ",
+
+  "SECTION_HELP": "Aide & Guides",
+  "LABEL_RESTART_TOUR": "Redémarrer la visite rapide",
+  "BTN_RESTART": "Redémarrer",
+  "SECTION_TOUR": "Visite Rapide",
+  "LABEL_REACTIVATE_TOUR": "Réactiver la visite",
+  "BTN_START_TOUR": "Démarrer la visite"
 };

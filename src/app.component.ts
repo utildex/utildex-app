@@ -18,6 +18,8 @@ import { DashboardModalsComponent } from './components/dashboard-modals/dashboar
 import { BackgroundComponent } from './components/background/background.component';
 import { DownloadStatusComponent } from './components/download-status/download-status.component';
 import { GuideComponent } from './components/guide/guide.component';
+import { TourOverlayComponent } from './components/tour-overlay/tour-overlay.component';
+import { TourTargetDirective } from './directives/tour-target.directive';
 import { OfflineManagerService } from './services/offline-manager.service';
 import { BubbleDirective } from './directives/bubble.directive';
 import { LocalLinkPipe } from './core/pipes/local-link.pipe';
@@ -26,6 +28,7 @@ import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 import { filter } from 'rxjs/operators';
+import { TourService } from './services/tour.service';
 
 @Component({
   selector: 'app-root',
@@ -35,7 +38,7 @@ import { filter } from 'rxjs/operators';
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
     DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective, BackgroundComponent,
-    LocalLinkPipe
+    LocalLinkPipe, TourOverlayComponent, TourTargetDirective
   ],
   templateUrl: './app.component.html',
   providers: [
@@ -50,6 +53,7 @@ export class AppComponent implements OnInit {
   seoService = inject(SeoService); 
   networkService = inject(NetworkService); 
   offline = inject(OfflineManagerService);
+  tour = inject(TourService);
   t = inject(ScopedTranslationService);
   router: Router = inject(Router);
 
@@ -57,6 +61,7 @@ export class AppComponent implements OnInit {
   sidebarOpen = signal(false);
   settingsOpen = signal(false);
   mobileMenuOpen = signal(false);
+  showTourFab = signal(false);
 
   @ViewChild(CommandPaletteComponent) commandPalette!: CommandPaletteComponent;
 
@@ -64,6 +69,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Services initialized via inject()
+    setTimeout(() => {
+      this.showTourFab.set(true);
+    }, 1500);
   }
 
   constructor() {
@@ -75,6 +83,14 @@ export class AppComponent implements OnInit {
       // We generally want to keep sidebar open if user toggled it, unless on mobile
       if (window.innerWidth < 1024) {
         this.sidebarOpen.set(false);
+      }
+    });
+
+    this.tour.actionEvents$.subscribe(action => {
+      if (action === 'open-settings') {
+        this.settingsOpen.set(true);
+      } else if (action === 'close-settings') {
+        this.settingsOpen.set(false);
       }
     });
   }

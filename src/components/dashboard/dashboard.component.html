@@ -22,7 +22,7 @@
         </p>
         
         <div class="max-w-2xl mx-auto mb-8 px-4 sm:px-0">
-            <button (click)="app.openCommandPalette()" 
+            <button (click)="app.openCommandPalette()" appTourTarget="tour-search"
                     class="w-full flex items-center gap-3 px-6 py-4 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl hover:border-primary dark:hover:border-primary hover:shadow-lg transition-all text-left group">
                 <span class="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">search</span>
                 <span class="text-lg text-slate-500 dark:text-slate-400 flex-1">{{ t.map()['SEARCH_PLACEHOLDER'] || 'Search for a tool... (Ctrl+K)' }}</span>
@@ -34,7 +34,7 @@
         </div>
 
         <div class="flex justify-center gap-4 flex-wrap">
-            <a [routerLink]="'/tools' | localLink" class="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors">
+            <a [routerLink]="'/tools' | localLink" appTourTarget="tour-browse" class="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors">
                 {{ t.map()['BTN_BROWSE'] }}
             </a>
         </div>

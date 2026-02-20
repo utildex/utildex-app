@@ -3,6 +3,7 @@ import { ToolService } from '../../services/tool.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
 import { FormsModule } from '@angular/forms';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { TourTargetDirective } from '../../directives/tour-target.directive';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -11,7 +12,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-all-tools',
   standalone: true,
-  imports: [ToolCardComponent, FormsModule],
+  imports: [ToolCardComponent, FormsModule, TourTargetDirective],
   providers: [
     provideTranslation({
       en: () => en,
@@ -54,7 +55,7 @@ import zh from './i18n/zh';
         </div>
 
         <!-- Categories (Pills) -->
-        <div class="flex flex-wrap gap-2 pb-2">
+        <div class="flex flex-wrap gap-2 pb-2" appTourTarget="tour-filters">
             <button 
                 (click)="toolService.setCategory(null)"
                 class="px-4 py-2 rounded-full text-sm font-medium transition-all shadow-sm"

@@ -61,5 +61,12 @@ export default {
   "KEY_COLOR": "强调色首选项",
   "KEY_FONT": "字体首选项",
   "KEY_DENSITY": "显示密度首选项",
-  "KEY_STATE_PREFIX": "状态："
+  "KEY_STATE_PREFIX": "状态：",
+
+  "SECTION_HELP": "帮助与指南",
+  "LABEL_RESTART_TOUR": "重新启动快速导览",
+  "BTN_RESTART": "重新启动",
+  "SECTION_TOUR": "快速导览",
+  "LABEL_REACTIVATE_TOUR": "重新激活导览",
+  "BTN_START_TOUR": "开始导览"
 };

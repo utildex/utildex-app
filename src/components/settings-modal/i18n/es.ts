@@ -61,5 +61,12 @@ export default {
   "KEY_COLOR": "Preferencia de color",
   "KEY_FONT": "Preferencia de fuente",
   "KEY_DENSITY": "Preferencia de densidad",
-  "KEY_STATE_PREFIX": "Estado: "
+  "KEY_STATE_PREFIX": "Estado: ",
+
+  "SECTION_HELP": "Ayuda y Guías",
+  "LABEL_RESTART_TOUR": "Reiniciar visita rápida",
+  "BTN_RESTART": "Reiniciar",
+  "SECTION_TOUR": "Visita Rápida",
+  "LABEL_REACTIVATE_TOUR": "Reactivar visita",
+  "BTN_START_TOUR": "Iniciar visita"
 };

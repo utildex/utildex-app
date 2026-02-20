@@ -94,3 +94,19 @@
     -webkit-font-feature-settings: "liga";
     -webkit-font-smoothing: antialiased;
 }
+
+@keyframes glow-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgb(var(--color-primary) / 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgb(var(--color-primary) / 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgb(var(--color-primary) / 0);
+    }
+}
+
+.animate-glow-pulse {
+    animation: glow-pulse 2s infinite;
+}

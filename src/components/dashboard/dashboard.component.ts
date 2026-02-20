@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { AppComponent } from '../../app.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
+import { TourTargetDirective } from '../../directives/tour-target.directive';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -15,7 +16,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [ToolCardComponent, CarouselComponent, RouterLink, LocalLinkPipe],
+  imports: [ToolCardComponent, CarouselComponent, RouterLink, LocalLinkPipe, TourTargetDirective],
   templateUrl: './dashboard.component.html',
   providers: [
     provideTranslation({

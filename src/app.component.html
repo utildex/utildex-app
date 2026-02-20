@@ -61,6 +61,7 @@
           <!-- Settings Button -->
             <button
                     (click)="toggleSettings()"
+                    appTourTarget="tour-settings-open"
                     class="h-10 w-10 flex items-center justify-center rounded-full
                      text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800
                      transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
@@ -88,6 +89,7 @@
                     (click)="toggleSidebar()"
                     [appBubble]="'BUBBLE_HISTORY_INFO'"
                     [bubblePos]="'bottom'"
+                    appTourTarget="tour-history"
                     class="h-10 w-10 flex items-center justify-center rounded-full
                      text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800
                      transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
@@ -154,7 +156,7 @@
             <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
             <div class="flex flex-wrap justify-center md:justify-end gap-4">
                <a [routerLink]="'/categories' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_CATEGORIES'] }}</a>
-               <a [routerLink]="'/articles' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_ARTICLES'] }}</a>
+               <a [routerLink]="'/articles' | localLink" appTourTarget="tour-blog" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_ARTICLES'] }}</a>
                <a [routerLink]="'/legal' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_LEGAL'] }}</a>
                <a [routerLink]="'/privacy' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_PRIVACY'] }}</a>
                <a [routerLink]="'/terms' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_TERMS'] }}</a>
@@ -182,6 +184,7 @@
   </div>
 
   <!-- Global Elements -->
+  <app-tour-overlay></app-tour-overlay>
   <app-guide></app-guide>
   <app-toast></app-toast>
   <app-network-status></app-network-status>
@@ -191,6 +194,22 @@
   <app-dashboard-modals></app-dashboard-modals>
   @if (settingsOpen()) {
     <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
+  }
+
+  <!-- Quick Tour Opt-in -->
+  @if (showTourFab() && !tour.hasBeenDismissed() && !tour.isActive()) {
+    <div class="fixed bottom-6 right-6 z-50 animate-fade-in">
+      <div class="bg-white dark:bg-slate-800 rounded-full shadow-xl border border-slate-200 dark:border-slate-700 p-1 flex items-center gap-2 pr-4 group hover:border-primary/50 transition-all cursor-pointer animate-glow-pulse"
+           (click)="tour.startTour()">
+        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+          <span class="material-symbols-outlined">explore</span>
+        </div>
+        <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ t.map()['TOUR_OPT_IN'] || 'Quick Tour' }}</span>
+        <button (click)="tour.dismissTour(); $event.stopPropagation()" class="ml-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700">
+          <span class="material-symbols-outlined text-sm">close</span>
+        </button>
+      </div>
+    </div>
   }
 
 </div>
