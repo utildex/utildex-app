@@ -1,9 +1,10 @@
 
 export default {
-  "HERO_TITLE_PREFIX": "Your",
-  "HERO_TITLE_HIGHLIGHT": "Local-First",
-  "HERO_TITLE_SUFFIX": "Toolbox",
-  "HERO_DESC": "A modular collection of utilities that run entirely in your browser. Private, offline-ready, and open source.",
+  "HERO_TITLE_PREFIX": "Your Everyday Tools.",
+  "HERO_TITLE_HIGHLIGHT": "100% Private.",
+  "HERO_TITLE_SUFFIX": "",
+  "HERO_DESC": "Run all kinds of tools only in your browser. No uploads, no tracking, no ads. And your data never leaves your device. Source available for full transparency.",
+  "SEARCH_PLACEHOLDER": "Search for a tool... (Ctrl+K)",
   "AVAILABLE_TOOLS": "{0}+ Tools Available",
   "BTN_BROWSE": "Browse All Tools",
   "BTN_QUICK_SEARCH": "Quick Search",

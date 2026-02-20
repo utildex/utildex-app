@@ -1,9 +1,10 @@
 
 export default {
-  "HERO_TITLE_PREFIX": "您的",
-  "HERO_TITLE_HIGHLIGHT": "本地优先",
-  "HERO_TITLE_SUFFIX": "工具箱",
-  "HERO_DESC": "完全在浏览器中运行的模块化实用程序集合。隐私、离线可用且开源。",
+  "HERO_TITLE_PREFIX": "你的日常工具。",
+  "HERO_TITLE_HIGHLIGHT": "100% 保护隐私。",
+  "HERO_TITLE_SUFFIX": "",
+  "HERO_DESC": "仅在浏览器中运行各种工具。无上传、无跟踪、无广告。你的数据永远不会离开你的设备。源代码公开以实现完全透明。",
+  "SEARCH_PLACEHOLDER": "搜索工具... (Ctrl+K)",
   "AVAILABLE_TOOLS": "{0}+ 可用工具",
   "BTN_BROWSE": "浏览所有工具",
   "BTN_QUICK_SEARCH": "快速搜索",

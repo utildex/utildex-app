@@ -1,9 +1,10 @@
 
 export default {
-  "HERO_TITLE_PREFIX": "Votre Boîte à Outils",
-  "HERO_TITLE_HIGHLIGHT": "Locale",
+  "HERO_TITLE_PREFIX": "Vos outils du quotidien.",
+  "HERO_TITLE_HIGHLIGHT": "100% Privés.",
   "HERO_TITLE_SUFFIX": "",
-  "HERO_DESC": "Une collection modulaire d'utilitaires qui s'exécutent entièrement dans votre navigateur. Privée, hors ligne et open source.",
+  "HERO_DESC": "Exécutez toutes sortes d'outils uniquement dans votre navigateur. Aucun téléchargement, aucun suivi, aucune publicité. Vos données ne quittent jamais votre appareil. Code source disponible pour une transparence totale.",
+  "SEARCH_PLACEHOLDER": "Rechercher un outil... (Ctrl+K)",
   "AVAILABLE_TOOLS": "{0}+ Outils Disponibles",
   "BTN_BROWSE": "Parcourir les outils",
   "BTN_QUICK_SEARCH": "Recherche Rapide",
