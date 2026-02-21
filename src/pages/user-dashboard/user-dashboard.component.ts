@@ -23,7 +23,7 @@ import { TourService } from '../../services/tour.service';
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
   template: `
-    <div class="space-y-6 pb-40">
+    <div class="space-y-6 pb-8">
       <!-- Header -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>

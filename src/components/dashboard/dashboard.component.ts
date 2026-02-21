@@ -25,7 +25,8 @@ import zh from './i18n/zh';
       es: () => es,
       zh: () => zh
     })
-  ]
+  ],
+  host: { class: 'contents' }
 })
 export class DashboardComponent {
   toolService = inject(ToolService);
