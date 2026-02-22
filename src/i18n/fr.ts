@@ -16,7 +16,7 @@ export default {
   "NAV_HISTORY": "Historique",
   "NAV_DASHBOARD": "Mon Tableau",
   "FOOTER_ARTICLES": "Blog",
-  "FOOTER_COPYRIGHT": "© 2026 Utildex. Local-first. Open Source.",
+  "FOOTER_COPYRIGHT": "© 2026 Utildex. Local-first. Source Available.",
   "FOOTER_CONTRIBUTE": "Contribuer",
   "FOOTER_PRIVACY": "Confidentialité",
   "FOOTER_LEGAL": "Mentions Légales",
