@@ -4,6 +4,7 @@ import { ToolCardComponent } from '../../components/tool-card/tool-card.componen
 import { FormsModule } from '@angular/forms';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { TourTargetDirective } from '../../directives/tour-target.directive';
+import { DropdownComponent } from '../../components/dropdown/dropdown.component';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -12,7 +13,7 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-all-tools',
   standalone: true,
-  imports: [ToolCardComponent, FormsModule, TourTargetDirective],
+  imports: [ToolCardComponent, FormsModule, TourTargetDirective, DropdownComponent],
   providers: [
     provideTranslation({
       en: () => en,
@@ -22,9 +23,9 @@ import zh from './i18n/zh';
     })
   ],
   template: `
-    <div class="flex flex-col gap-8 w-full">
+    <div class="flex flex-col gap-4 w-full">
       <!-- Top Control Bar (Search, Filter, Sort) -->
-      <header class="w-full space-y-6" #gridTop>
+      <header class="w-full space-y-4 pt-2 overflow-visible" #gridTop>
         <div class="flex flex-col md:flex-row gap-4">
              <!-- Search -->
              <div class="flex-1 relative min-w-0">
@@ -38,19 +39,18 @@ import zh from './i18n/zh';
                 >
              </div>
              
-             <!-- Sort Dropdown -->
+             <!-- Sort Dropdown (Custom) -->
              <div class="relative flex-shrink-0 max-w-full">
-                <div class="flex items-center gap-2 h-full bg-white dark:bg-slate-800 px-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm w-full md:w-auto">
-                   <select 
-                      [ngModel]="sortOrder()" 
-                      (ngModelChange)="toolService.setSort($event)"
-                      class="bg-transparent border-none text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-0 cursor-pointer pr-8 py-3 outline-none w-full"
-                   >
-                     <option value="name">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_NAME'] }}</option>
-                     <option value="popularity">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_POPULARITY'] }}</option>
-                     <option value="relevance">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_RELEVANCE'] }}</option>
-                   </select>
-                </div>
+                <app-dropdown
+                  [options]="[
+                    { label: t.map()['SORT_BY'] + ': ' + t.map()['SORT_NAME'], value: 'name' },
+                    { label: t.map()['SORT_BY'] + ': ' + t.map()['SORT_POPULARITY'], value: 'popularity' },
+                    { label: t.map()['SORT_BY'] + ': ' + t.map()['SORT_RELEVANCE'], value: 'relevance' }
+                  ]"
+                  [value]="sortOrder()"
+                  [selectedLabel]="getSortLabel()"
+                  (valueChange)="toolService.setSort($event)"
+                ></app-dropdown>
              </div>
         </div>
 
@@ -228,5 +228,13 @@ export class AllToolsComponent {
 
   isFav(id: string): boolean {
     return this.favorites().has(id);
+  }
+
+  getSortLabel(): string {
+    const val = this.sortOrder();
+    if (val === 'name') return this.t.map()['SORT_BY'] + ': ' + this.t.map()['SORT_NAME'];
+    if (val === 'popularity') return this.t.map()['SORT_BY'] + ': ' + this.t.map()['SORT_POPULARITY'];
+    if (val === 'relevance') return this.t.map()['SORT_BY'] + ': ' + this.t.map()['SORT_RELEVANCE'];
+    return '';
   }
 }
