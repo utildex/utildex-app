@@ -1,11 +1,10 @@
-
 import { Injectable, inject, WritableSignal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DbService } from './db.service';
 import { STORAGE_KEYS } from '../core/storage-keys';
 
 export interface StorageOptions {
-  type?: 'string' | 'number' | 'boolean';
+  type?: 'string' | 'number' | 'boolean' | 'object';
   strategy?: 'idb' | 'local' | 'hybrid';
 }
 
@@ -20,11 +19,11 @@ export class PersistenceService {
    * Syncs a signal with Storage (IDB or LocalStorage).
    * Supports 'hybrid' strategy for instant load (reads LocalStorage) + durable save (writes IDB).
    */
-  storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' = 'string') {
-    const options: StorageOptions = typeof optionsOrType === 'object' 
+  storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' | 'object' = 'string') {
+    const options: StorageOptions = typeof optionsOrType === 'object'
       ? optionsOrType 
-      : { type: optionsOrType as 'string' | 'number' | 'boolean', strategy: 'idb' };
-    
+      : { type: optionsOrType as 'string' | 'number' | 'boolean' | 'object', strategy: 'idb' };
+
     const { type = 'string', strategy = 'idb' } = options;
     const fullKey = `${STORAGE_KEYS.PREFIX_STATE}${key}`;
     let isIdbHydrated = false;
@@ -50,10 +49,12 @@ export class PersistenceService {
         if (stored !== undefined && stored !== null) {
           this.updateSignal(targetSignal, String(stored), type);
         }
+      }).finally(() => {
         isIdbHydrated = true;
       });
     } else {
         // Strategy local, already set true above
+        isIdbHydrated = true;
     }
 
     // --- WRITE PHASE ---
@@ -66,7 +67,14 @@ export class PersistenceService {
       }
 
       const timer = setTimeout(async () => {
-        const strVal = String(val);
+        // Serialization
+        let strVal: string;
+        try {
+          const stringified = type === 'object' ? JSON.stringify(val) : String(val);
+          strVal = stringified === undefined ? 'null' : stringified;
+        } catch (e) {
+          return console.warn('[Persistence] Serialization failed:', fullKey, e);
+        }
 
         if (strategy === 'local' || strategy === 'hybrid') {
           try {
@@ -89,9 +97,17 @@ export class PersistenceService {
     });
   }
 
-  private updateSignal<T>(signal: WritableSignal<T>, value: string, type: string) {
+  private updateSignal<T>(signal: WritableSignal<T>, value: string, type: NonNullable<StorageOptions['type']>) {
       if (type === 'number') signal.set(Number(value) as T);
       else if (type === 'boolean') signal.set((value === 'true') as T);
+      else if (type === 'object') {
+        try {
+          signal.set(JSON.parse(value) as T);
+        } catch (e) {
+          console.warn('[Persistence] JSON parse failed', e);
+          // Keep default if parse fails
+        }
+      }
       else signal.set(value as T);
   }
 

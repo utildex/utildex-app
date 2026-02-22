@@ -12,6 +12,8 @@ export default {
   "LABEL_COLOR": "Color de Acento",
   "LABEL_FONT": "Fuente",
   "LABEL_DENSITY": "Modo Compacto",
+  "LABEL_PETS": "Mascotas Virtuales",
+  "LABEL_PETS_DESC": "Muestra dinosaurios animados caminando por la pantalla",
   "STATUS_ONLINE": "En línea",
   "STATUS_OFFLINE": "Sin conexión",
 
@@ -22,8 +24,9 @@ export default {
   "CAT_HISTORY": "Historial",
   "CAT_PREFS": "Preferencias",
   "CAT_TOOLS": "Estados de Herramientas",
+  "CAT_PETS": "Mascotas Virtuales",
   "CAT_FILES": "Archivos",
-  
+
   "BTN_VIEW": "Inspeccionar",
   "BTN_DELETE": "Borrar",
   "BTN_BACK": "Volver",

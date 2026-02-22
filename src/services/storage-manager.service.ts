@@ -1,4 +1,3 @@
-
 import { Injectable, inject } from '@angular/core';
 import { DbService, DbRecord } from './db.service';
 import { STORAGE_KEYS, getPrefKey } from '../core/storage-keys';
@@ -48,6 +47,12 @@ export class StorageManagerService {
       labelKey: 'CAT_PREFS',
       icon: 'tune',
       patterns: STORAGE_KEYS.PREFERENCES.map(p => new RegExp(`^${getPrefKey(p)}$`))
+    },
+    {
+      id: 'pets',
+      labelKey: 'CAT_PETS',
+      icon: 'pets',
+      patterns: [/^utildex-state-active-pets$/]
     },
     {
       id: 'tools',

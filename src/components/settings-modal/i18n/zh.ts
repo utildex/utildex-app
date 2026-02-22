@@ -12,6 +12,8 @@ export default {
   "LABEL_COLOR": "强调色",
   "LABEL_FONT": "字体",
   "LABEL_DENSITY": "紧凑模式",
+  "LABEL_PETS": "恐龙宠物",
+  "LABEL_PETS_DESC": "显示在屏幕上行走的动画恐龙",
   "STATUS_ONLINE": "在线",
   "STATUS_OFFLINE": "离线",
 
@@ -22,8 +24,9 @@ export default {
   "CAT_HISTORY": "使用历史",
   "CAT_PREFS": "偏好设置",
   "CAT_TOOLS": "工具状态",
+  "CAT_PETS": "恐龙宠物",
   "CAT_FILES": "文件",
-  
+
   "BTN_VIEW": "查看详情",
   "BTN_DELETE": "清除数据",
   "BTN_BACK": "返回",
