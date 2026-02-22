@@ -4,7 +4,7 @@ export default {
   "HERO_TITLE_HIGHLIGHT": "100% Privés.",
   "HERO_TITLE_SUFFIX": "",
   "HERO_DESC": "Exécutez toutes sortes d'outils uniquement dans votre navigateur. Aucun téléchargement, aucun suivi, aucune publicité. Vos données ne quittent jamais votre appareil. Code source disponible pour une transparence totale.",
-  "SEARCH_PLACEHOLDER": "Rechercher un outil... (Ctrl+K)",
+  "SEARCH_PLACEHOLDER": "Rechercher un outil...",
   "AVAILABLE_TOOLS": "{0}+ Outils Disponibles",
   "BTN_BROWSE": "Parcourir les outils",
   "BTN_QUICK_SEARCH": "Recherche Rapide",

@@ -27,7 +27,7 @@ import zh from './i18n/zh';
       <header class="w-full space-y-6" #gridTop>
         <div class="flex flex-col md:flex-row gap-4">
              <!-- Search -->
-             <div class="flex-1 relative">
+             <div class="flex-1 relative min-w-0">
                 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
                 <input 
                   type="text" 
@@ -39,12 +39,12 @@ import zh from './i18n/zh';
              </div>
              
              <!-- Sort Dropdown -->
-             <div class="relative flex-shrink-0">
-                <div class="flex items-center gap-2 h-full bg-white dark:bg-slate-800 px-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+             <div class="relative flex-shrink-0 max-w-full">
+                <div class="flex items-center gap-2 h-full bg-white dark:bg-slate-800 px-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm w-full md:w-auto">
                    <select 
                       [ngModel]="sortOrder()" 
                       (ngModelChange)="toolService.setSort($event)"
-                      class="bg-transparent border-none text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-0 cursor-pointer pr-8 py-3 outline-none"
+                      class="bg-transparent border-none text-sm font-medium text-slate-700 dark:text-slate-200 focus:ring-0 cursor-pointer pr-8 py-3 outline-none w-full"
                    >
                      <option value="name">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_NAME'] }}</option>
                      <option value="popularity">{{ t.map()['SORT_BY'] }}: {{ t.map()['SORT_POPULARITY'] }}</option>

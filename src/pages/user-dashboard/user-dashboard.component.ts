@@ -1,6 +1,6 @@
 
-import { Component, inject, signal, computed, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, computed, effect, PLATFORM_ID, OnDestroy } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolService, DashboardWidget, PendingPlacement } from '../../services/tool.service';
 import { WidgetHostComponent } from '../../components/widget-host/widget-host.component';
@@ -42,7 +42,7 @@ import { TourService } from '../../services/tour.service';
             >
               {{ t.map()['BTN_DONE'] }}
             </button>
-          } @else {
+          } @else if (!isMobile()) {
             <button 
               appTourTarget="tour-dashboard-edit"
               (click)="isEditMode.set(true)" 
@@ -56,7 +56,7 @@ import { TourService } from '../../services/tour.service';
       </div>
 
       <!-- Toolbar (Only in Edit Mode) -->
-      @if (isEditMode() && !pendingPlacement()) {
+      @if (isEditMode() && !pendingPlacement() && !isMobile()) {
         <div class="sticky top-4 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl flex gap-4 overflow-x-auto animate-fade-in-up items-center">
            <span class="text-xs font-bold text-slate-400 uppercase mr-2 shrink-0">{{ t.map()['LABEL_ADD'] }}</span>
            
@@ -73,6 +73,18 @@ import { TourService } from '../../services/tour.service';
            </button>
         </div>
       }
+
+      @if (isMobile()) {
+          <div class="flex flex-col items-center justify-center py-20 text-center px-4 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-slate-50/50 dark:bg-slate-900/50">
+              <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-6 shadow-sm">
+                  <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-slate-500">desktop_windows</span>
+              </div>
+              <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">{{ t.map()['UNAVAILABLE_TITLE'] || 'Not Available' }}</h3>
+              <p class="text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
+                  {{ t.map()['DASHBOARD_MOBILE_UNAVAILABLE'] }}
+              </p>
+          </div>
+      } @else {
 
       <!-- Placement Message -->
       @if (pendingPlacement()) {
@@ -99,7 +111,7 @@ import { TourService } from '../../services/tour.service';
         (mouseleave)="hoveredSlot.set(null)"
       >
          <!-- Empty State Hero -->
-         @if (dashboardWidgets().length === 0 && !isEditMode()) {
+         @if (dashboardWidgets().length === 0 && !isEditMode() && !isMobile()) {
             <div class="absolute inset-0 flex flex-col items-center justify-center -mt-20">
                <div class="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-full mb-6 border border-slate-100 dark:border-slate-700 animate-fade-in-up">
                   <span class="material-symbols-outlined text-6xl text-slate-300">dashboard_customize</span>
@@ -216,6 +228,7 @@ import { TourService } from '../../services/tour.service';
             </div>
          }
       </div>
+      }
     </div>
   `
 })
@@ -225,10 +238,19 @@ export class UserDashboardComponent {
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
   tour = inject(TourService);
+  platformId = inject(PLATFORM_ID);
 
   isEditMode = signal(false);
+  isMobile = signal(false);
+  private resizeListener?: () => void;
   
   constructor() {
+    if (isPlatformBrowser(this.platformId)) {
+        this.isMobile.set(window.innerWidth < 768);
+        this.resizeListener = () => this.isMobile.set(window.innerWidth < 768);
+        window.addEventListener('resize', this.resizeListener);
+    }
+
     effect(() => {
       if (this.tour.isActive()) {
         const step = this.tour.steps[this.tour.currentStepIndex()];
@@ -250,6 +272,12 @@ export class UserDashboardComponent {
         this.pendingPlacement.set(request);
       }
     });
+  }
+
+  ngOnDestroy() {
+      if (isPlatformBrowser(this.platformId) && this.resizeListener) {
+          window.removeEventListener('resize', this.resizeListener);
+      }
   }
 
   // Placement State
@@ -319,10 +347,6 @@ export class UserDashboardComponent {
   }
 
   // --- Dynamic Layout Calculations ---
-
-  isMobile(): boolean {
-    return window.innerWidth < 768;
-  }
 
   get cols() {
     return this.isMobile() ? 1 : 4;

@@ -31,5 +31,6 @@ export default {
   "FILLER_SPACER": "Espaceur (1x1)",
   "EMPTY_TITLE": "Votre Tableau de Bord est Vide",
   "EMPTY_DESC": "Épinglez vos outils favoris ici pour un accès rapide.",
-  "BTN_START": "Personnaliser"
+  "BTN_START": "Personnaliser",
+  "DASHBOARD_MOBILE_UNAVAILABLE": "Ce tableau de bord est optimisé pour les ordinateurs et n'est pas encore disponible sur mobile."
 };

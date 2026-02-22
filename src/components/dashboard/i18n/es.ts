@@ -4,7 +4,7 @@ export default {
   "HERO_TITLE_HIGHLIGHT": "100% Privadas.",
   "HERO_TITLE_SUFFIX": "",
   "HERO_DESC": "Ejecuta todo tipo de herramientas solo en tu navegador. Sin subidas, sin rastreo, sin anuncios. Tus datos nunca salen de tu dispositivo. Código fuente disponible para total transparencia.",
-  "SEARCH_PLACEHOLDER": "Buscar una herramienta... (Ctrl+K)",
+  "SEARCH_PLACEHOLDER": "Buscar una herramienta...",
   "AVAILABLE_TOOLS": "{0}+ Herramientas Disponibles",
   "BTN_BROWSE": "Explorar herramientas",
   "BTN_QUICK_SEARCH": "Búsqueda Rápida",
