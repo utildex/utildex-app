@@ -1,5 +1,5 @@
 
-import { Component, inject, signal, computed, effect, PLATFORM_ID, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed, effect, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolService, DashboardWidget, PendingPlacement } from '../../services/tool.service';
