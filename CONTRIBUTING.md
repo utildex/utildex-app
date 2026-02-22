@@ -215,3 +215,5 @@ constructor() {
 ```
 
 Happy Coding!
+
+By contributing, you agree your contributions are licensed under Apache 2.0 with Commons Clause.

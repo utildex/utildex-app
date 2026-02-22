@@ -46,6 +46,21 @@ export const routes: Routes = [
             title: 'Category - Utildex'
         },
         {
+            path: 'legal',
+            loadComponent: () => import('./pages/legal/legal.component').then(m => m.LegalComponent),
+            title: 'Legal Notice - Utildex'
+        },
+        {
+            path: 'privacy',
+            loadComponent: () => import('./pages/privacy/privacy.component').then(m => m.PrivacyComponent),
+            title: 'Privacy Policy - Utildex'
+        },
+        {
+            path: 'terms',
+            loadComponent: () => import('./pages/terms/terms.component').then(m => m.TermsComponent),
+            title: 'Terms of Use - Utildex'
+        },
+        {
             path: 'tools',
             loadComponent: () => import('./pages/all-tools/all-tools.component').then(m => m.AllToolsComponent),
             title: 'All Tools - Utildex'
