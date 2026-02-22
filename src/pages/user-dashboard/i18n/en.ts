@@ -31,5 +31,6 @@ export default {
   "FILLER_SPACER": "Spacer (1x1)",
   "EMPTY_TITLE": "Your Dashboard is Empty",
   "EMPTY_DESC": "Pin your favorite tools here for quick access.",
-  "BTN_START": "Start Customizing"
+  "BTN_START": "Start Customizing",
+  "DASHBOARD_MOBILE_UNAVAILABLE": "This dashboard is optimized for desktop and is not yet available on mobile devices."
 };

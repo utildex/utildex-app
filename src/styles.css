@@ -30,15 +30,20 @@
 
     /* Dark Mode Overrides */
     :root:has(.dark), .dark {
-        --sb-track: #0f172a;  /* slate-900 */
+        --sb-track: transparent;  /* slate-900 */
         --sb-thumb: #334155;  /* slate-700 */
         --sb-hover: #475569;  /* slate-600 */
+        background-color: transparent !important;
     }
 
     /* Global Scrollbar Styling */
     * {
         scrollbar-width: thin;
         scrollbar-color: var(--sb-thumb) var(--sb-track);
+    }
+
+    html, body {
+        background-color: transparent !important;
     }
 
     ::-webkit-scrollbar {
@@ -88,4 +93,20 @@
     font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
     -webkit-font-feature-settings: "liga";
     -webkit-font-smoothing: antialiased;
+}
+
+@keyframes glow-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgb(var(--color-primary) / 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgb(var(--color-primary) / 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgb(var(--color-primary) / 0);
+    }
+}
+
+.animate-glow-pulse {
+    animation: glow-pulse 2s infinite;
 }

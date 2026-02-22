@@ -11,6 +11,8 @@ import {ScopedTranslationService, provideTranslation} from '../../core/i18n';
 import {ToastService} from '../../services/toast.service';
 import {OfflineManagerService} from '../../services/offline-manager.service'; // Added
 import {VirtualPetsService} from '../../services/virtual-pets.service';
+import { TourService } from '../../services/tour.service';
+import { TourTargetDirective } from '../../directives/tour-target.directive';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -43,42 +45,42 @@ type ParsedData =
     | { type: 'json' | 'simple'; data: string };
 
 @Component({
-    selector: 'app-settings-modal',
-    standalone: true,
-    imports: [CommonModule, DatePipe],
-    providers: [
-        provideTranslation({en: () => en, fr: () => fr, es: () => es, zh: () => zh})
-    ],
-    template: `
-        <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <!-- Backdrop -->
-            <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close.emit()"></div>
-
-            <!-- Modal -->
-            <div class="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-slide-up flex flex-col max-h-[85vh]">
-
-                <!-- Header -->
-                <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0">
-                    <div class="flex items-center gap-3">
-                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ t.map()['TITLE'] }}</h2>
-
-                        <!-- Network Status Indicator -->
-                        <!--            
-                                    <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                                      <span class="relative flex h-2 w-2">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" 
-                                          [class.bg-green-400]="network.isOnline()" 
-                                          [class.bg-red-400]="!network.isOnline()"></span>
-                                        <span class="relative inline-flex rounded-full h-2 w-2" 
-                                          [class.bg-green-500]="network.isOnline()" 
-                                          [class.bg-red-500]="!network.isOnline()"></span>
-                                      </span>
-                                      <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                                        {{ network.isOnline() ? t.map()['STATUS_ONLINE'] : t.map()['STATUS_OFFLINE'] }}
-                                      </span>
-                                    </div>
-                        -->
-                    </div>
+  selector: 'app-settings-modal',
+  standalone: true,
+  imports: [CommonModule, DatePipe, TourTargetDirective],
+  providers: [
+    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
+  ],
+  template: `
+    <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <!-- Backdrop -->
+      <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close.emit()"></div>
+      
+      <!-- Modal -->
+      <div class="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden animate-slide-up flex flex-col max-h-[85vh]">
+        
+        <!-- Header -->
+        <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center shrink-0">
+          <div class="flex items-center gap-3">
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ t.map()['TITLE'] }}</h2>
+            
+            <!-- Network Status Indicator -->
+<!--            
+            <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" 
+                  [class.bg-green-400]="network.isOnline()" 
+                  [class.bg-red-400]="!network.isOnline()"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2" 
+                  [class.bg-green-500]="network.isOnline()" 
+                  [class.bg-red-500]="!network.isOnline()"></span>
+              </span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                {{ network.isOnline() ? t.map()['STATUS_ONLINE'] : t.map()['STATUS_OFFLINE'] }}
+              </span>
+            </div>
+-->
+          </div>
 
                     <button (click)="close.emit()"
                             class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
@@ -86,31 +88,33 @@ type ParsedData =
                     </button>
                 </div>
 
-                <!-- Tab Navigation -->
-                <div class="flex p-2 gap-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
-                    <button
-                            (click)="switchTab('general')"
-                            class="flex-1 py-2 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2"
-                            [class.bg-slate-100]="activeTab() === 'general'"
-                            [class.dark:bg-slate-800]="activeTab() === 'general'"
-                            [class.text-primary]="activeTab() === 'general'"
-                            [class.text-slate-500]="activeTab() !== 'general'"
-                    >
-                        <span class="material-symbols-outlined text-lg">tune</span>
-                        {{ t.map()['TAB_GENERAL'] }}
-                    </button>
-                    <button
-                            (click)="switchTab('data')"
-                            class="flex-1 py-2 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2"
-                            [class.bg-slate-100]="activeTab() === 'data'"
-                            [class.dark:bg-slate-800]="activeTab() === 'data'"
-                            [class.text-primary]="activeTab() === 'data'"
-                            [class.text-slate-500]="activeTab() !== 'data'"
-                    >
-                        <span class="material-symbols-outlined text-lg">database</span>
-                        {{ t.map()['TAB_DATA'] }}
-                    </button>
-                </div>
+        <!-- Tab Navigation -->
+        <div class="flex p-2 gap-2 border-b border-slate-100 dark:border-slate-800 shrink-0">
+           <button 
+             appTourTarget="tour-settings-general"
+             (click)="switchTab('general')" 
+             class="flex-1 py-2 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2"
+             [class.bg-slate-100]="activeTab() === 'general'"
+             [class.dark:bg-slate-800]="activeTab() === 'general'"
+             [class.text-primary]="activeTab() === 'general'"
+             [class.text-slate-500]="activeTab() !== 'general'"
+           >
+             <span class="material-symbols-outlined text-lg">tune</span>
+             {{ t.map()['TAB_GENERAL'] }}
+           </button>
+           <button 
+             appTourTarget="tour-settings-data"
+             (click)="switchTab('data')" 
+             class="flex-1 py-2 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-2"
+             [class.bg-slate-100]="activeTab() === 'data'"
+             [class.dark:bg-slate-800]="activeTab() === 'data'"
+             [class.text-primary]="activeTab() === 'data'"
+             [class.text-slate-500]="activeTab() !== 'data'"
+           >
+             <span class="material-symbols-outlined text-lg">database</span>
+             {{ t.map()['TAB_DATA'] }}
+           </button>
+        </div>
 
                 <!-- Content Scrollable Area -->
                 <div class="flex-1 overflow-y-auto p-6 relative">
@@ -267,6 +271,22 @@ type ParsedData =
 
                                 <!-- Virtual Pets extra options removed: "Désactiver sur petits écrans" (controle supprimé par demande utilisateur) -->
                             </section>
+
+              <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
+
+              <!-- Tour -->
+              <section class="space-y-6">
+                <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider">{{ t.map()['SECTION_TOUR'] }}</h3>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-700 dark:text-slate-300 font-medium">{{ t.map()['LABEL_REACTIVATE_TOUR'] }}</span>
+                  <button 
+                    (click)="reactivateTour()"
+                    class="px-4 py-2 bg-primary text-white text-sm font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-sm"
+                  >
+                    {{ t.map()['BTN_START_TOUR'] }}
+                  </button>
+                </div>
+              </section>
                         </div>
                     }
 
@@ -449,75 +469,53 @@ type ParsedData =
                                             }
                                         </div>
 
-                                        <!-- Danger Zone -->
-                                        <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
-                                            <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-xl p-4 flex flex-col items-center text-center gap-3">
-                                                <div class="text-red-800 dark:text-red-200 font-bold text-sm">{{ t.map()['DANGER_ZONE'] }}</div>
-                                                <p class="text-xs text-red-600 dark:text-red-300 opacity-80 max-w-xs">{{ t.map()['DANGER_DESC'] }}</p>
-
-                                                @if (!resetConfirm()) {
-                                                    <button
-                                                            (click)="resetConfirm.set(true)"
-                                                            class="px-4 py-2 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-800 text-red-600 font-bold rounded-lg text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                                                    >
-                                                        {{ t.map()['BTN_RESET_APP'] }}
-                                                    </button>
-                                                } @else {
-                                                    <div class="flex gap-2 animate-fade-in">
-                                                        <button
-                                                                (click)="performFactoryReset()"
-                                                                class="px-4 py-2 bg-red-600 text-white font-bold rounded-lg text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30"
-                                                        >
-                                                            {{ t.map()['BTN_CONFIRM_RESET'] }}
-                                                        </button>
-                                                        <button
-                                                                (click)="resetConfirm.set(false)"
-                                                                class="px-4 py-2 bg-transparent text-slate-500 font-bold rounded-lg text-sm hover:text-slate-700 dark:hover:text-slate-300"
-                                                        >
-                                                            {{ t.map()['BTN_CANCEL'] }}
-                                                        </button>
-                                                    </div>
-                                                }
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            }
+                        <!-- Danger Zone -->
+                        <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
+                           <div class="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/30 rounded-xl p-4 flex flex-col items-center text-center gap-3">
+                              <div class="text-red-800 dark:text-red-200 font-bold text-sm">{{ t.map()['DANGER_ZONE'] }}</div>
+                              <p class="text-xs text-red-600 dark:text-red-300 opacity-80 max-w-xs">{{ t.map()['DANGER_DESC'] }}</p>
+                              
+                              @if (!resetConfirm()) {
+                                 <button 
+                                    appTourTarget="tour-settings-reset"
+                                    (click)="resetConfirm.set(true)" 
+                                    class="px-4 py-2 bg-white dark:bg-slate-900 border border-red-200 dark:border-red-800 text-red-600 font-bold rounded-lg text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                 >
+                                    {{ t.map()['BTN_RESET_APP'] }}
+                                 </button>
+                              } @else {
+                                 <div class="flex gap-2 animate-fade-in">
+                                    <button 
+                                       (click)="performFactoryReset()" 
+                                       class="px-4 py-2 bg-red-600 text-white font-bold rounded-lg text-sm hover:bg-red-700 transition-colors shadow-lg shadow-red-500/30"
+                                    >
+                                       {{ t.map()['BTN_CONFIRM_RESET'] }}
+                                    </button>
+                                    <button 
+                                       (click)="resetConfirm.set(false)" 
+                                       class="px-4 py-2 bg-transparent text-slate-500 font-bold rounded-lg text-sm hover:text-slate-700 dark:hover:text-slate-300"
+                                    >
+                                       {{ t.map()['BTN_CANCEL'] }}
+                                    </button>
+                                 </div>
+                              }
+                           </div>
                         </div>
-                    }
-                </div>
-            </div>
+                     }
+                  </div>
+               }
+             </div>
+          }
         </div>
-    `,
-    styles: [`
-        .animate-slide-up {
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .animate-fade-in {
-            animation: fadeIn 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-    `]
+      </div>
+    </div>
+  `,
+  styles: [`
+    .animate-slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  `]
 })
 export class SettingsModalComponent {
     close = output();
@@ -531,6 +529,7 @@ export class SettingsModalComponent {
     clipboard = inject(ClipboardService);
     toast = inject(ToastService);
     offline = inject(OfflineManagerService);
+  tour = inject(TourService);
     petsService = inject(VirtualPetsService);
     private router = inject(Router);
 
@@ -559,15 +558,26 @@ export class SettingsModalComponent {
             }
         });
 
-        effect(() => {
-            const cat = this.inspectingCategory();
-            if (cat) {
-                this.loadInspection(cat);
-            } else {
-                this.inspectionData.set([]);
-            }
-        });
-    }
+     effect(() => {
+       const cat = this.inspectingCategory();
+       if (cat) {
+         this.loadInspection(cat);
+       } else {
+         this.inspectionData.set([]);
+       }
+     });
+
+     this.tour.actionEvents$.subscribe(action => {
+       if (action === 'open-settings') {
+         const step = this.tour.steps[this.tour.currentStepIndex()];
+         if (step.id === 'tour-settings-general') {
+           this.switchTab('general');
+         } else if (step.id === 'tour-settings-data' || step.id === 'tour-settings-reset') {
+           this.switchTab('data');
+         }
+       }
+     });
+  }
 
     async refreshStats() {
         this.loading.set(true);
@@ -631,11 +641,15 @@ export class SettingsModalComponent {
         }
     }
 
-    async performFactoryReset() {
-        this.petsService.clearPets();
-        await this.storage.factoryReset();
-        window.location.reload();
-    }
+  async performFactoryReset() {
+     await this.storage.factoryReset();
+     window.location.reload();
+  }
+
+  reactivateTour() {
+    this.close.emit();
+    this.tour.startTour();
+  }
 
     // --- Import / Export ---
 

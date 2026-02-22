@@ -31,5 +31,6 @@ export default {
   "FILLER_SPACER": "间隔 (1x1)",
   "EMPTY_TITLE": "您的仪表盘是空的",
   "EMPTY_DESC": "在此固定您最常用的工具以便快速访问。",
-  "BTN_START": "开始自定义"
+  "BTN_START": "开始自定义",
+  "DASHBOARD_MOBILE_UNAVAILABLE": "此仪表盘针对桌面进行了优化，目前尚不可用于移动设备。"
 };

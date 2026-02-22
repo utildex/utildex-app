@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://utildex.com/">
     <meta property="og:title" content="Utildex - Local-First Modular Toolbox">
-    <meta property="og:description" content="A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and open source.">
+    <meta property="og:description" content="A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and source available.">
     <meta property="og:image" content="https://utildex.com/assets/images/preview-banner.jpg">
 
     <!-- Twitter -->
@@ -40,7 +40,7 @@
 
 </head>
 
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 overflow-x-hidden">
+<body class="bg-transparent text-slate-900 dark:text-slate-100 transition-colors duration-300 overflow-x-hidden">
 <script>
     // Critical Theme Init - Runs before paint to prevent flash and allow correct App Shell rendering
     (function() {
@@ -69,12 +69,12 @@
             :root { --bg-color: #ffffff; --border-color: #e2e8f0; --text-primary: #0f172a; --text-secondary: #475569; }
             .dark :root { --bg-color: #0f172a; --border-color: #1e293b; --text-primary: #f8fafc; --text-secondary: #94a3b8; }
             /* Tailwind mappings */
-            .dark body { background-color: #020617; color: #f1f5f9; } 
+            .dark body { background-color: transparent !important; color: #f1f5f9; } 
             /* Shell specific overrides */
-            html.dark .shell-wrapper { background-color: #020617; color: #f1f5f9; }
-            html.dark .shell-header { background-color: #0f172a; border-color: #1e293b; }
-            html:not(.dark) .shell-wrapper { background-color: #f8fafc; color: #0f172a; }
-            html:not(.dark) .shell-header { background-color: #ffffff; border-color: #e2e8f0; }
+            html.dark .shell-wrapper { background-color: transparent !important; color: #f1f5f9; }
+            html.dark .shell-header { background-color: transparent !important; border-color: #1e293b; }
+            html:not(.dark) .shell-wrapper { background-color: transparent !important; color: #0f172a; }
+            html:not(.dark) .shell-header { background-color: transparent !important; border-color: #e2e8f0; }
         </style>
 
         <div class="shell-header" style="display: flex; align-items: center; gap: 0.75rem;">

@@ -1,5 +1,5 @@
 
-import { Component, input, TemplateRef, ElementRef, viewChild, OnDestroy, effect, ChangeDetectionStrategy, NgZone, inject, PLATFORM_ID } from '@angular/core';
+import { Component, input, computed, TemplateRef, ElementRef, viewChild, OnDestroy, effect, ChangeDetectionStrategy, NgZone, inject, PLATFORM_ID } from '@angular/core';
 import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
 
 @Component({
@@ -15,6 +15,7 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
       (touchstart)="pause()"
       (touchend)="resume()"
     >
+      @if (enableInfiniteScroll() || items().length > 1) {
       <button 
         type="button"
         class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-lg border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-105 active:scale-95 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary hidden sm:flex items-center justify-center backdrop-blur-sm"
@@ -32,6 +33,7 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
       >
         <span class="material-symbols-outlined text-2xl">chevron_right</span>
       </button>
+      }
 
       <div 
         #scrollContainer
@@ -43,7 +45,8 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
         (wheel)="onWheel($event)"
       >
         <!-- Pre-clones for infinite backward scroll -->
-        @for (item of items(); track trackByFn($index, item) + '_pre'; let i = $index) {
+        @if (enableInfiniteScroll()) {
+          @for (item of items(); track trackByFn($index, item) + '_pre'; let i = $index) {
           <div 
             class="snap-start flex-shrink-0 transition-opacity duration-300"
             [class.w-[300px]]="marquee()"
@@ -54,6 +57,7 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
           >
             <ng-container *ngTemplateOutlet="itemTemplate() || defaultTemplate; context: { $implicit: item, index: i }"></ng-container>
           </div>
+          }
         }
 
         <!-- Original Items -->
@@ -71,7 +75,8 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
         }
 
         <!-- Post-clones for infinite forward scroll -->
-        @for (item of items(); track trackByFn($index, item) + '_post'; let i = $index) {
+        @if (enableInfiniteScroll()) {
+          @for (item of items(); track trackByFn($index, item) + '_post'; let i = $index) {
           <div 
             class="snap-start flex-shrink-0 transition-opacity duration-300"
             [class.w-[300px]]="marquee()"
@@ -82,6 +87,7 @@ import { NgTemplateOutlet, isPlatformBrowser } from '@angular/common';
           >
             <ng-container *ngTemplateOutlet="itemTemplate() || defaultTemplate; context: { $implicit: item, index: i }"></ng-container>
           </div>
+          }
         }
         
         <div class="w-1 flex-shrink-0 sm:hidden"></div>
@@ -153,6 +159,9 @@ export class CarouselComponent<T> implements OnDestroy {
   protected isPaused = false;
   private ngZone = inject(NgZone);
   private platformId = inject(PLATFORM_ID);
+  
+  // Only enable infinite scroll if we have enough items (e.g. > 3) or if it's a marquee
+  enableInfiniteScroll = computed(() => this.items().length > 3 || this.marquee());
 
   constructor() {
     effect(() => {
@@ -174,12 +183,16 @@ export class CarouselComponent<T> implements OnDestroy {
   }
 
   initializeScroll() {
+    if (!this.enableInfiniteScroll()) return;
+    
     const el = this.container()?.nativeElement;
     if (!el) return;
     el.scrollLeft = el.scrollWidth / 3;
   }
 
   onScroll() {
+    if (!this.enableInfiniteScroll()) return;
+
     const el = this.container()?.nativeElement;
     if (!el) return;
 
@@ -264,6 +277,15 @@ export class CarouselComponent<T> implements OnDestroy {
     const itemWidth = firstItem.offsetWidth;
     const gap = 16; 
     const step = itemWidth + gap;
+
+    if (!this.enableInfiniteScroll()) {
+      if (direction === 'right') {
+        el.scrollBy({ left: step, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: -step, behavior: 'smooth' });
+      }
+      return;
+    }
 
     const W = el.scrollWidth / 3;
 

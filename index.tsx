@@ -8,6 +8,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { AppComponent } from './src/app.component';
 import { routes } from './src/app.routes';
 import { GlobalErrorHandler } from './src/core/global-error-handler';
+import { TOUR_STEPS, DEFAULT_TOUR_STEPS } from './src/core/tour.config';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -25,6 +26,7 @@ bootstrapApplication(AppComponent, {
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
-    }
+    },
+    { provide: TOUR_STEPS, useValue: DEFAULT_TOUR_STEPS }
   ]
 }).catch(err => console.error(err));

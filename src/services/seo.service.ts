@@ -193,7 +193,7 @@ export class SeoService {
 
     const url = this.router.url;
     let title = 'Utildex - Local-First Modular Toolbox';
-    let desc = 'A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and open source.';
+    let desc = 'A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and source available.';
     let image = ''; // Default OG Image if available
 
     // 1. Tool Route

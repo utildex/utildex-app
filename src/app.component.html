@@ -1,12 +1,14 @@
-<div class="flex flex-col h-screen overflow-hidden">
+<app-background></app-background>
+
+<div class="flex flex-col h-screen supports-[height:100dvh]:h-[100dvh] overflow-hidden relative">
   
   <!-- Navbar -->
-  <header class="flex-shrink-0 z-40 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+  <header class="flex-shrink-0 z-40 w-full bg-white/5 dark:bg-slate-900/40 backdrop-blur-[2px] border-b border-transparent shadow-sm dark:shadow-none transition-all duration-300">
     <div class="max-w-full px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16 items-center">
         <!-- Logo -->
-        <div class="flex-shrink-0 flex items-center gap-2">
-          <a [routerLink]="'/' | localLink" class="flex items-center gap-3 focus:outline-none group">
+        <div class="flex-shrink-0 flex items-center gap-2 overflow-hidden">
+          <a [routerLink]="'/' | localLink" class="flex items-center gap-3 focus:outline-none group flex-shrink-0">
             <div class="w-9 h-9 group-hover:scale-105 transition-transform duration-200">
                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-sm">
                   <rect x="0" y="0" width="28" height="28" rx="8" class="fill-red-400" />
@@ -22,7 +24,7 @@
             </div>
             <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white group-hover:text-primary transition-colors">Utildex</span>
           </a>
-          <span class="ml-2 px-2.5 py-0.5 rounded-full border border-pink-200/60 dark:border-pink-500/20 bg-pink-50/50 dark:bg-pink-500/5 shadow-sm">
+          <span class="ml-2 px-2.5 py-0.5 rounded-full border border-pink-200/60 dark:border-pink-500/20 bg-pink-50/50 dark:bg-pink-500/5 shadow-sm hidden sm:inline-block">
              <span class="text-xs font-bold bg-gradient-to-r from-pink-500 to-violet-600 bg-clip-text text-transparent">
                {{ t.map()['EARLY_PREVIEW'] }}
              </span>
@@ -30,7 +32,7 @@
         </div>
 
         <!-- Right Side -->
-        <div class="flex items-center gap-2">
+        <div class="flex items-center justify-end gap-2 flex-1 md:flex-none">
           <!-- Desktop Nav -->
           <nav class="hidden md:flex gap-1 mr-2">
              <a [routerLink]="'/my-dashboard' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1">
@@ -40,12 +42,6 @@
              <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
              <a [routerLink]="'/tools' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
                {{ t.map()['NAV_ALL_TOOLS'] }}
-             </a>
-             <a [routerLink]="'/categories' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-               {{ t.map()['NAV_CATEGORIES'] }}
-             </a>
-             <a [routerLink]="'/articles' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-               {{ t.map()['NAV_ARTICLES'] }}
              </a>
           </nav>
 
@@ -64,7 +60,8 @@
           <!-- Settings Button -->
             <button
                     (click)="toggleSettings()"
-                    class="h-10 w-10 flex items-center justify-center rounded-full
+                    appTourTarget="tour-settings-open"
+                    class="hidden md:flex h-10 w-10 items-center justify-center rounded-full
                      text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800
                      transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
                                 aria-label="Open Settings"
@@ -91,7 +88,8 @@
                     (click)="toggleSidebar()"
                     [appBubble]="'BUBBLE_HISTORY_INFO'"
                     [bubblePos]="'bottom'"
-                    class="h-10 w-10 flex items-center justify-center rounded-full
+                    appTourTarget="tour-history"
+                    class="hidden md:flex h-10 w-10 items-center justify-center rounded-full
                      text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800
                      transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
                                 [class.bg-slate-100]="sidebarOpen()"
@@ -110,7 +108,7 @@
           <!-- Mobile Menu Button -->
           <button 
             (click)="toggleMobileMenu()" 
-            class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-primary ml-1"
+            class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-primary ml-auto"
           >
             <span class="material-symbols-outlined">
               {{ mobileMenuOpen() ? 'close' : 'menu' }}
@@ -137,12 +135,27 @@
             <a [routerLink]="'/tools' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
               {{ t.map()['NAV_ALL_TOOLS'] }}
             </a>
-            <a [routerLink]="'/categories' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
-              {{ t.map()['NAV_CATEGORIES'] }}
-            </a>
-            <a [routerLink]="'/articles' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
-              {{ t.map()['NAV_ARTICLES'] }}
-            </a>
+            
+            <div class="h-px bg-slate-100 dark:bg-slate-800 my-2"></div>
+            
+            <button (click)="toggleSettings(); mobileMenuOpen.set(false)" class="w-full text-left px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800">
+               <span class="material-symbols-outlined">settings</span>
+               {{ t.map()['TOUR_TITLE_SETTINGS_OPEN'] || 'Settings' }}
+            </button>
+            
+            <button (click)="toggleSidebar(); mobileMenuOpen.set(false)" class="w-full text-left px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800">
+               <span class="material-symbols-outlined">history</span>
+               {{ t.map()['NAV_HISTORY'] || 'History' }}
+            </button>
+            
+            @if (!tour.hasBeenDismissed() && !tour.isActive()) {
+               <div class="hidden md:block">
+                    <button (click)="tour.startTour(); mobileMenuOpen.set(false)" class="w-full text-left px-4 py-3 rounded-xl bg-primary/5 border border-primary/20 text-primary font-bold flex items-center gap-2 mt-2">
+                        <span class="material-symbols-outlined">explore</span>
+                        {{ t.map()['TOUR_OPT_IN'] || 'Quick Tour' }}
+                    </button>
+               </div>
+            }
           </nav>
         </div>
       </div>
@@ -154,14 +167,16 @@
     
     <!-- Main Scrollable Area -->
     <main class="flex-1 w-full overflow-y-auto overflow-x-hidden">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-full flex flex-col">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-full flex flex-col">
         <router-outlet></router-outlet>
         
         <!-- Footer in flow -->
-        <footer class="mt-auto pt-12 pb-6 border-t border-slate-200 dark:border-slate-800">
+        <footer class="mt-auto py-6 border-t border-slate-200 dark:border-slate-800">
           <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
             <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
             <div class="flex flex-wrap justify-center md:justify-end gap-4">
+               <a [routerLink]="'/categories' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_CATEGORIES'] }}</a>
+               <a [routerLink]="'/articles' | localLink" appTourTarget="tour-blog" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_ARTICLES'] }}</a>
                <a [routerLink]="'/legal' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_LEGAL'] }}</a>
                <a [routerLink]="'/privacy' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_PRIVACY'] }}</a>
                <a [routerLink]="'/terms' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_TERMS'] }}</a>
@@ -174,7 +189,7 @@
 
     <!-- Right Sidebar (Collapsible) -->
     <aside 
-      class="fixed inset-y-0 right-0 w-80 bg-white dark:bg-slate-900 shadow-2xl z-30 transform transition-transform duration-300 md:relative md:transform-none md:shadow-none md:border-l md:border-slate-200 md:dark:border-slate-800"
+      class="fixed inset-y-0 right-0 w-80 bg-white dark:bg-slate-900 shadow-2xl z-50 transform transition-transform duration-300 md:relative md:transform-none md:shadow-none md:border-l md:border-slate-200 md:dark:border-slate-800"
       [class.translate-x-full]="!sidebarOpen()"
       [class.md:hidden]="!sidebarOpen()"
       [class.md:block]="sidebarOpen()"
@@ -184,11 +199,12 @@
 
     <!-- Overlay for mobile sidebar -->
     @if (sidebarOpen()) {
-      <div class="fixed inset-0 bg-black/20 z-20 md:hidden" (click)="sidebarOpen.set(false)"></div>
+      <div class="fixed inset-0 bg-black/20 z-45 md:hidden" (click)="sidebarOpen.set(false)"></div>
     }
   </div>
 
   <!-- Global Elements -->
+  <app-tour-overlay></app-tour-overlay>
   <app-guide></app-guide>
   <app-toast></app-toast>
   <app-network-status></app-network-status>
@@ -199,6 +215,24 @@
   @if (settingsOpen()) {
     <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
   }
+  
+  <div class="hidden md:block">
+      <!-- Quick Tour Opt-in (Desktop Only) -->
+      @if (showTourFab() && !tour.hasBeenDismissed() && !tour.isActive()) {
+        <div class="fixed bottom-6 left-6 z-50 animate-fade-in">
+          <div class="bg-white dark:bg-slate-800 rounded-full shadow-xl border border-slate-200 dark:border-slate-700 p-1 flex items-center gap-2 pr-4 group hover:border-primary/50 transition-all cursor-pointer animate-glow-pulse"
+              (click)="tour.startTour()">
+            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+              <span class="material-symbols-outlined">explore</span>
+            </div>
+            <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ t.map()['TOUR_OPT_IN'] || 'Quick Tour' }}</span>
+            <button (click)="tour.dismissTour(); $event.stopPropagation()" class="ml-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700">
+              <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+          </div>
+        </div>
+      }
+  </div>
 
   <!-- Virtual Pets -->
   @defer (on immediate) {

@@ -1,26 +1,29 @@
 
-import { Component, inject, signal, computed, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, signal, computed, effect, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolService, DashboardWidget, PendingPlacement } from '../../services/tool.service';
 import { WidgetHostComponent } from '../../components/widget-host/widget-host.component';
 import { I18nService } from '../../services/i18n.service';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { TourTargetDirective } from '../../directives/tour-target.directive';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
+import { TourService } from '../../services/tour.service';
+
 @Component({
   selector: 'app-user-dashboard',
   standalone: true,
-  imports: [WidgetHostComponent, CommonModule, FormsModule],
+  imports: [WidgetHostComponent, CommonModule, FormsModule, TourTargetDirective],
   providers: [
     provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
   ],
   template: `
-    <div class="space-y-6 pb-40">
+    <div class="space-y-6 pb-8">
       <!-- Header -->
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -39,8 +42,9 @@ import zh from './i18n/zh';
             >
               {{ t.map()['BTN_DONE'] }}
             </button>
-          } @else {
+          } @else if (!isMobile()) {
             <button 
+              appTourTarget="tour-dashboard-edit"
               (click)="isEditMode.set(true)" 
               class="px-4 py-2 rounded-xl text-sm font-medium border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-2"
             >
@@ -52,23 +56,35 @@ import zh from './i18n/zh';
       </div>
 
       <!-- Toolbar (Only in Edit Mode) -->
-      @if (isEditMode() && !pendingPlacement()) {
+      @if (isEditMode() && !pendingPlacement() && !isMobile()) {
         <div class="sticky top-4 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xl flex gap-4 overflow-x-auto animate-fade-in-up items-center">
            <span class="text-xs font-bold text-slate-400 uppercase mr-2 shrink-0">{{ t.map()['LABEL_ADD'] }}</span>
            
-           <button (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg shadow hover:opacity-90 transition-opacity text-sm font-bold whitespace-nowrap">
+           <button appTourTarget="tour-dashboard-add-widget" (click)="openAddModal()" class="flex items-center gap-2 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-lg shadow hover:opacity-90 transition-opacity text-sm font-bold whitespace-nowrap">
               <span class="material-symbols-outlined">add_circle</span>
               {{ t.map()['BTN_ADD_TOOL'] }}
            </button>
            
            <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-2"></div>
            
-           <button (click)="openFillerModal()" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm font-bold whitespace-nowrap">
+           <button appTourTarget="tour-dashboard-add-filler" (click)="openFillerModal()" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors text-sm font-bold whitespace-nowrap">
               <span class="material-symbols-outlined">widgets</span>
               {{ t.map()['BTN_ADD_FILLER'] }}
            </button>
         </div>
       }
+
+      @if (isMobile()) {
+          <div class="flex flex-col items-center justify-center py-20 text-center px-4 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-slate-50/50 dark:bg-slate-900/50">
+              <div class="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-6 shadow-sm">
+                  <span class="material-symbols-outlined text-4xl text-slate-400 dark:text-slate-500">desktop_windows</span>
+              </div>
+              <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">{{ t.map()['UNAVAILABLE_TITLE'] || 'Not Available' }}</h3>
+              <p class="text-slate-500 dark:text-slate-400 max-w-xs mx-auto leading-relaxed">
+                  {{ t.map()['DASHBOARD_MOBILE_UNAVAILABLE'] }}
+              </p>
+          </div>
+      } @else {
 
       <!-- Placement Message -->
       @if (pendingPlacement()) {
@@ -95,7 +111,7 @@ import zh from './i18n/zh';
         (mouseleave)="hoveredSlot.set(null)"
       >
          <!-- Empty State Hero -->
-         @if (dashboardWidgets().length === 0 && !isEditMode()) {
+         @if (dashboardWidgets().length === 0 && !isEditMode() && !isMobile()) {
             <div class="absolute inset-0 flex flex-col items-center justify-center -mt-20">
                <div class="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-full mb-6 border border-slate-100 dark:border-slate-700 animate-fade-in-up">
                   <span class="material-symbols-outlined text-6xl text-slate-300">dashboard_customize</span>
@@ -212,6 +228,7 @@ import zh from './i18n/zh';
             </div>
          }
       </div>
+      }
     </div>
   `
 })
@@ -220,9 +237,49 @@ export class UserDashboardComponent {
   i18n = inject(I18nService);
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
+  tour = inject(TourService);
+  platformId = inject(PLATFORM_ID);
 
   isEditMode = signal(false);
+  isMobile = signal(false);
+  private resizeListener?: () => void;
   
+  constructor() {
+    if (isPlatformBrowser(this.platformId)) {
+        this.isMobile.set(window.innerWidth < 768);
+        this.resizeListener = () => this.isMobile.set(window.innerWidth < 768);
+        window.addEventListener('resize', this.resizeListener);
+    }
+
+    effect(() => {
+      if (this.tour.isActive()) {
+        const step = this.tour.steps[this.tour.currentStepIndex()];
+        if (step.id === 'tour-dashboard-add-widget' || step.id === 'tour-dashboard-add-filler') {
+          this.isEditMode.set(true);
+        } else if (step.id === 'tour-history' || step.id === 'tour-dashboard-edit') {
+          this.isEditMode.set(false);
+        }
+      }
+    }, { allowSignalWrites: true });
+
+    // Listen for placement requests from the global modal
+    effect(() => {
+      const request = this.toolService.consumePlacementRequest();
+      if (request) {
+        if (this.isMobile()) {
+          request.w = 1;
+        }
+        this.pendingPlacement.set(request);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+      if (isPlatformBrowser(this.platformId) && this.resizeListener) {
+          window.removeEventListener('resize', this.resizeListener);
+      }
+  }
+
   // Placement State
   pendingPlacement = signal<PendingPlacement | null>(null);
   hoveredSlot = signal<{x: number, y: number} | null>(null);
@@ -246,19 +303,6 @@ export class UserDashboardComponent {
         this.cols
     );
   });
-
-  constructor() {
-    // Listen for placement requests from the global modal
-    effect(() => {
-      const request = this.toolService.consumePlacementRequest();
-      if (request) {
-        if (this.isMobile()) {
-          request.w = 1;
-        }
-        this.pendingPlacement.set(request);
-      }
-    });
-  }
 
   getPhantomWidget(): DashboardWidget {
      const pending = this.pendingPlacement()!;
@@ -303,10 +347,6 @@ export class UserDashboardComponent {
   }
 
   // --- Dynamic Layout Calculations ---
-
-  isMobile(): boolean {
-    return window.innerWidth < 768;
-  }
 
   get cols() {
     return this.isMobile() ? 1 : 4;

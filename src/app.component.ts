@@ -1,5 +1,5 @@
 
-import { Component, inject, signal, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { ThemeService } from './services/theme.service';
 import { ToolService } from './services/tool.service';
@@ -15,8 +15,11 @@ import { CommandPaletteComponent } from './components/command-palette/command-pa
 import { ErrorOverlayComponent } from './components/error-overlay/error-overlay.component';
 import { NetworkStatusComponent } from './components/network-status/network-status.component';
 import { DashboardModalsComponent } from './components/dashboard-modals/dashboard-modals.component'; // Added
+import { BackgroundComponent } from './components/background/background.component';
 import { DownloadStatusComponent } from './components/download-status/download-status.component';
 import { GuideComponent } from './components/guide/guide.component';
+import { TourOverlayComponent } from './components/tour-overlay/tour-overlay.component';
+import { TourTargetDirective } from './directives/tour-target.directive';
 import { OfflineManagerService } from './services/offline-manager.service';
 import { BubbleDirective } from './directives/bubble.directive';
 import { VirtualPetsComponent } from './components/virtual-pets/virtual-pets.component';
@@ -26,6 +29,7 @@ import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 import { filter } from 'rxjs/operators';
+import { TourService } from './services/tour.service';
 
 @Component({
   selector: 'app-root',
@@ -34,8 +38,8 @@ import { filter } from 'rxjs/operators';
     RouterOutlet, RouterLink, RouterLinkActive,
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
-    DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective,
-    VirtualPetsComponent, LocalLinkPipe
+    DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective, BackgroundComponent,
+    VirtualPetsComponent, LocalLinkPipe, TourOverlayComponent, TourTargetDirective
   ],
   templateUrl: './app.component.html',
   providers: [
@@ -50,6 +54,7 @@ export class AppComponent implements OnInit {
   seoService = inject(SeoService); 
   networkService = inject(NetworkService); 
   offline = inject(OfflineManagerService);
+  tour = inject(TourService);
   t = inject(ScopedTranslationService);
   router: Router = inject(Router);
 
@@ -57,6 +62,7 @@ export class AppComponent implements OnInit {
   sidebarOpen = signal(false);
   settingsOpen = signal(false);
   mobileMenuOpen = signal(false);
+  showTourFab = signal(false);
 
   @ViewChild(CommandPaletteComponent) commandPalette!: CommandPaletteComponent;
 
@@ -64,6 +70,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Services initialized via inject()
+    setTimeout(() => {
+      this.showTourFab.set(true);
+    }, 1500);
   }
 
   constructor() {
@@ -77,18 +86,26 @@ export class AppComponent implements OnInit {
         this.sidebarOpen.set(false);
       }
     });
+
+    this.tour.actionEvents$.subscribe(action => {
+      if (action === 'open-settings') {
+        this.settingsOpen.set(true);
+      } else if (action === 'close-settings') {
+        this.settingsOpen.set(false);
+      }
+    });
   }
 
   toggleSidebar() {
-    this.sidebarOpen.update(v => !v);
+    this.sidebarOpen.update((v: boolean) => !v);
   }
 
   toggleSettings() {
-    this.settingsOpen.update(v => !v);
+    this.settingsOpen.update((v: boolean) => !v);
   }
   
   toggleMobileMenu() {
-    this.mobileMenuOpen.update(v => !v);
+    this.mobileMenuOpen.update((v: boolean) => !v);
   }
 
   openCommandPalette() {

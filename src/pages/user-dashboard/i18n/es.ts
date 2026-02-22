@@ -31,5 +31,6 @@ export default {
   "FILLER_SPACER": "Espaciador (1x1)",
   "EMPTY_TITLE": "Tu Tablero está Vacío",
   "EMPTY_DESC": "Fija tus herramientas favoritas aquí para un acceso rápido.",
-  "BTN_START": "Empezar a Personalizar"
+  "BTN_START": "Empezar a personalizar",
+  "DASHBOARD_MOBILE_UNAVAILABLE": "Este panel está optimizado para escritorio y aún no está disponible en dispositivos móviles."
 };
