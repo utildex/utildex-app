@@ -65,9 +65,6 @@ export class VirtualPetsService implements OnDestroy {
       this.persistence.storage(this.showSpawnButton, 'virtual-pets-show-btn', 'boolean');
       this.persistence.storage(this.activePets, 'active-pets', { type: 'object' });
 
-      // Load custom sprites manifest (fire-and-forget)
-      this.loadCustomManifest();
-
       // Automatically preload assets if feature is already enabled (rehydrated from persistence)
       effect(() => {
         if (this.enabled()) {
@@ -103,51 +100,6 @@ export class VirtualPetsService implements OnDestroy {
 
   ngOnDestroy() {
     this.clearPetsSource.complete();
-  }
-
-  /**
-   * Attempts to load a JSON manifest file in /assets/images/virtual-pets/custom/manifest.json
-   */
-  async loadCustomManifest() {
-    if (!this.isBrowser) return;
-    try {
-      // Use default caching strategy to support offline regular usage
-      const res = await fetch('/assets/images/virtual-pets/custom/manifest.json');
-      if (!res.ok) return; // no manifest
-      const json = await res.json();
-
-      // Basic validation: ensure json is an object
-      if (!json || typeof json !== 'object') return;
-
-      // convert filenames to urls and preload
-      Object.keys(json).forEach((type: string) => {
-        const states = json[type];
-        // Ensure states is a Record<string, string>
-        if (!states || typeof states !== 'object') return;
-
-        this.customSprites[type] = this.customSprites[type] || {};
-        Object.entries(states as Record<string, string>).forEach(([state, filename]) => {
-          if (typeof filename !== 'string') return;
-
-          const url = `/assets/images/virtual-pets/custom/${filename}`;
-          this.customSprites[type][state] = url;
-          // Preload image
-          const img = new Image();
-          img.src = url;
-          this.preloadedImages.push(img);
-        });
-      });
-    } catch {
-      // ignore failures silently
-    }
-  }
-
-  /**
-   * Re-scans the custom folder (reloads the manifest). Useful after adding gifs.
-   */
-  async reloadCustomManifest() {
-    this.customSprites = {};
-    await this.loadCustomManifest();
   }
 
   /**
