@@ -35,14 +35,6 @@ import { CommonModule } from '@angular/common';
             <div class="stars-lg" [style.box-shadow]="starsLarge"></div>
         </div>
 
-
-        <!-- Cosmic Orbits -->
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vmin] h-[100vmin] opacity-0 dark:opacity-40 pointer-events-none transition-opacity duration-700">
-             <div class="absolute inset-0 border border-transparent dark:border-slate-700/30 rounded-full animate-[spin_60s_linear_infinite]"></div>
-             <div class="absolute inset-[10%] border border-transparent dark:border-slate-700/30 rounded-full animate-[spin_80s_linear_reverse_infinite]"></div>
-             <div class="absolute inset-[25%] border border-transparent dark:border-slate-800/30 rounded-full animate-[spin_100s_linear_infinite]"></div>
-        </div>
-        
     </div>
   `,
   styles: [`
