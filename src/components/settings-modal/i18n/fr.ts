@@ -12,6 +12,8 @@ export default {
   "LABEL_COLOR": "Couleur d'accentuation",
   "LABEL_FONT": "Police d'écriture",
   "LABEL_DENSITY": "Mode Compact",
+  "LABEL_PETS": "Animaux Virtuels",
+  "LABEL_PETS_DESC": "Affiche des animaux animés qui traversent l'écran",
   "STATUS_ONLINE": "En ligne",
   "STATUS_OFFLINE": "Hors ligne",
 
@@ -21,7 +23,10 @@ export default {
   "CAT_FAVORITES": "Favoris",
   "CAT_HISTORY": "Historique",
   "CAT_PREFS": "Préférences",
-  "CAT_TOOLS": "États des outils",  "CAT_FILES": "Fichiers",  
+  "CAT_TOOLS": "États des outils",
+  "CAT_PETS": "Animaux virtuels",
+
+  "CAT_FILES": "Fichiers",
   "BTN_VIEW": "Inspecter",
   "BTN_DELETE": "Effacer",
   "BTN_BACK": "Retour",

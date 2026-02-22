@@ -22,6 +22,7 @@ import { TourOverlayComponent } from './components/tour-overlay/tour-overlay.com
 import { TourTargetDirective } from './directives/tour-target.directive';
 import { OfflineManagerService } from './services/offline-manager.service';
 import { BubbleDirective } from './directives/bubble.directive';
+import { VirtualPetsComponent } from './components/virtual-pets/virtual-pets.component';
 import { LocalLinkPipe } from './core/pipes/local-link.pipe';
 import en from './i18n/en';
 import fr from './i18n/fr';
@@ -38,7 +39,7 @@ import { TourService } from './services/tour.service';
     ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
     CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
     DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective, BackgroundComponent,
-    LocalLinkPipe, TourOverlayComponent, TourTargetDirective
+    VirtualPetsComponent, LocalLinkPipe, TourOverlayComponent, TourTargetDirective
   ],
   templateUrl: './app.component.html',
   providers: [

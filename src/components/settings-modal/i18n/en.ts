@@ -12,6 +12,8 @@ export default {
   "LABEL_COLOR": "Accent Color",
   "LABEL_FONT": "Font Family",
   "LABEL_DENSITY": "Compact Mode",
+  "LABEL_PETS": "Virtual Pets",
+  "LABEL_PETS_DESC": "Show animated pets walking across the screen",
   "STATUS_ONLINE": "Internet",
   "STATUS_OFFLINE": "Offline",
   
@@ -22,8 +24,9 @@ export default {
   "CAT_HISTORY": "Usage History",
   "CAT_PREFS": "Preferences",
   "CAT_TOOLS": "Tool States",
+  "CAT_PETS": "Virtual Pets",
   "CAT_FILES": "Files",
-  
+
   "BTN_VIEW": "Inspect Data",
   "BTN_DELETE": "Clear Data",
   "BTN_BACK": "Back",
