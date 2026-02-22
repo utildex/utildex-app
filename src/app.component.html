@@ -219,7 +219,7 @@
   <div class="hidden md:block">
       <!-- Quick Tour Opt-in (Desktop Only) -->
       @if (showTourFab() && !tour.hasBeenDismissed() && !tour.isActive()) {
-        <div class="fixed bottom-6 right-6 z-50 animate-fade-in">
+        <div class="fixed bottom-6 left-6 z-50 animate-fade-in">
           <div class="bg-white dark:bg-slate-800 rounded-full shadow-xl border border-slate-200 dark:border-slate-700 p-1 flex items-center gap-2 pr-4 group hover:border-primary/50 transition-all cursor-pointer animate-glow-pulse"
               (click)="tour.startTour()">
             <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
@@ -238,6 +238,5 @@
   @defer (on immediate) {
     <app-virtual-pets></app-virtual-pets>
   }
-
 
 </div>
