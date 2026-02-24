@@ -356,6 +356,7 @@ export class PdfToImgComponent {
         canvas.width = viewport.width;
 
         await page.render({
+          canvas: canvas,
           canvasContext: context!,
           viewport: viewport,
         }).promise;
@@ -421,6 +422,7 @@ export class PdfToImgComponent {
         canvas.width = viewport.width;
 
         await page.render({
+          canvas: canvas,
           canvasContext: context!,
           viewport: viewport,
         }).promise;
