@@ -1,0 +1,18 @@
+# CODEOWNERS — GitHub will request review from these users for any matching path.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @R-Elias
+
+# CI / build pipeline — any change needs extra scrutiny
+.github/                @R-Elias
+angular.json            @R-Elias
+tsconfig.json           @R-Elias
+package.json            @R-Elias
+
+# Tool registries are load-bearing — both must stay in sync
+src/data/tool-registry.ts   @R-Elias
+src/core/tool-registry.ts   @R-Elias
+
+# Integrity / scripts
+scripts/                @R-Elias
