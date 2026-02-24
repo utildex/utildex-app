@@ -1,13 +1,17 @@
 {
   "name": "utildex",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "ng serve",
     "prebuild": "tsx scripts/generate-sitemap.ts",
     "build": "ng build",
     "preview": "ng serve --configuration=production",
+    "check:integrity": "tsx scripts/check-integrity.ts",
     "lint": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs --fix"
   },
