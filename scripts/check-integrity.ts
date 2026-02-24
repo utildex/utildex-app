@@ -2,6 +2,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getKeys(obj: any, prefix = ''): string[] {
   let keys: string[] = [];
   for (const key in obj) {
@@ -25,6 +26,7 @@ async function validateI18nDir(dir: string, context: string): Promise<boolean> {
   }
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const contents: Record<string, any> = {};
     for (const lang of languages) {
       const modulePath = path.resolve(dir, `${lang}.ts`);
