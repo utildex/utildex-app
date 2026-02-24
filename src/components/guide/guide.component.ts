@@ -11,13 +11,11 @@ import zh from '../../i18n/zh';
   selector: 'app-guide',
   standalone: true,
   imports: [CommonModule],
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     @if (state().isVisible) {
-      <div 
-        class="fixed z-[70] transition-all duration-300 ease-out pointer-events-none"
+      <div
+        class="pointer-events-none fixed z-[70] transition-all duration-300 ease-out"
         [style.top.px]="coords().top"
         [style.left.px]="coords().left"
         [class.opacity-0]="!display()"
@@ -26,45 +24,47 @@ import zh from '../../i18n/zh';
         [class.scale-100]="display()"
       >
         <!-- Cloud Body -->
-        <div class="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-md text-slate-900 dark:text-white px-5 py-3 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 max-w-xs md:max-w-sm">
-            <!-- Text Content -->
-            <p class="text-sm font-medium leading-relaxed text-center">
-               {{ t.get(state().messageKey) || state().messageKey }}
-            </p>
+        <div
+          class="relative max-w-xs rounded-2xl border border-slate-200 bg-white/90 px-5 py-3 text-slate-900 shadow-xl backdrop-blur-md md:max-w-sm dark:border-slate-700 dark:bg-slate-800/90 dark:text-white"
+        >
+          <!-- Text Content -->
+          <p class="text-center text-sm leading-relaxed font-medium">
+            {{ t.get(state().messageKey) || state().messageKey }}
+          </p>
 
-            <!-- Triangle (Only if anchored) -->
-            @if (state().targetRect) {
-               <div 
-                 class="absolute w-4 h-4 bg-white/90 dark:bg-slate-800/90 border-r border-b border-slate-200 dark:border-slate-700 transform rotate-45"
-                 [style.left.px]="triangleLeft()"
-                 [class.-bottom-2]="isAbove()"
-                 [class.-top-2]="!isAbove()"
-                 [class.border-l]="!isAbove()" 
-                 [class.border-t]="!isAbove()"
-                 [class.border-r-0]="!isAbove()"
-                 [class.border-b-0]="!isAbove()"
-               ></div>
-            }
+          <!-- Triangle (Only if anchored) -->
+          @if (state().targetRect) {
+            <div
+              class="absolute h-4 w-4 rotate-45 transform border-r border-b border-slate-200 bg-white/90 dark:border-slate-700 dark:bg-slate-800/90"
+              [style.left.px]="triangleLeft()"
+              [class.-bottom-2]="isAbove()"
+              [class.-top-2]="!isAbove()"
+              [class.border-l]="!isAbove()"
+              [class.border-t]="!isAbove()"
+              [class.border-r-0]="!isAbove()"
+              [class.border-b-0]="!isAbove()"
+            ></div>
+          }
         </div>
       </div>
     }
-  `
+  `,
 })
 export class GuideComponent {
   guide = inject(GuideService);
   t = inject(ScopedTranslationService);
-  
+
   state = this.guide.state;
   display = signal(false);
 
   constructor() {
     // Animation tick
     effect(() => {
-        if (this.state().isVisible) {
-            requestAnimationFrame(() => this.display.set(true));
-        } else {
-            this.display.set(false);
-        }
+      if (this.state().isVisible) {
+        requestAnimationFrame(() => this.display.set(true));
+      } else {
+        this.display.set(false);
+      }
     });
   }
 
@@ -72,19 +72,19 @@ export class GuideComponent {
   coords = computed(() => {
     const s = this.state();
     if (!s.targetRect) {
-        // Broadcast Mode: Bottom Center
-        return { 
-            top: window.innerHeight - 100, 
-            left: (window.innerWidth / 2) - 150
-        };
+      // Broadcast Mode: Bottom Center
+      return {
+        top: window.innerHeight - 100,
+        left: window.innerWidth / 2 - 150,
+      };
     }
 
     const rect = s.targetRect;
     const gap = 12;
-    
+
     // Default to Above
     let top = rect.top - gap - 60;
-    let left = rect.left + (rect.width / 2) - 100;
+    let left = rect.left + rect.width / 2 - 100;
 
     // Bounds checking (Simplistic)
     if (top < 20) top = rect.bottom + gap;
@@ -93,22 +93,22 @@ export class GuideComponent {
 
     return { top, left };
   });
-  
+
   isAbove = computed(() => {
-      const s = this.state();
-      if (!s.targetRect) return true;
-      const c = this.coords();
-      return c.top < s.targetRect.top;
+    const s = this.state();
+    if (!s.targetRect) return true;
+    const c = this.coords();
+    return c.top < s.targetRect.top;
   });
 
   triangleLeft = computed(() => {
-      const s = this.state();
-      const c = this.coords();
-      if (!s.targetRect) return 0;
-      
-      const centerTarget = s.targetRect.left + (s.targetRect.width / 2);
-      const rel = centerTarget - c.left;
-      
-      return Math.max(10, Math.min(180, rel - 8));
+    const s = this.state();
+    const c = this.coords();
+    if (!s.targetRect) return 0;
+
+    const centerTarget = s.targetRect.left + s.targetRect.width / 2;
+    const rel = centerTarget - c.left;
+
+    return Math.max(10, Math.min(180, rel - 8));
   });
 }

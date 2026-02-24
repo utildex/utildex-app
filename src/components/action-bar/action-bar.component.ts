@@ -1,4 +1,3 @@
-
 import { Component, input, inject, computed } from '@angular/core';
 import { ClipboardService } from '../../services/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -10,32 +9,34 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-action-bar',
   standalone: true,
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
-    <div class="flex flex-wrap items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-700 rounded-b-2xl">
-      <div class="mr-auto text-sm text-slate-500 font-medium flex items-center gap-2">
+    <div
+      class="flex flex-wrap items-center gap-3 rounded-b-2xl border-t border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50"
+    >
+      <div class="mr-auto flex items-center gap-2 text-sm font-medium text-slate-500">
         <span class="material-symbols-outlined text-lg" aria-hidden="true">check_circle</span>
         {{ t.map()['READY_LABEL'] }}
       </div>
 
       <div class="flex gap-2">
         @if (canCopy()) {
-          <button 
-            (click)="copy()" 
-            class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-95"
+          <button
+            (click)="copy()"
+            class="focus:ring-primary inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
             [title]="t.map()['BTN_COPY']"
             [attr.aria-label]="t.map()['BTN_COPY']"
           >
-            <span class="material-symbols-outlined text-lg sm:mr-2" aria-hidden="true">content_copy</span>
+            <span class="material-symbols-outlined text-lg sm:mr-2" aria-hidden="true"
+              >content_copy</span
+            >
             <span class="hidden sm:inline">{{ t.map()['BTN_COPY'] }}</span>
           </button>
         }
 
-        <button 
-          (click)="download()"  
-          class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-95"
+        <button
+          (click)="download()"
+          class="focus:ring-primary inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
           [title]="t.map()['BTN_DOWNLOAD']"
           [attr.aria-label]="t.map()['BTN_DOWNLOAD']"
         >
@@ -44,9 +45,9 @@ import zh from './i18n/zh';
         </button>
 
         @if (canPrint()) {
-          <button 
-            (click)="print()"  
-            class="inline-flex items-center px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-95"
+          <button
+            (click)="print()"
+            class="focus:ring-primary inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
             [title]="t.map()['BTN_PRINT']"
             [attr.aria-label]="t.map()['BTN_PRINT']"
           >
@@ -56,7 +57,7 @@ import zh from './i18n/zh';
         }
       </div>
     </div>
-  `
+  `,
 })
 export class ActionBarComponent {
   content = input.required<string | Uint8Array>();

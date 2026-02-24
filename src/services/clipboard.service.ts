@@ -1,4 +1,3 @@
-
 import { Injectable, signal, inject } from '@angular/core';
 import { ToastService } from './toast.service';
 import { DbService } from './db.service';
@@ -11,11 +10,11 @@ export interface ClipboardItem {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClipboardService {
   history = signal<ClipboardItem[]>([]);
-  
+
   private toast = inject(ToastService);
   private db = inject(DbService);
 
@@ -41,11 +40,11 @@ export class ClipboardService {
       id: crypto.randomUUID(),
       text,
       timestamp: Date.now(),
-      source
+      source,
     };
 
-    this.history.update(prev => {
-      const filtered = prev.filter(item => item.text !== text);
+    this.history.update((prev) => {
+      const filtered = prev.filter((item) => item.text !== text);
       const updated = [newItem, ...filtered].slice(0, 20);
       this.persistHistory(updated);
       return updated;

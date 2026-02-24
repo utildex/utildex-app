@@ -1,15 +1,14 @@
-
 import { signal, WritableSignal, computed, Signal } from '@angular/core';
 import { DbService } from './db.service';
 
 /**
  * A generic State Manager for tools backed by IndexedDB (records store).
- * 
+ *
  * Usage:
  * class MyTool {
  *   state = new ToolState('my-tool', { count: 0 }, inject(DbService));
  *   count = this.state.select('count');
- *   
+ *
  *   inc() { this.state.update(s => ({ count: s.count + 1 })); }
  * }
  */
@@ -19,9 +18,9 @@ export class ToolState<T extends object> {
   private isLoaded = false;
 
   constructor(
-    private scope: string, 
+    private scope: string,
     private defaultState: T,
-    private db: DbService
+    private db: DbService,
   ) {
     this.internalState = signal<T>(defaultState);
     this.init();
@@ -53,7 +52,7 @@ export class ToolState<T extends object> {
    * Set specific property
    */
   set<K extends keyof T>(key: K, value: T[K]) {
-    this.update(s => ({ ...s, [key]: value }));
+    this.update((s) => ({ ...s, [key]: value }));
   }
 
   private async init() {
@@ -61,17 +60,18 @@ export class ToolState<T extends object> {
       const records = await this.db.records.list(this.scope);
       if (records && records.length > 0) {
         records.sort((a, b) => (b.id || 0) - (a.id || 0));
-        
+
         const latest = records[0];
         this.dbId = latest.id;
-        
+
         const savedState = latest.data as T;
         this.internalState.set({ ...this.defaultState, ...savedState });
 
         if (records.length > 1) {
-             const duplicates = records.slice(1);
-             Promise.all(duplicates.map(d => d.id ? this.db.records.delete(d.id) : Promise.resolve()))
-                .catch(err => console.warn(`[ToolState] Cleanup failed for ${this.scope}`, err));
+          const duplicates = records.slice(1);
+          Promise.all(
+            duplicates.map((d) => (d.id ? this.db.records.delete(d.id) : Promise.resolve())),
+          ).catch((err) => console.warn(`[ToolState] Cleanup failed for ${this.scope}`, err));
         }
       }
       this.isLoaded = true;
@@ -94,15 +94,14 @@ export class ToolState<T extends object> {
   private saveDebounced(data: T) {
     clearTimeout(this.debounceTimer);
     this.debounceTimer = setTimeout(async () => {
-       try {
-           
-           if (this.dbId) {
-             await this.db.records.delete(this.dbId);
-           }
-           this.dbId = await this.db.records.add(this.scope, data);
-       } catch (err) {
-           console.error(`[ToolState] Failed to save state for ${this.scope}`, err);
-       }
+      try {
+        if (this.dbId) {
+          await this.db.records.delete(this.dbId);
+        }
+        this.dbId = await this.db.records.add(this.scope, data);
+      } catch (err) {
+        console.error(`[ToolState] Failed to save state for ${this.scope}`, err);
+      }
     }, 500);
   }
 }

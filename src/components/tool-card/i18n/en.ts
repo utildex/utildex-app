@@ -1,3 +1,3 @@
 export default {
-  "OPEN_TOOL": "Open Tool"
+  OPEN_TOOL: 'Open Tool',
 };

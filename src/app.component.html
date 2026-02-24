@@ -1,114 +1,151 @@
 <app-background></app-background>
 
-<div class="flex flex-col h-screen supports-[height:100dvh]:h-[100dvh] overflow-hidden relative">
-  
+<div class="relative flex h-screen flex-col overflow-hidden supports-[height:100dvh]:h-[100dvh]">
   <!-- Navbar -->
-  <header class="flex-shrink-0 z-40 w-full bg-gradient-to-b from-white/10 via-transparent to-transparent dark:from-slate-900/60 dark:via-slate-900/40 dark:to-transparent backdrop-blur-[2px] shadow-none transition-all duration-300">
+  <header
+    class="z-40 w-full flex-shrink-0 bg-gradient-to-b from-white/10 via-transparent to-transparent shadow-none backdrop-blur-[2px] transition-all duration-300 dark:from-slate-900/60 dark:via-slate-900/40 dark:to-transparent"
+  >
     <div class="max-w-full px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16 items-center">
+      <div class="flex h-16 items-center justify-between">
         <!-- Logo -->
-        <div class="flex-shrink-0 flex items-center gap-2 overflow-hidden">
-          <a [routerLink]="'/' | localLink" class="flex items-center gap-3 focus:outline-none group flex-shrink-0">
-            <div class="w-9 h-9 group-hover:scale-105 transition-transform duration-200">
-               <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-sm">
-                  <rect x="0" y="0" width="28" height="28" rx="8" class="fill-red-400" />
-                  <rect x="36" y="0" width="28" height="28" rx="8" class="fill-amber-400" />
-                  <rect x="72" y="0" width="28" height="28" rx="8" class="fill-emerald-400" />
-                  <rect x="0" y="36" width="28" height="28" rx="8" class="fill-purple-400" />
-                  <rect x="36" y="36" width="28" height="28" rx="8" class="fill-sky-400" />
-                  <path d="M86 36 V64 M72 50 H100" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" class="text-slate-900 dark:text-white" />
-                  <rect x="0" y="72" width="28" height="28" rx="8" class="fill-orange-400" />
-                  <rect x="36" y="72" width="28" height="28" rx="8" class="fill-rose-400" />
-                  <rect x="72" y="72" width="28" height="28" rx="8" class="fill-lime-400" />
-               </svg>
+        <div class="flex flex-shrink-0 items-center gap-2 overflow-hidden">
+          <a
+            [routerLink]="'/' | localLink"
+            class="group flex flex-shrink-0 items-center gap-3 focus:outline-none"
+          >
+            <div class="h-9 w-9 transition-transform duration-200 group-hover:scale-105">
+              <svg
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-full w-full drop-shadow-sm"
+              >
+                <rect x="0" y="0" width="28" height="28" rx="8" class="fill-red-400" />
+                <rect x="36" y="0" width="28" height="28" rx="8" class="fill-amber-400" />
+                <rect x="72" y="0" width="28" height="28" rx="8" class="fill-emerald-400" />
+                <rect x="0" y="36" width="28" height="28" rx="8" class="fill-purple-400" />
+                <rect x="36" y="36" width="28" height="28" rx="8" class="fill-sky-400" />
+                <path
+                  d="M86 36 V64 M72 50 H100"
+                  stroke="currentColor"
+                  stroke-width="8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="text-slate-900 dark:text-white"
+                />
+                <rect x="0" y="72" width="28" height="28" rx="8" class="fill-orange-400" />
+                <rect x="36" y="72" width="28" height="28" rx="8" class="fill-rose-400" />
+                <rect x="72" y="72" width="28" height="28" rx="8" class="fill-lime-400" />
+              </svg>
             </div>
-            <span class="font-bold text-xl tracking-tight text-slate-900 dark:text-white group-hover:text-primary transition-colors">Utildex</span>
+            <span
+              class="group-hover:text-primary text-xl font-bold tracking-tight text-slate-900 transition-colors dark:text-white"
+              >Utildex</span
+            >
           </a>
-          <span class="ml-2 px-2.5 py-0.5 rounded-full border border-pink-200/60 dark:border-pink-500/20 bg-pink-50/50 dark:bg-pink-500/5 shadow-sm hidden sm:inline-block">
-             <span class="text-xs font-bold bg-gradient-to-r from-pink-500 to-violet-600 bg-clip-text text-transparent">
-               {{ t.map()['EARLY_PREVIEW'] }}
-             </span>
+          <span
+            class="ml-2 hidden rounded-full border border-pink-200/60 bg-pink-50/50 px-2.5 py-0.5 shadow-sm sm:inline-block dark:border-pink-500/20 dark:bg-pink-500/5"
+          >
+            <span
+              class="bg-gradient-to-r from-pink-500 to-violet-600 bg-clip-text text-xs font-bold text-transparent"
+            >
+              {{ t.map()['EARLY_PREVIEW'] }}
+            </span>
           </span>
         </div>
 
         <!-- Right Side -->
-        <div class="flex items-center justify-end gap-2 flex-1 md:flex-none">
+        <div class="flex flex-1 items-center justify-end gap-2 md:flex-none">
           <!-- Desktop Nav -->
-          <nav class="hidden md:flex gap-1 mr-2">
-             <a [routerLink]="'/my-dashboard' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all flex items-center gap-1">
-               <span class="material-symbols-outlined text-sm">dashboard</span>
-               {{ t.map()['NAV_DASHBOARD'] }}
-             </a>
-             <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
-             <a [routerLink]="'/tools' | localLink" routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
-               {{ t.map()['NAV_ALL_TOOLS'] }}
-             </a>
+          <nav class="mr-2 hidden gap-1 md:flex">
+            <a
+              [routerLink]="'/my-dashboard' | localLink"
+              routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+              class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <span class="material-symbols-outlined text-sm">dashboard</span>
+              {{ t.map()['NAV_DASHBOARD'] }}
+            </a>
+            <div class="mx-1 h-6 w-px bg-slate-200 dark:bg-slate-700"></div>
+            <a
+              [routerLink]="'/tools' | localLink"
+              routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+              class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              {{ t.map()['NAV_ALL_TOOLS'] }}
+            </a>
           </nav>
 
-          <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden md:block mx-1"></div>
+          <div class="mx-1 hidden h-6 w-px bg-slate-200 md:block dark:bg-slate-700"></div>
 
           <!-- Command Palette Trigger (Desktop) -->
-          <button 
-             (click)="openCommandPalette()"
-             class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-primary/50 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all mr-1"
-             title="Command Palette (Cmd+K)"
+          <button
+            (click)="openCommandPalette()"
+            class="hover:border-primary/50 mr-1 hidden items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-slate-500 transition-all hover:text-slate-900 md:flex dark:border-slate-700 dark:bg-slate-800 dark:hover:text-white"
+            title="Command Palette (Cmd+K)"
           >
-             <span class="material-symbols-outlined text-lg">search</span>
-             <span class="text-xs font-mono border border-slate-300 dark:border-slate-600 rounded px-1">⌘K</span>
+            <span class="material-symbols-outlined text-lg">search</span>
+            <span
+              class="rounded border border-slate-300 px-1 font-mono text-xs dark:border-slate-600"
+              >⌘K</span
+            >
           </button>
 
           <!-- Settings Button -->
-            <button
-                    (click)="toggleSettings()"
-                    appTourTarget="tour-settings-open"
-                    class="hidden md:flex h-10 w-10 items-center justify-center rounded-full
-                     text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800
-                     transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
-                                aria-label="Open Settings"
-                        >
-              <span class="material-symbols-outlined text-xl leading-none">
-                settings
-              </span>
-            </button>
-          
-          <!-- Preload Library Button -->
-          <button 
-             [appBubble]="'BUBBLE_PRELOAD_INFO'"
-             [bubblePos]="'bottom'"
-            (click)="offline.downloadLibrary()"
-            [disabled]="offline.isDownloading()"
-            class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-primary/50 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all mr-1 disabled:opacity-50 disabled:cursor-not-allowed"
-            [title]="t.map()['BTN_DOWNLOAD_LIBRARY'] || 'Download Library'"
+          <button
+            (click)="toggleSettings()"
+            appTourTarget="tour-settings-open"
+            class="hidden h-10 w-10 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 focus:ring-2 focus:ring-slate-500 focus:outline-none md:flex dark:hover:bg-slate-800"
+            aria-label="Open Settings"
           >
-             <span class="material-symbols-outlined text-lg">cloud_download</span>
-             <span class="text-xs font-bold">{{ offline.isDownloading() ? t.map()['BTN_DOWNLOADING'] : t.map()['BTN_PRELOAD'] }}</span>
+            <span class="material-symbols-outlined text-xl leading-none"> settings </span>
           </button>
 
-            <button
-                    (click)="toggleSidebar()"
-                    [appBubble]="'BUBBLE_HISTORY_INFO'"
-                    [bubblePos]="'bottom'"
-                    appTourTarget="tour-history"
-                    class="hidden md:flex h-10 w-10 items-center justify-center rounded-full
-                     text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800
-                     transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
-                                [class.bg-slate-100]="sidebarOpen()"
-                                [class.dark:bg-slate-800]="sidebarOpen()"
-                                aria-label="Toggle Sidebar"
-                        >
-              <span class="material-symbols-outlined text-xl leading-none">
-                history
-              </span>
-            </button>
-          
-          <a href="https://github.com/utildex" target="_blank" class="hidden md:block p-2 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors" aria-label="Github">
-            <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <!-- Preload Library Button -->
+          <button
+            [appBubble]="'BUBBLE_PRELOAD_INFO'"
+            [bubblePos]="'bottom'"
+            (click)="offline.downloadLibrary()"
+            [disabled]="offline.isDownloading()"
+            class="hover:border-primary/50 mr-1 hidden items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-slate-500 transition-all hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50 md:flex dark:border-slate-700 dark:bg-slate-800 dark:hover:text-white"
+            [title]="t.map()['BTN_DOWNLOAD_LIBRARY'] || 'Download Library'"
+          >
+            <span class="material-symbols-outlined text-lg">cloud_download</span>
+            <span class="text-xs font-bold">{{
+              offline.isDownloading() ? t.map()['BTN_DOWNLOADING'] : t.map()['BTN_PRELOAD']
+            }}</span>
+          </button>
+
+          <button
+            (click)="toggleSidebar()"
+            [appBubble]="'BUBBLE_HISTORY_INFO'"
+            [bubblePos]="'bottom'"
+            appTourTarget="tour-history"
+            class="hidden h-10 w-10 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 focus:ring-2 focus:ring-slate-500 focus:outline-none md:flex dark:hover:bg-slate-800"
+            [class.bg-slate-100]="sidebarOpen()"
+            [class.dark:bg-slate-800]="sidebarOpen()"
+            aria-label="Toggle Sidebar"
+          >
+            <span class="material-symbols-outlined text-xl leading-none"> history </span>
+          </button>
+
+          <a
+            href="https://github.com/utildex"
+            target="_blank"
+            class="hidden p-2 text-slate-500 transition-colors hover:text-slate-900 md:block dark:hover:text-white"
+            aria-label="Github"
+          >
+            <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              />
+            </svg>
           </a>
 
           <!-- Mobile Menu Button -->
-          <button 
-            (click)="toggleMobileMenu()" 
-            class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-primary ml-auto"
+          <button
+            (click)="toggleMobileMenu()"
+            class="focus:ring-primary ml-auto rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:ring-2 focus:outline-none md:hidden dark:text-slate-300 dark:hover:bg-slate-800"
           >
             <span class="material-symbols-outlined">
               {{ mobileMenuOpen() ? 'close' : 'menu' }}
@@ -120,41 +157,63 @@
 
     <!-- Mobile Menu Overlay -->
     @if (mobileMenuOpen()) {
-      <div class="md:hidden absolute top-16 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-xl animate-fade-in z-40">
-        <div class="px-4 py-6 space-y-4">
+      <div
+        class="animate-fade-in absolute top-16 left-0 z-40 w-full border-b border-slate-200 bg-white shadow-xl md:hidden dark:border-slate-800 dark:bg-slate-900"
+      >
+        <div class="space-y-4 px-4 py-6">
           <nav class="flex flex-col space-y-2">
-            <button (click)="openCommandPalette(); mobileMenuOpen.set(false)" class="w-full text-left px-4 py-3 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-medium flex items-center gap-2">
-               <span class="material-symbols-outlined">search</span>
-               {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
+            <button
+              (click)="openCommandPalette(); mobileMenuOpen.set(false)"
+              class="flex w-full items-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-left font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+            >
+              <span class="material-symbols-outlined">search</span>
+              {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
             </button>
-            <div class="h-px bg-slate-100 dark:bg-slate-800 my-2"></div>
-            <a [routerLink]="'/my-dashboard' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium flex items-center gap-2">
+            <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
+            <a
+              [routerLink]="'/my-dashboard' | localLink"
+              (click)="mobileMenuOpen.set(false)"
+              class="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
+            >
               <span class="material-symbols-outlined text-sm">dashboard</span>
               {{ t.map()['NAV_DASHBOARD'] }}
             </a>
-            <a [routerLink]="'/tools' | localLink" (click)="mobileMenuOpen.set(false)" class="px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white font-medium">
+            <a
+              [routerLink]="'/tools' | localLink"
+              (click)="mobileMenuOpen.set(false)"
+              class="rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
+            >
               {{ t.map()['NAV_ALL_TOOLS'] }}
             </a>
-            
-            <div class="h-px bg-slate-100 dark:bg-slate-800 my-2"></div>
-            
-            <button (click)="toggleSettings(); mobileMenuOpen.set(false)" class="w-full text-left px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800">
-               <span class="material-symbols-outlined">settings</span>
-               {{ t.map()['TOUR_TITLE_SETTINGS_OPEN'] || 'Settings' }}
+
+            <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
+
+            <button
+              (click)="toggleSettings(); mobileMenuOpen.set(false)"
+              class="flex w-full items-center gap-2 rounded-xl border border-slate-100 bg-white px-4 py-3 text-left font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <span class="material-symbols-outlined">settings</span>
+              {{ t.map()['TOUR_TITLE_SETTINGS_OPEN'] || 'Settings' }}
             </button>
-            
-            <button (click)="toggleSidebar(); mobileMenuOpen.set(false)" class="w-full text-left px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium flex items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800">
-               <span class="material-symbols-outlined">history</span>
-               {{ t.map()['NAV_HISTORY'] || 'History' }}
+
+            <button
+              (click)="toggleSidebar(); mobileMenuOpen.set(false)"
+              class="flex w-full items-center gap-2 rounded-xl border border-slate-100 bg-white px-4 py-3 text-left font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <span class="material-symbols-outlined">history</span>
+              {{ t.map()['NAV_HISTORY'] || 'History' }}
             </button>
-            
+
             @if (!tour.hasBeenDismissed() && !tour.isActive()) {
-               <div class="hidden md:block">
-                    <button (click)="tour.startTour(); mobileMenuOpen.set(false)" class="w-full text-left px-4 py-3 rounded-xl bg-primary/5 border border-primary/20 text-primary font-bold flex items-center gap-2 mt-2">
-                        <span class="material-symbols-outlined">explore</span>
-                        {{ t.map()['TOUR_OPT_IN'] || 'Quick Tour' }}
-                    </button>
-               </div>
+              <div class="hidden md:block">
+                <button
+                  (click)="tour.startTour(); mobileMenuOpen.set(false)"
+                  class="bg-primary/5 border-primary/20 text-primary mt-2 flex w-full items-center gap-2 rounded-xl border px-4 py-3 text-left font-bold"
+                >
+                  <span class="material-symbols-outlined">explore</span>
+                  {{ t.map()['TOUR_OPT_IN'] || 'Quick Tour' }}
+                </button>
+              </div>
             }
           </nav>
         </div>
@@ -163,24 +222,51 @@
   </header>
 
   <!-- Main Content Area with Sidebar -->
-  <div class="flex-1 flex overflow-hidden relative">
-    
+  <div class="relative flex flex-1 overflow-hidden">
     <!-- Main Scrollable Area -->
-    <main class="flex-1 w-full overflow-y-auto overflow-x-hidden">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-full flex flex-col">
+    <main class="w-full flex-1 overflow-x-hidden overflow-y-auto">
+      <div class="mx-auto flex min-h-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
         <router-outlet></router-outlet>
-        
+
         <!-- Footer in flow -->
-        <footer class="mt-auto py-6 border-t border-slate-200 dark:border-slate-800">
-          <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-500">
+        <footer class="mt-auto border-t border-slate-200 py-6 dark:border-slate-800">
+          <div
+            class="flex flex-col items-center justify-between gap-4 text-sm text-slate-500 md:flex-row"
+          >
             <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
-            <div class="flex flex-wrap justify-center md:justify-end gap-4">
-               <a [routerLink]="'/categories' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_CATEGORIES'] }}</a>
-               <a [routerLink]="'/articles' | localLink" appTourTarget="tour-blog" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_ARTICLES'] }}</a>
-               <a [routerLink]="'/legal' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_LEGAL'] }}</a>
-               <a [routerLink]="'/privacy' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_PRIVACY'] }}</a>
-               <a [routerLink]="'/terms' | localLink" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_TERMS'] }}</a>
-               <a href="https://github.com/utildex/utildex" target="_blank" class="hover:text-slate-900 dark:hover:text-white transition-colors">{{ t.map()['FOOTER_CONTRIBUTE'] }}</a>
+            <div class="flex flex-wrap justify-center gap-4 md:justify-end">
+              <a
+                [routerLink]="'/categories' | localLink"
+                class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                >{{ t.map()['FOOTER_CATEGORIES'] }}</a
+              >
+              <a
+                [routerLink]="'/articles' | localLink"
+                appTourTarget="tour-blog"
+                class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                >{{ t.map()['FOOTER_ARTICLES'] }}</a
+              >
+              <a
+                [routerLink]="'/legal' | localLink"
+                class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                >{{ t.map()['FOOTER_LEGAL'] }}</a
+              >
+              <a
+                [routerLink]="'/privacy' | localLink"
+                class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                >{{ t.map()['FOOTER_PRIVACY'] }}</a
+              >
+              <a
+                [routerLink]="'/terms' | localLink"
+                class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                >{{ t.map()['FOOTER_TERMS'] }}</a
+              >
+              <a
+                href="https://github.com/utildex/utildex"
+                target="_blank"
+                class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                >{{ t.map()['FOOTER_CONTRIBUTE'] }}</a
+              >
             </div>
           </div>
         </footer>
@@ -188,8 +274,8 @@
     </main>
 
     <!-- Right Sidebar (Collapsible) -->
-    <aside 
-      class="fixed inset-y-0 right-0 w-80 bg-white dark:bg-slate-900 shadow-2xl z-50 transform transition-transform duration-300 md:relative md:transform-none md:shadow-none md:border-l md:border-slate-200 md:dark:border-slate-800"
+    <aside
+      class="fixed inset-y-0 right-0 z-50 w-80 transform bg-white shadow-2xl transition-transform duration-300 md:relative md:transform-none md:border-l md:border-slate-200 md:shadow-none dark:bg-slate-900 md:dark:border-slate-800"
       [class.translate-x-full]="!sidebarOpen()"
       [class.md:hidden]="!sidebarOpen()"
       [class.md:block]="sidebarOpen()"
@@ -199,7 +285,7 @@
 
     <!-- Overlay for mobile sidebar -->
     @if (sidebarOpen()) {
-      <div class="fixed inset-0 bg-black/20 z-45 md:hidden" (click)="sidebarOpen.set(false)"></div>
+      <div class="fixed inset-0 z-45 bg-black/20 md:hidden" (click)="sidebarOpen.set(false)"></div>
     }
   </div>
 
@@ -215,28 +301,36 @@
   @if (settingsOpen()) {
     <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
   }
-  
+
   <div class="hidden md:block">
-      <!-- Quick Tour Opt-in (Desktop Only) -->
-      @if (showTourFab() && !tour.hasBeenDismissed() && !tour.isActive()) {
-        <div class="fixed bottom-6 left-6 z-50 animate-fade-in">
-          <div class="bg-white dark:bg-slate-800 rounded-full shadow-xl border border-slate-200 dark:border-slate-700 p-1 flex items-center gap-2 pr-4 group hover:border-primary/50 transition-all cursor-pointer animate-glow-pulse"
-              (click)="tour.startTour()">
-            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-              <span class="material-symbols-outlined">explore</span>
-            </div>
-            <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{ t.map()['TOUR_OPT_IN'] || 'Quick Tour' }}</span>
-            <button (click)="tour.dismissTour(); $event.stopPropagation()" class="ml-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700">
-              <span class="material-symbols-outlined text-sm">close</span>
-            </button>
+    <!-- Quick Tour Opt-in (Desktop Only) -->
+    @if (showTourFab() && !tour.hasBeenDismissed() && !tour.isActive()) {
+      <div class="animate-fade-in fixed bottom-6 left-6 z-50">
+        <div
+          class="group hover:border-primary/50 animate-glow-pulse flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white p-1 pr-4 shadow-xl transition-all dark:border-slate-700 dark:bg-slate-800"
+          (click)="tour.startTour()"
+        >
+          <div
+            class="bg-primary/10 text-primary group-hover:bg-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors group-hover:text-white"
+          >
+            <span class="material-symbols-outlined">explore</span>
           </div>
+          <span class="text-sm font-bold text-slate-700 dark:text-slate-200">{{
+            t.map()['TOUR_OPT_IN'] || 'Quick Tour'
+          }}</span>
+          <button
+            (click)="tour.dismissTour(); $event.stopPropagation()"
+            class="ml-2 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+          >
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
         </div>
-      }
+      </div>
+    }
   </div>
 
   <!-- Virtual Pets -->
   @defer (on immediate) {
     <app-virtual-pets></app-virtual-pets>
   }
-
 </div>

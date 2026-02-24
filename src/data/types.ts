@@ -26,7 +26,7 @@ export interface ToolMetadata {
   tags: string[];
   featured?: boolean;
   color?: string;
-  routePath?: string; 
+  routePath?: string;
   widget?: WidgetCapability;
 }
 

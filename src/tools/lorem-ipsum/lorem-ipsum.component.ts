@@ -14,9 +14,7 @@ import zh from './i18n/zh';
   selector: 'app-lorem-ipsum',
   standalone: true,
   imports: [CommonModule, FormsModule, ToolLayoutComponent, ActionBarComponent],
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     @if (!isWidget()) {
       <app-tool-layout toolId="lorem-ipsum">
@@ -24,79 +22,105 @@ import zh from './i18n/zh';
       </app-tool-layout>
     } @else {
       <!-- Widget Mode -->
-      <div class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden relative border border-slate-200 dark:border-slate-700">
-         <div class="flex items-center justify-between p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-             <div class="flex items-center gap-2">
-               <span class="material-symbols-outlined text-lg text-slate-500">description</span>
-               <span class="text-xs font-bold uppercase text-slate-600 dark:text-slate-300">Lorem Ipsum</span>
-             </div>
-             <input 
-                type="number" 
-                min="1" 
-                max="5" 
-                [(ngModel)]="count" 
-                class="w-12 h-6 text-center text-sm border rounded bg-white dark:bg-slate-700 dark:border-slate-600 dark:text-white"
-                title="Paragraphs"
-             >
-         </div>
-         <div class="flex-1 p-3 overflow-y-auto text-xs text-slate-600 dark:text-slate-300 leading-relaxed max-h-[150px]">
-           {{ output()[0] }}
-         </div>
-         <div class="p-2 border-t border-slate-100 dark:border-slate-700 flex gap-2">
-            <button (click)="generate()" class="flex-1 py-1.5 rounded bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-slate-600 dark:text-slate-300 text-xs font-medium">
-               {{ t.map()['BTN_GENERATE'] }}
-            </button>
-            <button (click)="copy()" class="flex-1 py-1.5 rounded bg-primary text-white hover:bg-blue-600 transition-colors text-xs font-medium">
-               {{ t.map()['BTN_COPY'] }}
-            </button>
-         </div>
+      <div
+        class="relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/50"
+        >
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg text-slate-500">description</span>
+            <span class="text-xs font-bold text-slate-600 uppercase dark:text-slate-300"
+              >Lorem Ipsum</span
+            >
+          </div>
+          <input
+            type="number"
+            min="1"
+            max="5"
+            [(ngModel)]="count"
+            class="h-6 w-12 rounded border bg-white text-center text-sm dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+            title="Paragraphs"
+          />
+        </div>
+        <div
+          class="max-h-[150px] flex-1 overflow-y-auto p-3 text-xs leading-relaxed text-slate-600 dark:text-slate-300"
+        >
+          {{ output()[0] }}
+        </div>
+        <div class="flex gap-2 border-t border-slate-100 p-2 dark:border-slate-700">
+          <button
+            (click)="generate()"
+            class="flex-1 rounded bg-slate-100 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+          >
+            {{ t.map()['BTN_GENERATE'] }}
+          </button>
+          <button
+            (click)="copy()"
+            class="bg-primary flex-1 rounded py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-600"
+          >
+            {{ t.map()['BTN_COPY'] }}
+          </button>
+        </div>
       </div>
     }
 
     <ng-template #mainContent>
-      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div
+        class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
+      >
         <!-- Toolbar -->
-        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-          <div class="flex items-center gap-6 w-full sm:w-auto">
-            <label class="flex flex-col text-xs font-bold text-slate-500 uppercase tracking-wider">
+        <div
+          class="flex flex-col items-center justify-between gap-4 border-b border-slate-100 bg-slate-50 p-6 sm:flex-row dark:border-slate-700 dark:bg-slate-800/50"
+        >
+          <div class="flex w-full items-center gap-6 sm:w-auto">
+            <label class="flex flex-col text-xs font-bold tracking-wider text-slate-500 uppercase">
               {{ t.map()['LABEL_PARAGRAPHS'] }}
-              <input 
-                type="number" 
-                min="1" 
-                max="20" 
-                [(ngModel)]="count" 
-                class="mt-1 block w-24 px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm text-slate-900 dark:text-white font-medium"
-              >
+              <input
+                type="number"
+                min="1"
+                max="20"
+                [(ngModel)]="count"
+                class="focus:ring-primary focus:border-primary mt-1 block w-24 rounded-lg border border-slate-300 bg-white px-3 py-2 font-medium text-slate-900 shadow-sm focus:outline-none sm:text-sm dark:border-slate-600 dark:bg-slate-700 dark:text-white"
+              />
             </label>
-            
-            <label class="flex items-center gap-3 cursor-pointer mt-5 select-none p-2 rounded hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-              <input type="checkbox" [(ngModel)]="startWithLorem" class="w-4 h-4 text-primary border-slate-300 rounded focus:ring-primary">
-              <span class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ t.map()['LABEL_START_LOREM'] }}</span>
+
+            <label
+              class="mt-5 flex cursor-pointer items-center gap-3 rounded p-2 transition-colors select-none hover:bg-slate-200 dark:hover:bg-slate-700"
+            >
+              <input
+                type="checkbox"
+                [(ngModel)]="startWithLorem"
+                class="text-primary focus:ring-primary h-4 w-4 rounded border-slate-300"
+              />
+              <span class="text-sm font-medium text-slate-700 dark:text-slate-300">{{
+                t.map()['LABEL_START_LOREM']
+              }}</span>
             </label>
           </div>
 
-          <div class="flex gap-3 w-full sm:w-auto">
-            <button 
-              (click)="generate()" 
-              class="flex-1 sm:flex-none justify-center inline-flex items-center px-5 py-2.5 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-primary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all active:scale-95"
+          <div class="flex w-full gap-3 sm:w-auto">
+            <button
+              (click)="generate()"
+              class="bg-primary focus:ring-primary inline-flex flex-1 items-center justify-center rounded-xl border border-transparent px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-blue-600 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 sm:flex-none"
             >
-              <span class="material-symbols-outlined text-lg mr-2">autorenew</span>
+              <span class="material-symbols-outlined mr-2 text-lg">autorenew</span>
               {{ t.map()['BTN_GENERATE'] }}
             </button>
           </div>
         </div>
 
         <!-- Output -->
-        <div class="p-8 bg-white dark:bg-slate-800 min-h-[300px]">
+        <div class="min-h-[300px] bg-white p-8 dark:bg-slate-800">
           @if (output().length > 0) {
             <div class="prose dark:prose-invert max-w-none text-slate-600 dark:text-slate-300">
               @for (para of output(); track $index) {
-                <p class="mb-6 last:mb-0 leading-relaxed text-lg">{{ para }}</p>
+                <p class="mb-6 text-lg leading-relaxed last:mb-0">{{ para }}</p>
               }
             </div>
           } @else {
-            <div class="h-full flex flex-col items-center justify-center text-slate-400 py-12">
-              <span class="material-symbols-outlined text-5xl mb-4 opacity-50">text_fields</span>
+            <div class="flex h-full flex-col items-center justify-center py-12 text-slate-400">
+              <span class="material-symbols-outlined mb-4 text-5xl opacity-50">text_fields</span>
               <p class="text-lg">{{ t.map()['EMPTY_STATE'] }}</p>
             </div>
           }
@@ -104,16 +128,16 @@ import zh from './i18n/zh';
 
         <!-- Action Bar -->
         @if (output().length > 0) {
-          <app-action-bar 
-             [content]="resultString()" 
-             filename="lorem-ipsum.txt" 
-             source="Lorem Ipsum" 
-             [allowPrint]="true"
+          <app-action-bar
+            [content]="resultString()"
+            filename="lorem-ipsum.txt"
+            source="Lorem Ipsum"
+            [allowPrint]="true"
           ></app-action-bar>
         }
       </div>
     </ng-template>
-  `
+  `,
 })
 export class LoremIpsumComponent {
   isWidget = input<boolean>(false);
@@ -135,32 +159,102 @@ export class LoremIpsumComponent {
 
   generate() {
     const paragraphs: string[] = [];
-    const words = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua", "ut", "enim", "ad", "minim", "veniam", "quis", "nostrud", "exercitation", "ullamco", "laboris", "nisi", "ut", "aliquip", "ex", "ea", "commodo", "consequat", "duis", "aute", "irure", "dolor", "in", "reprehenderit", "in", "voluptate", "velit", "esse", "cillum", "dolore", "eu", "fugiat", "nulla", "pariatur", "excepteur", "sint", "occaecat", "cupidatat", "non", "proident", "sunt", "in", "culpa", "qui", "officia", "deserunt", "mollit", "anim", "id", "est", "laborum"];
-    
+    const words = [
+      'lorem',
+      'ipsum',
+      'dolor',
+      'sit',
+      'amet',
+      'consectetur',
+      'adipiscing',
+      'elit',
+      'sed',
+      'do',
+      'eiusmod',
+      'tempor',
+      'incididunt',
+      'ut',
+      'labore',
+      'et',
+      'dolore',
+      'magna',
+      'aliqua',
+      'ut',
+      'enim',
+      'ad',
+      'minim',
+      'veniam',
+      'quis',
+      'nostrud',
+      'exercitation',
+      'ullamco',
+      'laboris',
+      'nisi',
+      'ut',
+      'aliquip',
+      'ex',
+      'ea',
+      'commodo',
+      'consequat',
+      'duis',
+      'aute',
+      'irure',
+      'dolor',
+      'in',
+      'reprehenderit',
+      'in',
+      'voluptate',
+      'velit',
+      'esse',
+      'cillum',
+      'dolore',
+      'eu',
+      'fugiat',
+      'nulla',
+      'pariatur',
+      'excepteur',
+      'sint',
+      'occaecat',
+      'cupidatat',
+      'non',
+      'proident',
+      'sunt',
+      'in',
+      'culpa',
+      'qui',
+      'officia',
+      'deserunt',
+      'mollit',
+      'anim',
+      'id',
+      'est',
+      'laborum',
+    ];
+
     const num = Math.max(1, Math.min(50, this.count()));
 
     for (let i = 0; i < num; i++) {
-      let paragraph = "";
+      let paragraph = '';
       if (i === 0 && this.startWithLorem()) {
-        paragraph = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. ";
+        paragraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
       }
-      
+
       const length = Math.floor(Math.random() * 50) + 20;
       for (let j = 0; j < length; j++) {
-         const word = words[Math.floor(Math.random() * words.length)];
-         if (j === 0 && !paragraph) {
-            paragraph += word.charAt(0).toUpperCase() + word.slice(1);
-         } else {
-            paragraph += (paragraph ? " " : "") + word;
-         }
+        const word = words[Math.floor(Math.random() * words.length)];
+        if (j === 0 && !paragraph) {
+          paragraph += word.charAt(0).toUpperCase() + word.slice(1);
+        } else {
+          paragraph += (paragraph ? ' ' : '') + word;
+        }
       }
-      paragraph += ".";
+      paragraph += '.';
       paragraphs.push(paragraph);
     }
     this.output.set(paragraphs);
   }
 
   copy() {
-    this.clipboard.copy(this.resultString(), "Lorem Ipsum");
+    this.clipboard.copy(this.resultString(), 'Lorem Ipsum');
   }
 }

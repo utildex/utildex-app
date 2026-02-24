@@ -1,4 +1,12 @@
-import { Injectable, signal, inject, PLATFORM_ID, effect, WritableSignal, OnDestroy } from '@angular/core';
+import {
+  Injectable,
+  signal,
+  inject,
+  PLATFORM_ID,
+  effect,
+  WritableSignal,
+  OnDestroy,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { PersistenceService } from './persistence.service';
 import { Subject } from 'rxjs';
@@ -9,7 +17,7 @@ import { Pet } from '../data/virtual-pets.types';
  * with IndexedDB persistence (via PersistenceService).
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class VirtualPetsService implements OnDestroy {
   private platformId = inject(PLATFORM_ID);
@@ -33,11 +41,14 @@ export class VirtualPetsService implements OnDestroy {
   private customSprites: Record<string, Record<string, string>> = {};
 
   // Centralized Pet Configuration
-  private readonly PET_CONFIGS: Record<string, {
-    icon: string,
-    folder: string,
-    states: Record<string, string>
-  }> = {
+  private readonly PET_CONFIGS: Record<
+    string,
+    {
+      icon: string;
+      folder: string;
+      states: Record<string, string>;
+    }
+  > = {
     diplodocus: {
       icon: '/assets/images/virtual-pets/diplodocus/icon.png',
       folder: 'diplodocus',
@@ -47,15 +58,15 @@ export class VirtualPetsService implements OnDestroy {
         walk_fast: 'green_walk_fast_8fps.gif',
         run: 'green_run_8fps.gif',
         swipe: 'green_swipe_8fps.gif',
-        with_ball: 'green_with_ball_8fps.gif'
-      }
-    }
+        with_ball: 'green_with_ball_8fps.gif',
+      },
+    },
   };
 
   // List of available pets for the interface
   readonly AVAILABLE_PETS = Object.entries(this.PET_CONFIGS).map(([id, config]) => ({
     id,
-    icon: config.icon
+    icon: config.icon,
   }));
 
   constructor() {
@@ -68,14 +79,14 @@ export class VirtualPetsService implements OnDestroy {
       // Automatically preload assets if feature is already enabled (rehydrated from persistence)
       effect(() => {
         if (this.enabled()) {
-           this.preloadBuiltInAssets();
+          this.preloadBuiltInAssets();
         }
       });
     }
   }
 
   toggle() {
-    this.enabled.update(v => !v);
+    this.enabled.update((v) => !v);
   }
   setEnabled(value: boolean) {
     this.enabled.set(value);
@@ -135,8 +146,8 @@ export class VirtualPetsService implements OnDestroy {
     this.preloadedImages.push(portalImg);
 
     // 2. Preload built-in sprites
-    Object.values(this.PET_CONFIGS).forEach(cfg => {
-      Object.values(cfg.states).forEach(filename => {
+    Object.values(this.PET_CONFIGS).forEach((cfg) => {
+      Object.values(cfg.states).forEach((filename) => {
         const url = `/assets/images/virtual-pets/${cfg.folder}/${filename}`;
         const img = new Image();
         img.src = url;

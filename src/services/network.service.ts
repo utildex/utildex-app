@@ -1,8 +1,7 @@
-
 import { Injectable, signal, OnDestroy } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NetworkService implements OnDestroy {
   isOnline = signal<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
@@ -13,7 +12,7 @@ export class NetworkService implements OnDestroy {
         this.isOnline.set(navigator.onLine);
       }
     }
-  }
+  };
 
   constructor() {
     if (typeof window !== 'undefined') {

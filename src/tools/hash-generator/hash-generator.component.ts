@@ -16,9 +16,7 @@ type InputMode = 'text' | 'file';
   selector: 'app-hash-generator',
   standalone: true,
   imports: [CommonModule, FormsModule, ToolLayoutComponent],
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     @if (!isWidget()) {
       <app-tool-layout toolId="hash-generator">
@@ -26,66 +24,78 @@ type InputMode = 'text' | 'file';
       </app-tool-layout>
     } @else {
       <!-- Widget Mode -->
-      <div class="h-full flex flex-col bg-white dark:bg-slate-800 rounded-xl overflow-hidden">
+      <div class="flex h-full flex-col overflow-hidden rounded-xl bg-white dark:bg-slate-800">
         @if (viewMode() === 'wide') {
           <!-- Compact Widget Mode -->
-          <div class="flex items-center justify-between p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+          <div
+            class="flex items-center justify-between border-b border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/50"
+          >
             <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200">
               <span class="material-symbols-outlined text-lg">fingerprint</span>
-              <span class="text-xs font-bold uppercase tracking-wider">{{ t.map()['TITLE'] }}</span>
+              <span class="text-xs font-bold tracking-wider uppercase">{{ t.map()['TITLE'] }}</span>
             </div>
-            <select 
-              [(ngModel)]="algorithm" 
+            <select
+              [(ngModel)]="algorithm"
               (ngModelChange)="calculateHash()"
-              class="text-xs bg-slate-100 dark:bg-slate-700 border-0 rounded px-2 py-1 text-slate-700 dark:text-slate-200">
+              class="rounded border-0 bg-slate-100 px-2 py-1 text-xs text-slate-700 dark:bg-slate-700 dark:text-slate-200"
+            >
               @for (algo of algorithms; track algo) {
                 <option [value]="algo">{{ algo }}</option>
               }
             </select>
           </div>
-          <div class="flex-1 p-3 flex flex-col gap-2">
-            <input 
-              type="text" 
-              [(ngModel)]="inputText" 
+          <div class="flex flex-1 flex-col gap-2 p-3">
+            <input
+              type="text"
+              [(ngModel)]="inputText"
               (ngModelChange)="calculateHash()"
               [placeholder]="t.map()['INPUT_PLACEHOLDER']"
-              class="w-full px-3 py-2 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200">
-            <div 
-              class="flex-1 bg-slate-100 dark:bg-slate-900 rounded-lg p-2 font-mono text-xs text-slate-800 dark:text-slate-100 break-all overflow-auto cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
-              (click)="copyHash()">
+              class="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+            />
+            <div
+              class="flex-1 cursor-pointer overflow-auto rounded-lg bg-slate-100 p-2 font-mono text-xs break-all text-slate-800 transition-colors hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+              (click)="copyHash()"
+            >
               {{ hashResult() || '—' }}
             </div>
           </div>
         } @else {
           <!-- Standard Widget Mode -->
-          <div class="flex items-center justify-between p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+          <div
+            class="flex items-center justify-between border-b border-slate-100 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/50"
+          >
             <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200">
               <span class="material-symbols-outlined text-lg">fingerprint</span>
-              <span class="text-xs font-bold uppercase tracking-wider">{{ t.map()['TITLE'] }}</span>
+              <span class="text-xs font-bold tracking-wider uppercase">{{ t.map()['TITLE'] }}</span>
             </div>
           </div>
-          <div class="flex-1 p-4 flex flex-col gap-3 overflow-auto">
-            <select 
-              [(ngModel)]="algorithm" 
+          <div class="flex flex-1 flex-col gap-3 overflow-auto p-4">
+            <select
+              [(ngModel)]="algorithm"
               (ngModelChange)="calculateHash()"
-              class="w-full px-3 py-2 text-sm bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-slate-800 dark:text-slate-200">
+              class="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-800 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
+            >
               @for (algo of algorithms; track algo) {
                 <option [value]="algo">{{ algo }}</option>
               }
             </select>
-            <textarea 
-              [(ngModel)]="inputText" 
+            <textarea
+              [(ngModel)]="inputText"
               (ngModelChange)="calculateHash()"
               [placeholder]="t.map()['INPUT_PLACEHOLDER']"
               rows="3"
-              class="w-full px-3 py-2 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 resize-none"></textarea>
-            <div class="bg-slate-100 dark:bg-slate-900 rounded-lg p-3 font-mono text-xs text-slate-800 dark:text-slate-100 break-all border border-slate-200 dark:border-slate-700">
+              class="w-full resize-none rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+            ></textarea>
+            <div
+              class="rounded-lg border border-slate-200 bg-slate-100 p-3 font-mono text-xs break-all text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            >
               {{ hashResult() || '—' }}
             </div>
-            <button 
-              (click)="copyHash()" 
+            <button
+              (click)="copyHash()"
               [disabled]="!hashResult()"
-              class="w-full py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+              class="bg-primary flex w-full items-center justify-center gap-2 rounded-lg py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
               <span class="material-symbols-outlined text-sm">content_copy</span>
               {{ copied() ? t.map()['BTN_COPIED'] : t.map()['BTN_COPY'] }}
             </button>
@@ -96,22 +106,30 @@ type InputMode = 'text' | 'file';
 
     <!-- Main Content Template -->
     <ng-template #mainContent>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-8">
+      <div class="grid grid-cols-1 gap-8 pb-8 lg:grid-cols-3">
         <!-- Settings Panel -->
-        <div class="lg:col-span-1 space-y-6">
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-            <h3 class="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2 uppercase tracking-wide text-xs">
-              <span class="material-symbols-outlined text-lg">tune</span> {{ t.map()['ALGORITHM_LABEL'] }}
+        <div class="space-y-6 lg:col-span-1">
+          <div
+            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          >
+            <h3
+              class="mb-6 flex items-center gap-2 text-xs font-bold tracking-wide text-slate-900 uppercase dark:text-white"
+            >
+              <span class="material-symbols-outlined text-lg">tune</span>
+              {{ t.map()['ALGORITHM_LABEL'] }}
             </h3>
-            
+
             <div class="space-y-3">
               @for (algo of algorithms; track algo) {
-                <button 
+                <button
                   (click)="algorithm.set(algo); calculateHash()"
-                  class="w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all"
-                  [class]="algorithm() === algo 
-                    ? 'bg-primary text-white shadow-lg shadow-primary/25' 
-                    : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600'">
+                  class="flex w-full items-center justify-between rounded-xl px-4 py-3 transition-all"
+                  [class]="
+                    algorithm() === algo
+                      ? 'bg-primary shadow-primary/25 text-white shadow-lg'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600'
+                  "
+                >
                   <span class="font-medium">{{ algo }}</span>
                   @if (algorithm() === algo) {
                     <span class="material-symbols-outlined text-sm">check</span>
@@ -122,20 +140,32 @@ type InputMode = 'text' | 'file';
           </div>
 
           <!-- Options Panel -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-            <h3 class="font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2 uppercase tracking-wide text-xs">
-              <span class="material-symbols-outlined text-lg">settings</span> {{ t.map()['OPTIONS_TITLE'] }}
+          <div
+            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          >
+            <h3
+              class="mb-6 flex items-center gap-2 text-xs font-bold tracking-wide text-slate-900 uppercase dark:text-white"
+            >
+              <span class="material-symbols-outlined text-lg">settings</span>
+              {{ t.map()['OPTIONS_TITLE'] }}
             </h3>
-            
-            <div class="flex items-center justify-between cursor-pointer" (click)="toggleUppercase()">
-              <span class="text-sm text-slate-700 dark:text-slate-300">{{ t.map()['UPPERCASE_LABEL'] }}</span>
+
+            <div
+              class="flex cursor-pointer items-center justify-between"
+              (click)="toggleUppercase()"
+            >
+              <span class="text-sm text-slate-700 dark:text-slate-300">{{
+                t.map()['UPPERCASE_LABEL']
+              }}</span>
               <div class="relative">
-                <div 
-                  class="w-11 h-6 rounded-full transition-colors"
-                  [class]="uppercase() ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-600'">
-                  <div 
-                    class="absolute top-[2px] left-[2px] bg-white rounded-full h-5 w-5 transition-transform"
-                    [class.translate-x-5]="uppercase()"></div>
+                <div
+                  class="h-6 w-11 rounded-full transition-colors"
+                  [class]="uppercase() ? 'bg-primary' : 'bg-slate-200 dark:bg-slate-600'"
+                >
+                  <div
+                    class="absolute top-[2px] left-[2px] h-5 w-5 rounded-full bg-white transition-transform"
+                    [class.translate-x-5]="uppercase()"
+                  ></div>
                 </div>
               </div>
             </div>
@@ -143,25 +173,33 @@ type InputMode = 'text' | 'file';
         </div>
 
         <!-- Main Input/Output Panel -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="space-y-6 lg:col-span-2">
           <!-- Mode Toggle -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-2">
+          <div
+            class="rounded-2xl border border-slate-200 bg-white p-2 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          >
             <div class="flex">
-              <button 
+              <button
                 (click)="inputMode.set('text')"
-                class="flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2"
-                [class]="inputMode() === 'text' 
-                  ? 'bg-primary text-white shadow-lg' 
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'">
+                class="flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 font-medium transition-all"
+                [class]="
+                  inputMode() === 'text'
+                    ? 'bg-primary text-white shadow-lg'
+                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700'
+                "
+              >
                 <span class="material-symbols-outlined text-lg">text_fields</span>
                 {{ t.map()['MODE_TEXT'] }}
               </button>
-              <button 
+              <button
                 (click)="inputMode.set('file')"
-                class="flex-1 py-3 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2"
-                [class]="inputMode() === 'file' 
-                  ? 'bg-primary text-white shadow-lg' 
-                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'">
+                class="flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 font-medium transition-all"
+                [class]="
+                  inputMode() === 'file'
+                    ? 'bg-primary text-white shadow-lg'
+                    : 'text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700'
+                "
+              >
                 <span class="material-symbols-outlined text-lg">upload_file</span>
                 {{ t.map()['MODE_FILE'] }}
               </button>
@@ -169,43 +207,53 @@ type InputMode = 'text' | 'file';
           </div>
 
           <!-- Input Area -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-            <h3 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-xs">
-              <span class="material-symbols-outlined text-lg">input</span> {{ t.map()['INPUT_LABEL'] }}
+          <div
+            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          >
+            <h3
+              class="mb-4 flex items-center gap-2 text-xs font-bold tracking-wide text-slate-900 uppercase dark:text-white"
+            >
+              <span class="material-symbols-outlined text-lg">input</span>
+              {{ t.map()['INPUT_LABEL'] }}
             </h3>
-            
+
             @if (inputMode() === 'text') {
-              <textarea 
-                [(ngModel)]="inputText" 
+              <textarea
+                [(ngModel)]="inputText"
                 (ngModelChange)="calculateHash()"
                 [placeholder]="t.map()['INPUT_PLACEHOLDER']"
                 rows="6"
-                class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 resize-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all font-mono"></textarea>
+                class="focus:ring-primary/50 focus:border-primary w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-mono text-slate-800 transition-all focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+              ></textarea>
             } @else {
-              <div 
-                class="border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all"
-                [ngClass]="selectedFile() 
-                  ? 'border-primary bg-indigo-50 dark:bg-indigo-900/20' 
-                  : 'border-slate-300 dark:border-slate-600 hover:border-primary hover:bg-indigo-50 dark:hover:bg-indigo-900/20'"
+              <div
+                class="cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all"
+                [ngClass]="
+                  selectedFile()
+                    ? 'border-primary bg-indigo-50 dark:bg-indigo-900/20'
+                    : 'hover:border-primary border-slate-300 hover:bg-indigo-50 dark:border-slate-600 dark:hover:bg-indigo-900/20'
+                "
                 (click)="fileInput.click()"
                 (dragover)="onDragOver($event)"
-                (drop)="onFileDrop($event)">
-                <input 
-                  #fileInput
-                  type="file" 
-                  class="hidden"
-                  (change)="onFileSelect($event)">
-                
+                (drop)="onFileDrop($event)"
+              >
+                <input #fileInput type="file" class="hidden" (change)="onFileSelect($event)" />
+
                 @if (selectedFile()) {
                   <div class="flex flex-col items-center gap-3">
-                    <span class="material-symbols-outlined text-4xl text-primary">description</span>
+                    <span class="material-symbols-outlined text-primary text-4xl">description</span>
                     <div>
-                      <p class="font-medium text-slate-900 dark:text-white">{{ selectedFile()?.name }}</p>
-                      <p class="text-sm text-slate-500">{{ formatFileSize(selectedFile()?.size || 0) }}</p>
+                      <p class="font-medium text-slate-900 dark:text-white">
+                        {{ selectedFile()?.name }}
+                      </p>
+                      <p class="text-sm text-slate-500">
+                        {{ formatFileSize(selectedFile()?.size || 0) }}
+                      </p>
                     </div>
-                    <button 
+                    <button
                       (click)="clearFile($event)"
-                      class="text-sm text-red-500 hover:text-red-600 flex items-center gap-1">
+                      class="flex items-center gap-1 text-sm text-red-500 hover:text-red-600"
+                    >
                       <span class="material-symbols-outlined text-sm">close</span>
                       {{ t.map()['BTN_CLEAR'] }}
                     </button>
@@ -221,36 +269,47 @@ type InputMode = 'text' | 'file';
           </div>
 
           <!-- Result Area -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2 uppercase tracking-wide text-xs">
-                <span class="material-symbols-outlined text-lg">fingerprint</span> {{ t.map()['RESULT_LABEL'] }} ({{ algorithm() }})
+          <div
+            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          >
+            <div class="mb-4 flex items-center justify-between">
+              <h3
+                class="flex items-center gap-2 text-xs font-bold tracking-wide text-slate-900 uppercase dark:text-white"
+              >
+                <span class="material-symbols-outlined text-lg">fingerprint</span>
+                {{ t.map()['RESULT_LABEL'] }} ({{ algorithm() }})
               </h3>
               <div class="flex gap-2">
-                <button 
+                <button
                   (click)="clearAll()"
-                  class="px-3 py-1.5 text-sm rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors flex items-center gap-1">
+                  class="flex items-center gap-1 rounded-lg bg-slate-100 px-3 py-1.5 text-sm text-slate-600 transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+                >
                   <span class="material-symbols-outlined text-sm">delete</span>
                   {{ t.map()['BTN_CLEAR'] }}
                 </button>
-                <button 
+                <button
                   (click)="copyHash()"
                   [disabled]="!hashResult()"
-                  class="px-4 py-1.5 text-sm rounded-lg bg-primary text-white hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
+                  class="bg-primary flex items-center gap-1 rounded-lg px-4 py-1.5 text-sm text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+                >
                   <span class="material-symbols-outlined text-sm">content_copy</span>
                   {{ copied() ? t.map()['BTN_COPIED'] : t.map()['BTN_COPY'] }}
                 </button>
               </div>
             </div>
 
-            <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-4 min-h-[60px] flex items-center">
+            <div
+              class="flex min-h-[60px] items-center rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-900"
+            >
               @if (isCalculating()) {
                 <div class="flex items-center gap-2 text-slate-500">
                   <span class="material-symbols-outlined animate-spin">progress_activity</span>
                   {{ t.map()['CALCULATING'] }}
                 </div>
               } @else {
-                <code class="font-mono text-sm text-slate-800 dark:text-slate-100 break-all select-all">
+                <code
+                  class="font-mono text-sm break-all text-slate-800 select-all dark:text-slate-100"
+                >
                   {{ hashResult() || '—' }}
                 </code>
               }
@@ -258,23 +317,39 @@ type InputMode = 'text' | 'file';
           </div>
 
           <!-- Compare Hash -->
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-            <h3 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2 uppercase tracking-wide text-xs">
-              <span class="material-symbols-outlined text-lg">compare</span> {{ t.map()['COMPARE_LABEL'] }}
+          <div
+            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800"
+          >
+            <h3
+              class="mb-4 flex items-center gap-2 text-xs font-bold tracking-wide text-slate-900 uppercase dark:text-white"
+            >
+              <span class="material-symbols-outlined text-lg">compare</span>
+              {{ t.map()['COMPARE_LABEL'] }}
             </h3>
-            
+
             <div class="flex gap-4">
-              <input 
+              <input
                 type="text"
                 [(ngModel)]="compareHash"
                 [placeholder]="t.map()['COMPARE_PLACEHOLDER']"
-                class="flex-1 px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 font-mono text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
-              
+                class="focus:ring-primary/50 focus:border-primary flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-mono text-sm text-slate-800 transition-all focus:ring-2 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+              />
+
               @if (compareHash() && hashResult()) {
-                <div class="flex items-center gap-2 px-4 py-3 rounded-xl"
-                  [class]="hashesMatch() ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'">
-                  <span class="material-symbols-outlined">{{ hashesMatch() ? 'check_circle' : 'cancel' }}</span>
-                  <span class="font-medium text-sm">{{ hashesMatch() ? t.map()['COMPARE_MATCH'] : t.map()['COMPARE_NO_MATCH'] }}</span>
+                <div
+                  class="flex items-center gap-2 rounded-xl px-4 py-3"
+                  [class]="
+                    hashesMatch()
+                      ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+                  "
+                >
+                  <span class="material-symbols-outlined">{{
+                    hashesMatch() ? 'check_circle' : 'cancel'
+                  }}</span>
+                  <span class="text-sm font-medium">{{
+                    hashesMatch() ? t.map()['COMPARE_MATCH'] : t.map()['COMPARE_NO_MATCH']
+                  }}</span>
                 </div>
               }
             </div>
@@ -282,7 +357,7 @@ type InputMode = 'text' | 'file';
         </div>
       </div>
     </ng-template>
-  `
+  `,
 })
 export class HashGeneratorComponent implements OnDestroy {
   t = inject(ScopedTranslationService);
@@ -296,7 +371,7 @@ export class HashGeneratorComponent implements OnDestroy {
 
   viewMode = computed(() => {
     const config = this.widgetConfig();
-    return (config?.cols === 2 && config?.rows === 1) ? 'wide' : 'default';
+    return config?.cols === 2 && config?.rows === 1 ? 'wide' : 'default';
   });
 
   // State
@@ -343,29 +418,29 @@ export class HashGeneratorComponent implements OnDestroy {
 
   private initWorker() {
     if (!this.worker && typeof Worker !== 'undefined') {
-       this.worker = new Worker(new URL('./hash.worker', import.meta.url), { type: 'module' });
-       this.worker.onmessage = ({ data }) => {
-          if (data.id === String(this.workerId)) {
-             if (data.error) {
-                console.error(data.error);
-             } else {
-                this.rawHashResult.set(data.hash);
-             }
-             this.isCalculating.set(false);
+      this.worker = new Worker(new URL('./hash.worker', import.meta.url), { type: 'module' });
+      this.worker.onmessage = ({ data }) => {
+        if (data.id === String(this.workerId)) {
+          if (data.error) {
+            console.error(data.error);
+          } else {
+            this.rawHashResult.set(data.hash);
           }
-       };
+          this.isCalculating.set(false);
+        }
+      };
     }
   }
 
   private terminateWorker() {
-     if (this.worker) {
-        this.worker.terminate();
-        this.worker = null;
-     }
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
   }
 
   toggleUppercase() {
-    this.uppercase.update(v => !v);
+    this.uppercase.update((v) => !v);
     localStorage.setItem('hash-generator-uppercase', String(this.uppercase()));
   }
 
@@ -383,25 +458,28 @@ export class HashGeneratorComponent implements OnDestroy {
     this.initWorker();
 
     if (this.inputMode() === 'text' && text) {
-      this.worker?.postMessage({ 
-         id: currentId,
-         data: text, 
-         algorithm: algo, 
-         inputType: 'text' 
+      this.worker?.postMessage({
+        id: currentId,
+        data: text,
+        algorithm: algo,
+        inputType: 'text',
       });
     } else if (this.inputMode() === 'file' && file) {
       try {
         const buffer = await file.arrayBuffer();
         // Transfer the buffer to avoid copy overhead
-        this.worker?.postMessage({ 
-           id: currentId,
-           data: buffer, 
-           algorithm: algo, 
-           inputType: 'file' 
-        }, [buffer]);
+        this.worker?.postMessage(
+          {
+            id: currentId,
+            data: buffer,
+            algorithm: algo,
+            inputType: 'file',
+          },
+          [buffer],
+        );
       } catch (e) {
-         console.error(e);
-         this.isCalculating.set(false);
+        console.error(e);
+        this.isCalculating.set(false);
       }
     } else {
       this.rawHashResult.set('');
@@ -467,4 +545,3 @@ export class HashGeneratorComponent implements OnDestroy {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 }
-

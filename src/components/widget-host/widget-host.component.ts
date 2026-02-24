@@ -1,5 +1,14 @@
-
-import { Component, input, inject, signal, computed, OnInit, ElementRef, viewChild, Type } from '@angular/core';
+import {
+  Component,
+  input,
+  inject,
+  signal,
+  computed,
+  OnInit,
+  ElementRef,
+  viewChild,
+  Type,
+} from '@angular/core';
 import { NgComponentOutlet, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { getToolComponent } from '../../core/tool-registry';
@@ -13,119 +22,139 @@ import { I18nService } from '../../services/i18n.service';
   template: `
     <!-- Case: Tool -->
     @if (widget().type === 'tool') {
-        @if (error()) {
-          <div class="h-full flex items-center justify-center bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-200 dark:border-red-800 text-red-500">
-             <div class="text-center">
-                <span class="material-symbols-outlined mb-2">error</span>
-                <p class="text-xs">Failed to load</p>
-             </div>
+      @if (error()) {
+        <div
+          class="flex h-full items-center justify-center rounded-xl border border-red-200 bg-red-50 text-red-500 dark:border-red-800 dark:bg-red-900/10"
+        >
+          <div class="text-center">
+            <span class="material-symbols-outlined mb-2">error</span>
+            <p class="text-xs">Failed to load</p>
           </div>
-        } @else if (!componentType()) {
-           <div class="h-full flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-xl animate-pulse">
-              <span class="text-xs text-slate-400">Loading...</span>
-           </div>
-        } @else {
-          <!-- Important: pointer-events-auto ensures inputs inside the dynamic component work, BUT NOT if it's a phantom -->
-          <div class="h-full w-full" [class.pointer-events-auto]="!isPhantom()">
-             <ng-container *ngComponentOutlet="componentType(); inputs: widgetInputs()" />
-          </div>
-        }
-    } 
-    
+        </div>
+      } @else if (!componentType()) {
+        <div
+          class="flex h-full animate-pulse items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800"
+        >
+          <span class="text-xs text-slate-400">Loading...</span>
+        </div>
+      } @else {
+        <!-- Important: pointer-events-auto ensures inputs inside the dynamic component work, BUT NOT if it's a phantom -->
+        <div class="h-full w-full" [class.pointer-events-auto]="!isPhantom()">
+          <ng-container *ngComponentOutlet="componentType(); inputs: widgetInputs()" />
+        </div>
+      }
+    }
+
     <!-- Case: Note -->
     @else if (widget().type === 'note') {
-        <div class="h-full w-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-900 dark:text-yellow-100 p-4 rounded-xl shadow-sm border border-yellow-200 dark:border-yellow-800 flex flex-col relative group">
-            <textarea 
-                [ngModel]="widget().data?.['content'] || ''"
-                (ngModelChange)="updateContent($event)"
-                class="w-full h-full bg-transparent resize-none border-none outline-none focus:ring-0 p-0 text-sm font-medium placeholder-yellow-800/50 dark:placeholder-yellow-100/30"
-                [class.pointer-events-auto]="!isPhantom()"
-                [placeholder]="notePlaceholder()"
-            ></textarea>
-        </div>
+      <div
+        class="group relative flex h-full w-full flex-col rounded-xl border border-yellow-200 bg-yellow-100 p-4 text-yellow-900 shadow-sm dark:border-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-100"
+      >
+        <textarea
+          [ngModel]="widget().data?.['content'] || ''"
+          (ngModelChange)="updateContent($event)"
+          class="h-full w-full resize-none border-none bg-transparent p-0 text-sm font-medium placeholder-yellow-800/50 outline-none focus:ring-0 dark:placeholder-yellow-100/30"
+          [class.pointer-events-auto]="!isPhantom()"
+          [placeholder]="notePlaceholder()"
+        ></textarea>
+      </div>
     }
 
     <!-- Case: Image -->
     @else if (widget().type === 'image') {
-        <div class="h-full w-full rounded-xl overflow-hidden relative bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group" [class.pointer-events-auto]="!isPhantom()">
-            @if (widget().data?.['url']) {
-                <img [src]="widget().data?.['url']" class="w-full h-full object-cover pointer-events-none">
-            } @else {
-                <div class="absolute inset-0 flex items-center justify-center text-slate-400 flex-col gap-2">
-                    <span class="material-symbols-outlined text-4xl">image</span>
-                    <span class="text-xs text-slate-500">No Image Set</span>
-                </div>
-            }
-            
-            <!-- Hover Edit Button (Visible in View Mode if empty, or always in Edit Mode via dashboard controls) -->
-            <button 
-              (click)="promptImage()" 
-              class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center z-10"
-              [class.opacity-100]="!widget().data?.['url']"
-            >
-               <span class="bg-white text-black px-3 py-1.5 rounded-lg text-xs font-bold">
-                 {{ widget().data?.['url'] ? 'Change Image' : 'Set Image URL' }}
-               </span>
-               <input 
-                 #fileInput
-                 type="file" 
-                 class="hidden" 
-                 accept="image/*"
-                 (change)="handleFileSelect($event)"
-               >
-            </button>
-        </div>
+      <div
+        class="group relative h-full w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800"
+        [class.pointer-events-auto]="!isPhantom()"
+      >
+        @if (widget().data?.['url']) {
+          <img
+            [src]="widget().data?.['url']"
+            class="pointer-events-none h-full w-full object-cover"
+          />
+        } @else {
+          <div
+            class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-slate-400"
+          >
+            <span class="material-symbols-outlined text-4xl">image</span>
+            <span class="text-xs text-slate-500">No Image Set</span>
+          </div>
+        }
+
+        <!-- Hover Edit Button (Visible in View Mode if empty, or always in Edit Mode via dashboard controls) -->
+        <button
+          (click)="promptImage()"
+          class="absolute inset-0 z-10 flex items-center justify-center bg-black/50 opacity-0 transition-opacity hover:opacity-100"
+          [class.opacity-100]="!widget().data?.['url']"
+        >
+          <span class="rounded-lg bg-white px-3 py-1.5 text-xs font-bold text-black">
+            {{ widget().data?.['url'] ? 'Change Image' : 'Set Image URL' }}
+          </span>
+          <input
+            #fileInput
+            type="file"
+            class="hidden"
+            accept="image/*"
+            (change)="handleFileSelect($event)"
+          />
+        </button>
+      </div>
     }
 
     <!-- Case: Spacer -->
     @else if (widget().type === 'spacer') {
-        <div class="h-full w-full rounded-xl border-2 border-dashed border-slate-200 dark:border-slate-700 opacity-50 flex items-center justify-center">
-            <span class="text-xs text-slate-400 font-bold uppercase tracking-widest">Spacer</span>
-        </div>
+      <div
+        class="flex h-full w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-200 opacity-50 dark:border-slate-700"
+      >
+        <span class="text-xs font-bold tracking-widest text-slate-400 uppercase">Spacer</span>
+      </div>
     }
-  `
+  `,
 })
 export class WidgetHostComponent implements OnInit {
   widget = input.required<DashboardWidget>();
   isEditMode = input<boolean>(false);
   isPhantom = input<boolean>(false);
-  
+
   toolService = inject(ToolService);
   i18n = inject(I18nService);
-  
+
   componentType = signal<Type<unknown> | null>(null);
   error = signal<boolean>(false);
   widgetInputs = signal<Record<string, unknown>>({});
-  
+
   fileInput = viewChild<ElementRef>('fileInput');
 
   notePlaceholder = computed(() => {
     const lang = this.i18n.currentLang();
     switch (lang) {
-        case 'fr': return 'Écrivez une note...';
-        case 'es': return 'Escribe una nota...';
-        case 'zh': return '输入笔记...';
-        default: return 'Type a note...';
+      case 'fr':
+        return 'Écrivez une note...';
+      case 'es':
+        return 'Escribe una nota...';
+      case 'zh':
+        return '输入笔记...';
+      default:
+        return 'Type a note...';
     }
   });
 
   ngOnInit() {
     if (this.widget().type === 'tool' && this.widget().toolId) {
-       this.loadComponent();
+      this.loadComponent();
     }
     this.updateInputs();
   }
 
   updateInputs() {
-     this.widgetInputs.set({
-        isWidget: true,
-        widgetConfig: { 
-            cols: this.widget().layout.w, 
-            rows: this.widget().layout.h,
-            instanceId: this.widget().instanceId,
-            ...this.widget().data 
-        }
-     });
+    this.widgetInputs.set({
+      isWidget: true,
+      widgetConfig: {
+        cols: this.widget().layout.w,
+        rows: this.widget().layout.h,
+        instanceId: this.widget().instanceId,
+        ...this.widget().data,
+      },
+    });
   }
 
   async loadComponent() {
@@ -133,7 +162,7 @@ export class WidgetHostComponent implements OnInit {
     if (!toolId) return;
 
     const importer = getToolComponent(toolId);
-    
+
     if (!importer) {
       this.error.set(true);
       return;
@@ -151,15 +180,15 @@ export class WidgetHostComponent implements OnInit {
   private updateTimeout: ReturnType<typeof setTimeout> | null = null;
 
   updateContent(content: string) {
-      if (this.updateTimeout) clearTimeout(this.updateTimeout);
-      
-      this.updateTimeout = setTimeout(() => {
-        this.toolService.updateWidgetData(this.widget().instanceId, { content });
-      }, 500); // 500ms Debounce
+    if (this.updateTimeout) clearTimeout(this.updateTimeout);
+
+    this.updateTimeout = setTimeout(() => {
+      this.toolService.updateWidgetData(this.widget().instanceId, { content });
+    }, 500); // 500ms Debounce
   }
 
   promptImage() {
-      this.fileInput()?.nativeElement.click();
+    this.fileInput()?.nativeElement.click();
   }
 
   handleFileSelect(event: Event) {

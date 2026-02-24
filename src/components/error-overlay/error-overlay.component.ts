@@ -10,33 +10,53 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-error-overlay',
   standalone: true,
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     @if (errorService.error(); as err) {
-      <div class="fixed inset-0 z-[100] bg-slate-900/95 backdrop-blur flex items-center justify-center p-4 animate-fade-in">
-        <div class="bg-white dark:bg-slate-900 border border-red-200 dark:border-red-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
+      <div
+        class="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/95 p-4 backdrop-blur"
+      >
+        <div
+          class="w-full max-w-lg overflow-hidden rounded-2xl border border-red-200 bg-white shadow-2xl dark:border-red-900 dark:bg-slate-900"
+        >
           <div class="p-6 text-center">
-            <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div
+              class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30"
+            >
               <span class="material-symbols-outlined text-3xl">error</span>
             </div>
-            
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2">{{ t.map()['TITLE'] }}</h2>
-            <p class="text-slate-600 dark:text-slate-300 mb-6">{{ t.map()['DESC'] }}</p>
-            
-            <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-lg mb-6 text-left max-h-40 overflow-y-auto border border-slate-200 dark:border-slate-800">
-               <code class="text-xs font-mono text-red-600 dark:text-red-400 block whitespace-pre-wrap">{{ err.message }}</code>
+
+            <h2 class="mb-2 text-xl font-bold text-slate-900 dark:text-white">
+              {{ t.map()['TITLE'] }}
+            </h2>
+            <p class="mb-6 text-slate-600 dark:text-slate-300">{{ t.map()['DESC'] }}</p>
+
+            <div
+              class="mb-6 max-h-40 overflow-y-auto rounded-lg border border-slate-200 bg-slate-50 p-4 text-left dark:border-slate-800 dark:bg-slate-950"
+            >
+              <code
+                class="block font-mono text-xs whitespace-pre-wrap text-red-600 dark:text-red-400"
+                >{{ err.message }}</code
+              >
             </div>
 
-            <div class="flex gap-3 justify-center">
-              <button (click)="reload()" class="px-5 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-blue-600 transition-colors">
+            <div class="flex justify-center gap-3">
+              <button
+                (click)="reload()"
+                class="bg-primary rounded-xl px-5 py-2.5 font-medium text-white transition-colors hover:bg-blue-600"
+              >
                 {{ t.map()['BTN_RELOAD'] }}
               </button>
-              <button (click)="resetApp()" class="px-5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 rounded-xl font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+              <button
+                (click)="resetApp()"
+                class="rounded-xl border border-slate-200 bg-white px-5 py-2.5 font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
                 {{ t.map()['BTN_RESET'] }}
               </button>
-              <button (click)="dismiss()" class="px-5 py-2.5 text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+              <button
+                (click)="dismiss()"
+                class="px-5 py-2.5 text-slate-500 transition-colors hover:text-slate-700 dark:hover:text-slate-300"
+              >
                 {{ t.map()['BTN_DISMISS'] }}
               </button>
             </div>
@@ -45,10 +65,21 @@ import zh from './i18n/zh';
       </div>
     }
   `,
-  styles: [`
-    .animate-fade-in { animation: fadeIn 0.2s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  `]
+  styles: [
+    `
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    `,
+  ],
 })
 export class ErrorOverlayComponent {
   errorService = inject(GlobalErrorService);

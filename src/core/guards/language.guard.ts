@@ -6,7 +6,7 @@ export const languageGuard: CanMatchFn = (route, segments) => {
   const i18n = inject(I18nService);
   const langCode = segments[0]?.path;
 
-  const isValid = i18n.supportedLanguages.some(l => l.code === langCode);
+  const isValid = i18n.supportedLanguages.some((l) => l.code === langCode);
 
   if (isValid) {
     return true;
