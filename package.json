@@ -13,7 +13,9 @@
     "preview": "ng serve --configuration=production",
     "check:integrity": "tsx scripts/check-integrity.ts",
     "lint": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs",
-    "lint:fix": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs --fix"
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,html,css,scss,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,html,css,scss,json,md}\""
   },
   "dependencies": {
     "@angular/build": "^21.0.0",
@@ -55,6 +57,8 @@
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
     "postcss": "^8.5.6",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.21.0",
     "typescript": "~5.9.0",

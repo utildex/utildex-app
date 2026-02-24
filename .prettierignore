@@ -1,0 +1,10 @@
+# Ignore artifacts:
+dist
+coverage
+.angular
+node_modules
+*.min.js
+
+# Ignore specific build files
+package-lock.json
+stats.json
