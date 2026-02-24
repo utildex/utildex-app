@@ -1,0 +1,23 @@
+{
+  "name": "Utildex",
+  "short_name": "Utildex",
+  "theme_color": "#1f2937",
+  "background_color": "#111827",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/?source=pwa",
+  "icons": [
+    {
+      "src": "assets/images/utildex_favicon_64x64.webp",
+      "sizes": "64x64",
+      "type": "image/webp"
+    },
+    {
+      "src": "assets/images/logo_utildex_128.jpeg",
+      "sizes": "128x128",
+      "type": "image/jpeg"
+    }
+  ],
+  "orientation": "portrait",
+  "description": "A local-first, modular toolbox web application featuring independent utilities like generators and converters."
+}
