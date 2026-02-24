@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "ng serve",
-    "prebuild": "tsx scripts/generate-sitemap.ts",
+    "prebuild": "npm run check:integrity && npm run format && npm run lint && tsx scripts/generate-sitemap.ts",
     "build": "ng build",
     "preview": "ng serve --configuration=production",
     "check:integrity": "tsx scripts/check-integrity.ts",
