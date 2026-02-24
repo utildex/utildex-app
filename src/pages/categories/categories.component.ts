@@ -17,13 +17,13 @@ import zh from './i18n/zh';
       en: () => en,
       fr: () => fr,
       es: () => es,
-      zh: () => zh
-    })
+      zh: () => zh,
+    }),
   ],
   template: `
     <div class="space-y-8">
       <div class="flex flex-col gap-2">
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+        <h1 class="flex items-center gap-3 text-3xl font-bold text-slate-900 dark:text-white">
           <span class="material-symbols-outlined text-3xl text-slate-500">grid_view</span>
           {{ t.map()['TITLE'] }}
         </h1>
@@ -32,15 +32,28 @@ import zh from './i18n/zh';
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+      <div class="animate-fade-in grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         @for (cat of categories(); track cat) {
-          <a [routerLink]="['/categories', cat] | localLink" class="group block p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary transition-all hover:shadow-md">
-            <div class="flex items-center justify-between mb-4">
-              <span class="material-symbols-outlined text-4xl text-slate-400 group-hover:text-primary transition-colors">folder</span>
-              <span class="material-symbols-outlined text-slate-300 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          <a
+            [routerLink]="['/categories', cat] | localLink"
+            class="group hover:border-primary dark:hover:border-primary block rounded-xl border border-slate-200 bg-white p-6 transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+          >
+            <div class="mb-4 flex items-center justify-between">
+              <span
+                class="material-symbols-outlined group-hover:text-primary text-4xl text-slate-400 transition-colors"
+                >folder</span
+              >
+              <span
+                class="material-symbols-outlined text-slate-300 transition-transform group-hover:translate-x-1"
+                >arrow_forward</span
+              >
             </div>
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary transition-colors">{{ toolService.getCategoryName(cat) }}</h2>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">
+            <h2
+              class="group-hover:text-primary mb-2 text-xl font-bold text-slate-900 transition-colors dark:text-white"
+            >
+              {{ toolService.getCategoryName(cat) }}
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
               {{ toolService.getToolsByCategory(cat).length }} {{ t.map()['TOOLS_COUNT_SUFFIX'] }}
             </p>
           </a>
@@ -48,10 +61,23 @@ import zh from './i18n/zh';
       </div>
     </div>
   `,
-  styles: [`
-    .animate-fade-in { animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-  `]
+  styles: [
+    `
+      .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `,
+  ],
 })
 export class CategoriesComponent {
   toolService = inject(ToolService);
@@ -59,9 +85,11 @@ export class CategoriesComponent {
   categories = this.toolService.categories;
 
   getSubtitle(): string {
-    const template = this.t.map()['SUBTITLE'] || 'Exploring {0} categories containing {1} total tools.';
+    const template =
+      this.t.map()['SUBTITLE'] || 'Exploring {0} categories containing {1} total tools.';
     const totalTools = this.toolService.tools().length;
-    return template.replace('{0}', this.categories().length.toString())
-        .replace('{1}', totalTools.toString());
+    return template
+      .replace('{0}', this.categories().length.toString())
+      .replace('{1}', totalTools.toString());
   }
 }

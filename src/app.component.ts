@@ -1,4 +1,3 @@
-
 import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { ThemeService } from './services/theme.service';
@@ -6,7 +5,7 @@ import { ToolService } from './services/tool.service';
 import { I18nService } from './services/i18n.service';
 import { ShortcutService } from './services/shortcut.service';
 import { SeoService } from './services/seo.service';
-import { NetworkService } from './services/network.service'; 
+import { NetworkService } from './services/network.service';
 import { provideTranslation, ScopedTranslationService } from './core/i18n';
 import { ToastComponent } from './components/toast/toast.component';
 import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
@@ -35,24 +34,35 @@ import { TourService } from './services/tour.service';
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet, RouterLink, RouterLinkActive,
-    ToastComponent, SettingsModalComponent, ClipboardHistoryComponent, 
-    CommandPaletteComponent, ErrorOverlayComponent, NetworkStatusComponent,
-    DashboardModalsComponent, DownloadStatusComponent, GuideComponent, BubbleDirective, BackgroundComponent,
-    VirtualPetsComponent, LocalLinkPipe, TourOverlayComponent, TourTargetDirective
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    ToastComponent,
+    SettingsModalComponent,
+    ClipboardHistoryComponent,
+    CommandPaletteComponent,
+    ErrorOverlayComponent,
+    NetworkStatusComponent,
+    DashboardModalsComponent,
+    DownloadStatusComponent,
+    GuideComponent,
+    BubbleDirective,
+    BackgroundComponent,
+    VirtualPetsComponent,
+    LocalLinkPipe,
+    TourOverlayComponent,
+    TourTargetDirective,
   ],
   templateUrl: './app.component.html',
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ]
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
 })
 export class AppComponent implements OnInit {
   themeService = inject(ThemeService);
   toolService = inject(ToolService);
   i18nService = inject(I18nService);
   shortcutService = inject(ShortcutService);
-  seoService = inject(SeoService); 
-  networkService = inject(NetworkService); 
+  seoService = inject(SeoService);
+  networkService = inject(NetworkService);
   offline = inject(OfflineManagerService);
   tour = inject(TourService);
   t = inject(ScopedTranslationService);
@@ -77,9 +87,7 @@ export class AppComponent implements OnInit {
 
   constructor() {
     // Close menus on route change
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.mobileMenuOpen.set(false);
       // We generally want to keep sidebar open if user toggled it, unless on mobile
       if (window.innerWidth < 1024) {
@@ -87,7 +95,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.tour.actionEvents$.subscribe(action => {
+    this.tour.actionEvents$.subscribe((action) => {
       if (action === 'open-settings') {
         this.settingsOpen.set(true);
       } else if (action === 'close-settings') {
@@ -103,7 +111,7 @@ export class AppComponent implements OnInit {
   toggleSettings() {
     this.settingsOpen.update((v: boolean) => !v);
   }
-  
+
   toggleMobileMenu() {
     this.mobileMenuOpen.update((v: boolean) => !v);
   }

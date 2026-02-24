@@ -3,8 +3,9 @@ La productivité ne consiste pas à travailler plus d'heures, mais à faire comp
 ## 1. Maîtrisez votre IDE
 
 Arrêtez d'utiliser la souris. Apprenez les raccourcis clavier (VS Code, WebStorm).
-*   **Cmd/Ctrl + P** : Ouvrir un fichier
-*   **Cmd/Ctrl + Shift + F** : Recherche globale
+
+- **Cmd/Ctrl + P** : Ouvrir un fichier
+- **Cmd/Ctrl + Shift + F** : Recherche globale
 
 ## 2. La technique Pomodoro
 

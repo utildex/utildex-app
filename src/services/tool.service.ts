@@ -1,24 +1,17 @@
-
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { I18nService } from './i18n.service';
 import { DbService } from './db.service';
 import { TOOL_REGISTRY } from '../data/tool-registry';
-import { 
-    I18nText, 
-    WidgetPreset, 
-    WidgetCapability, 
-    ToolMetadata, 
-    WidgetLayout 
+import {
+  I18nText,
+  WidgetPreset,
+  WidgetCapability,
+  ToolMetadata,
+  WidgetLayout,
 } from '../data/types';
 
 // Export types so they can be imported from ToolService
-export type { 
-    I18nText, 
-    WidgetPreset, 
-    WidgetCapability, 
-    ToolMetadata, 
-    WidgetLayout 
-};
+export type { I18nText, WidgetPreset, WidgetCapability, ToolMetadata, WidgetLayout };
 
 export interface DashboardWidget {
   instanceId: string;
@@ -45,40 +38,40 @@ interface ToolUsageStats {
 }
 
 const CATEGORY_TRANSLATIONS: Record<string, I18nText> = {
-  'Utility': { en: 'Utility', fr: 'Utilitaire', es: 'Utilidad', zh: '实用工具' },
-  'Security': { en: 'Security', fr: 'Sécurité', es: 'Seguridad', zh: '安全' },
-  'Developer': { en: 'Developer', fr: 'Développeur', es: 'Desarrollador', zh: '开发者' },
-  'Office': { en: 'Office', fr: 'Bureautique', es: 'Oficina', zh: '办公' },
-  'Media': { en: 'Media', fr: 'Média', es: 'Multimedia', zh: '媒体' },
-  'Design': { en: 'Design', fr: 'Design', es: 'Diseño', zh: '设计' }
+  Utility: { en: 'Utility', fr: 'Utilitaire', es: 'Utilidad', zh: '实用工具' },
+  Security: { en: 'Security', fr: 'Sécurité', es: 'Seguridad', zh: '安全' },
+  Developer: { en: 'Developer', fr: 'Développeur', es: 'Desarrollador', zh: '开发者' },
+  Office: { en: 'Office', fr: 'Bureautique', es: 'Oficina', zh: '办公' },
+  Media: { en: 'Media', fr: 'Média', es: 'Multimedia', zh: '媒体' },
+  Design: { en: 'Design', fr: 'Design', es: 'Diseño', zh: '设计' },
 };
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ToolService {
   private i18n = inject(I18nService);
   private db = inject(DbService);
 
   // Dynamically attach route paths based on ID
-  private readonly toolsRegistry: ToolMetadata[] = TOOL_REGISTRY.map(t => ({
+  private readonly toolsRegistry: ToolMetadata[] = TOOL_REGISTRY.map((t) => ({
     ...t,
-    routePath: `tools/${t.id}`
+    routePath: `tools/${t.id}`,
   }));
 
   // Core State
   readonly tools = signal<ToolMetadata[]>(this.toolsRegistry);
   favorites = signal<Set<string>>(new Set<string>());
   usageStats = signal<ToolUsageStats>({});
-  
+
   // Dashboard State
   dashboardWidgets = signal<DashboardWidget[]>([]);
-  
+
   // Modal State (Global placement to solve z-index issues)
   addModalOpen = signal(false);
   fillerModalOpen = signal(false);
   placementRequest = signal<PendingPlacement | null>(null);
-  
+
   // Search/Filter State
   searchQuery = signal<string>('');
   selectedTags = signal<Set<string>>(new Set<string>());
@@ -93,12 +86,12 @@ export class ToolService {
 
   // ... (Computed properties unchanged)
   categories = computed(() => {
-    const allCats = this.tools().flatMap(t => t.categories);
+    const allCats = this.tools().flatMap((t) => t.categories);
     return [...new Set(allCats)].sort();
   });
 
   allTags = computed(() => {
-    const tags = this.tools().flatMap(t => t.tags);
+    const tags = this.tools().flatMap((t) => t.tags);
     return [...new Set(tags)].sort();
   });
 
@@ -111,78 +104,85 @@ export class ToolService {
     const stats = this.usageStats(); // For popularity sort
 
     // 1. Filter
-    let filtered = allTools.filter(tool => {
-      const matchesSearch = 
+    let filtered = allTools.filter((tool) => {
+      const matchesSearch =
         !query ||
-        this.resolveSearchText(tool.name).includes(query) || 
+        this.resolveSearchText(tool.name).includes(query) ||
         this.resolveSearchText(tool.description).includes(query);
       const matchesCategory = category ? tool.categories.includes(category) : true;
-      const matchesTags = tags.size === 0 || tool.tags.some(tag => tags.has(tag));
+      const matchesTags = tags.size === 0 || tool.tags.some((tag) => tags.has(tag));
       return matchesSearch && matchesCategory && matchesTags;
     });
 
     // 2. Score (if needed for relevance) or Default Sort
     if (order === 'relevance' && query.length > 1) {
-      filtered = filtered.map(tool => {
-        const name = this.resolveSearchText(tool.name).toLowerCase();
-        const tagsJoined = tool.tags.join(' ');
-        const desc = this.resolveSearchText(tool.description).toLowerCase();
-        
-        let score = 0;
-        if (name.startsWith(query)) score += 100;
-        else if (name.includes(query)) score += 10;
-        if (tagsJoined.includes(query)) score += 5;
-        if (desc.includes(query)) score += 1;
+      filtered = filtered
+        .map((tool) => {
+          const name = this.resolveSearchText(tool.name).toLowerCase();
+          const tagsJoined = tool.tags.join(' ');
+          const desc = this.resolveSearchText(tool.description).toLowerCase();
 
-        return { tool, score };
-      })
-      .filter(item => item.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .map(item => item.tool);
+          let score = 0;
+          if (name.startsWith(query)) score += 100;
+          else if (name.includes(query)) score += 10;
+          if (tagsJoined.includes(query)) score += 5;
+          if (desc.includes(query)) score += 1;
+
+          return { tool, score };
+        })
+        .filter((item) => item.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map((item) => item.tool);
     } else if (order === 'popularity') {
-       filtered.sort((a, b) => (stats[b.id]?.count || 0) - (stats[a.id]?.count || 0));
+      filtered.sort((a, b) => (stats[b.id]?.count || 0) - (stats[a.id]?.count || 0));
     } else if (order === 'name') {
       filtered.sort((a, b) => this.i18n.resolve(a.name).localeCompare(this.i18n.resolve(b.name)));
     }
-    
+
     // Fallback if relevance is selected but query is empty or short -> default to Name
     if (order === 'relevance' && query.length <= 1) {
-         filtered.sort((a, b) => this.i18n.resolve(a.name).localeCompare(this.i18n.resolve(b.name)));
+      filtered.sort((a, b) => this.i18n.resolve(a.name).localeCompare(this.i18n.resolve(b.name)));
     }
 
     return filtered;
   });
 
-  featuredTools = computed(() => this.tools().filter(t => t.featured));
+  featuredTools = computed(() => this.tools().filter((t) => t.featured));
   favoriteTools = computed(() => {
     const favIds = this.favorites();
-    return this.tools().filter(t => favIds.has(t.id));
+    return this.tools().filter((t) => favIds.has(t.id));
   });
   mostUsedTools = computed(() => {
     const stats = this.usageStats();
-    const usedTools = this.tools().filter(t => stats[t.id]?.count > 0);
-    return usedTools.sort((a, b) => (stats[b.id].count || 0) - (stats[a.id].count || 0)).slice(0, 5);
+    const usedTools = this.tools().filter((t) => stats[t.id]?.count > 0);
+    return usedTools
+      .sort((a, b) => (stats[b.id].count || 0) - (stats[a.id].count || 0))
+      .slice(0, 5);
   });
   historyTools = computed(() => {
     const stats = this.usageStats();
-    const usedTools = this.tools().filter(t => stats[t.id]?.lastUsed > 0);
+    const usedTools = this.tools().filter((t) => stats[t.id]?.lastUsed > 0);
     return usedTools.sort((a, b) => (stats[b.id].lastUsed || 0) - (stats[a.id].lastUsed || 0));
   });
 
   // --- Modal Actions ---
-  openAddToolModal() { this.addModalOpen.set(true); }
-  openFillerModal() { this.fillerModalOpen.set(true); }
-  closeModals() { 
-    this.addModalOpen.set(false); 
+  openAddToolModal() {
+    this.addModalOpen.set(true);
+  }
+  openFillerModal() {
+    this.fillerModalOpen.set(true);
+  }
+  closeModals() {
+    this.addModalOpen.set(false);
     this.fillerModalOpen.set(false);
   }
-  
+
   // Called by the modal when user makes a selection
   requestPlacement(p: PendingPlacement) {
     this.closeModals();
     this.placementRequest.set(p);
   }
-  
+
   // Called by Dashboard to consume the event
   consumePlacementRequest(): PendingPlacement | null {
     const p = this.placementRequest();
@@ -191,7 +191,7 @@ export class ToolService {
   }
 
   trackToolUsage(toolId: string) {
-    this.usageStats.update(current => {
+    this.usageStats.update((current) => {
       const stats = current[toolId] || { count: 0, lastUsed: 0 };
       const updated = { ...current, [toolId]: { count: stats.count + 1, lastUsed: Date.now() } };
       this.persistUsageStats(updated);
@@ -200,7 +200,7 @@ export class ToolService {
   }
 
   toggleFavorite(toolId: string) {
-    this.favorites.update(favs => {
+    this.favorites.update((favs) => {
       const newFavs = new Set<string>(favs);
       if (newFavs.has(toolId)) newFavs.delete(toolId);
       else newFavs.add(toolId);
@@ -211,22 +211,22 @@ export class ToolService {
 
   // --- Reset Methods ---
   resetUsage() {
-     this.usageStats.set({});
-     this.persistUsageStats({});
+    this.usageStats.set({});
+    this.persistUsageStats({});
   }
 
   resetFavorites() {
-     this.favorites.set(new Set());
-     this.persistFavorites(new Set());
+    this.favorites.set(new Set());
+    this.persistFavorites(new Set());
   }
 
   resetDashboard() {
-     this.dashboardWidgets.set([]);
-     this.persistDashboard([]);
+    this.dashboardWidgets.set([]);
+    this.persistDashboard([]);
   }
 
   toggleTag(tag: string) {
-    this.selectedTags.update(tags => {
+    this.selectedTags.update((tags) => {
       const newTags = new Set<string>(tags);
       if (newTags.has(tag)) newTags.delete(tag);
       else newTags.add(tag);
@@ -234,9 +234,13 @@ export class ToolService {
     });
   }
 
-  setCategory(category: string | null) { this.selectedCategory.set(category); }
-  setSort(order: 'name' | 'newest' | 'relevance' | 'popularity') { this.sortOrder.set(order); }
-  setSearch(query: string) { 
+  setCategory(category: string | null) {
+    this.selectedCategory.set(category);
+  }
+  setSort(order: 'name' | 'newest' | 'relevance' | 'popularity') {
+    this.sortOrder.set(order);
+  }
+  setSearch(query: string) {
     this.searchQuery.set(query);
   }
   resetFilters() {
@@ -246,7 +250,9 @@ export class ToolService {
     this.sortOrder.set('name');
   }
 
-  getToolsByCategory(category: string) { return this.tools().filter(t => t.categories.includes(category)); }
+  getToolsByCategory(category: string) {
+    return this.tools().filter((t) => t.categories.includes(category));
+  }
   getLastUsedDate(toolId: string): Date | null {
     const timestamp = this.usageStats()[toolId]?.lastUsed;
     return timestamp ? new Date(timestamp) : null;
@@ -261,26 +267,29 @@ export class ToolService {
   /**
    * Checks if a rectangle overlaps with any existing widget.
    */
-  isPositionValid(x: number, y: number, w: number, h: number, existingWidgets: DashboardWidget[], maxCols?: number, ignoreId?: string): boolean {
+  isPositionValid(
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    existingWidgets: DashboardWidget[],
+    maxCols?: number,
+    ignoreId?: string,
+  ): boolean {
     if (x < 0 || y < 0) return false;
     if (maxCols !== undefined && x + w > maxCols) return false;
 
     for (const widget of existingWidgets) {
       if (widget.instanceId === ignoreId) continue;
       const wl = widget.layout;
-      const overlaps = (
-        x < wl.x + wl.w &&
-        x + w > wl.x &&
-        y < wl.y + wl.h &&
-        y + h > wl.y
-      );
+      const overlaps = x < wl.x + wl.w && x + w > wl.x && y < wl.y + wl.h && y + h > wl.y;
       if (overlaps) return false;
     }
     return true;
   }
 
   placeWidget(widget: DashboardWidget) {
-    this.dashboardWidgets.update(current => {
+    this.dashboardWidgets.update((current) => {
       const updated = [...current, widget];
       this.persistDashboard(updated);
       return updated;
@@ -288,20 +297,18 @@ export class ToolService {
   }
 
   updateWidgetData(instanceId: string, data: Record<string, unknown>) {
-    this.dashboardWidgets.update(widgets => {
-       const updated = widgets.map(w =>
-         w.instanceId === instanceId
-           ? { ...w, data: { ...w.data, ...data } }
-           : w
-       );
-       this.persistDashboard(updated);
-       return updated;
+    this.dashboardWidgets.update((widgets) => {
+      const updated = widgets.map((w) =>
+        w.instanceId === instanceId ? { ...w, data: { ...w.data, ...data } } : w,
+      );
+      this.persistDashboard(updated);
+      return updated;
     });
   }
 
   removeWidget(instanceId: string) {
-    this.dashboardWidgets.update(widgets => {
-      const updated = widgets.filter(w => w.instanceId !== instanceId);
+    this.dashboardWidgets.update((widgets) => {
+      const updated = widgets.filter((w) => w.instanceId !== instanceId);
       this.persistDashboard(updated);
       return updated;
     });
@@ -317,8 +324,8 @@ export class ToolService {
     }
   }
 
-  private persistFavorites(favs: Set<string>) { 
-    this.db.set('utildex-favorites', [...favs]); 
+  private persistFavorites(favs: Set<string>) {
+    this.db.set('utildex-favorites', [...favs]);
   }
 
   private async loadUsageStats() {
@@ -330,8 +337,8 @@ export class ToolService {
     }
   }
 
-  private persistUsageStats(stats: ToolUsageStats) { 
-    this.db.set('utildex-usage', stats); 
+  private persistUsageStats(stats: ToolUsageStats) {
+    this.db.set('utildex-usage', stats);
   }
 
   private async loadDashboard() {
@@ -343,8 +350,8 @@ export class ToolService {
     }
   }
 
-  private persistDashboard(items: DashboardWidget[]) { 
-    this.db.set('utildex-dashboard-v2', items); 
+  private persistDashboard(items: DashboardWidget[]) {
+    this.db.set('utildex-dashboard-v2', items);
   }
 
   private resolveSearchText(text: I18nText): string {

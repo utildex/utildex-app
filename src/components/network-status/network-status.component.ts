@@ -9,26 +9,41 @@ import zh from './i18n/zh';
 @Component({
   selector: 'app-network-status',
   standalone: true,
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     @if (!network.isOnline()) {
-      <div class="fixed bottom-4 right-4 z-50 animate-slide-up">
-        <div class="bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 border border-slate-700">
+      <div class="animate-slide-up fixed right-4 bottom-4 z-50">
+        <div
+          class="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white shadow-lg"
+        >
           <span class="relative flex h-3 w-3">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+            <span
+              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"
+            ></span>
+            <span class="relative inline-flex h-3 w-3 rounded-full bg-red-500"></span>
           </span>
           <span class="text-sm font-medium">{{ t.map()['OFFLINE_MSG'] }}</span>
         </div>
       </div>
     }
   `,
-  styles: [`
-    .animate-slide-up { animation: slideUp 0.3s ease-out; }
-    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  `]
+  styles: [
+    `
+      .animate-slide-up {
+        animation: slideUp 0.3s ease-out;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+    `,
+  ],
 })
 export class NetworkStatusComponent {
   network = inject(NetworkService);

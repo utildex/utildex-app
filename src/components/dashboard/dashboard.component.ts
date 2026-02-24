@@ -1,4 +1,3 @@
-
 import { Component, inject, computed } from '@angular/core';
 import { ToolService } from '../../services/tool.service';
 import { ToolCardComponent } from '../tool-card/tool-card.component';
@@ -23,10 +22,10 @@ import zh from './i18n/zh';
       en: () => en,
       fr: () => fr,
       es: () => es,
-      zh: () => zh
-    })
+      zh: () => zh,
+    }),
   ],
-  host: { class: 'contents' }
+  host: { class: 'contents' },
 })
 export class DashboardComponent {
   toolService = inject(ToolService);

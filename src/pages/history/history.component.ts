@@ -20,13 +20,13 @@ import zh from './i18n/zh';
       en: () => en,
       fr: () => fr,
       es: () => es,
-      zh: () => zh
-    })
+      zh: () => zh,
+    }),
   ],
   template: `
     <div class="space-y-8">
       <div class="flex flex-col gap-2">
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
+        <h1 class="flex items-center gap-3 text-3xl font-bold text-slate-900 dark:text-white">
           <span class="material-symbols-outlined text-3xl text-slate-500">history</span>
           {{ t.map()['TITLE'] }}
         </h1>
@@ -34,37 +34,45 @@ import zh from './i18n/zh';
       </div>
 
       @if (historyTools().length === 0) {
-        <div class="text-center py-20 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
-          <span class="material-symbols-outlined text-5xl text-slate-300 mb-4">schedule</span>
+        <div
+          class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 py-20 text-center dark:border-slate-700 dark:bg-slate-800/50"
+        >
+          <span class="material-symbols-outlined mb-4 text-5xl text-slate-300">schedule</span>
           <p class="text-lg text-slate-500">{{ t.map()['NO_HISTORY_TITLE'] }}</p>
-          <a [routerLink]="'/tools' | localLink" class="mt-4 inline-block text-primary hover:underline">{{ t.map()['BROWSE_LINK'] }}</a>
+          <a
+            [routerLink]="'/tools' | localLink"
+            class="text-primary mt-4 inline-block hover:underline"
+            >{{ t.map()['BROWSE_LINK'] }}</a
+          >
         </div>
       } @else {
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           @for (tool of historyTools(); track tool.id) {
-             <div class="flex flex-col gap-2">
-               <span class="text-xs font-mono text-slate-400 dark:text-slate-500 pl-1">
-                 {{ t.map()['LAST_USED_PREFIX'] }} {{ toolService.getLastUsedDate(tool.id) | date:'medium' }}
-               </span>
-               <div class="flex-1">
-                 <app-tool-card 
-                   [tool]="tool" 
-                   [isFavorite]="isFav(tool.id)" 
-                   (toggleFavorite)="toggleFav($event)">
-                 </app-tool-card>
-               </div>
-             </div>
+            <div class="flex flex-col gap-2">
+              <span class="pl-1 font-mono text-xs text-slate-400 dark:text-slate-500">
+                {{ t.map()['LAST_USED_PREFIX'] }}
+                {{ toolService.getLastUsedDate(tool.id) | date: 'medium' }}
+              </span>
+              <div class="flex-1">
+                <app-tool-card
+                  [tool]="tool"
+                  [isFavorite]="isFav(tool.id)"
+                  (toggleFavorite)="toggleFav($event)"
+                >
+                </app-tool-card>
+              </div>
+            </div>
           }
         </div>
       }
     </div>
-  `
+  `,
 })
 export class HistoryComponent {
   toolService = inject(ToolService);
   i18nService = inject(I18nService);
   t = inject(ScopedTranslationService);
-  
+
   historyTools = this.toolService.historyTools;
   favorites = this.toolService.favorites;
   // Expose currentLang for date pipe if needed in the future, currently just using default

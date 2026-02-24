@@ -1,14 +1,13 @@
-
 {
   "id": "image-converter",
-  "name": { 
-    "en": "Image Converter", 
+  "name": {
+    "en": "Image Converter",
     "fr": "Convertisseur Image",
     "es": "Convertidor de Imagen",
     "zh": "图片转换器"
   },
-  "description": { 
-    "en": "Batch convert images (JPG, PNG, WEBP, HEIC) locally. Resize and compress securely.", 
+  "description": {
+    "en": "Batch convert images (JPG, PNG, WEBP, HEIC) locally. Resize and compress securely.",
     "fr": "Convertissez des images (JPG, PNG, WEBP, HEIC) localement par lots. Redimensionnez et compressez en toute sécurité.",
     "es": "Convierta imágenes (JPG, PNG, WEBP, HEIC) localmente por lotes. Redimensione y comprima de forma segura.",
     "zh": "本地批量转换图片（JPG, PNG, WEBP, HEIC）。安全地调整大小和压缩。"

@@ -1,4 +1,3 @@
-
 import { Component, input, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule, DatePipe, NgTemplateOutlet, NgOptimizedImage } from '@angular/common';
@@ -13,11 +12,11 @@ import { I18nService } from '../../services/i18n.service';
   template: `
     <!-- External Link Variant -->
     @if (isExternal()) {
-      <a 
+      <a
         [href]="article().url"
         target="_blank"
         rel="noopener noreferrer"
-        class="group/article block bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl transition-all duration-300 isolate"
+        class="group/article isolate block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800"
         [class.flex-col]="layout() === 'grid'"
         [class.h-full]="layout() === 'grid'"
         [class.hover:-translate-y-2]="layout() === 'grid'"
@@ -27,12 +26,12 @@ import { I18nService } from '../../services/i18n.service';
       >
         <ng-container *ngTemplateOutlet="cardContent"></ng-container>
       </a>
-    } 
+    }
     <!-- Internal Router Link Variant -->
     @else {
-      <a 
+      <a
         [routerLink]="['/articles', article().id] | localLink"
-        class="group/article block bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden hover:shadow-xl transition-all duration-300 isolate"
+        class="group/article isolate block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800"
         [class.flex-col]="layout() === 'grid'"
         [class.h-full]="layout() === 'grid'"
         [class.hover:-translate-y-2]="layout() === 'grid'"
@@ -47,8 +46,8 @@ import { I18nService } from '../../services/i18n.service';
     <!-- Shared Content Template -->
     <ng-template #cardContent>
       <!-- Thumbnail -->
-      <div 
-        class="relative overflow-hidden bg-slate-200 dark:bg-slate-700 shrink-0"
+      <div
+        class="relative shrink-0 overflow-hidden bg-slate-200 dark:bg-slate-700"
         [class.h-48]="layout() === 'grid'"
         [class.w-full]="layout() === 'grid'"
         [class.w-32]="layout() === 'list'"
@@ -56,71 +55,82 @@ import { I18nService } from '../../services/i18n.service';
         [class.h-full]="layout() === 'list'"
         [class.min-h-32]="layout() === 'list'"
       >
-      <img 
-          [ngSrc]="article().thumbnail" 
-          [alt]="i18n.resolve(article().title)" 
+        <img
+          [ngSrc]="article().thumbnail"
+          [alt]="i18n.resolve(article().title)"
           fill
           [priority]="priority()"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           class="object-cover transition-transform duration-500 group-hover/article:scale-105"
-        >
-        
+        />
+
         <!-- External Badge -->
         @if (article().type === 'external') {
-           <div class="absolute top-3 right-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-1 rounded-lg text-xs font-bold shadow-sm flex items-center gap-1 z-10">
-              <span>EXT</span>
-              <span class="material-symbols-outlined text-sm">open_in_new</span>
-           </div>
+          <div
+            class="absolute top-3 right-3 z-10 flex items-center gap-1 rounded-lg bg-white/90 px-2 py-1 text-xs font-bold shadow-sm backdrop-blur dark:bg-slate-900/90"
+          >
+            <span>EXT</span>
+            <span class="material-symbols-outlined text-sm">open_in_new</span>
+          </div>
         }
-        
+
         <!-- Reading Time (Grid Only) -->
         @if (layout() === 'grid') {
-          <div class="absolute bottom-3 right-3 bg-black/60 text-white px-2 py-1 rounded text-xs font-medium backdrop-blur-sm z-10">
-             {{ article().readingTime }} min
+          <div
+            class="absolute right-3 bottom-3 z-10 rounded bg-black/60 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm"
+          >
+            {{ article().readingTime }} min
           </div>
         }
       </div>
 
       <!-- Content -->
-      <div class="p-5 flex flex-col flex-1">
-        <div class="flex flex-wrap gap-2 mb-2">
+      <div class="flex flex-1 flex-col p-5">
+        <div class="mb-2 flex flex-wrap gap-2">
           @for (tag of article().tags.slice(0, 3); track tag) {
-            <span class="text-[10px] uppercase font-bold tracking-wider text-primary bg-primary/5 px-2 py-1 rounded border border-primary/10">
+            <span
+              class="text-primary bg-primary/5 border-primary/10 rounded border px-2 py-1 text-[10px] font-bold tracking-wider uppercase"
+            >
               {{ tag }}
             </span>
           }
         </div>
-        
-        <h3 class="font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover/article:text-primary transition-colors"
+
+        <h3
+          class="group-hover/article:text-primary mb-2 leading-tight font-bold text-slate-900 transition-colors dark:text-white"
           [class.text-xl]="layout() === 'grid'"
           [class.text-lg]="layout() === 'list'"
         >
           {{ i18n.resolve(article().title) }}
         </h3>
-        
-        <p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-3 mb-4 flex-1">
+
+        <p class="mb-4 line-clamp-3 flex-1 text-sm text-slate-500 dark:text-slate-400">
           {{ i18n.resolve(article().summary) }}
         </p>
 
-        <div class="pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-xs text-slate-400 mt-auto">
+        <div
+          class="mt-auto flex items-center justify-between border-t border-slate-100 pt-4 text-xs text-slate-400 dark:border-slate-700"
+        >
           <div class="flex items-center gap-2">
-             <span class="font-medium text-slate-600 dark:text-slate-300">{{ article().author }}</span>
-             @if (layout() === 'list') {
-               <span>•</span>
-               <span>{{ article().readingTime }} min</span>
-             }
+            <span class="font-medium text-slate-600 dark:text-slate-300">{{
+              article().author
+            }}</span>
+            @if (layout() === 'list') {
+              <span>•</span>
+              <span>{{ article().readingTime }} min</span>
+            }
           </div>
-          <span>{{ article().date | date:'mediumDate' }}</span>
+          <span>{{ article().date | date: 'mediumDate' }}</span>
         </div>
       </div>
     </ng-template>
-  `
+  `,
 })
 export class ArticleCardComponent {
   article = input.required<ArticleMetadata>();
   layout = input<'grid' | 'list'>('grid');
   priority = input<boolean>(false);
-  
+
   i18n = inject(I18nService);
 
   isExternal = computed(() => this.article().type === 'external');

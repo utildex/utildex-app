@@ -24,8 +24,16 @@
     "defaultCols": 2,
     "defaultRows": 2,
     "presets": [
-      { "label": { "en": "Icon", "fr": "Icône", "es": "Icono", "zh": "图标" }, "cols": 1, "rows": 1 },
-      { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 }
+      {
+        "label": { "en": "Icon", "fr": "Icône", "es": "Icono", "zh": "图标" },
+        "cols": 1,
+        "rows": 1
+      },
+      {
+        "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" },
+        "cols": 2,
+        "rows": 2
+      }
     ]
   }
 }

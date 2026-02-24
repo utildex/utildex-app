@@ -15,7 +15,7 @@ export interface LanguageInfo {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class I18nService {
   private db = inject(DbService);
@@ -24,16 +24,14 @@ export class I18nService {
 
   readonly supportedLanguages = languages as LanguageInfo[];
   private readonly storageKey = getPrefKey('lang');
-  
+
   // Initialize with saved preference to prevent "Flash of Default" overwriting storage
   currentLang = signal<Language>(this.getStartupLanguage());
 
   constructor() {
     // URL is the Source of Truth
     // Listen to navigation events to determine the language from the URL
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       const foundLang = this.findLangInRoute(this.route.snapshot);
       if (foundLang && this.isSupported(foundLang)) {
         this.currentLang.set(foundLang as Language);
@@ -42,7 +40,7 @@ export class I18nService {
 
     effect(() => {
       const lang = this.currentLang();
-      
+
       document.documentElement.lang = lang;
 
       try {
@@ -54,19 +52,20 @@ export class I18nService {
     });
   }
 
-
   getStartupLanguage(): Language {
-     // 1. Try LocalStorage (Sync)
-     try {
-       const saved = localStorage.getItem(this.storageKey);
-       if (saved && this.isSupported(saved)) {
-         return saved as Language;
-       }
-     } catch { /* ignore */ }
+    // 1. Try LocalStorage (Sync)
+    try {
+      const saved = localStorage.getItem(this.storageKey);
+      if (saved && this.isSupported(saved)) {
+        return saved as Language;
+      }
+    } catch {
+      /* ignore */
+    }
 
-     return this.getBrowserLang();
+    return this.getBrowserLang();
   }
-  
+
   private findLangInRoute(snapshot: ActivatedRouteSnapshot): string | null {
     let current: ActivatedRouteSnapshot | null = snapshot;
     while (current) {
@@ -82,9 +81,9 @@ export class I18nService {
     const url = this.router.url;
     const currentLang = this.currentLang();
     const newUrl = url.replace(`/${currentLang}`, `/${lang}`);
-    
+
     const target = newUrl !== url ? newUrl : `/${lang}`;
-    
+
     this.router.navigateByUrl(target);
   }
 
@@ -94,19 +93,19 @@ export class I18nService {
   }
 
   private isSupported(lang: string): boolean {
-    return this.supportedLanguages.some(l => l.code === lang);
+    return this.supportedLanguages.some((l) => l.code === lang);
   }
 
   private getBrowserLang(): Language {
-     const browserLang = navigator.language.split('-')[0];
-     const match = this.supportedLanguages.find(l => l.code === browserLang);
-     return match ? match.code : 'en';
+    const browserLang = navigator.language.split('-')[0];
+    const match = this.supportedLanguages.find((l) => l.code === browserLang);
+    return match ? match.code : 'en';
   }
 
   resolve(text: I18nText | undefined | null): string {
     if (!text) return '';
     if (typeof text === 'string') return text;
-    
+
     const lang = this.currentLang();
     return text[lang] || text['en'] || Object.values(text)[0] || '';
   }

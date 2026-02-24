@@ -1,3 +1,3 @@
 export default {
-  "BACK_LINK": "Retour aux catégories"
+  BACK_LINK: 'Retour aux catégories',
 };

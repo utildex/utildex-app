@@ -1,14 +1,13 @@
-
 {
   "id": "rotate-pdf",
-  "name": { 
-    "en": "Rotate PDF", 
+  "name": {
+    "en": "Rotate PDF",
     "fr": "Pivoter PDF",
     "es": "Rotar PDF",
     "zh": "旋转 PDF"
   },
-  "description": { 
-    "en": "Rotate all or selected pages of a PDF document permanently.", 
+  "description": {
+    "en": "Rotate all or selected pages of a PDF document permanently.",
     "fr": "Faites pivoter toutes ou certaines pages d'un document PDF de façon permanente.",
     "es": "Rote todas o las páginas seleccionadas de un documento PDF permanentemente.",
     "zh": "永久旋转 PDF 文档的所有或选定页面。"

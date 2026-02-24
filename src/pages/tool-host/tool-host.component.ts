@@ -1,4 +1,3 @@
-
 import { Component, input, inject, signal, effect, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -12,15 +11,23 @@ import { I18nService } from '../../services/i18n.service';
   imports: [CommonModule],
   template: `
     @if (error()) {
-      <div class="flex flex-col items-center justify-center py-20 px-4 text-center">
-        <div class="w-16 h-16 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-full flex items-center justify-center mb-4">
+      <div class="flex flex-col items-center justify-center px-4 py-20 text-center">
+        <div
+          class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30"
+        >
           <span class="material-symbols-outlined text-3xl">error</span>
         </div>
-        <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Tool Not Found</h2>
-        <p class="text-slate-500 dark:text-slate-400 max-w-md mb-6">
-          The tool with ID "<span class="font-mono text-xs p-1 bg-slate-100 dark:bg-slate-800 rounded">{{ id() }}</span>" does not exist or could not be loaded.
+        <h2 class="mb-2 text-2xl font-bold text-slate-900 dark:text-white">Tool Not Found</h2>
+        <p class="mb-6 max-w-md text-slate-500 dark:text-slate-400">
+          The tool with ID "<span
+            class="rounded bg-slate-100 p-1 font-mono text-xs dark:bg-slate-800"
+            >{{ id() }}</span
+          >" does not exist or could not be loaded.
         </p>
-        <button (click)="goBack()" class="px-6 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:opacity-90 transition-opacity">
+        <button
+          (click)="goBack()"
+          class="rounded-xl bg-slate-900 px-6 py-2 font-bold text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-slate-900"
+        >
           Browse Tools
         </button>
       </div>
@@ -29,11 +36,13 @@ import { I18nService } from '../../services/i18n.service';
     } @else {
       <!-- Loading State -->
       <div class="flex flex-col items-center justify-center py-40">
-        <div class="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="text-slate-400 animate-pulse font-medium">Loading tool...</p>
+        <div
+          class="border-primary mb-4 h-12 w-12 animate-spin rounded-full border-4 border-t-transparent"
+        ></div>
+        <p class="animate-pulse font-medium text-slate-400">Loading tool...</p>
       </div>
     }
-  `
+  `,
 })
 export class ToolHostComponent {
   // Input binding from router for :id
@@ -49,7 +58,7 @@ export class ToolHostComponent {
   // Default inputs for full page tools
   inputs = signal({
     isWidget: false,
-    widgetConfig: null
+    widgetConfig: null,
   });
 
   constructor() {

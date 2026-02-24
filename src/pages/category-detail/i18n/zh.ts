@@ -1,3 +1,3 @@
 export default {
-  "BACK_LINK": "返回分类"
+  BACK_LINK: '返回分类',
 };

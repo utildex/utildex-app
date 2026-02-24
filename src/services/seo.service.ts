@@ -1,4 +1,3 @@
-
 import { Injectable, inject, effect } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
@@ -9,7 +8,7 @@ import { I18nService } from './i18n.service';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SeoService {
   private title: Title = inject(Title);
@@ -23,16 +22,14 @@ export class SeoService {
 
   constructor() {
     // Listen to route changes
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
+    this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.updateSeo();
     });
 
     // Re-run SEO update when language changes
     effect(() => {
       // Access signal to register dependency
-      this.i18n.currentLang(); 
+      this.i18n.currentLang();
       this.updateSeo();
       this.updateLangAttribute();
     });
@@ -45,26 +42,26 @@ export class SeoService {
   private updateCanonicalUrl() {
     const head = this.document.head;
     let link: HTMLLinkElement | null = head.querySelector("link[rel='canonical']");
-    
+
     if (!link) {
       link = this.document.createElement('link');
       link.setAttribute('rel', 'canonical');
       head.appendChild(link);
     }
-    
+
     // Construct clean URL (stripping query params for canonical)
-    // We use window.location.origin to support whatever domain we are on, 
+    // We use window.location.origin to support whatever domain we are on,
     // unless you want to force 'https://utildex.com' even on dev/staging.
     // Ideally for SEO we want the production domain.
-    const domain = 'https://utildex.com'; 
+    const domain = 'https://utildex.com';
     const path = this.router.url.split('?')[0]; // Simple strip of query params
-    
+
     link.setAttribute('href', domain + path);
   }
 
   private updateHreflangTags() {
     const head = this.document.head;
-    const domain = 'https://utildex.com'; 
+    const domain = 'https://utildex.com';
     const currentUrl = this.router.url.split('?')[0]; // Current path without queries
 
     // 1. Identify the "universal suffix" (path without language prefix)
@@ -74,7 +71,7 @@ export class SeoService {
     if (!urlSuffix.startsWith('/')) urlSuffix = '/' + urlSuffix;
 
     // 2. Loop through all supported languages
-    this.i18n.supportedLanguages.forEach(lang => {
+    this.i18n.supportedLanguages.forEach((lang) => {
       // Find or create the tag
       let link: HTMLLinkElement | null = head.querySelector(`link[hreflang='${lang.code}']`);
       if (!link) {
@@ -115,39 +112,39 @@ export class SeoService {
     const url = this.router.url;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let schema: any = {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Utildex",
-      "url": "https://utildex.com",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://utildex.com/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Utildex',
+      url: 'https://utildex.com',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://utildex.com/search?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+      },
     };
 
     // 1. Tool Route
     if (url.startsWith('/tools/')) {
       const toolId = url.split('/tools/')[1]?.split('?')[0];
-      const tool = this.toolService.tools().find(t => t.id === toolId);
-      
+      const tool = this.toolService.tools().find((t) => t.id === toolId);
+
       if (tool) {
         schema = {
-          "@context": "https://schema.org",
-          "@type": "SoftwareApplication",
-          "name": this.i18n.resolve(tool.name),
-          "operatingSystem": "Web Browser",
-          "applicationCategory": "UtilityApplication",
-          "description": this.i18n.resolve(tool.description),
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: this.i18n.resolve(tool.name),
+          operatingSystem: 'Web Browser',
+          applicationCategory: 'UtilityApplication',
+          description: this.i18n.resolve(tool.description),
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
           },
-          "url": `https://utildex.com${url}`
+          url: `https://utildex.com${url}`,
         };
       }
-    } 
+    }
     // 2. Article Route
     else if (url.startsWith('/articles/')) {
       const articleId = url.split('/articles/')[1]?.split('?')[0];
@@ -155,24 +152,24 @@ export class SeoService {
         const article = this.articleService.getById(articleId);
         if (article) {
           schema = {
-            "@context": "https://schema.org",
-            "@type": "Article",
-            "headline": this.i18n.resolve(article.title),
-            "image": article.thumbnail,
-            "author": {
-              "@type": "Person",
-              "name": article.author
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: this.i18n.resolve(article.title),
+            image: article.thumbnail,
+            author: {
+              '@type': 'Person',
+              name: article.author,
             },
-            "publisher": {
-              "@type": "Organization",
-              "name": "Utildex",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://utildex.com/assets/images/logo.png"
-              }
+            publisher: {
+              '@type': 'Organization',
+              name: 'Utildex',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://utildex.com/assets/images/logo.png',
+              },
             },
-            "datePublished": article.date,
-            "description": this.i18n.resolve(article.summary)
+            datePublished: article.date,
+            description: this.i18n.resolve(article.summary),
           };
         }
       }
@@ -193,19 +190,20 @@ export class SeoService {
 
     const url = this.router.url;
     let title = 'Utildex - Local-First Modular Toolbox';
-    let desc = 'A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and source available.';
+    let desc =
+      'A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and source available.';
     let image = ''; // Default OG Image if available
 
     // 1. Tool Route
     if (url.startsWith('/tools/')) {
       const toolId = url.split('/tools/')[1]?.split('?')[0];
-      const tool = this.toolService.tools().find(t => t.id === toolId);
-      
+      const tool = this.toolService.tools().find((t) => t.id === toolId);
+
       if (tool) {
         title = `${this.i18n.resolve(tool.name)} - Utildex`;
         desc = this.i18n.resolve(tool.description);
       }
-    } 
+    }
     // 2. Article Route
     else if (url.startsWith('/articles/')) {
       const articleId = url.split('/articles/')[1]?.split('?')[0];
@@ -233,13 +231,13 @@ export class SeoService {
     // Apply Tags
     this.title.setTitle(title);
     this.meta.updateTag({ name: 'description', content: desc });
-    
+
     // OpenGraph
     this.meta.updateTag({ property: 'og:title', content: title });
     this.meta.updateTag({ property: 'og:description', content: desc });
     this.meta.updateTag({ property: 'og:type', content: 'website' });
     this.meta.updateTag({ property: 'og:url', content: window.location.href });
-    
+
     if (image) {
       this.meta.updateTag({ property: 'og:image', content: image });
     } else {

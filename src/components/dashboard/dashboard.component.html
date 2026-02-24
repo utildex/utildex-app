@@ -1,87 +1,146 @@
-<div class="w-full pb-12 transition-all duration-500" [class.flex-1]="!hasUserStats()" [class.flex]="!hasUserStats()" [class.flex-col]="!hasUserStats()" [class.justify-center]="!hasUserStats()">
-
-    <section class="text-center transition-all duration-500" [class.py-12]="hasUserStats()" [class.md:py-20]="hasUserStats()" [class.py-0]="!hasUserStats()">
-        <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 animate-fade-in">
-            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-            <span class="text-xs font-bold text-slate-600 dark:text-slate-300">
-         {{ t.map()['AVAILABLE_TOOLS'].replace('{0}', toolService.tools().length.toString()) }}
+<div
+  class="w-full pb-12 transition-all duration-500"
+  [class.flex-1]="!hasUserStats()"
+  [class.flex]="!hasUserStats()"
+  [class.flex-col]="!hasUserStats()"
+  [class.justify-center]="!hasUserStats()"
+>
+  <section
+    class="text-center transition-all duration-500"
+    [class.py-12]="hasUserStats()"
+    [class.md:py-20]="hasUserStats()"
+    [class.py-0]="!hasUserStats()"
+  >
+    <div
+      class="animate-fade-in mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-100 px-3 py-1 dark:border-slate-700 dark:bg-slate-800"
+    >
+      <span class="h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
+      <span class="text-xs font-bold text-slate-600 dark:text-slate-300">
+        {{ t.map()['AVAILABLE_TOOLS'].replace('{0}', toolService.tools().length.toString()) }}
       </span>
+    </div>
+
+    <h1
+      class="mb-6 font-extrabold tracking-tight text-slate-900 transition-all duration-500 dark:text-white"
+      [class.text-4xl]="hasUserStats()"
+      [class.md:text-6xl]="hasUserStats()"
+      [class.text-5xl]="!hasUserStats()"
+      [class.md:text-7xl]="!hasUserStats()"
+    >
+      {{ t.map()['HERO_TITLE_PREFIX'] !== undefined ? t.map()['HERO_TITLE_PREFIX'] : 'Modular' }}
+      <span class="text-primary">{{
+        t.map()['HERO_TITLE_HIGHLIGHT'] !== undefined ? t.map()['HERO_TITLE_HIGHLIGHT'] : 'Local'
+      }}</span>
+      {{ t.map()['HERO_TITLE_SUFFIX'] !== undefined ? t.map()['HERO_TITLE_SUFFIX'] : 'Toolbox' }}
+    </h1>
+    <p
+      class="mx-auto mb-10 max-w-2xl text-slate-600 transition-all duration-500 dark:text-slate-400"
+      [class.text-lg]="hasUserStats()"
+      [class.md:text-xl]="hasUserStats()"
+      [class.text-xl]="!hasUserStats()"
+      [class.md:text-2xl]="!hasUserStats()"
+    >
+      {{
+        t.map()['HERO_DESC'] ||
+          'A privacy-focused collection of open-source utilities for developers and power users. 100% Local.'
+      }}
+    </p>
+
+    <div class="mx-auto mb-8 max-w-2xl px-4 sm:px-0">
+      <button
+        (click)="app.openCommandPalette()"
+        appTourTarget="tour-search"
+        class="hover:border-primary dark:hover:border-primary group flex w-full items-center gap-3 rounded-2xl border-2 border-slate-200 bg-white px-6 py-4 text-left transition-all hover:shadow-lg dark:border-slate-700 dark:bg-slate-900"
+      >
+        <span
+          class="material-symbols-outlined group-hover:text-primary text-2xl text-slate-400 transition-colors"
+          >search</span
+        >
+        <span class="flex-1 text-lg text-slate-500 dark:text-slate-400">{{
+          t.map()['SEARCH_PLACEHOLDER'] || 'Search for a tool...'
+        }}</span>
+        <div class="hidden items-center gap-1 sm:flex">
+          <kbd
+            class="rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+            >Ctrl</kbd
+          >
+          <kbd
+            class="rounded bg-slate-100 px-2 py-1 font-mono text-sm text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+            >K</kbd
+          >
         </div>
+      </button>
+    </div>
 
-        <h1 class="font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 transition-all duration-500"
-            [class.text-4xl]="hasUserStats()" [class.md:text-6xl]="hasUserStats()"
-            [class.text-5xl]="!hasUserStats()" [class.md:text-7xl]="!hasUserStats()">
-            {{ t.map()['HERO_TITLE_PREFIX'] !== undefined ? t.map()['HERO_TITLE_PREFIX'] : 'Modular' }} 
-            <span class="text-primary">{{ t.map()['HERO_TITLE_HIGHLIGHT'] !== undefined ? t.map()['HERO_TITLE_HIGHLIGHT'] : 'Local' }}</span> 
-            {{ t.map()['HERO_TITLE_SUFFIX'] !== undefined ? t.map()['HERO_TITLE_SUFFIX'] : 'Toolbox' }}
-        </h1>
-        <p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 transition-all duration-500"
-           [class.text-lg]="hasUserStats()" [class.md:text-xl]="hasUserStats()"
-           [class.text-xl]="!hasUserStats()" [class.md:text-2xl]="!hasUserStats()">
-            {{ t.map()['HERO_DESC'] || 'A privacy-focused collection of open-source utilities for developers and power users. 100% Local.' }}
-        </p>
-        
-        <div class="max-w-2xl mx-auto mb-8 px-4 sm:px-0">
-            <button (click)="app.openCommandPalette()" appTourTarget="tour-search"
-                    class="w-full flex items-center gap-3 px-6 py-4 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 rounded-2xl hover:border-primary dark:hover:border-primary hover:shadow-lg transition-all text-left group">
-                <span class="material-symbols-outlined text-2xl text-slate-400 group-hover:text-primary transition-colors">search</span>
-                <span class="text-lg text-slate-500 dark:text-slate-400 flex-1">{{ t.map()['SEARCH_PLACEHOLDER'] || 'Search for a tool...' }}</span>
-                <div class="hidden sm:flex items-center gap-1">
-                    <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-sm font-mono text-slate-500 dark:text-slate-400">Ctrl</kbd>
-                    <kbd class="px-2 py-1 bg-slate-100 dark:bg-slate-800 rounded text-sm font-mono text-slate-500 dark:text-slate-400">K</kbd>
-                </div>
-            </button>
-        </div>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a
+        [routerLink]="'/tools' | localLink"
+        appTourTarget="tour-browse"
+        class="rounded-xl bg-slate-900 px-8 py-3 font-bold text-white transition-colors hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100"
+      >
+        {{ t.map()['BTN_BROWSE'] }}
+      </a>
+    </div>
+  </section>
 
-        <div class="flex justify-center gap-4 flex-wrap">
-            <a [routerLink]="'/tools' | localLink" appTourTarget="tour-browse" class="px-8 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors">
-                {{ t.map()['BTN_BROWSE'] }}
-            </a>
-        </div>
-    </section>
+  @if (hasUserStats()) {
+    <div class="mt-12 space-y-12">
+      @if (favoriteTools().length > 0) {
+        @defer (on idle) {
+          <section>
+            <div class="mb-6 flex items-center gap-2 px-4 sm:px-0">
+              <span class="material-symbols-outlined fill-current text-yellow-400">star</span>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+                {{ t.map()['SECTION_FAVORITES'] }}
+              </h2>
+            </div>
 
-    @if (hasUserStats()) {
-        <div class="space-y-12 mt-12">
-            @if (favoriteTools().length > 0) {
-                @defer (on idle) {
-                    <section>
-                        <div class="flex items-center gap-2 mb-6 px-4 sm:px-0">
-                            <span class="material-symbols-outlined text-yellow-400 fill-current">star</span>
-                            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_FAVORITES'] }}</h2>
-                        </div>
+            <app-carousel
+              [items]="favoriteTools()"
+              [itemTemplate]="toolTemplate"
+              [autoplay]="false"
+            ></app-carousel>
+          </section>
+        } @placeholder {
+          <div
+            class="mb-12 h-64 w-full animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800/50"
+          ></div>
+        }
+      }
 
-                        <app-carousel [items]="favoriteTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
-                    </section>
-                } @placeholder {
-                    <div class="h-64 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
-                }
-            }
+      @if (mostUsedTools().length > 0) {
+        @defer (on viewport) {
+          <section>
+            <div class="mb-6 flex items-center gap-2 px-4 sm:px-0">
+              <span class="material-symbols-outlined text-slate-500">trending_up</span>
+              <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
+                {{ t.map()['SECTION_MOST_USED'] }}
+              </h2>
+            </div>
 
-            @if (mostUsedTools().length > 0) {
-                @defer (on viewport) {
-                    <section>
-                        <div class="flex items-center gap-2 mb-6 px-4 sm:px-0">
-                            <span class="material-symbols-outlined text-slate-500">trending_up</span>
-                            <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ t.map()['SECTION_MOST_USED'] }}</h2>
-                        </div>
+            <app-carousel
+              [items]="mostUsedTools()"
+              [itemTemplate]="toolTemplate"
+              [autoplay]="false"
+            ></app-carousel>
+          </section>
+        } @placeholder {
+          <div
+            class="mb-12 h-64 w-full animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800/50"
+          ></div>
+        }
+      }
+    </div>
+  }
 
-                        <app-carousel [items]="mostUsedTools()" [itemTemplate]="toolTemplate" [autoplay]="false"></app-carousel>
-                    </section>
-                } @placeholder {
-                    <div class="h-64 w-full animate-pulse bg-slate-100 dark:bg-slate-800/50 rounded-2xl mb-12"></div>
-                }
-            }
-        </div>
-    }
-
-    <ng-template #toolTemplate let-tool>
-        <div class="h-full">
-            <app-tool-card
-                    [tool]="tool"
-                    [isFavorite]="isFav(tool.id)"
-                    (toggleFavorite)="toggleFav($event)">
-            </app-tool-card>
-        </div>
-    </ng-template>
-
+  <ng-template #toolTemplate let-tool>
+    <div class="h-full">
+      <app-tool-card
+        [tool]="tool"
+        [isFavorite]="isFav(tool.id)"
+        (toggleFavorite)="toggleFav($event)"
+      >
+      </app-tool-card>
+    </div>
+  </ng-template>
 </div>

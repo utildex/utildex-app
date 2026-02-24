@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { DB_STORES } from '../core/storage-keys';
 
@@ -10,7 +9,7 @@ export interface DbRecord {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DbService {
   private dbName = 'utildex-db';
@@ -22,7 +21,7 @@ export class DbService {
   private memoryStores: Record<string, Map<unknown, unknown>> = {
     [DB_STORES.CONFIG]: new Map(),
     [DB_STORES.RECORDS]: new Map(),
-    [DB_STORES.BLOBS]: new Map()
+    [DB_STORES.BLOBS]: new Map(),
   };
 
   // Store Constants
@@ -30,42 +29,43 @@ export class DbService {
 
   /** System Configuration API */
   public readonly config = {
-    read: (key: string) => this.run<unknown>('readonly', this.STORES.CONFIG, store => store.get(key)),
-    write: (key: string, value: unknown) => this.run<void>('readwrite', this.STORES.CONFIG, store => store.put(value, key)),
-    delete: (key: string) => this.run<void>('readwrite', this.STORES.CONFIG, store => store.delete(key))
+    read: (key: string) =>
+      this.run<unknown>('readonly', this.STORES.CONFIG, (store) => store.get(key)),
+    write: (key: string, value: unknown) =>
+      this.run<void>('readwrite', this.STORES.CONFIG, (store) => store.put(value, key)),
+    delete: (key: string) =>
+      this.run<void>('readwrite', this.STORES.CONFIG, (store) => store.delete(key)),
   };
 
   /** User Data API */
   public readonly records = {
-    add: (scope: string, data: unknown) => 
-      this.run<number>('readwrite', this.STORES.RECORDS, store => 
-        store.add({ scope, data, updatedAt: Date.now() })
+    add: (scope: string, data: unknown) =>
+      this.run<number>('readwrite', this.STORES.RECORDS, (store) =>
+        store.add({ scope, data, updatedAt: Date.now() }),
       ),
-    
-    list: (scope: string) => 
-      this.run<DbRecord[]>('readonly', this.STORES.RECORDS, store => {
+
+    list: (scope: string) =>
+      this.run<DbRecord[]>('readonly', this.STORES.RECORDS, (store) => {
         const index = store.index('scope');
         return index.getAll(scope);
       }),
-      
-    delete: (id: number) => 
-      this.run<void>('readwrite', this.STORES.RECORDS, store => store.delete(id))
+
+    delete: (id: number) =>
+      this.run<void>('readwrite', this.STORES.RECORDS, (store) => store.delete(id)),
   };
 
   /** Blob Storage API */
   public readonly blobs = {
-    put: (key: string, blob: Blob) => 
-      this.run<string>('readwrite', this.STORES.BLOBS, store => store.put(blob, key)),
-      
-    get: (key: string) => 
-      this.run<Blob>('readonly', this.STORES.BLOBS, store => store.get(key)),
+    put: (key: string, blob: Blob) =>
+      this.run<string>('readwrite', this.STORES.BLOBS, (store) => store.put(blob, key)),
 
-    prune: () => Promise.resolve() 
+    get: (key: string) => this.run<Blob>('readonly', this.STORES.BLOBS, (store) => store.get(key)),
+
+    prune: () => Promise.resolve(),
   };
 
-
   // --- LEGACY COMPATIBILITY LAYER ---
-  
+
   async get<T>(key: string): Promise<T | undefined> {
     const val = await this.config.read(key);
     return val as T;
@@ -84,24 +84,25 @@ export class DbService {
   }
 
   async keys(): Promise<string[]> {
-    return this.run<string[]>('readonly', this.STORES.CONFIG, store => store.getAllKeys())
-      .then(k => k.map(String));
+    return this.run<string[]>('readonly', this.STORES.CONFIG, (store) => store.getAllKeys()).then(
+      (k) => k.map(String),
+    );
   }
 
   async wipe(scope: 'all' | 'config' | 'cache') {
     if (scope === 'config' || scope === 'all') {
-      await this.run('readwrite', this.STORES.CONFIG, s => s.clear());
-      await this.run('readwrite', this.STORES.RECORDS, s => s.clear());
+      await this.run('readwrite', this.STORES.CONFIG, (s) => s.clear());
+      await this.run('readwrite', this.STORES.RECORDS, (s) => s.clear());
     }
     if (scope === 'cache' || scope === 'all') {
-      await this.run('readwrite', this.STORES.BLOBS, s => s.clear());
+      await this.run('readwrite', this.STORES.BLOBS, (s) => s.clear());
     }
   }
 
   // --- INTERNAL ENGINE ---
-  
+
   private async getDB(): Promise<IDBDatabase> {
-    if (this.isInMemory) return null as unknown as IDBDatabase; 
+    if (this.isInMemory) return null as unknown as IDBDatabase;
     if (this.dbPromise) return this.dbPromise;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -115,19 +116,21 @@ export class DbService {
         resolve(null as unknown as IDBDatabase);
         return;
       }
-      
+
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
 
         if (!db.objectStoreNames.contains(this.STORES.CONFIG)) {
-          db.createObjectStore(this.STORES.CONFIG); 
+          db.createObjectStore(this.STORES.CONFIG);
         }
 
         if (!db.objectStoreNames.contains(this.STORES.RECORDS)) {
-          const store = db.createObjectStore(this.STORES.RECORDS, { keyPath: 'id', autoIncrement: true });
+          const store = db.createObjectStore(this.STORES.RECORDS, {
+            keyPath: 'id',
+            autoIncrement: true,
+          });
           store.createIndex('scope', 'scope', { unique: false });
         }
-
 
         if (!db.objectStoreNames.contains(this.STORES.BLOBS)) {
           db.createObjectStore(this.STORES.BLOBS);
@@ -136,17 +139,17 @@ export class DbService {
 
       request.onsuccess = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        
+
         db.onclose = () => {
           console.warn('DB Closed unexpectedly. Resetting.');
           this.dbPromise = null;
         };
 
         db.onversionchange = () => {
-           db.close();
-           this.dbPromise = null;
+          db.close();
+          this.dbPromise = null;
         };
-        
+
         resolve(db);
       };
 
@@ -160,11 +163,10 @@ export class DbService {
   }
 
   public async run<T>(
-    mode: IDBTransactionMode, 
-    storeName: string, 
-    operation: (store: IDBObjectStore) => IDBRequest
+    mode: IDBTransactionMode,
+    storeName: string,
+    operation: (store: IDBObjectStore) => IDBRequest,
   ): Promise<T> {
-    
     if (this.isInMemory) return this.runInMemory<T>(storeName, operation);
 
     try {
@@ -174,19 +176,21 @@ export class DbService {
       return new Promise((resolve, reject) => {
         let transaction: IDBTransaction;
         try {
-           transaction = db.transaction(storeName, mode);
+          transaction = db.transaction(storeName, mode);
         } catch {
-           this.dbPromise = null;
-           // Retry once
-           this.getDB().then(newDb => {
-               if (this.isInMemory) {
-                   resolve(this.runInMemory(storeName, operation));
-               } else {
-                   const t2 = newDb.transaction(storeName, mode);
-                   this.executeRequest(t2, storeName, operation, resolve, reject);
-               }
-           }).catch(reject);
-           return;
+          this.dbPromise = null;
+          // Retry once
+          this.getDB()
+            .then((newDb) => {
+              if (this.isInMemory) {
+                resolve(this.runInMemory(storeName, operation));
+              } else {
+                const t2 = newDb.transaction(storeName, mode);
+                this.executeRequest(t2, storeName, operation, resolve, reject);
+              }
+            })
+            .catch(reject);
+          return;
         }
 
         this.executeRequest(transaction, storeName, operation, resolve, reject);
@@ -198,19 +202,22 @@ export class DbService {
   }
 
   private executeRequest<T>(
-      transaction: IDBTransaction, 
-      storeName: string,
-      operation: (store: IDBObjectStore) => IDBRequest,
-      resolve: (val: T) => void,
-      reject: (err: unknown) => void
+    transaction: IDBTransaction,
+    storeName: string,
+    operation: (store: IDBObjectStore) => IDBRequest,
+    resolve: (val: T) => void,
+    reject: (err: unknown) => void,
   ) {
-      const store = transaction.objectStore(storeName);
-      const request = operation(store);
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
+    const store = transaction.objectStore(storeName);
+    const request = operation(store);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
   }
 
-  private runInMemory<T>(storeName: string, operation: (store: IDBObjectStore) => IDBRequest): Promise<T> {
+  private runInMemory<T>(
+    storeName: string,
+    operation: (store: IDBObjectStore) => IDBRequest,
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
       const storeMap = this.memoryStores[storeName];
       if (!storeMap) {
@@ -226,57 +233,63 @@ export class DbService {
           let k = key;
           // Auto-increment logic
           if (k === undefined && storeName === this.STORES.RECORDS) {
-            k = (typeof value === 'object' && value !== null && 'id' in value) 
-                ? (value as { id: unknown }).id 
+            k =
+              typeof value === 'object' && value !== null && 'id' in value
+                ? (value as { id: unknown }).id
                 : undefined;
 
-            if (!k) k = (Date.now() + Math.random());
-            
+            if (!k) k = Date.now() + Math.random();
+
             if (typeof value === 'object' && value !== null) {
-                (value as { id: unknown }).id = k;
+              (value as { id: unknown }).id = k;
             }
           }
           if (k !== undefined) storeMap.set(k, value);
           return this.mockRequest(k);
         },
         add: (value: unknown, key?: unknown) => {
-           let k = key;
-           if (k === undefined) { 
-               k = Date.now() + Math.random();
-               if (typeof value === 'object' && value !== null && storeName === this.STORES.RECORDS) {
-                   (value as { id: unknown }).id = k;
-               }
-           }
+          let k = key;
+          if (k === undefined) {
+            k = Date.now() + Math.random();
+            if (typeof value === 'object' && value !== null && storeName === this.STORES.RECORDS) {
+              (value as { id: unknown }).id = k;
+            }
+          }
 
-           if (storeMap.has(k)) {
-               const req = this.mockRequest(undefined);
-               setTimeout(() => {
-                   if (req.onerror) req.onerror({ target: { error: new DOMException('Key already exists', 'ConstraintError') } } as unknown as Event);
-               }, 0);
-               return req;
-           }
+          if (storeMap.has(k)) {
+            const req = this.mockRequest(undefined);
+            setTimeout(() => {
+              if (req.onerror)
+                req.onerror({
+                  target: { error: new DOMException('Key already exists', 'ConstraintError') },
+                } as unknown as Event);
+            }, 0);
+            return req;
+          }
 
-           storeMap.set(k, value);
-           return this.mockRequest(k);
+          storeMap.set(k, value);
+          return this.mockRequest(k);
         },
         delete: (key: unknown) => {
-           storeMap.delete(key);
-           return this.mockRequest(undefined);
+          storeMap.delete(key);
+          return this.mockRequest(undefined);
         },
         clear: () => {
-           storeMap.clear();
-           return this.mockRequest(undefined);
+          storeMap.clear();
+          return this.mockRequest(undefined);
         },
         index: (name: string) => ({
-           getAll: (key: unknown) => {
-               // Hardcoded index emulation for 'scope'
-               if (name === 'scope') {
-                   const results = Array.from(storeMap.values()).filter((v) => (v as { scope?: unknown }).scope === key);
-                   return this.mockRequest(results);
-               }
-               return this.mockRequest([]);
-           }
-        })
+          getAll: (key: unknown) => {
+            // Hardcoded index emulation for 'scope'
+            if (name === 'scope') {
+              const results = Array.from(storeMap.values()).filter(
+                (v) => (v as { scope?: unknown }).scope === key,
+              );
+              return this.mockRequest(results);
+            }
+            return this.mockRequest([]);
+          },
+        }),
       };
 
       try {
@@ -286,14 +299,14 @@ export class DbService {
         // Hook into the mock request we created
         const originalOnSuccess = req.onsuccess;
         req.onsuccess = (ev) => {
-            if (originalOnSuccess) originalOnSuccess.call(req, ev);
-            resolve(req.result as T);
+          if (originalOnSuccess) originalOnSuccess.call(req, ev);
+          resolve(req.result as T);
         };
 
         const originalOnError = req.onerror;
         req.onerror = (ev) => {
-            if (originalOnError) originalOnError.call(req, ev);
-            reject(req.error);
+          if (originalOnError) originalOnError.call(req, ev);
+          reject(req.error);
         };
       } catch (err) {
         reject(err);
@@ -312,17 +325,16 @@ export class DbService {
       onerror: null,
       dispatchEvent: () => true,
       addEventListener: () => {},
-      removeEventListener: () => {}
+      removeEventListener: () => {},
     };
-    
+
     setTimeout(() => {
       const request = req as unknown as { onsuccess: ((ev: { target: unknown }) => void) | null };
       if (request.onsuccess) {
-         request.onsuccess({ target: req });
+        request.onsuccess({ target: req });
       }
     }, 0);
-    
+
     return req as unknown as IDBRequest;
   }
 }
-

@@ -10,7 +10,18 @@
   },
   "icon": "tune",
   "categories": ["Utility", "Media"],
-  "tags": ["image", "editor", "crop", "rotate", "filters", "blur", "sharpen", "batch", "export", "offline"],
+  "tags": [
+    "image",
+    "editor",
+    "crop",
+    "rotate",
+    "filters",
+    "blur",
+    "sharpen",
+    "batch",
+    "export",
+    "offline"
+  ],
   "color": "#6366f1",
   "routePath": "tools/advanced-image-editor",
   "version": "1.0.0",
@@ -19,8 +30,16 @@
     "defaultCols": 2,
     "defaultRows": 2,
     "presets": [
-      { "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" }, "cols": 2, "rows": 2 },
-      { "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" }, "cols": 3, "rows": 3 }
+      {
+        "label": { "en": "Standard", "fr": "Standard", "es": "Estándar", "zh": "标准" },
+        "cols": 2,
+        "rows": 2
+      },
+      {
+        "label": { "en": "Large", "fr": "Grand", "es": "Grande", "zh": "大" },
+        "cols": 3,
+        "rows": 3
+      }
     ]
   }
 }

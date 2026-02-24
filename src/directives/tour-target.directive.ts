@@ -3,11 +3,11 @@ import { TourService } from '../services/tour.service';
 
 @Directive({
   selector: '[appTourTarget]',
-  standalone: true
+  standalone: true,
 })
 export class TourTargetDirective implements OnInit, OnDestroy {
   @Input('appTourTarget') targetId!: string;
-  
+
   private el = inject(ElementRef);
   private tourService = inject(TourService);
 

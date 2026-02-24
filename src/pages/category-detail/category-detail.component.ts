@@ -18,33 +18,41 @@ import zh from './i18n/zh';
       en: () => en,
       fr: () => fr,
       es: () => es,
-      zh: () => zh
-    })
+      zh: () => zh,
+    }),
   ],
   template: `
     <div class="space-y-8">
       <div class="flex flex-col gap-2">
-        <a [routerLink]="'/categories' | localLink" class="text-sm text-slate-500 hover:text-primary flex items-center gap-1 mb-2">
-          <span class="material-symbols-outlined text-sm">arrow_back</span> {{ t.map()['BACK_LINK'] }}
+        <a
+          [routerLink]="'/categories' | localLink"
+          class="hover:text-primary mb-2 flex items-center gap-1 text-sm text-slate-500"
+        >
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          {{ t.map()['BACK_LINK'] }}
         </a>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-          <span class="material-symbols-outlined text-3xl text-primary">folder_open</span>
+        <h1 class="flex items-center gap-3 text-3xl font-bold text-slate-900 dark:text-white">
+          <span class="material-symbols-outlined text-primary text-3xl">folder_open</span>
           {{ toolService.getCategoryName(categoryId()) }}
         </h1>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         @for (tool of tools(); track tool.id) {
-           <app-tool-card [tool]="tool" [isFavorite]="isFav(tool.id)" (toggleFavorite)="toggleFav($event)"></app-tool-card>
+          <app-tool-card
+            [tool]="tool"
+            [isFavorite]="isFav(tool.id)"
+            (toggleFavorite)="toggleFav($event)"
+          ></app-tool-card>
         }
       </div>
     </div>
-  `
+  `,
 })
 export class CategoryDetailComponent {
   toolService = inject(ToolService);
   t = inject(ScopedTranslationService);
-  
+
   // Route param input
   categoryId = input.required<string>({ alias: 'id' });
 

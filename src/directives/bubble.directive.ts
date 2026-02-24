@@ -3,7 +3,7 @@ import { GuideService } from '../services/guide.service';
 
 @Directive({
   selector: '[appBubble]',
-  standalone: true
+  standalone: true,
 })
 export class BubbleDirective {
   @Input('appBubble') messageKey = '';

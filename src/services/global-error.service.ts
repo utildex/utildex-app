@@ -7,14 +7,14 @@ export interface AppError {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GlobalErrorService {
   error = signal<AppError | null>(null);
 
   handleError(error: unknown) {
     console.error('Global Error Caught:', error);
-    
+
     let message = 'An unexpected error occurred.';
     let stack = '';
 
@@ -28,7 +28,7 @@ export class GlobalErrorService {
     this.error.set({
       message,
       stack,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
   }
 

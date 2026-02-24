@@ -1,4 +1,3 @@
-
 import { Injectable, signal, effect, inject } from '@angular/core';
 import { PersistenceService } from './persistence.service';
 
@@ -7,24 +6,24 @@ export type FontFamily = 'inter' | 'roboto' | 'system';
 export type Density = 'comfortable' | 'compact';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ThemeService {
   private persistence = inject(PersistenceService);
 
   // Initialize with System Preference immediately so we don't need to force-set it later
   isDark = signal<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches);
-  
+
   primaryColor = signal<PrimaryColor>('blue');
   fontFamily = signal<FontFamily>('inter');
   density = signal<Density>('comfortable');
 
   private colorMap: Record<PrimaryColor, string> = {
-    blue: '59 130 246',    // #3b82f6
+    blue: '59 130 246', // #3b82f6
     emerald: '16 185 129', // #10b981
-    violet: '139 92 246',  // #8b5cf6
-    amber: '245 158 11',   // #f59e0b
-    rose: '244 63 94'      // #f43f5e
+    violet: '139 92 246', // #8b5cf6
+    amber: '245 158 11', // #f59e0b
+    rose: '244 63 94', // #f43f5e
   };
 
   constructor() {
@@ -58,7 +57,7 @@ export class ThemeService {
       let fontValue = 'Inter';
       if (font === 'roboto') fontValue = 'Roboto Mono';
       if (font === 'system') fontValue = 'system-ui, sans-serif';
-      
+
       document.documentElement.style.setProperty('--font-sans', fontValue);
     });
 
@@ -74,7 +73,7 @@ export class ThemeService {
   }
 
   toggleTheme() {
-    this.isDark.update(current => !current);
+    this.isDark.update((current) => !current);
   }
 
   setColor(color: PrimaryColor) {
@@ -90,9 +89,9 @@ export class ThemeService {
   }
 
   reset() {
-     this.isDark.set(window.matchMedia('(prefers-color-scheme: dark)').matches);
-     this.primaryColor.set('blue');
-     this.fontFamily.set('inter');
-     this.density.set('comfortable');
+    this.isDark.set(window.matchMedia('(prefers-color-scheme: dark)').matches);
+    this.primaryColor.set('blue');
+    this.fontFamily.set('inter');
+    this.density.set('comfortable');
   }
 }

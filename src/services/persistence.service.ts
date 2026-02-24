@@ -9,7 +9,7 @@ export interface StorageOptions {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PersistenceService {
   private router: Router = inject(Router);
@@ -19,17 +19,22 @@ export class PersistenceService {
    * Syncs a signal with Storage (IDB or LocalStorage).
    * Supports 'hybrid' strategy for instant load (reads LocalStorage) + durable save (writes IDB).
    */
-  storage<T>(targetSignal: WritableSignal<T>, key: string, optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' | 'object' = 'string') {
-    const options: StorageOptions = typeof optionsOrType === 'object'
-      ? optionsOrType 
-      : { type: optionsOrType as 'string' | 'number' | 'boolean' | 'object', strategy: 'idb' };
+  storage<T>(
+    targetSignal: WritableSignal<T>,
+    key: string,
+    optionsOrType: StorageOptions | 'string' | 'number' | 'boolean' | 'object' = 'string',
+  ) {
+    const options: StorageOptions =
+      typeof optionsOrType === 'object'
+        ? optionsOrType
+        : { type: optionsOrType as 'string' | 'number' | 'boolean' | 'object', strategy: 'idb' };
 
     const { type = 'string', strategy = 'idb' } = options;
     const fullKey = `${STORAGE_KEYS.PREFIX_STATE}${key}`;
     let isIdbHydrated = false;
 
     // --- READ PHASE ---
-    
+
     // 1. Hybrid/Local: Read SYNC from LocalStorage
     if (strategy === 'hybrid' || strategy === 'local') {
       try {
@@ -43,27 +48,30 @@ export class PersistenceService {
       }
     }
 
-    // 2. IDB/Hybrid: Read ASYNC from DB 
-    if ((strategy === 'idb') || strategy === 'hybrid') {
-      this.db.config.read(fullKey).then(stored => {
-        if (stored !== undefined && stored !== null) {
-          this.updateSignal(targetSignal, String(stored), type);
-        }
-      }).finally(() => {
-        isIdbHydrated = true;
-      });
+    // 2. IDB/Hybrid: Read ASYNC from DB
+    if (strategy === 'idb' || strategy === 'hybrid') {
+      this.db.config
+        .read(fullKey)
+        .then((stored) => {
+          if (stored !== undefined && stored !== null) {
+            this.updateSignal(targetSignal, String(stored), type);
+          }
+        })
+        .finally(() => {
+          isIdbHydrated = true;
+        });
     } else {
-        // Strategy local, already set true above
-        isIdbHydrated = true;
+      // Strategy local, already set true above
+      isIdbHydrated = true;
     }
 
     // --- WRITE PHASE ---
-    
+
     effect((onCleanup) => {
       const val = targetSignal();
-      
+
       if (!isIdbHydrated && (strategy === 'idb' || strategy === 'hybrid')) {
-           return;
+        return;
       }
 
       const timer = setTimeout(async () => {
@@ -97,30 +105,37 @@ export class PersistenceService {
     });
   }
 
-  private updateSignal<T>(signal: WritableSignal<T>, value: string, type: NonNullable<StorageOptions['type']>) {
-      if (type === 'number') signal.set(Number(value) as T);
-      else if (type === 'boolean') signal.set((value === 'true') as T);
-      else if (type === 'object') {
-        try {
-          signal.set(JSON.parse(value) as T);
-        } catch (e) {
-          console.warn('[Persistence] JSON parse failed', e);
-          // Keep default if parse fails
-        }
+  private updateSignal<T>(
+    signal: WritableSignal<T>,
+    value: string,
+    type: NonNullable<StorageOptions['type']>,
+  ) {
+    if (type === 'number') signal.set(Number(value) as T);
+    else if (type === 'boolean') signal.set((value === 'true') as T);
+    else if (type === 'object') {
+      try {
+        signal.set(JSON.parse(value) as T);
+      } catch (e) {
+        console.warn('[Persistence] JSON parse failed', e);
+        // Keep default if parse fails
       }
-      else signal.set(value as T);
+    } else signal.set(value as T);
   }
 
   /**
    * Syncs a signal with URL Query Parameters.
    * Must be called within an Injection Context (e.g. Component Constructor).
    */
-  url<T>(targetSignal: WritableSignal<T>, paramName: string, type: 'string' | 'number' | 'boolean' = 'string') {
+  url<T>(
+    targetSignal: WritableSignal<T>,
+    paramName: string,
+    type: 'string' | 'number' | 'boolean' = 'string',
+  ) {
     const route = inject(ActivatedRoute);
 
     const params = route.snapshot.queryParams;
     const val = params[paramName];
-    
+
     if (val !== undefined) {
       if (type === 'number' && !isNaN(Number(val))) targetSignal.set(Number(val) as T);
       else if (type === 'boolean') targetSignal.set((val === 'true') as T);
@@ -131,7 +146,7 @@ export class PersistenceService {
 
     effect(() => {
       const newVal = targetSignal();
-      
+
       const currentParams = this.router.parseUrl(this.router.url).queryParams;
       if (String(currentParams[paramName]) === String(newVal)) return;
 
@@ -141,7 +156,7 @@ export class PersistenceService {
           relativeTo: route,
           queryParams: { [paramName]: newVal },
           queryParamsHandling: 'merge',
-          replaceUrl: true
+          replaceUrl: true,
         });
       }, 300);
     });

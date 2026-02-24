@@ -1,4 +1,3 @@
-
 import { I18nText } from './types';
 
 export type ArticleType = 'internal' | 'external';
@@ -21,20 +20,20 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
   {
     id: 'local-first-philosophy',
     type: 'internal',
-    title: { 
+    title: {
       en: 'Why Local-First Software Matters',
       fr: 'Pourquoi le logiciel Local-First est important',
     },
     summary: {
       en: 'Discover the benefits of privacy, speed, and ownership that come with local-first applications.',
-      fr: 'Découvrez les avantages de la confidentialité, de la vitesse et de la propriété qu\'apportent les applications local-first.',
+      fr: "Découvrez les avantages de la confidentialité, de la vitesse et de la propriété qu'apportent les applications local-first.",
     },
     thumbnail: '../assets/articles/local-first-philosophy/thumbnail.webp',
     date: '2025-05-15',
     tags: ['Philosophy', 'Dev', 'Privacy'],
     author: 'Utildex Team',
     featured: true,
-    readingTime: 5
+    readingTime: 5,
   },
   {
     id: 'productivity-tips',
@@ -52,12 +51,10 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
     tags: ['Tips', 'Productivity'],
     author: 'Bogus Author',
     featured: true,
-    readingTime: 4
+    readingTime: 4,
   },
 
-
-
-/**
+  /**
 
     External Zone
 
@@ -69,13 +66,13 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
       en: 'What is Open Source Software ?',
       fr: 'Qu’est-ce qu’un logiciel open source ?',
       es: '¿Qué es el software de código abierto?',
-      zh: '什么是开源软件？'
+      zh: '什么是开源软件？',
     },
     summary: {
       en: 'Red Hat’s definition of open source software and how it is developed and shared.',
       fr: 'La définition du logiciel open source selon Red Hat et son mode de développement et de collaboration.',
       es: 'La definición del software de código abierto según Red Hat y cómo se desarrolla y comparte.',
-      zh: 'Red Hat 对开源软件的定义，以及其开发和共享方式。'
+      zh: 'Red Hat 对开源软件的定义，以及其开发和共享方式。',
     },
     thumbnail: '../assets/images/external-thumbnails/external-open-source-redhat-thumbnail.webp',
     date: '2025-04-20',
@@ -83,7 +80,6 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
     author: 'Red Hat',
     featured: true,
     readingTime: 10,
-    url: 'https://www.redhat.com/en/topics/open-source/what-is-open-source'
-  }
-
+    url: 'https://www.redhat.com/en/topics/open-source/what-is-open-source',
+  },
 ];

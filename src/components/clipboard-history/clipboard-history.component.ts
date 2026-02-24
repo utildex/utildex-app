@@ -11,48 +11,62 @@ import zh from './i18n/zh';
   selector: 'app-clipboard-history',
   standalone: true,
   imports: [DatePipe],
-  providers: [
-    provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })
-  ],
+  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
-    <div class="h-full flex flex-col bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shadow-xl">
+    <div
+      class="flex h-full flex-col border-l border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900"
+    >
       <!-- Header -->
-      <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900/50">
-        <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+      <div
+        class="flex items-center justify-between border-b border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/50"
+      >
+        <h3 class="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
           <span class="material-symbols-outlined text-slate-500">content_paste</span>
           {{ t.map()['TITLE'] }}
         </h3>
         @if (history().length > 0) {
-          <button (click)="clipboard.clearHistory()" class="text-xs text-red-500 hover:underline" [title]="t.map()['CLEAR_TOOLTIP']">
+          <button
+            (click)="clipboard.clearHistory()"
+            class="text-xs text-red-500 hover:underline"
+            [title]="t.map()['CLEAR_TOOLTIP']"
+          >
             {{ t.map()['BTN_CLEAR'] }}
           </button>
         }
       </div>
 
       <!-- List -->
-      <div class="flex-1 overflow-y-auto p-4 space-y-3">
+      <div class="flex-1 space-y-3 overflow-y-auto p-4">
         @if (history().length === 0) {
-          <div class="text-center py-10 opacity-50">
-            <span class="material-symbols-outlined text-4xl mb-2">history_edu</span>
+          <div class="py-10 text-center opacity-50">
+            <span class="material-symbols-outlined mb-2 text-4xl">history_edu</span>
             <p class="text-sm">{{ t.map()['EMPTY_STATE'] }}</p>
           </div>
         } @else {
           @for (item of history(); track item.id) {
-            <div class="group relative bg-slate-50 dark:bg-slate-800 rounded-lg p-3 border border-slate-100 dark:border-slate-700 hover:border-primary dark:hover:border-primary transition-colors">
-              <p class="text-xs text-slate-400 mb-1 flex justify-between">
-                <span>{{ item.timestamp | date:'shortTime' }}</span>
-                @if (item.source) { <span class="uppercase tracking-wider text-[10px]">{{ item.source }}</span> }
+            <div
+              class="group hover:border-primary dark:hover:border-primary relative rounded-lg border border-slate-100 bg-slate-50 p-3 transition-colors dark:border-slate-700 dark:bg-slate-800"
+            >
+              <p class="mb-1 flex justify-between text-xs text-slate-400">
+                <span>{{ item.timestamp | date: 'shortTime' }}</span>
+                @if (item.source) {
+                  <span class="text-[10px] tracking-wider uppercase">{{ item.source }}</span>
+                }
               </p>
-              <div class="text-sm font-mono text-slate-700 dark:text-slate-300 break-all line-clamp-3 font-medium">
+              <div
+                class="line-clamp-3 font-mono text-sm font-medium break-all text-slate-700 dark:text-slate-300"
+              >
                 {{ item.text }}
               </div>
-              
+
               <!-- Copy Button Overlay -->
-              <button 
+              <button
                 (click)="copy(item.text)"
-                class="absolute inset-0 bg-primary/5 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                class="bg-primary/5 absolute inset-0 flex items-center justify-center opacity-0 backdrop-blur-[1px] transition-opacity group-hover:opacity-100"
               >
-                <span class="bg-white dark:bg-slate-900 text-primary shadow-sm px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                <span
+                  class="text-primary flex translate-y-2 transform items-center gap-1 rounded-full bg-white px-3 py-1.5 text-xs font-bold shadow-sm transition-transform group-hover:translate-y-0 dark:bg-slate-900"
+                >
                   <span class="material-symbols-outlined text-sm">content_copy</span>
                   {{ t.map()['BTN_COPY'] }}
                 </span>
@@ -62,12 +76,12 @@ import zh from './i18n/zh';
         }
       </div>
     </div>
-  `
+  `,
 })
 export class ClipboardHistoryComponent {
   clipboard = inject(ClipboardService);
   t = inject(ScopedTranslationService);
-  
+
   history = this.clipboard.history;
 
   copy(text: string) {

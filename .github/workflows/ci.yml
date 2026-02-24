@@ -8,6 +8,7 @@ on:
 
 jobs:
   build:
+    name: Build & Check
     runs-on: ubuntu-latest
 
     steps:
@@ -17,14 +18,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version-file: '.nvmrc'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Check Integrity
+        run: npm run check:integrity
+
+      - name: Lint
+        run: npm run lint
 
       - name: Build
         run: npm run build
 
-      - name: Lint
-        run: npm run lint
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
 

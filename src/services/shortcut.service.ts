@@ -2,8 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
 export interface ShortcutConfig {
-  key: string;           // e.g., 'k', 'enter', 'escape'
-  ctrlOrMeta?: boolean;  // Requires Ctrl (Win) or Cmd (Mac)
+  key: string; // e.g., 'k', 'enter', 'escape'
+  ctrlOrMeta?: boolean; // Requires Ctrl (Win) or Cmd (Mac)
   alt?: boolean;
   shift?: boolean;
   description?: string;
@@ -12,7 +12,7 @@ export interface ShortcutConfig {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShortcutService {
   private document = inject(DOCUMENT) as Document;
@@ -32,21 +32,21 @@ export class ShortcutService {
 
   private handleKeydown(event: KeyboardEvent) {
     if (typeof document === 'undefined') return;
-    
+
     const target = event.target as HTMLElement;
     // Check if target exists and is an element that accepts input
-    const isInput = target && (
-      target instanceof HTMLInputElement || 
-      target instanceof HTMLTextAreaElement ||
-      target.isContentEditable
-    );
+    const isInput =
+      target &&
+      (target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target.isContentEditable);
 
     for (const config of this.shortcuts.values()) {
       if (this.matches(event, config)) {
         if (isInput && !config.allowInInput) {
           continue;
         }
-        
+
         event.preventDefault();
         config.action(event);
         return;

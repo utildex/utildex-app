@@ -1,12 +1,12 @@
 {
   "id": "lorem-ipsum",
-  "name": { 
-    "en": "Lorem Ipsum", 
-    "fr": "Lorem Ipsum" 
+  "name": {
+    "en": "Lorem Ipsum",
+    "fr": "Lorem Ipsum"
   },
-  "description": { 
-    "en": "Generate placeholder text for your designs with adjustable paragraph counts.", 
-    "fr": "Générez du texte de remplissage pour vos designs avec un nombre de paragraphes ajustable." 
+  "description": {
+    "en": "Generate placeholder text for your designs with adjustable paragraph counts.",
+    "fr": "Générez du texte de remplissage pour vos designs avec un nombre de paragraphes ajustable."
   },
   "icon": "description",
   "version": "1.0.0",

@@ -57,6 +57,18 @@
               "pako",
               "dijkstrajs",
               "path2d-polyfill"
+            ],
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "600kb",
+                "maximumError": "2mb"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "8kb",
+                "maximumError": "32kb"
+              }
             ]
           },
           "configurations": {

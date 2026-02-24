@@ -4,19 +4,19 @@ export interface GuideState {
   isVisible: boolean;
   messageKey: string;
   // If null, it's a broadcast (centered notification). If set, it anchors to this.
-  targetRect: DOMRect | null; 
+  targetRect: DOMRect | null;
   position: 'top' | 'bottom' | 'best';
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GuideService {
   state: WritableSignal<GuideState> = signal({
     isVisible: false,
     messageKey: '',
     targetRect: null,
-    position: 'best'
+    position: 'best',
   });
 
   private hideTimer: ReturnType<typeof setTimeout> | null = null;
@@ -28,7 +28,7 @@ export class GuideService {
       isVisible: true,
       messageKey,
       targetRect: rect,
-      position
+      position,
     });
   }
 
@@ -38,7 +38,7 @@ export class GuideService {
       isVisible: true,
       messageKey,
       targetRect: null,
-      position: 'bottom'
+      position: 'bottom',
     });
 
     this.hideTimer = setTimeout(() => {
@@ -47,7 +47,7 @@ export class GuideService {
   }
 
   hide() {
-    this.state.update(s => ({ ...s, isVisible: false }));
+    this.state.update((s) => ({ ...s, isVisible: false }));
   }
 
   private clearTimer() {
