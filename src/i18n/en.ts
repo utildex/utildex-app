@@ -11,6 +11,7 @@ export default {
   WARN_MOBILE_DATA: 'Automatically caches tools when idle. May use mobile data.',
 
   NAV_ALL_TOOLS: 'All Tools',
+  NAV_PIPELINE: 'Pipeline',
   FOOTER_CATEGORIES: 'Categories',
   NAV_HISTORY: 'History',
   NAV_DASHBOARD: 'My Dashboard',

@@ -11,6 +11,7 @@ export default {
   WARN_MOBILE_DATA: '空闲时自动缓存工具。可能会消耗移动数据。',
 
   NAV_ALL_TOOLS: '所有工具',
+  NAV_PIPELINE: '管道',
   FOOTER_CATEGORIES: '分类',
   NAV_HISTORY: '历史',
   NAV_DASHBOARD: '我的仪表盘',

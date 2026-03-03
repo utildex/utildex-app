@@ -4,20 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { ToolService } from '../../services/tool.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { generateQrCode, buildQrContent, QrType, ErrorCorrectionLevel } from './processor';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
-
-// Extend window interface to include QRCode library
-interface WindowWithQRCode extends Window {
-  QRCode?: {
-    toDataURL: (content: string, options: Record<string, unknown>) => Promise<string>;
-  };
-}
-
-type QrType = 'url' | 'text' | 'wifi';
-type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
 
 interface QrStateData {
   type?: QrType;
@@ -758,37 +749,19 @@ export class QrStudioComponent {
   });
 
   constructor() {
-    // Lazy load library
-    this.loadLib();
+    this.generate();
 
     effect(() => {
-      // If in widget mode and we have config, load it
       if (this.isWidget()) {
         const cfg = this.widgetConfig();
         if (cfg?.qrData) {
           this.restoreState(cfg.qrData);
-          // For 1x1, if we have data, start flipped
           if (this.viewMode() === 'compact') {
             this.isFlipped.set(true);
           }
         }
       }
     });
-  }
-
-  async loadLib() {
-    const win = window as unknown as WindowWithQRCode;
-    if (typeof window !== 'undefined' && !win.QRCode) {
-      try {
-        const module = await import('qrcode');
-        win.QRCode = module.default || module;
-        this.generate();
-      } catch (e) {
-        console.error('Failed to load QRCode lib', e);
-      }
-    } else {
-      this.generate();
-    }
   }
 
   setType(type: QrType) {
@@ -813,24 +786,17 @@ export class QrStudioComponent {
   }
 
   async generate() {
-    const win = window as unknown as WindowWithQRCode;
-    if (typeof window === 'undefined' || !win.QRCode) return;
-
     this.isGenerating.set(true);
 
-    // Construct Content
-    let content = '';
-    const type = this.currentType();
-
-    if (type === 'url') content = this.urlValue();
-    else if (type === 'text') content = this.textValue();
-    else if (type === 'wifi') {
-      const ssid = this.escapeWifi(this.wifiSsid());
-      const pass = this.escapeWifi(this.wifiPass());
-      const t = pass ? 'WPA' : 'nopass';
-      const h = this.wifiHidden() ? 'true' : 'false';
-      content = `WIFI:S:${ssid};T:${t};P:${pass};H:${h};;`;
-    }
+    const content = buildQrContent(this.currentType(), {
+      url: this.urlValue(),
+      text: this.textValue(),
+      wifi: {
+        ssid: this.wifiSsid(),
+        password: this.wifiPass(),
+        hidden: this.wifiHidden(),
+      },
+    });
 
     if (!content) {
       this.isGenerating.set(false);
@@ -838,14 +804,11 @@ export class QrStudioComponent {
     }
 
     try {
-      const url = await win.QRCode.toDataURL(content, {
+      const url = await generateQrCode(content, {
         errorCorrectionLevel: this.errorLevel(),
-        margin: 1,
-        color: {
-          dark: this.colorDark(),
-          light: this.colorLight(),
-        },
-        width: 1024, // High res
+        foreground: this.colorDark(),
+        background: this.colorLight(),
+        width: 1024,
       });
       this.qrDataUrl.set(url);
     } catch (e) {
@@ -853,10 +816,6 @@ export class QrStudioComponent {
     } finally {
       this.isGenerating.set(false);
     }
-  }
-
-  escapeWifi(str: string): string {
-    return str.replace(/([\\;,:])/g, '\\$1');
   }
 
   download() {

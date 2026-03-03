@@ -9,6 +9,8 @@ export const STORAGE_KEYS = {
   FAVORITES: 'utildex-favorites',
   CLIPBOARD_HISTORY: 'utildex-clipboard-history',
   USAGE_STATS: 'utildex-usage',
+  PIPELINE_GRAPH: 'utildex-pipeline-graph',
+  PIPELINE_SETTINGS: 'utildex-pipeline-settings',
   PREFIX_STATE: 'utildex-state-',
   PREFIX_TOOLS: 'tools.',
   PREFIX_APP: 'utildex-', // Legacy/Global prefix

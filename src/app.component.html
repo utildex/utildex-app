@@ -74,6 +74,14 @@
             >
               {{ t.map()['NAV_ALL_TOOLS'] }}
             </a>
+            <a
+              [routerLink]="'/pipeline' | localLink"
+              routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+              class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <span class="material-symbols-outlined text-sm">account_tree</span>
+              {{ t.map()['NAV_PIPELINE'] }}
+            </a>
           </nav>
 
           <div class="mx-1 hidden h-6 w-px bg-slate-200 md:block dark:bg-slate-700"></div>
@@ -185,6 +193,14 @@
             >
               {{ t.map()['NAV_ALL_TOOLS'] }}
             </a>
+            <a
+              [routerLink]="'/pipeline' | localLink"
+              (click)="mobileMenuOpen.set(false)"
+              class="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
+            >
+              <span class="material-symbols-outlined text-sm">account_tree</span>
+              {{ t.map()['NAV_PIPELINE'] }}
+            </a>
 
             <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
 
@@ -225,51 +241,60 @@
   <div class="relative flex flex-1 overflow-hidden">
     <!-- Main Scrollable Area -->
     <main class="w-full flex-1 overflow-x-hidden overflow-y-auto">
-      <div class="mx-auto flex min-h-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
+      <div
+        class="flex min-h-full flex-col"
+        [class.mx-auto]="!fullscreenLayout()"
+        [class.max-w-7xl]="!fullscreenLayout()"
+        [class.px-4]="!fullscreenLayout()"
+        [class.sm:px-6]="!fullscreenLayout()"
+        [class.lg:px-8]="!fullscreenLayout()"
+      >
         <router-outlet></router-outlet>
 
-        <!-- Footer in flow -->
-        <footer class="mt-auto border-t border-slate-200 py-6 dark:border-slate-800">
-          <div
-            class="flex flex-col items-center justify-between gap-4 text-sm text-slate-500 md:flex-row"
-          >
-            <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
-            <div class="flex flex-wrap justify-center gap-4 md:justify-end">
-              <a
-                [routerLink]="'/categories' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_CATEGORIES'] }}</a
-              >
-              <a
-                [routerLink]="'/articles' | localLink"
-                appTourTarget="tour-blog"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_ARTICLES'] }}</a
-              >
-              <a
-                [routerLink]="'/legal' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_LEGAL'] }}</a
-              >
-              <a
-                [routerLink]="'/privacy' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_PRIVACY'] }}</a
-              >
-              <a
-                [routerLink]="'/terms' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_TERMS'] }}</a
-              >
-              <a
-                href="https://github.com/utildex/utildex"
-                target="_blank"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_CONTRIBUTE'] }}</a
-              >
+        <!-- Footer in flow (hidden in fullscreen layout) -->
+        @if (!fullscreenLayout()) {
+          <footer class="mt-auto border-t border-slate-200 py-6 dark:border-slate-800">
+            <div
+              class="flex flex-col items-center justify-between gap-4 text-sm text-slate-500 md:flex-row"
+            >
+              <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
+              <div class="flex flex-wrap justify-center gap-4 md:justify-end">
+                <a
+                  [routerLink]="'/categories' | localLink"
+                  class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                  >{{ t.map()['FOOTER_CATEGORIES'] }}</a
+                >
+                <a
+                  [routerLink]="'/articles' | localLink"
+                  appTourTarget="tour-blog"
+                  class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                  >{{ t.map()['FOOTER_ARTICLES'] }}</a
+                >
+                <a
+                  [routerLink]="'/legal' | localLink"
+                  class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                  >{{ t.map()['FOOTER_LEGAL'] }}</a
+                >
+                <a
+                  [routerLink]="'/privacy' | localLink"
+                  class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                  >{{ t.map()['FOOTER_PRIVACY'] }}</a
+                >
+                <a
+                  [routerLink]="'/terms' | localLink"
+                  class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                  >{{ t.map()['FOOTER_TERMS'] }}</a
+                >
+                <a
+                  href="https://github.com/utildex/utildex"
+                  target="_blank"
+                  class="transition-colors hover:text-slate-900 dark:hover:text-white"
+                  >{{ t.map()['FOOTER_CONTRIBUTE'] }}</a
+                >
+              </div>
             </div>
-          </div>
-        </footer>
+          </footer>
+        }
       </div>
     </main>
 

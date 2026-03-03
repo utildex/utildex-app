@@ -92,6 +92,12 @@ export const routes: Routes = [
           import('./pages/history/history.component').then((m) => m.HistoryComponent),
         title: 'History - Utildex',
       },
+      {
+        path: 'pipeline',
+        loadComponent: () =>
+          import('./pages/pipeline/pipeline.component').then((m) => m.PipelineComponent),
+        title: 'Pipeline - Utildex',
+      },
       // Dev-Only Banner Generator
       {
         path: 'preview-banner',

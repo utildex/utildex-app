@@ -132,3 +132,34 @@
 .animate-glow-pulse {
   animation: glow-pulse 2s infinite;
 }
+
+/* ---- Reusable frosted glass panels ---- */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 4px 24px -4px rgba(0, 0, 0, 0.07),
+    inset 0 0.5px 0 0 rgba(255, 255, 255, 0.8);
+}
+
+.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 24px -4px rgba(0, 0, 0, 0.35),
+    inset 0 0.5px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+.glass-panel-subtle {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-panel-subtle {
+  background: rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}

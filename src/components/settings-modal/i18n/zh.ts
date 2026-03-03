@@ -25,6 +25,7 @@ export default {
   CAT_TOOLS: '工具状态',
   CAT_PETS: '恐龙宠物',
   CAT_FILES: '文件',
+  CAT_PIPELINE: '管道',
 
   BTN_VIEW: '查看详情',
   BTN_DELETE: '清除数据',

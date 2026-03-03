@@ -11,6 +11,7 @@ export default {
   WARN_MOBILE_DATA: 'Almacena herramientas automáticamente. Puede usar datos móviles.',
 
   NAV_ALL_TOOLS: 'Herramientas',
+  NAV_PIPELINE: 'Pipeline',
   FOOTER_CATEGORIES: 'Categorías',
   NAV_HISTORY: 'Historial',
   NAV_DASHBOARD: 'Mi Tablero',

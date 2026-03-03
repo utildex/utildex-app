@@ -25,6 +25,7 @@ export default {
   CAT_TOOLS: 'Estados de Herramientas',
   CAT_PETS: 'Mascotas Virtuales',
   CAT_FILES: 'Archivos',
+  CAT_PIPELINE: 'Pipeline',
 
   BTN_VIEW: 'Inspeccionar',
   BTN_DELETE: 'Borrar',

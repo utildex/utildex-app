@@ -26,6 +26,7 @@ export default {
   CAT_PETS: 'Animaux virtuels',
 
   CAT_FILES: 'Fichiers',
+  CAT_PIPELINE: 'Pipeline',
   BTN_VIEW: 'Inspecter',
   BTN_DELETE: 'Effacer',
   BTN_BACK: 'Retour',

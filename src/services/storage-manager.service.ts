@@ -72,6 +72,12 @@ export class StorageManagerService {
       icon: 'folder',
       patterns: [/^app_blobs/],
     },
+    {
+      id: 'pipeline',
+      labelKey: 'CAT_PIPELINE',
+      icon: 'account_tree',
+      patterns: [new RegExp(`^${STORAGE_KEYS.PIPELINE_GRAPH}$`)],
+    },
   ];
 
   async getStats(): Promise<StorageStats> {

@@ -73,6 +73,8 @@ export class AppComponent implements OnInit {
   settingsOpen = signal(false);
   mobileMenuOpen = signal(false);
   showTourFab = signal(false);
+  /** When true, the main area uses full viewport with no max-width and hides the footer. */
+  fullscreenLayout = signal(false);
 
   @ViewChild(CommandPaletteComponent) commandPalette!: CommandPaletteComponent;
 

@@ -25,6 +25,7 @@ export default {
   CAT_TOOLS: 'Tool States',
   CAT_PETS: 'Virtual Pets',
   CAT_FILES: 'Files',
+  CAT_PIPELINE: 'Pipeline',
 
   BTN_VIEW: 'Inspect Data',
   BTN_DELETE: 'Clear Data',

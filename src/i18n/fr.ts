@@ -12,6 +12,7 @@ export default {
   WARN_MOBILE_DATA: 'Met en cache les outils automatiquement. Peut utiliser des données mobiles.',
 
   NAV_ALL_TOOLS: 'Tous les outils',
+  NAV_PIPELINE: 'Pipeline',
   FOOTER_CATEGORIES: 'Catégories',
   NAV_HISTORY: 'Historique',
   NAV_DASHBOARD: 'Mon Tableau',
