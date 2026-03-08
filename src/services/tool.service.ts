@@ -338,6 +338,11 @@ export class ToolService {
    */
   private async loadContractMetadata() {
     const entries = Object.entries(TOOL_REGISTRY_MAP);
+    if (entries.length === 0) {
+      console.error('[ToolService] Tool registry is empty. No tool metadata can be loaded.');
+      return;
+    }
+
     const loaded = await Promise.all(
       entries.map(async ([id, entry]) => {
         try {
@@ -357,14 +362,18 @@ export class ToolService {
             widget: contract.widget,
           };
           return metadata;
-        } catch {
+        } catch (error) {
+          console.error(`[ToolService] Failed to load contract metadata for tool "${id}".`, error);
           return null;
         }
       }),
     );
 
     const tools = loaded.filter((t): t is ToolMetadata => t !== null);
-    if (tools.length === 0) return;
+    if (tools.length === 0) {
+      console.error('[ToolService] No tool metadata loaded successfully.');
+      return;
+    }
     this.tools.set(tools);
   }
 

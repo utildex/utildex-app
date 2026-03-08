@@ -20,30 +20,62 @@ interface ToolIndexModule {
   loadKernel: () => Promise<Record<string, unknown>>;
 }
 
-const toolIndexModules = (
-  import.meta as unknown as {
-    glob: <T>(pattern: string, options: { eager: true }) => Record<string, T>;
-  }
-).glob<ToolIndexModule>('../tools/*/index.ts', {
-  eager: true,
-}) as Record<string, ToolIndexModule>;
+type ToolIndexLoader = () => Promise<ToolIndexModule>;
+
+/**
+ * Explicit loader map avoids relying on bundler-specific glob transforms.
+ * This keeps tool discovery stable across dev/build targets (including Cloudflare Pages).
+ */
+const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
+  'diff-checker': () => import('../tools/diff-checker/index'),
+  'hash-generator': () => import('../tools/hash-generator/index'),
+  'image-converter': () => import('../tools/image-converter/index'),
+  'image-resizer': () => import('../tools/image-resizer/index'),
+  'img-to-pdf': () => import('../tools/img-to-pdf/index'),
+  'json-formatter': () => import('../tools/json-formatter/index'),
+  'lorem-ipsum': () => import('../tools/lorem-ipsum/index'),
+  'markdown-preview': () => import('../tools/markdown-preview/index'),
+  'merge-pdf': () => import('../tools/merge-pdf/index'),
+  'password-generator': () => import('../tools/password-generator/index'),
+  'pdf-to-img': () => import('../tools/pdf-to-img/index'),
+  'qr-studio': () => import('../tools/qr-studio/index'),
+  'rotate-pdf': () => import('../tools/rotate-pdf/index'),
+  'split-pdf': () => import('../tools/split-pdf/index'),
+  'unit-converter': () => import('../tools/unit-converter/index'),
+};
 
 function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
   const map: Record<string, ToolRegistryEntry> = {};
 
-  for (const [modulePath, mod] of Object.entries(toolIndexModules)) {
-    const id = mod.contract?.id;
-    if (!id) {
-      throw new Error(`Tool index module ${modulePath} does not export a valid contract id.`);
-    }
-    if (map[id]) {
-      throw new Error(`Duplicate tool id detected while building registry: ${id}`);
+  for (const [declaredId, loadIndex] of Object.entries(TOOL_INDEX_LOADERS)) {
+    if (map[declaredId]) {
+      throw new Error(`Duplicate tool id detected while building registry: ${declaredId}`);
     }
 
-    map[id] = {
-      component: mod.loadComponent,
-      contract: async () => mod.contract,
-      kernel: mod.loadKernel,
+    map[declaredId] = {
+      component: async () => {
+        const mod = await loadIndex();
+        return mod.loadComponent();
+      },
+      contract: async () => {
+        const mod = await loadIndex();
+        const contractId = mod.contract?.id;
+        if (!contractId) {
+          throw new Error(
+            `Tool index module for ${declaredId} does not export a valid contract id.`,
+          );
+        }
+        if (contractId !== declaredId) {
+          throw new Error(
+            `Tool index contract id mismatch: declared=${declaredId}, exported=${contractId}`,
+          );
+        }
+        return mod.contract;
+      },
+      kernel: async () => {
+        const mod = await loadIndex();
+        return mod.loadKernel();
+      },
     };
   }
 
