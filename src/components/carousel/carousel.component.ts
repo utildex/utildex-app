@@ -149,10 +149,17 @@ export class CarouselComponent<T> implements OnDestroy {
     const el = this.container()?.nativeElement;
     if (!el) return;
 
-    event.preventDefault();
+    const hasHorizontalOverflow = el.scrollWidth - el.clientWidth > 1;
+    if (!hasHorizontalOverflow) return;
 
-    let delta = event.deltaY;
-    if (delta === 0) delta = event.deltaX;
+    // Keep native vertical page scrolling; only capture explicit horizontal wheel gestures.
+    const isHorizontalGesture = Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey;
+    if (!isHorizontalGesture) return;
+
+    let delta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
+    if (delta === 0) return;
+
+    event.preventDefault();
 
     if (event.deltaMode === 1) {
       delta *= 40;
