@@ -17,6 +17,7 @@ import { ArticleService } from '../../services/article.service';
 import { ArticleMetadata } from '../../data/article-registry';
 import { I18nService, Language } from '../../services/i18n.service';
 import { ClipboardService } from '../../services/clipboard.service';
+import { FontLoaderService } from '../../services/font-loader.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import { marked } from 'marked';
 import Prism from 'prismjs';
@@ -127,9 +128,9 @@ import zh from './i18n/zh';
       <!-- Content -->
       <main
         [style.--article-font-size.px]="fontSize()"
-        [class.font-sans]="fontFamily() === 'sans'"
-        [class.font-serif]="fontFamily() === 'serif'"
-        [class.font-mono]="fontFamily() === 'mono'"
+        [class.font-utx-sans]="fontFamily() === 'sans'"
+        [class.font-utx-serif]="fontFamily() === 'serif'"
+        [class.font-utx-mono]="fontFamily() === 'mono'"
       >
         @if (article(); as meta) {
           <!-- Check content availability or override -->
@@ -336,6 +337,7 @@ export class ArticleReaderComponent implements OnInit {
   t = inject(ScopedTranslationService);
   sanitizer = inject(DomSanitizer) as DomSanitizer;
   clipboard = inject(ClipboardService);
+  fontLoader = inject(FontLoaderService);
   el = inject(ElementRef);
 
   // State
@@ -402,6 +404,17 @@ export class ArticleReaderComponent implements OnInit {
         } else {
           this.loadError.set(true);
         }
+      }
+    });
+
+    effect(() => {
+      const family = this.fontFamily();
+      if (family === 'sans') {
+        this.fontLoader.ensureInter();
+      } else if (family === 'serif') {
+        this.fontLoader.ensureMerriweather();
+      } else {
+        this.fontLoader.ensureRobotoMono();
       }
     });
   }

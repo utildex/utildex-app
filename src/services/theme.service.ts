@@ -1,5 +1,6 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
 import { PersistenceService } from './persistence.service';
+import { FontLoaderService } from './font-loader.service';
 
 export type PrimaryColor = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose';
 export type FontFamily = 'inter' | 'roboto' | 'system';
@@ -10,6 +11,7 @@ export type Density = 'comfortable' | 'compact';
 })
 export class ThemeService {
   private persistence = inject(PersistenceService);
+  private fontLoader = inject(FontLoaderService);
 
   // Initialize with System Preference immediately so we don't need to force-set it later
   isDark = signal<boolean>(window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -57,6 +59,12 @@ export class ThemeService {
       let fontValue = 'Inter';
       if (font === 'roboto') fontValue = 'Roboto Mono';
       if (font === 'system') fontValue = 'system-ui, sans-serif';
+
+      if (font === 'inter') {
+        this.fontLoader.ensureInter().catch(() => undefined);
+      } else if (font === 'roboto') {
+        this.fontLoader.ensureRobotoMono().catch(() => undefined);
+      }
 
       document.documentElement.style.setProperty('--font-sans', fontValue);
     });

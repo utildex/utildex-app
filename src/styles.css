@@ -18,9 +18,9 @@
 @layer base {
   :root {
     --color-primary: 59 130 246;
-    --font-sans: 'Inter';
-    --font-serif: 'Merriweather';
-    --font-mono: 'Roboto Mono';
+    --font-sans: ui-sans-serif, system-ui, sans-serif;
+    --font-serif: ui-serif, Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
     /* Scrollbar Config */
     --sb-track: #f1f5f9; /* slate-100 */
@@ -115,6 +115,18 @@
     'opsz' 24;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+}
+
+.font-utx-sans {
+  font-family: 'Inter', var(--font-sans);
+}
+
+.font-utx-serif {
+  font-family: 'Merriweather', var(--font-serif);
+}
+
+.font-utx-mono {
+  font-family: 'Roboto Mono', var(--font-mono);
 }
 
 @keyframes glow-pulse {
