@@ -1,12 +1,19 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { pathToFileURL } from 'url';
 
 // 1. Import Data
 // Note: We access these via relative paths from /scripts/ to /src/
 import { LANGUAGES } from '../src/data/languages';
 import { ARTICLE_REGISTRY } from '../src/data/article-registry';
-import { TOOL_REGISTRY_MAP } from '../src/core/tool-registry';
+
+interface ToolContractLike {
+  id: string;
+  metadata: {
+    categories: string[];
+  };
+}
 
 // 2. Configuration
 const BASE_URL = 'https://utildex.com';
@@ -26,9 +33,7 @@ const getUrlEntry = (loc: string, lastmod?: string, changefreq: string = 'weekly
 async function generateSitemap() {
   console.log('[sitemap] Generating sitemap...');
 
-  const toolContracts = await Promise.all(
-    Object.values(TOOL_REGISTRY_MAP).map((entry) => entry.contract()),
-  );
+  const toolContracts = await loadToolContracts();
 
   const urls: string[] = [];
   const today = new Date().toISOString().split('T')[0];
@@ -92,6 +97,35 @@ ${urls.join('')}
 
   fs.writeFileSync(OUT_FILE, sitemapContent);
   console.log(`[sitemap] Generated ${OUT_FILE} (${urls.length} URLs)`);
+}
+
+async function loadToolContracts(): Promise<ToolContractLike[]> {
+  const toolsDir = path.join(process.cwd(), 'src', 'tools');
+  const toolFolders = fs
+    .readdirSync(toolsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
+
+  const contracts = await Promise.all(
+    toolFolders.map(async (folder) => {
+      const indexFile = path.join(toolsDir, folder, 'index.ts');
+      if (!fs.existsSync(indexFile)) {
+        throw new Error(`[sitemap] Missing tool index: ${indexFile}`);
+      }
+
+      const mod = (await import(pathToFileURL(indexFile).href)) as {
+        contract?: ToolContractLike;
+      };
+
+      if (!mod.contract?.id) {
+        throw new Error(`[sitemap] Missing contract export in ${indexFile}`);
+      }
+
+      return mod.contract;
+    }),
+  );
+
+  return contracts.sort((a, b) => a.id.localeCompare(b.id));
 }
 
 generateSitemap().catch(console.error);
