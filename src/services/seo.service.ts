@@ -11,6 +11,8 @@ import { filter } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class SeoService {
+  private readonly baseUrl = 'https://utildex.com';
+
   private title: Title = inject(Title);
   private meta: Meta = inject(Meta);
   private router: Router = inject(Router);
@@ -19,6 +21,8 @@ export class SeoService {
   private articleService = inject(ArticleService);
   private i18n = inject(I18nService);
   private document = inject(DOCUMENT);
+
+  private noIndexPaths = new Set(['/my-dashboard', '/history', '/preview-banner']);
 
   constructor() {
     // Listen to route changes
@@ -49,30 +53,17 @@ export class SeoService {
       head.appendChild(link);
     }
 
-    // Construct clean URL (stripping query params for canonical)
-    // We use window.location.origin to support whatever domain we are on,
-    // unless you want to force 'https://utildex.com' even on dev/staging.
-    // Ideally for SEO we want the production domain.
-    const domain = 'https://utildex.com';
-    const path = this.router.url.split('?')[0]; // Simple strip of query params
+    const path = this.normalizeCurrentPath();
 
-    link.setAttribute('href', domain + path);
+    link.setAttribute('href', this.baseUrl + path);
   }
 
   private updateHreflangTags() {
     const head = this.document.head;
-    const domain = 'https://utildex.com';
-    const currentUrl = this.router.url.split('?')[0]; // Current path without queries
+    const routeInfo = this.parseRoute();
+    const urlSuffix = routeInfo.pathNoLang;
 
-    // 1. Identify the "universal suffix" (path without language prefix)
-    // Regex matches starts with slash, then 2 chars (language), then slash or end of string
-    const langPrefixRegex = /^\/[a-z]{2}(\/|$)/;
-    let urlSuffix = currentUrl.replace(langPrefixRegex, '/');
-    if (!urlSuffix.startsWith('/')) urlSuffix = '/' + urlSuffix;
-
-    // 2. Loop through all supported languages
     this.i18n.supportedLanguages.forEach((lang) => {
-      // Find or create the tag
       let link: HTMLLinkElement | null = head.querySelector(`link[hreflang='${lang.code}']`);
       if (!link) {
         link = this.document.createElement('link');
@@ -81,13 +72,10 @@ export class SeoService {
         head.appendChild(link);
       }
 
-      // Construct the URL: Domain + /code + suffix
-      // Note: If suffix is '/', we get /en//. We should clean that up.
       const cleanPath = `/${lang.code}${urlSuffix}`.replace('//', '/');
-      link.setAttribute('href', domain + cleanPath);
+      link.setAttribute('href', this.baseUrl + cleanPath);
     });
 
-    // 3. Handle x-default (usually 'en')
     let xDefault: HTMLLinkElement | null = head.querySelector(`link[hreflang='x-default']`);
     if (!xDefault) {
       xDefault = this.document.createElement('link');
@@ -96,7 +84,7 @@ export class SeoService {
       head.appendChild(xDefault);
     }
     const enPath = `/en${urlSuffix}`.replace('//', '/');
-    xDefault.setAttribute('href', domain + enPath);
+    xDefault.setAttribute('href', this.baseUrl + enPath);
   }
 
   private updateJsonLd() {
@@ -109,24 +97,18 @@ export class SeoService {
       head.appendChild(script);
     }
 
-    const url = this.router.url;
+    const routeInfo = this.parseRoute();
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let schema: any = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'Utildex',
-      url: 'https://utildex.com',
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: 'https://utildex.com/search?q={search_term_string}',
-        'query-input': 'required name=search_term_string',
-      },
+      url: this.baseUrl,
     };
 
-    // 1. Tool Route
-    if (url.startsWith('/tools/')) {
-      const toolId = url.split('/tools/')[1]?.split('?')[0];
-      const tool = this.toolService.tools().find((t) => t.id === toolId);
+    if (routeInfo.kind === 'tool' && routeInfo.toolId) {
+      const tool = this.toolService.tools().find((t) => t.id === routeInfo.toolId);
 
       if (tool) {
         schema = {
@@ -141,37 +123,33 @@ export class SeoService {
             price: '0',
             priceCurrency: 'USD',
           },
-          url: `https://utildex.com${url}`,
+          url: `${this.baseUrl}${routeInfo.path}`,
         };
       }
-    }
-    // 2. Article Route
-    else if (url.startsWith('/articles/')) {
-      const articleId = url.split('/articles/')[1]?.split('?')[0];
-      if (articleId) {
-        const article = this.articleService.getById(articleId);
-        if (article) {
-          schema = {
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            headline: this.i18n.resolve(article.title),
-            image: article.thumbnail,
-            author: {
-              '@type': 'Person',
-              name: article.author,
+    } else if (routeInfo.kind === 'article' && routeInfo.articleId) {
+      const article = this.articleService.getById(routeInfo.articleId);
+      if (article) {
+        schema = {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: this.i18n.resolve(article.title),
+          image: this.toAbsoluteUrl(article.thumbnail),
+          author: {
+            '@type': 'Person',
+            name: article.author,
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'Utildex',
+            logo: {
+              '@type': 'ImageObject',
+              url: `${this.baseUrl}/assets/images/logo.png`,
             },
-            publisher: {
-              '@type': 'Organization',
-              name: 'Utildex',
-              logo: {
-                '@type': 'ImageObject',
-                url: 'https://utildex.com/assets/images/logo.png',
-              },
-            },
-            datePublished: article.date,
-            description: this.i18n.resolve(article.summary),
-          };
-        }
+          },
+          datePublished: article.date,
+          description: this.i18n.resolve(article.summary),
+          mainEntityOfPage: `${this.baseUrl}${routeInfo.path}`,
+        };
       }
     }
 
@@ -179,49 +157,41 @@ export class SeoService {
   }
 
   private updateSeo() {
+    const routeInfo = this.parseRoute();
+
     this.updateCanonicalUrl();
     this.updateHreflangTags();
     this.updateJsonLd();
+    this.updateRobotsPolicy(routeInfo);
 
     let currentRoute = this.route;
     while (currentRoute.firstChild) {
       currentRoute = currentRoute.firstChild;
     }
 
-    const url = this.router.url;
     let title = 'Utildex - Local-First Modular Toolbox';
     let desc =
       'A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and source available.';
     let image = ''; // Default OG Image if available
 
-    // 1. Tool Route
-    if (url.startsWith('/tools/')) {
-      const toolId = url.split('/tools/')[1]?.split('?')[0];
-      const tool = this.toolService.tools().find((t) => t.id === toolId);
+    if (routeInfo.kind === 'tool' && routeInfo.toolId) {
+      const tool = this.toolService.tools().find((t) => t.id === routeInfo.toolId);
 
       if (tool) {
         title = `${this.i18n.resolve(tool.name)} - Utildex`;
         desc = this.i18n.resolve(tool.description);
       }
-    }
-    // 2. Article Route
-    else if (url.startsWith('/articles/')) {
-      const articleId = url.split('/articles/')[1]?.split('?')[0];
-      // Only if it's a detail view (has ID)
-      if (articleId) {
-        const article = this.articleService.getById(articleId);
-        if (article) {
-          title = `${this.i18n.resolve(article.title)} - Utildex`;
-          desc = this.i18n.resolve(article.summary);
-          image = article.thumbnail;
-        }
+    } else if (routeInfo.kind === 'article') {
+      const article = routeInfo.articleId ? this.articleService.getById(routeInfo.articleId) : null;
+      if (article) {
+        title = `${this.i18n.resolve(article.title)} - Utildex`;
+        desc = this.i18n.resolve(article.summary);
+        image = this.toAbsoluteUrl(article.thumbnail);
       } else {
         title = 'Articles - Utildex';
         desc = 'Guides, tutorials, and insights on local-first development.';
       }
-    }
-    // 3. Fallback to Route Data
-    else {
+    } else {
       const routeTitle = currentRoute.snapshot.title;
       if (routeTitle) {
         title = routeTitle;
@@ -236,12 +206,84 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:title', content: title });
     this.meta.updateTag({ property: 'og:description', content: desc });
     this.meta.updateTag({ property: 'og:type', content: 'website' });
-    this.meta.updateTag({ property: 'og:url', content: window.location.href });
+    this.meta.updateTag({ property: 'og:url', content: `${this.baseUrl}${routeInfo.path}` });
+
+    // Keep Twitter metadata aligned for static-host scraping fallbacks.
+    this.meta.updateTag({ property: 'twitter:title', content: title });
+    this.meta.updateTag({ property: 'twitter:description', content: desc });
+    this.meta.updateTag({ property: 'twitter:url', content: `${this.baseUrl}${routeInfo.path}` });
 
     if (image) {
       this.meta.updateTag({ property: 'og:image', content: image });
+      this.meta.updateTag({ property: 'twitter:image', content: image });
     } else {
       this.meta.removeTag("property='og:image'");
+      this.meta.removeTag("property='twitter:image'");
     }
+  }
+
+  private normalizeCurrentPath(): string {
+    const raw = this.router.url || '/';
+    const noHash = raw.split('#')[0] || '/';
+    const noQuery = noHash.split('?')[0] || '/';
+    return noQuery.startsWith('/') ? noQuery : `/${noQuery}`;
+  }
+
+  private parseRoute(): {
+    path: string;
+    pathNoLang: string;
+    lang: string | null;
+    kind: 'tool' | 'article' | 'other';
+    toolId?: string;
+    articleId?: string;
+  } {
+    const path = this.normalizeCurrentPath();
+    const segments = path.split('/').filter(Boolean);
+
+    let lang: string | null = null;
+    const supported = new Set<string>(this.i18n.supportedLanguages.map((l) => l.code));
+    if (segments[0] && supported.has(segments[0])) {
+      lang = segments.shift()!;
+    }
+
+    const pathNoLang = segments.length > 0 ? `/${segments.join('/')}` : '/';
+
+    if (segments[0] === 'tools' && segments[1]) {
+      return {
+        path,
+        pathNoLang,
+        lang,
+        kind: 'tool',
+        toolId: decodeURIComponent(segments[1]),
+      };
+    }
+
+    if (segments[0] === 'articles') {
+      return {
+        path,
+        pathNoLang,
+        lang,
+        kind: 'article',
+        articleId: segments[1] ? decodeURIComponent(segments[1]) : undefined,
+      };
+    }
+
+    return { path, pathNoLang, lang, kind: 'other' };
+  }
+
+  private updateRobotsPolicy(routeInfo: { pathNoLang: string }) {
+    const isNoIndex = this.noIndexPaths.has(routeInfo.pathNoLang);
+    this.meta.updateTag({
+      name: 'robots',
+      content: isNoIndex ? 'noindex, nofollow' : 'index, follow',
+    });
+  }
+
+  private toAbsoluteUrl(url: string): string {
+    if (!url) return url;
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+    const cleaned = url.replace(/^\.\//, '/').replace(/^\.\.\//, '/');
+    return cleaned.startsWith('/') ? `${this.baseUrl}${cleaned}` : `${this.baseUrl}/${cleaned}`;
   }
 }

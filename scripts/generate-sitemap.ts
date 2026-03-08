@@ -4,7 +4,7 @@ import * as path from 'path';
 
 // 1. Import Data
 // Note: We access these via relative paths from /scripts/ to /src/
-import languages from '../src/data/languages.json';
+import { LANGUAGES } from '../src/data/languages';
 import { ARTICLE_REGISTRY } from '../src/data/article-registry';
 import { TOOL_REGISTRY_MAP } from '../src/core/tool-registry';
 
@@ -35,7 +35,7 @@ async function generateSitemap() {
 
   // A. Static Pages (Home, Tools List, Articles List, Categories)
   // We generate one for each language
-  languages.forEach((lang) => {
+  LANGUAGES.forEach((lang) => {
     const code = lang.code;
     // Landing Page
     urls.push(getUrlEntry(`${BASE_URL}/${code}`, today, 'daily', 1.0));
@@ -53,14 +53,14 @@ async function generateSitemap() {
 
   // B. Tools
   toolContracts.forEach((tool) => {
-    languages.forEach((lang) => {
+    LANGUAGES.forEach((lang) => {
       urls.push(getUrlEntry(`${BASE_URL}/${lang.code}/tools/${tool.id}`, today, 'weekly', 0.8));
     });
   });
 
   // C. Articles
   ARTICLE_REGISTRY.forEach((article) => {
-    languages.forEach((lang) => {
+    LANGUAGES.forEach((lang) => {
       urls.push(
         getUrlEntry(`${BASE_URL}/${lang.code}/articles/${article.id}`, article.date, 'monthly', 0.7),
       );
@@ -74,7 +74,7 @@ async function generateSitemap() {
   categories.forEach((cat) => {
     // Encoded category name
     const catSlug = encodeURIComponent(cat);
-    languages.forEach((lang) => {
+    LANGUAGES.forEach((lang) => {
       urls.push(getUrlEntry(`${BASE_URL}/${lang.code}/categories/${catSlug}`, today, 'weekly', 0.6));
     });
   });
