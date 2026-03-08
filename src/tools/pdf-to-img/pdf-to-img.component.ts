@@ -14,14 +14,14 @@ import {
   renderThumbnails,
   type PageThumbnail,
 } from './pdf-to-img.kernel';
+import { getWorkerResource } from '../../core/runtime-resources';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
-// Initialize PDF.js worker
-// We must point to the CDN location that matches the version in importmap
-const pdfWorkerSrc = 'https://esm.sh/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs';
+// Initialize PDF.js worker from a local asset to avoid third-party runtime requests.
+const pdfWorkerSrc = getWorkerResource('pdfjs');
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
 
 @Component({

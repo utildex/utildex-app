@@ -7,7 +7,15 @@ export default defineConfig([
 
   // Ignores globaux
   {
-    ignores: ["dist/", "node_modules/", ".angular/", "*.min.js", "src/**/*.js"]
+    ignores: [
+      "dist/",
+      "node_modules/",
+      ".angular/",
+      "*.min.js",
+      "*.min.mjs",
+      "src/**/*.js",
+      "src/assets/pdfjs/**",
+    ]
   },
 
   // JavaScript files

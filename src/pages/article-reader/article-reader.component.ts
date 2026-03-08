@@ -17,6 +17,7 @@ import { ArticleService } from '../../services/article.service';
 import { ArticleMetadata } from '../../data/article-registry';
 import { I18nService, Language } from '../../services/i18n.service';
 import { ClipboardService } from '../../services/clipboard.service';
+import { FontLoaderService } from '../../services/font-loader.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import { marked } from 'marked';
 import Prism from 'prismjs';
@@ -127,9 +128,9 @@ import zh from './i18n/zh';
       <!-- Content -->
       <main
         [style.--article-font-size.px]="fontSize()"
-        [class.font-sans]="fontFamily() === 'sans'"
-        [class.font-serif]="fontFamily() === 'serif'"
-        [class.font-mono]="fontFamily() === 'mono'"
+        [class.font-utx-sans]="fontFamily() === 'sans'"
+        [class.font-utx-serif]="fontFamily() === 'serif'"
+        [class.font-utx-mono]="fontFamily() === 'mono'"
       >
         @if (article(); as meta) {
           <!-- Check content availability or override -->
@@ -232,7 +233,7 @@ import zh from './i18n/zh';
                       class="hover:border-primary hover:ring-primary hover:bg-primary/5 group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 shadow-sm transition-all hover:shadow-md hover:ring-1 dark:border-slate-800 dark:bg-slate-900"
                     >
                       <img
-                        [src]="'https://flagcdn.com/w40/' + getLangFlag(lang) + '.png'"
+                        [src]="getLangFlagAsset(lang)"
                         class="h-4 w-6 rounded object-cover opacity-80 shadow-sm transition-opacity group-hover:opacity-100"
                       />
                       <span
@@ -336,6 +337,7 @@ export class ArticleReaderComponent implements OnInit {
   t = inject(ScopedTranslationService);
   sanitizer = inject(DomSanitizer) as DomSanitizer;
   clipboard = inject(ClipboardService);
+  fontLoader = inject(FontLoaderService);
   el = inject(ElementRef);
 
   // State
@@ -355,6 +357,7 @@ export class ArticleReaderComponent implements OnInit {
   currentAppLang = this.i18n.currentLang;
 
   private readonly VALID_LANGUAGES: Language[] = ['en', 'fr', 'es', 'zh'];
+  private static prismThemeLoaded = false;
 
   availableLangs = computed(() => {
     const title = this.article()?.title;
@@ -403,10 +406,41 @@ export class ArticleReaderComponent implements OnInit {
         }
       }
     });
+
+    effect(() => {
+      const family = this.fontFamily();
+      if (family === 'sans') {
+        this.fontLoader.ensureInter();
+      } else if (family === 'serif') {
+        this.fontLoader.ensureMerriweather();
+      } else {
+        this.fontLoader.ensureRobotoMono();
+      }
+    });
   }
 
   ngOnInit() {
+    this.ensurePrismTheme();
     window.scrollTo(0, 0);
+  }
+
+  private ensurePrismTheme() {
+    if (ArticleReaderComponent.prismThemeLoaded || typeof document === 'undefined') {
+      return;
+    }
+
+    const existing = document.getElementById('prism-theme') as HTMLLinkElement | null;
+    if (existing) {
+      ArticleReaderComponent.prismThemeLoaded = true;
+      return;
+    }
+
+    const link = document.createElement('link');
+    link.id = 'prism-theme';
+    link.rel = 'stylesheet';
+    link.href = 'assets/styles/prism-tomorrow.css';
+    document.head.appendChild(link);
+    ArticleReaderComponent.prismThemeLoaded = true;
   }
 
   loadContent(id: string, lang: Language) {
@@ -484,7 +518,7 @@ export class ArticleReaderComponent implements OnInit {
     return this.i18n.supportedLanguages.find((l) => l.code === code)?.label || code;
   }
 
-  getLangFlag(code: string): string {
-    return this.i18n.supportedLanguages.find((l) => l.code === code)?.flagCode || 'us';
+  getLangFlagAsset(code: string): string {
+    return this.i18n.supportedLanguages.find((l) => l.code === code)?.flagAsset || '';
   }
 }

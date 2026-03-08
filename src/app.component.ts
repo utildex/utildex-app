@@ -29,6 +29,7 @@ import es from './i18n/es';
 import zh from './i18n/zh';
 import { filter } from 'rxjs/operators';
 import { TourService } from './services/tour.service';
+import { FontLoaderService } from './services/font-loader.service';
 
 @Component({
   selector: 'app-root',
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit {
   networkService = inject(NetworkService);
   offline = inject(OfflineManagerService);
   tour = inject(TourService);
+  fonts = inject(FontLoaderService);
   t = inject(ScopedTranslationService);
   router: Router = inject(Router);
 
@@ -79,6 +81,8 @@ export class AppComponent implements OnInit {
   currentLang = this.i18nService.currentLang;
 
   ngOnInit() {
+    this.fonts.observeMaterialSymbolsUsage();
+
     // Services initialized via inject()
     setTimeout(() => {
       this.showTourFab.set(true);

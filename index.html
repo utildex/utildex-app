@@ -28,31 +28,10 @@
             href="/assets/images/utildex_favicon_64x64.webp"
     />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Non-blocking Font Loading -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Mono:wght@400;500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Mono:wght@400;500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" media="print" onload="this.media='all'" />
-    <noscript>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Roboto+Mono:wght@400;500&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
-    </noscript>
-
 </head>
 
 <body class="bg-transparent text-slate-900 dark:text-slate-100 transition-colors duration-300 overflow-x-hidden">
-<script>
-    // Critical Theme Init - Runs before paint to prevent flash and allow correct App Shell rendering
-    (function() {
-        try {
-            const saved = localStorage.getItem('utildex-state-theme'); // Updated key
-            const isDark = saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-            }
-        } catch (e) {}
-    })();
-</script>
+<script src="/assets/theme-init.js"></script>
 <app-root>
     <!-- 
       APP SHELL: Static HTML that perfectly matches the Angular layout, for fast LCP
@@ -79,7 +58,7 @@
 
         <div class="shell-header" style="display: flex; align-items: center; gap: 0.75rem;">
             <div style="width: 2.25rem; height: 2.25rem; border-radius: 0.5rem; background-color: currentColor; opacity: 0.2;"></div>
-            <span style="font-weight: 700; font-size: 1.25rem; font-family: 'Inter', sans-serif;">Utildex</span>
+            <span style="font-weight: 700; font-size: 1.25rem; font-family: system-ui, sans-serif;">Utildex</span>
         </div>
     </div>
 
@@ -89,7 +68,7 @@
         <!-- Hero Title (LCP Element) -->
         <h1 style="
             font-size: 3rem; font-weight: 800; text-align: center; margin-bottom: 1.5rem; letter-spacing: -0.025em;
-            font-family: 'Inter', sans-serif;
+            font-family: system-ui, sans-serif;
         ">
             Modular Developer Toolbox
         </h1>
