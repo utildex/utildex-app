@@ -31,18 +31,7 @@
 </head>
 
 <body class="bg-transparent text-slate-900 dark:text-slate-100 transition-colors duration-300 overflow-x-hidden">
-<script>
-    // Critical Theme Init - Runs before paint to prevent flash and allow correct App Shell rendering
-    (function() {
-        try {
-            const saved = localStorage.getItem('utildex-state-theme'); // Updated key
-            const isDark = saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            if (isDark) {
-                document.documentElement.classList.add('dark');
-            }
-        } catch (e) {}
-    })();
-</script>
+<script src="/assets/theme-init.js"></script>
 <app-root>
     <!-- 
       APP SHELL: Static HTML that perfectly matches the Angular layout, for fast LCP

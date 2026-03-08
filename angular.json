@@ -71,7 +71,14 @@
           "configurations": {
             "production": {
               "serviceWorker": "ngsw-config.json",
-              "optimization": true,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
