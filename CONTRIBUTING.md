@@ -16,6 +16,19 @@ To keep the application fast and lightweight, Utildex uses a specific architectu
 3.  **Lazy Loading (`src/core/tool-registry.ts`):** Components, contracts, and kernels are loaded on demand via dynamic imports.
 4.  **Zoneless Angular:** We do not use `Zone.js`. All state changes must be handled via **Signals**.
 
+### Centralized Runtime Resources
+
+To keep assets maintainable and avoid scattered URL/path construction, all shared runtime resources must be declared in central registries:
+
+1. **Language-owned visual assets:** `src/data/languages.ts`
+  - Keep `flagCode` for locale metadata.
+  - Use `flagAsset` as the canonical flag path consumed by UI components.
+2. **Compute/runtime assets (workers, wasm, etc.):** `src/core/runtime-resources.ts`
+  - Register worker URLs and other runtime-heavy resources here.
+  - Components/tools should use accessor helpers (for example `getWorkerResource(...)`) instead of hardcoding paths.
+
+Rule: if a resource may be reused by more than one component, or may evolve over time, add it to a central registry first.
+
 ---
 
 ## Adding a New Tool
