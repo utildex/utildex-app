@@ -54,7 +54,9 @@ async function main() {
     throw new Error(`[tool-ids] Duplicate tool ids detected: ${Array.from(duplicates).join(', ')}`);
   }
 
-  console.log(`[tool-ids] OK: ${ids.length} unique tool ids.`);
+  console.log(
+    `[tool-ids] OK: ${ids.length} tools validated (unique contract.id + folder name matches contract.id).`,
+  );
 }
 
 main().catch((err) => {
