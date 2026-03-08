@@ -355,6 +355,7 @@ export class ArticleReaderComponent implements OnInit {
   currentAppLang = this.i18n.currentLang;
 
   private readonly VALID_LANGUAGES: Language[] = ['en', 'fr', 'es', 'zh'];
+  private static prismThemeLoaded = false;
 
   availableLangs = computed(() => {
     const title = this.article()?.title;
@@ -406,7 +407,27 @@ export class ArticleReaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.ensurePrismTheme();
     window.scrollTo(0, 0);
+  }
+
+  private ensurePrismTheme() {
+    if (ArticleReaderComponent.prismThemeLoaded || typeof document === 'undefined') {
+      return;
+    }
+
+    const existing = document.getElementById('prism-theme') as HTMLLinkElement | null;
+    if (existing) {
+      ArticleReaderComponent.prismThemeLoaded = true;
+      return;
+    }
+
+    const link = document.createElement('link');
+    link.id = 'prism-theme';
+    link.rel = 'stylesheet';
+    link.href = 'assets/styles/prism-tomorrow.css';
+    document.head.appendChild(link);
+    ArticleReaderComponent.prismThemeLoaded = true;
   }
 
   loadContent(id: string, lang: Language) {

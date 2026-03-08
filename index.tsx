@@ -1,8 +1,7 @@
 
-import '@angular/compiler';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideZonelessChangeDetection, isDevMode, ErrorHandler } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withPreloading, PreloadAllModules } from '@angular/router';
+import { provideRouter, withComponentInputBinding, withPreloading, NoPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { AppComponent } from './src/app.component';
@@ -16,7 +15,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(
       routes, 
       withComponentInputBinding(),
-      withPreloading(PreloadAllModules)
+      withPreloading(NoPreloading)
     ),
     provideHttpClient(withFetch()),
     provideServiceWorker('ngsw-worker.js', {

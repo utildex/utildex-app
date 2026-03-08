@@ -45,10 +45,7 @@
                 "output": "."
               }
             ],
-            "styles": [
-              "src/styles.css",
-              "node_modules/prismjs/themes/prism-tomorrow.css"
-            ],
+            "styles": ["src/styles.css"],
             "allowedCommonJsDependencies": [
               "prismjs",
               "jszip",

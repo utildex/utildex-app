@@ -290,16 +290,22 @@
   </div>
 
   <!-- Global Elements -->
-  <app-tour-overlay></app-tour-overlay>
-  <app-guide></app-guide>
   <app-toast></app-toast>
   <app-network-status></app-network-status>
   <app-download-status></app-download-status>
   <app-command-palette></app-command-palette>
   <app-error-overlay></app-error-overlay>
-  <app-dashboard-modals></app-dashboard-modals>
+
+  @defer (on idle) {
+    <app-tour-overlay></app-tour-overlay>
+    <app-guide></app-guide>
+    <app-dashboard-modals></app-dashboard-modals>
+  }
+
   @if (settingsOpen()) {
-    <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
+    @defer (when settingsOpen()) {
+      <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
+    }
   }
 
   <div class="hidden md:block">
