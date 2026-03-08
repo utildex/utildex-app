@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { ToolService } from '../../services/tool.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { generateQr, type QrType, type ErrorCorrectionLevel } from './qr-studio.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -15,9 +16,6 @@ interface WindowWithQRCode extends Window {
     toDataURL: (content: string, options: Record<string, unknown>) => Promise<string>;
   };
 }
-
-type QrType = 'url' | 'text' | 'wifi';
-type ErrorCorrectionLevel = 'L' | 'M' | 'Q' | 'H';
 
 interface QrStateData {
   type?: QrType;
@@ -818,45 +816,28 @@ export class QrStudioComponent {
 
     this.isGenerating.set(true);
 
-    // Construct Content
-    let content = '';
-    const type = this.currentType();
-
-    if (type === 'url') content = this.urlValue();
-    else if (type === 'text') content = this.textValue();
-    else if (type === 'wifi') {
-      const ssid = this.escapeWifi(this.wifiSsid());
-      const pass = this.escapeWifi(this.wifiPass());
-      const t = pass ? 'WPA' : 'nopass';
-      const h = this.wifiHidden() ? 'true' : 'false';
-      content = `WIFI:S:${ssid};T:${t};P:${pass};H:${h};;`;
-    }
-
-    if (!content) {
-      this.isGenerating.set(false);
-      return;
-    }
-
     try {
-      const url = await win.QRCode.toDataURL(content, {
-        errorCorrectionLevel: this.errorLevel(),
-        margin: 1,
-        color: {
-          dark: this.colorDark(),
-          light: this.colorLight(),
+      const result = await generateQr(
+        {
+          type: this.currentType(),
+          url: this.urlValue(),
+          text: this.textValue(),
+          wifiSsid: this.wifiSsid(),
+          wifiPass: this.wifiPass(),
+          wifiHidden: this.wifiHidden(),
+          colorDark: this.colorDark(),
+          colorLight: this.colorLight(),
+          errorLevel: this.errorLevel(),
         },
-        width: 1024, // High res
-      });
-      this.qrDataUrl.set(url);
+        win.QRCode,
+      );
+
+      this.qrDataUrl.set(result.success ? result.dataUrl : '');
     } catch (e) {
       console.error(e);
     } finally {
       this.isGenerating.set(false);
     }
-  }
-
-  escapeWifi(str: string): string {
-    return str.replace(/([\\;,:])/g, '\\$1');
   }
 
   download() {

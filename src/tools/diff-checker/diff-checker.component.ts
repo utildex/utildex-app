@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { ToolService } from '../../services/tool.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { buildDiffRows, type DiffChange, type DiffMode, type DiffRow } from './diff-checker.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -22,12 +23,6 @@ interface DiffLib {
   diffChars: (a: string, b: string, options?: { ignoreWhitespace: boolean }) => DiffChange[];
   diffWords: (a: string, b: string, options?: { ignoreWhitespace: boolean }) => DiffChange[];
   diffLines: (a: string, b: string, options?: { ignoreWhitespace: boolean }) => DiffChange[];
-}
-
-interface DiffChange {
-  value: string;
-  added?: boolean;
-  removed?: boolean;
 }
 
 interface WindowWithDiff extends Window {
@@ -42,13 +37,6 @@ interface WidgetConfig {
     a?: string;
     b?: string;
   };
-}
-
-interface DiffRow {
-  type: 'added' | 'removed' | 'unchanged' | 'header';
-  content: string;
-  oldLine?: number;
-  newLine?: number;
 }
 
 @Component({
@@ -545,7 +533,7 @@ export class DiffCheckerComponent {
   widgetTab = signal<'input' | 'diff'>('input');
 
   // Options
-  mode = signal<'Chars' | 'Words' | 'Lines'>('Lines');
+  mode = signal<DiffMode>('Lines');
   ignoreWhitespace = signal(false);
 
   // Render State
@@ -598,7 +586,7 @@ export class DiffCheckerComponent {
     }
   }
 
-  setMode(m: 'Chars' | 'Words' | 'Lines') {
+  setMode(m: DiffMode) {
     this.mode.set(m);
     this.computeDiff();
   }
@@ -654,54 +642,9 @@ export class DiffCheckerComponent {
       changes = diffLib.diffWords(this.textA(), this.textB(), options);
     else changes = diffLib.diffLines(this.textA(), this.textB(), options);
 
-    const rows: DiffRow[] = [];
-    let oldLine = 1;
-    let newLine = 1;
-    let additions = 0;
-    let deletions = 0;
-
-    changes.forEach((part: DiffChange) => {
-      const lines = part.value.split('\n');
-
-      // Fix for trailing newline in diffLines
-      if (lines.length > 0 && lines[lines.length - 1] === '' && this.mode() === 'Lines') {
-        lines.pop();
-      }
-
-      if (this.mode() !== 'Lines') {
-        // For Chars/Words, we just treat them as inline chunks
-        if (part.added) {
-          additions++;
-          rows.push({ type: 'added', content: part.value });
-        } else if (part.removed) {
-          deletions++;
-          rows.push({ type: 'removed', content: part.value });
-        } else {
-          rows.push({ type: 'unchanged', content: part.value });
-        }
-        return;
-      }
-
-      // Line Logic
-      lines.forEach((line: string) => {
-        if (part.added) {
-          additions++;
-          rows.push({ type: 'added', content: line, newLine: newLine++ });
-        } else if (part.removed) {
-          deletions++;
-          rows.push({ type: 'removed', content: line, oldLine: oldLine++ });
-        } else {
-          rows.push({ type: 'unchanged', content: line, oldLine: oldLine++, newLine: newLine++ });
-        }
-      });
-    });
-
-    this.diffRows.set(rows);
-    this.stats.set({
-      additions,
-      deletions,
-      changes: additions + deletions,
-    });
+    const rendered = buildDiffRows(changes, this.mode());
+    this.diffRows.set(rendered.rows);
+    this.stats.set(rendered.stats);
   }
 
   saveState() {

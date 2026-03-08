@@ -6,13 +6,11 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-// import { PDFDocument, degrees } from 'pdf-lib';
+import { rotatePdfBytes, type RotationMode } from './rotate-pdf.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
-
-type RotationMode = 'all' | 'odd' | 'even' | 'specific';
 
 @Component({
   selector: 'app-rotate-pdf',
@@ -289,44 +287,19 @@ export class RotatePdfComponent {
   }
 
   async save() {
-    if (!this.pdfFile()) return;
+    const sourceFile = this.pdfFile();
+    if (!sourceFile) return;
     this.isProcessing.set(true);
 
     try {
-      const buffer = await this.pdfFile()!.arrayBuffer();
-      const { PDFDocument, degrees } = await import('pdf-lib');
-      const doc = await PDFDocument.load(buffer);
-      const pages = doc.getPages();
+      const buffer = await sourceFile.arrayBuffer();
       const angle = this.totalRotation();
-      const pageCount = doc.getPageCount();
+      const safeBytes = await rotatePdfBytes(buffer, angle, this.mode(), this.specificRange());
+      this.resultBytes.set(safeBytes);
 
-      // Determine which pages to rotate
-      const indicesToRotate = new Set<number>();
-      const m = this.mode();
-
-      if (m === 'all') {
-        for (let i = 0; i < pageCount; i++) indicesToRotate.add(i);
-      } else if (m === 'odd') {
-        for (let i = 0; i < pageCount; i += 2) indicesToRotate.add(i); // 0-indexed: 0=page 1 (odd)
-      } else if (m === 'even') {
-        for (let i = 1; i < pageCount; i += 2) indicesToRotate.add(i); // 0-indexed: 1=page 2 (even)
-      } else if (m === 'specific') {
-        const parsed = this.parseRange(this.specificRange(), pageCount);
-        parsed.forEach((i) => indicesToRotate.add(i));
-      }
-
-      // Apply rotation
-      pages.forEach((page, idx) => {
-        if (indicesToRotate.has(idx)) {
-          const current = page.getRotation().angle;
-          page.setRotation(degrees(current + angle));
-        }
-      });
-
-      const bytes = await doc.save();
-      this.resultBytes.set(bytes);
-      const safeBytes = new Uint8Array(bytes);
-      const blob = new Blob([safeBytes], { type: 'application/pdf' });
+      const normalizedBytes = new Uint8Array(safeBytes.byteLength);
+      normalizedBytes.set(safeBytes);
+      const blob = new Blob([normalizedBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       this.resultUrl.set(url);
 
@@ -352,29 +325,5 @@ export class RotatePdfComponent {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-  }
-
-  private parseRange(rangeStr: string, max: number): number[] {
-    const pages = new Set<number>();
-    if (!rangeStr) return [];
-
-    const parts = rangeStr.split(',');
-    for (const part of parts) {
-      const trimmed = part.trim();
-      if (trimmed.includes('-')) {
-        const [start, end] = trimmed.split('-').map((n) => parseInt(n, 10));
-        if (!isNaN(start) && !isNaN(end)) {
-          const low = Math.max(1, Math.min(start, end));
-          const high = Math.min(max, Math.max(start, end));
-          for (let i = low; i <= high; i++) pages.add(i - 1);
-        }
-      } else {
-        const num = parseInt(trimmed, 10);
-        if (!isNaN(num) && num >= 1 && num <= max) {
-          pages.add(num - 1);
-        }
-      }
-    }
-    return Array.from(pages);
   }
 }

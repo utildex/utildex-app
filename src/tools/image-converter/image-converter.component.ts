@@ -5,6 +5,7 @@ import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.co
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { formatBytes as formatKernelBytes, processImageBlob } from './image-converter.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -475,7 +476,7 @@ export class ImageConverterComponent {
         }
 
         // Convert via Canvas
-        const resultBlob = await this.processImage(sourceBlob, format, qual);
+        const resultBlob = await processImageBlob(sourceBlob, format, qual);
         const resultUrl = URL.createObjectURL(resultBlob);
 
         this.images.update((curr) =>
@@ -497,40 +498,6 @@ export class ImageConverterComponent {
 
   updateStatus(id: string, status: ImageStatus) {
     this.images.update((curr) => curr.map((i) => (i.id === id ? { ...i, status } : i)));
-  }
-
-  private processImage(file: Blob, format: string, quality: number): Promise<Blob> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          reject('No context');
-          return;
-        }
-
-        // Draw
-        ctx.drawImage(img, 0, 0);
-
-        // Export
-        canvas.toBlob(
-          (blob) => {
-            if (blob) resolve(blob);
-            else reject('Canvas export failed');
-          },
-          format,
-          quality,
-        );
-
-        // Cleanup
-        URL.revokeObjectURL(img.src);
-      };
-      img.onerror = (e) => reject(e);
-      img.src = URL.createObjectURL(file);
-    });
   }
 
   async downloadZip() {
@@ -580,10 +547,6 @@ export class ImageConverterComponent {
   }
 
   formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    return formatKernelBytes(bytes);
   }
 }

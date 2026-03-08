@@ -6,7 +6,7 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-// import { PDFDocument } from 'pdf-lib';
+import { formatBytes, mergePdfBuffers } from './merge-pdf.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -433,20 +433,20 @@ export class MergePdfComponent {
     this.isProcessing.set(true);
 
     try {
-      const { PDFDocument } = await import('pdf-lib');
-      const mergedPdf = await PDFDocument.create();
+      const inputs = await Promise.all(
+        this.files().map(async (pdf) => ({
+          name: pdf.file.name,
+          buffer: await pdf.file.arrayBuffer(),
+        })),
+      );
 
-      for (const pdf of this.files()) {
-        const buffer = await pdf.file.arrayBuffer();
-        const doc = await PDFDocument.load(buffer);
-        const copiedPages = await mergedPdf.copyPages(doc, doc.getPageIndices());
-        copiedPages.forEach((page) => mergedPdf.addPage(page));
-      }
+      const safeBytes = await mergePdfBuffers(inputs);
+      this.resultBytes.set(safeBytes);
 
-      const bytes = await mergedPdf.save();
-      this.resultBytes.set(bytes);
-      const safeBytes = new Uint8Array(bytes);
-      const blob = new Blob([safeBytes], { type: 'application/pdf' });
+      // Normalize to ArrayBuffer-backed bytes for strict BlobPart typing.
+      const normalizedBytes = new Uint8Array(safeBytes.byteLength);
+      normalizedBytes.set(safeBytes);
+      const blob = new Blob([normalizedBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       this.resultUrl.set(url);
 
@@ -475,10 +475,6 @@ export class MergePdfComponent {
   }
 
   formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    return formatBytes(bytes);
   }
 }

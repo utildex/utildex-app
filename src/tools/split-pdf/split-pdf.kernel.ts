@@ -1,0 +1,63 @@
+export interface SplitResultFile {
+  name: string;
+  bytes: Uint8Array;
+}
+
+export function parsePageRange(range: string, maxPages: number): number[] {
+  const pages = new Set<number>();
+  const parts = range.split(',');
+
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (trimmed.includes('-')) {
+      const [start, end] = trimmed.split('-').map((n) => parseInt(n, 10));
+      if (!isNaN(start) && !isNaN(end)) {
+        const low = Math.max(1, Math.min(start, end));
+        const high = Math.min(maxPages, Math.max(start, end));
+        for (let i = low; i <= high; i++) pages.add(i - 1);
+      }
+    } else {
+      const num = parseInt(trimmed, 10);
+      if (!isNaN(num) && num >= 1 && num <= maxPages) pages.add(num - 1);
+    }
+  }
+
+  return Array.from(pages).sort((a, b) => a - b);
+}
+
+export async function splitPdfByGroups(
+  sourceBytes: ArrayBuffer,
+  groups: string[],
+  pageCount: number,
+  baseName: string,
+): Promise<SplitResultFile[]> {
+  const { PDFDocument } = await import('pdf-lib');
+  const source = await PDFDocument.load(sourceBytes);
+  const results: SplitResultFile[] = [];
+
+  for (let i = 0; i < groups.length; i++) {
+    const indices = parsePageRange(groups[i], pageCount);
+    if (indices.length === 0) continue;
+
+    const newPdf = await PDFDocument.create();
+    const copiedPages = await newPdf.copyPages(source, indices);
+    copiedPages.forEach((page) => newPdf.addPage(page));
+    const pdfBytes = await newPdf.save();
+
+    const suffix = groups.length === 1 ? 'split' : `part-${i + 1}`;
+    results.push({
+      name: `${baseName}-${suffix}.pdf`,
+      bytes: new Uint8Array(pdfBytes),
+    });
+  }
+
+  return results;
+}
+
+export function formatBytes(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+}

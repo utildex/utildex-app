@@ -6,6 +6,7 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { formatJson, minifyJson, type IndentOption } from './json-formatter.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -163,32 +164,28 @@ export class JsonFormatterComponent {
   toast = inject(ToastService);
 
   content = signal<string>('');
-  indentSize = signal<number | 'tab'>(2);
+  indentSize = signal<IndentOption>(2);
   error = signal<string | null>(null);
 
   format() {
     if (!this.content().trim()) return;
-    try {
-      const obj = JSON.parse(this.content());
-      const indent = this.indentSize();
-      const space = indent === 'tab' ? '\t' : indent;
-      this.content.set(JSON.stringify(obj, null, space));
+    const result = formatJson(this.content(), this.indentSize());
+    if (result.success) {
+      this.content.set(result.output);
       this.error.set(null);
-    } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : 'Invalid JSON';
-      this.error.set(message);
+    } else {
+      this.error.set(result.error);
     }
   }
 
   minify() {
     if (!this.content().trim()) return;
-    try {
-      const obj = JSON.parse(this.content());
-      this.content.set(JSON.stringify(obj));
+    const result = minifyJson(this.content());
+    if (result.success) {
+      this.content.set(result.output);
       this.error.set(null);
-    } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : 'Invalid JSON';
-      this.error.set(message);
+    } else {
+      this.error.set(result.error);
     }
   }
 
