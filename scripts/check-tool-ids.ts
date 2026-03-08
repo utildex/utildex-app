@@ -14,6 +14,7 @@ async function main() {
     .map((entry) => entry.name);
 
   const ids: string[] = [];
+  const folderIdMismatches: string[] = [];
 
   for (const folder of folders) {
     const indexFile = path.join(toolsDir, folder, 'index.ts');
@@ -28,7 +29,17 @@ async function main() {
       throw new Error(`[tool-ids] Missing contract.id in ${indexFile}`);
     }
 
+    if (id !== folder) {
+      folderIdMismatches.push(`${folder} -> ${id}`);
+    }
+
     ids.push(id);
+  }
+
+  if (folderIdMismatches.length > 0) {
+    throw new Error(
+      `[tool-ids] Folder/contract id mismatches detected: ${folderIdMismatches.join(', ')}`,
+    );
   }
 
   const seen = new Set<string>();
