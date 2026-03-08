@@ -7,7 +7,13 @@ import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import JSZip from 'jszip';
 import * as pdfjsLib from 'pdfjs-dist';
-import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
+import type { PDFDocumentProxy } from 'pdfjs-dist';
+import {
+  loadPdf,
+  renderPageToBlob,
+  renderThumbnails,
+  type PageThumbnail,
+} from './pdf-to-img.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -17,13 +23,6 @@ import zh from './i18n/zh';
 // We must point to the CDN location that matches the version in importmap
 const pdfWorkerSrc = 'https://esm.sh/pdfjs-dist@4.0.379/build/pdf.worker.min.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
-
-interface PageThumbnail {
-  pageNumber: number;
-  dataUrl: string;
-  selected: boolean;
-  viewport: ReturnType<PDFPageProxy['getViewport']>;
-}
 
 @Component({
   selector: 'app-pdf-to-img',
@@ -339,37 +338,8 @@ export class PdfToImgComponent {
 
     try {
       const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      this.pdfDoc = await loadingTask.promise;
-
-      const numPages = this.pdfDoc.numPages;
-      const thumbnails: PageThumbnail[] = [];
-
-      // Render thumbnails (Low Res)
-      for (let i = 1; i <= numPages; i++) {
-        const page = await this.pdfDoc.getPage(i);
-        const viewport = page.getViewport({ scale: 0.5 }); // Thumbnail scale
-
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        await page.render({
-          canvas: canvas,
-          canvasContext: context!,
-          viewport: viewport,
-        }).promise;
-
-        thumbnails.push({
-          pageNumber: i,
-          dataUrl: canvas.toDataURL('image/jpeg', 0.8),
-          selected: true, // Select all by default
-          viewport: page.getViewport({ scale: 1 }), // Store 1x viewport for later calculation
-        });
-      }
-
-      this.pages.set(thumbnails);
+      this.pdfDoc = await loadPdf(arrayBuffer);
+      this.pages.set(await renderThumbnails(this.pdfDoc));
     } catch (e) {
       console.error(e);
       this.toast.show(this.t.get('ERR_INVALID'), 'error');
@@ -413,23 +383,7 @@ export class PdfToImgComponent {
       if (!this.pdfDoc) throw new Error('PDF Document not loaded');
 
       for (const p of selected) {
-        const page = await this.pdfDoc.getPage(p.pageNumber);
-        const viewport = page.getViewport({ scale: renderScale });
-
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        await page.render({
-          canvas: canvas,
-          canvasContext: context!,
-          viewport: viewport,
-        }).promise;
-
-        // Convert to blob
-        const mime = `image/${format}`;
-        const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mime, 0.9));
+        const blob = await renderPageToBlob(this.pdfDoc, p.pageNumber, format, renderScale);
 
         if (blob) {
           if (selected.length === 1) {

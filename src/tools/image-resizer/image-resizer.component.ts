@@ -5,6 +5,11 @@ import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.co
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import {
+  calculateResizedDimensions,
+  formatBytes as formatKernelBytes,
+  resizeImageBlob,
+} from './image-resizer.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -974,49 +979,15 @@ export class ImageResizerComponent {
   }
 
   calculateDims(img: ResizableImage): { w: number; h: number } {
-    if (this.mode() === 'percent') {
-      const p = this.percentage() / 100;
-      return {
-        w: Math.round(img.originalWidth * p),
-        h: Math.round(img.originalHeight * p),
-      };
-    } else {
-      // Dimensions Mode
-      if (!this.lockRatio()) {
-        return {
-          w: this.targetWidth() || img.originalWidth,
-          h: this.targetHeight() || img.originalHeight,
-        };
-      } else {
-        // FIT Mode logic
-        // If targetWidth is set, prioritize it. If only height set, prioritize it.
-        // If both set, fit within box.
-
-        const tW = this.targetWidth();
-        const tH = this.targetHeight();
-
-        if (!tW && !tH) return { w: img.originalWidth, h: img.originalHeight };
-
-        const ratio = img.originalWidth / img.originalHeight;
-
-        if (tW && !tH) {
-          return { w: tW, h: Math.round(tW / ratio) };
-        }
-        if (!tW && tH) {
-          return { w: Math.round(tH * ratio), h: tH };
-        }
-
-        // Both set: Fit inside box
-        const scaleW = tW! / img.originalWidth;
-        const scaleH = tH! / img.originalHeight;
-        const scale = Math.min(scaleW, scaleH);
-
-        return {
-          w: Math.round(img.originalWidth * scale),
-          h: Math.round(img.originalHeight * scale),
-        };
-      }
-    }
+    return calculateResizedDimensions({
+      originalWidth: img.originalWidth,
+      originalHeight: img.originalHeight,
+      mode: this.mode(),
+      percentage: this.percentage(),
+      targetWidth: this.targetWidth(),
+      targetHeight: this.targetHeight(),
+      lockRatio: this.lockRatio(),
+    });
   }
 
   async processBatch() {
@@ -1046,59 +1017,32 @@ export class ImageResizerComponent {
   private processImage(img: ResizableImage): Promise<void> {
     return new Promise((resolve, reject) => {
       const { w, h } = this.calculateDims(img);
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d');
+      resizeImageBlob(img.originalUrl, w, h, this.targetFormat(), this.quality())
+        .then((blob) => {
+          const url = URL.createObjectURL(blob);
 
-      if (!ctx) {
-        reject('Failed to get 2D canvas context');
-        return;
-      }
+          this.images.update((curr) =>
+            curr.map((i) =>
+              i.id === img.id
+                ? {
+                    ...i,
+                    status: 'done',
+                    resizedBlob: blob,
+                    resizedUrl: url,
+                    resizedWidth: w,
+                    resizedHeight: h,
+                  }
+                : i,
+            ),
+          );
 
-      const imageObj = new Image();
-      imageObj.src = img.originalUrl;
+          if (this.previewTarget()?.id === img.id) {
+            this.previewTarget.set(this.images().find((i) => i.id === img.id)!);
+          }
 
-      imageObj.onload = () => {
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(imageObj, 0, 0, w, h);
-
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              const url = URL.createObjectURL(blob);
-
-              this.images.update((curr) =>
-                curr.map((i) =>
-                  i.id === img.id
-                    ? {
-                        ...i,
-                        status: 'done',
-                        resizedBlob: blob,
-                        resizedUrl: url,
-                        resizedWidth: w,
-                        resizedHeight: h,
-                      }
-                    : i,
-                ),
-              );
-
-              if (this.previewTarget()?.id === img.id) {
-                this.previewTarget.set(this.images().find((i) => i.id === img.id)!);
-              }
-
-              resolve();
-            } else {
-              reject(
-                `Failed to create blob from canvas (format: ${this.targetFormat()}, size: ${w}x${h})`,
-              );
-            }
-          },
-          this.targetFormat(),
-          this.quality(),
-        );
-      };
+          resolve();
+        })
+        .catch((err) => reject(err));
     });
   }
 
@@ -1160,10 +1104,6 @@ export class ImageResizerComponent {
   }
 
   formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    return formatKernelBytes(bytes);
   }
 }

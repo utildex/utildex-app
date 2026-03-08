@@ -1,18 +1,12 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import languages from '../data/languages.json';
+import { LANGUAGES, type Language, type LanguageInfo } from '../data/languages';
 import { DbService } from './db.service';
 import { getPrefKey } from '../core/storage-keys';
 
-export type Language = 'en' | 'fr' | 'es' | 'zh';
 export type I18nText = string | { [key: string]: string };
-
-export interface LanguageInfo {
-  code: Language;
-  flagCode: string;
-  label: string;
-}
+export type { Language, LanguageInfo };
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +16,7 @@ export class I18nService {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  readonly supportedLanguages = languages as LanguageInfo[];
+  readonly supportedLanguages = LANGUAGES;
   private readonly storageKey = getPrefKey('lang');
 
   // Initialize with saved preference to prevent "Flash of Default" overwriting storage

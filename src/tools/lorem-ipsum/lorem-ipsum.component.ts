@@ -5,6 +5,7 @@ import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.co
 import { ActionBarComponent } from '../../components/action-bar/action-bar.component';
 import { ClipboardService } from '../../services/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { generateLorem } from './lorem-ipsum.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -158,100 +159,12 @@ export class LoremIpsumComponent {
   }
 
   generate() {
-    const paragraphs: string[] = [];
-    const words = [
-      'lorem',
-      'ipsum',
-      'dolor',
-      'sit',
-      'amet',
-      'consectetur',
-      'adipiscing',
-      'elit',
-      'sed',
-      'do',
-      'eiusmod',
-      'tempor',
-      'incididunt',
-      'ut',
-      'labore',
-      'et',
-      'dolore',
-      'magna',
-      'aliqua',
-      'ut',
-      'enim',
-      'ad',
-      'minim',
-      'veniam',
-      'quis',
-      'nostrud',
-      'exercitation',
-      'ullamco',
-      'laboris',
-      'nisi',
-      'ut',
-      'aliquip',
-      'ex',
-      'ea',
-      'commodo',
-      'consequat',
-      'duis',
-      'aute',
-      'irure',
-      'dolor',
-      'in',
-      'reprehenderit',
-      'in',
-      'voluptate',
-      'velit',
-      'esse',
-      'cillum',
-      'dolore',
-      'eu',
-      'fugiat',
-      'nulla',
-      'pariatur',
-      'excepteur',
-      'sint',
-      'occaecat',
-      'cupidatat',
-      'non',
-      'proident',
-      'sunt',
-      'in',
-      'culpa',
-      'qui',
-      'officia',
-      'deserunt',
-      'mollit',
-      'anim',
-      'id',
-      'est',
-      'laborum',
-    ];
-
-    const num = Math.max(1, Math.min(50, this.count()));
-
-    for (let i = 0; i < num; i++) {
-      let paragraph = '';
-      if (i === 0 && this.startWithLorem()) {
-        paragraph = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
-      }
-
-      const length = Math.floor(Math.random() * 50) + 20;
-      for (let j = 0; j < length; j++) {
-        const word = words[Math.floor(Math.random() * words.length)];
-        if (j === 0 && !paragraph) {
-          paragraph += word.charAt(0).toUpperCase() + word.slice(1);
-        } else {
-          paragraph += (paragraph ? ' ' : '') + word;
-        }
-      }
-      paragraph += '.';
-      paragraphs.push(paragraph);
-    }
-    this.output.set(paragraphs);
+    this.output.set(
+      generateLorem({
+        count: this.count(),
+        startWithLorem: this.startWithLorem(),
+      }),
+    );
   }
 
   copy() {

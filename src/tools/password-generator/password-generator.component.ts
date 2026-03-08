@@ -5,6 +5,7 @@ import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.co
 import { ClipboardService } from '../../services/clipboard.service';
 import { PersistenceService } from '../../services/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { generatePassword, scorePasswordStrength } from './password-generator.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -329,15 +330,13 @@ export class PasswordGeneratorComponent {
   });
 
   strengthScore = computed(() => {
-    let score = 0;
-    if (this.length() > 8) score++;
-    if (this.length() > 12) score++;
-    if (this.useUppercase()) score++;
-    if (this.useLowercase()) score++;
-    if (this.useNumbers()) score++;
-    if (this.useSymbols()) score++;
-    // Normalize to 0-4
-    return Math.min(4, Math.floor(score / 1.5));
+    return scorePasswordStrength({
+      length: this.length(),
+      useUppercase: this.useUppercase(),
+      useLowercase: this.useLowercase(),
+      useNumbers: this.useNumbers(),
+      useSymbols: this.useSymbols(),
+    });
   });
 
   strengthLabel = computed(() => {
@@ -364,28 +363,15 @@ export class PasswordGeneratorComponent {
   }
 
   regenerate() {
-    const lower = 'abcdefghijklmnopqrstuvwxyz';
-    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const nums = '0123456789';
-    const syms = '!@#$%^&*()_+-=[]{}|;:,.<>?';
-
-    let chars = '';
-    if (this.useLowercase()) chars += lower;
-    if (this.useUppercase()) chars += upper;
-    if (this.useNumbers()) chars += nums;
-    if (this.useSymbols()) chars += syms;
-
-    if (!chars) {
-      this.password.set('');
-      return;
-    }
-
-    let result = '';
-    const len = this.length();
-    for (let i = 0; i < len; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    this.password.set(result);
+    this.password.set(
+      generatePassword({
+        length: this.length(),
+        useUppercase: this.useUppercase(),
+        useLowercase: this.useLowercase(),
+        useNumbers: this.useNumbers(),
+        useSymbols: this.useSymbols(),
+      }),
+    );
   }
 
   copy() {

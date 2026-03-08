@@ -1,7 +1,8 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { I18nService } from './i18n.service';
 import { DbService } from './db.service';
-import { TOOL_REGISTRY } from '../data/tool-registry';
+import { TOOL_REGISTRY_MAP } from '../core/tool-registry';
+import { ToolContract } from '../core/tool-contract';
 import {
   I18nText,
   WidgetPreset,
@@ -53,14 +54,11 @@ export class ToolService {
   private i18n = inject(I18nService);
   private db = inject(DbService);
 
-  // Dynamically attach route paths based on ID
-  private readonly toolsRegistry: ToolMetadata[] = TOOL_REGISTRY.map((t) => ({
-    ...t,
-    routePath: `tools/${t.id}`,
-  }));
+  /** Cache for loaded contracts (migrated tools only). */
+  private contractCache = new Map<string, ToolContract>();
 
   // Core State
-  readonly tools = signal<ToolMetadata[]>(this.toolsRegistry);
+  readonly tools = signal<ToolMetadata[]>([]);
   favorites = signal<Set<string>>(new Set<string>());
   usageStats = signal<ToolUsageStats>({});
 
@@ -82,6 +80,7 @@ export class ToolService {
     this.loadFavorites();
     this.loadUsageStats();
     this.loadDashboard();
+    this.loadContractMetadata();
   }
 
   // ... (Computed properties unchanged)
@@ -315,6 +314,69 @@ export class ToolService {
   }
 
   // --- Persistence (Async) ---
+
+  /**
+   * Load a tool's contract.
+   */
+  async getContract(toolId: string): Promise<ToolContract | null> {
+    if (this.contractCache.has(toolId)) {
+      return this.contractCache.get(toolId)!;
+    }
+    const entry = TOOL_REGISTRY_MAP[toolId];
+    if (!entry) return null;
+    const contract = await entry.contract();
+    this.contractCache.set(toolId, contract);
+    return contract;
+  }
+
+  hasContract(toolId: string): boolean {
+    return TOOL_REGISTRY_MAP[toolId] != null;
+  }
+
+  /**
+   * Loads all tool metadata from contracts.
+   */
+  private async loadContractMetadata() {
+    const entries = Object.entries(TOOL_REGISTRY_MAP);
+    if (entries.length === 0) {
+      console.error('[ToolService] Tool registry is empty. No tool metadata can be loaded.');
+      return;
+    }
+
+    const loaded = await Promise.all(
+      entries.map(async ([id, entry]) => {
+        try {
+          const contract = await entry.contract();
+          this.contractCache.set(id, contract);
+          const metadata: ToolMetadata = {
+            id: contract.id,
+            routePath: `tools/${contract.id}`,
+            name: contract.metadata.name,
+            description: contract.metadata.description,
+            icon: contract.metadata.icon,
+            version: contract.metadata.version,
+            categories: contract.metadata.categories,
+            tags: contract.metadata.tags,
+            featured: contract.metadata.featured,
+            color: contract.metadata.color,
+            widget: contract.widget,
+          };
+          return metadata;
+        } catch (error) {
+          console.error(`[ToolService] Failed to load contract metadata for tool "${id}".`, error);
+          return null;
+        }
+      }),
+    );
+
+    const tools = loaded.filter((t): t is ToolMetadata => t !== null);
+    if (tools.length === 0) {
+      console.error('[ToolService] No tool metadata loaded successfully.');
+      return;
+    }
+    this.tools.set(tools);
+  }
+
   private async loadFavorites() {
     try {
       const saved = await this.db.get<string[]>('utildex-favorites');

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { ClipboardService } from '../../services/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { compareHashes, formatFileSize, normalizeHash } from './hash-generator.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -388,16 +389,11 @@ export class HashGeneratorComponent implements OnDestroy {
 
   // Computed
   hashResult = computed(() => {
-    const raw = this.rawHashResult();
-    if (!raw) return '';
-    return this.uppercase() ? raw.toUpperCase() : raw.toLowerCase();
+    return normalizeHash(this.rawHashResult(), this.uppercase());
   });
 
   hashesMatch = computed(() => {
-    const result = this.hashResult();
-    const compare = this.compareHash();
-    if (!result || !compare) return false;
-    return result.toLowerCase() === compare.toLowerCase();
+    return compareHashes(this.hashResult(), this.compareHash());
   });
 
   constructor() {
@@ -538,10 +534,6 @@ export class HashGeneratorComponent implements OnDestroy {
   }
 
   formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return formatFileSize(bytes);
   }
 }

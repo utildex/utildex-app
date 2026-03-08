@@ -5,6 +5,7 @@ import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.co
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { formatBytes, splitPdfByGroups } from './split-pdf.kernel';
 // import { PDFDocument } from 'pdf-lib';
 import JSZip from 'jszip';
 import en from './i18n/en';
@@ -592,10 +593,10 @@ export class SplitPdfComponent {
   }
 
   async splitPdf() {
-    const doc = this.pdfDoc();
+    const sourceFile = this.pdfFile();
     const rangeStr = this.pageRange();
 
-    if (!doc || !rangeStr) return;
+    if (!sourceFile || !rangeStr) return;
 
     this.isProcessing.set(true);
 
@@ -608,38 +609,27 @@ export class SplitPdfComponent {
 
       if (groups.length === 0) throw new Error(this.t.get('ERR_INVALID_RANGE'));
 
-      const { PDFDocument } = await import('pdf-lib');
-      const results: GeneratedFile[] = [];
       const originalName = this.pdfFile()?.name.replace('.pdf', '') || 'document';
 
-      // 2. Process each group
-      for (let i = 0; i < groups.length; i++) {
-        const groupStr = groups[i];
-        const indices = this.parsePageRange(groupStr, this.pageCount());
-
-        if (indices.length === 0) continue;
-
-        const newPdf = await PDFDocument.create();
-        const copiedPages = await newPdf.copyPages(doc, indices);
-        copiedPages.forEach((page) => newPdf.addPage(page));
-
-        const pdfBytes = await newPdf.save();
-        const safeBytes = new Uint8Array(pdfBytes);
-        const blob = new Blob([safeBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-
-        // Suffix: -1, -2, or custom if we had naming logic.
-        // If 1 group, use -split. If multiple, use -part-X
-        const suffix = groups.length === 1 ? 'split' : `part-${i + 1}`;
-
-        results.push({
+      const sourceBytes = await sourceFile.arrayBuffer();
+      const splitResults = await splitPdfByGroups(
+        sourceBytes,
+        groups,
+        this.pageCount(),
+        originalName,
+      );
+      const results: GeneratedFile[] = splitResults.map((result) => {
+        const normalizedBytes = new Uint8Array(result.bytes.byteLength);
+        normalizedBytes.set(result.bytes);
+        const blob = new Blob([normalizedBytes], { type: 'application/pdf' });
+        return {
           id: crypto.randomUUID(),
-          name: `${originalName}-${suffix}.pdf`,
+          name: result.name,
           blob,
-          url,
+          url: URL.createObjectURL(blob),
           size: blob.size,
-        });
-      }
+        };
+      });
 
       if (results.length === 0) throw new Error(this.t.get('ERR_INVALID_RANGE'));
 
@@ -694,33 +684,6 @@ export class SplitPdfComponent {
   }
 
   formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  }
-
-  private parsePageRange(range: string, maxPages: number): number[] {
-    const pages = new Set<number>();
-    const parts = range.split(',');
-
-    for (const part of parts) {
-      const trimmed = part.trim();
-      if (trimmed.includes('-')) {
-        const [start, end] = trimmed.split('-').map((n) => parseInt(n, 10));
-        if (!isNaN(start) && !isNaN(end)) {
-          const low = Math.max(1, Math.min(start, end));
-          const high = Math.min(maxPages, Math.max(start, end));
-          for (let i = low; i <= high; i++) pages.add(i - 1);
-        }
-      } else {
-        const num = parseInt(trimmed, 10);
-        if (!isNaN(num) && num >= 1 && num <= maxPages) {
-          pages.add(num - 1);
-        }
-      }
-    }
-    return Array.from(pages).sort((a, b) => a - b);
+    return formatBytes(bytes);
   }
 }

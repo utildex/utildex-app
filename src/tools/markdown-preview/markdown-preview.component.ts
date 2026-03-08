@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../components/action-bar/action-bar.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { buildHtmlDocument, parseMarkdownToHtml } from './markdown-preview.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -172,62 +173,11 @@ This is *italic*.
 `);
 
   parsedHtml = computed(() => {
-    let md = this.rawMarkdown();
-    if (!md) return '';
-
-    // Escape HTML (Basic security)
-    md = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-    // Headers
-    md = md.replace(/^# (.*$)/gim, '<h1 class="text-3xl mb-4">$1</h1>');
-    md = md.replace(/^## (.*$)/gim, '<h2 class="text-2xl mb-3">$1</h2>');
-    md = md.replace(/^### (.*$)/gim, '<h3 class="text-xl mb-2">$1</h3>');
-
-    // Bold/Italic
-    md = md.replace(/\*\*(.*)\*\*/gim, '<strong>$1</strong>');
-    md = md.replace(/\*(.*)\*/gim, '<em>$1</em>');
-
-    // Blockquote
-    md = md.replace(
-      /^\> (.*$)/gim,
-      '<blockquote class="border-l-4 border-slate-300 pl-4 italic">$1</blockquote>',
-    );
-
-    // Code
-    md = md.replace(
-      /`(.*?)`/gim,
-      '<code class="bg-slate-100 dark:bg-slate-700 px-1 rounded">$1</code>',
-    );
-
-    // Links
-    md = md.replace(
-      /\[([^\]]+)\]\(([^)]+)\)/gim,
-      '<a href="$2" target="_blank" rel="noopener">$1</a>',
-    );
-
-    // Lists (Basic)
-    md = md.replace(/^\- (.*$)/gim, '<ul><li>$1</li></ul>');
-    md = md.replace(/<\/ul>\s*<ul>/gim, '');
-
-    // Paragraphs
-    md = md.replace(/\n\n/gim, '<br><br>');
-    md = md.replace(/([^>])\n([^<])/gim, '$1<br>$2');
-
-    return md;
+    return parseMarkdownToHtml(this.rawMarkdown());
   });
 
   // Full HTML Document for export
   outputHtml = computed(() => {
-    return `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Exported Markdown</title>
-<style>body{font-family:system-ui,sans-serif;line-height:1.5;max-width:800px;margin:0 auto;padding:2rem;color:#333}h1,h2,h3{color:#111}code{background:#f1f5f9;padding:0.2em 0.4em;border-radius:4px;font-family:monospace}blockquote{border-left:4px solid #cbd5e1;padding-left:1em;font-style:italic;color:#64748b}</style>
-</head>
-<body>
-${this.parsedHtml()}
-</body>
-</html>`;
+    return buildHtmlDocument(this.parsedHtml());
   });
 }

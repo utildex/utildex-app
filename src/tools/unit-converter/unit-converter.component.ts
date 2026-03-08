@@ -5,18 +5,11 @@ import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.co
 import { ActionBarComponent } from '../../components/action-bar/action-bar.component';
 import { PersistenceService } from '../../services/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { ALL_UNITS, convertUnits, type UnitType } from './unit-converter.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
-
-type UnitType = 'length' | 'weight' | 'temp';
-
-interface UnitDef {
-  id: string;
-  labelKey: string;
-  factor: number;
-}
 
 @Component({
   selector: 'app-unit-converter',
@@ -216,24 +209,7 @@ export class UnitConverterComponent {
     { id: 'temp', labelKey: 'TYPE_TEMP' },
   ];
 
-  // Flat list of units with their types and factors (relative to base unit)
-  allUnits: (UnitDef & { type: UnitType })[] = [
-    { id: 'meter', type: 'length', labelKey: 'UNIT_METER', factor: 1 },
-    { id: 'kilometer', type: 'length', labelKey: 'UNIT_KILOMETER', factor: 1000 },
-    { id: 'centimeter', type: 'length', labelKey: 'UNIT_CENTIMETER', factor: 0.01 },
-    { id: 'foot', type: 'length', labelKey: 'UNIT_FOOT', factor: 0.3048 },
-    { id: 'inch', type: 'length', labelKey: 'UNIT_INCH', factor: 0.0254 },
-    { id: 'mile', type: 'length', labelKey: 'UNIT_MILE', factor: 1609.34 },
-
-    { id: 'gram', type: 'weight', labelKey: 'UNIT_GRAM', factor: 1 },
-    { id: 'kilogram', type: 'weight', labelKey: 'UNIT_KILOGRAM', factor: 1000 },
-    { id: 'pound', type: 'weight', labelKey: 'UNIT_POUND', factor: 453.592 },
-    { id: 'ounce', type: 'weight', labelKey: 'UNIT_OUNCE', factor: 28.3495 },
-
-    { id: 'celsius', type: 'temp', labelKey: 'UNIT_CELSIUS', factor: 1 },
-    { id: 'fahrenheit', type: 'temp', labelKey: 'UNIT_FAHRENHEIT', factor: 1 },
-    { id: 'kelvin', type: 'temp', labelKey: 'UNIT_KELVIN', factor: 1 },
-  ];
+  allUnits = ALL_UNITS;
 
   availableUnits = computed(() => {
     return this.allUnits.filter((u) => u.type === this.currentType());
@@ -269,40 +245,10 @@ export class UnitConverterComponent {
   }
 
   result = computed(() => {
-    const val = this.amount();
-    const fromId = this.fromUnit();
-    const toId = this.toUnit();
-    const type = this.currentType();
-
-    if (type === 'temp') {
-      return this.convertTemp(val, fromId, toId);
-    }
-
-    const fromDef = this.allUnits.find((u) => u.id === fromId);
-    const toDef = this.allUnits.find((u) => u.id === toId);
-
-    if (!fromDef || !toDef) return 0;
-
-    // Convert to base, then to target
-    const base = val * fromDef.factor;
-    return base / toDef.factor;
+    return convertUnits(this.amount(), this.fromUnit(), this.toUnit(), this.currentType());
   });
 
   resultText = computed(() => {
     return `${this.amount()} ${this.fromUnit()} = ${this.result()} ${this.toUnit()}`;
   });
-
-  private convertTemp(val: number, from: string, to: string): number {
-    let celsius = val;
-    // To Celsius
-    if (from === 'fahrenheit') celsius = ((val - 32) * 5) / 9;
-    if (from === 'kelvin') celsius = val - 273.15;
-
-    // From Celsius
-    if (to === 'celsius') return celsius;
-    if (to === 'fahrenheit') return (celsius * 9) / 5 + 32;
-    if (to === 'kelvin') return celsius + 273.15;
-
-    return celsius;
-  }
 }

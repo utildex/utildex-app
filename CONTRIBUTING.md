@@ -11,9 +11,10 @@ Utildex is a **local-first**, **zoneless** Angular application designed for modu
 
 To keep the application fast and lightweight, Utildex uses a specific architectural pattern:
 
-1.  **Metadata Registry (`src/data/tool-registry.ts`):** A lightweight JSON list of all tools is loaded at startup. This enables search, routing, and lists without loading the actual tool code.
-2.  **Lazy Loading (`src/core/tool-registry.ts`):** The actual tool component code is fetched *only* when the user opens the tool or places its widget.
-3.  **Zoneless Angular:** We do not use `Zone.js`. All state changes must be handled via **Signals**.
+1.  **Tool Contracts (`src/tools/*/*.contract.ts`):** Each tool declares metadata, type contract, widget config, and cost in a local contract file.
+2.  **Tool Kernels (`src/tools/*/*.kernel.ts`):** Pure processing logic is isolated from Angular/UI so it can be reused in pipelines and tested independently.
+3.  **Lazy Loading (`src/core/tool-registry.ts`):** Components, contracts, and kernels are loaded on demand via dynamic imports.
+4.  **Zoneless Angular:** We do not use `Zone.js`. All state changes must be handled via **Signals**.
 
 ---
 
@@ -27,33 +28,48 @@ Create a new folder in `src/tools/` using **kebab-case** (e.g., `src/tools/uuid-
 ### 2. Scaffold Files
 Copy the contents of `src/templates/tool/` into your new directory. You should have:
 *   `uuid-generator.component.ts` (The logic & UI)
-*   `metadata.json` (The definition)
+*   `uuid-generator.contract.ts` (Metadata + type contract)
+*   `uuid-generator.kernel.ts` (Pure processing logic)
 *   `i18n/` (Localization files: `en.ts`, `fr.ts`, etc.)
 
-### 3. Configure Metadata (`metadata.json`)
+### 3. Configure Contract (`*.contract.ts`)
 This file defines how the app "sees" your tool.
 *   **id**: Must be unique and kebab-case.
+*   **metadata**: Name, description, icon, categories, tags, color.
+*   **types**: Input traits and output format.
 *   **widget**: Configuration for the dashboard grid.
+*   **cost**: One of `low`, `medium`, `high`.
 
-```json
-{
-  "id": "uuid-generator",
-  "name": { "en": "UUID Generator", "fr": "Générateur UUID" },
-  "description": { "en": "Generate version 4 UUIDs." },
-  "icon": "fingerprint",
-  "categories": ["Developer"],
-  "tags": ["uuid", "guid", "generator"],
-  "color": "#10b981",
-  "widget": {
-    "supported": true,
-    "defaultCols": 2,
-    "defaultRows": 1,
-    "presets": [
-        { "label": { "en": "Compact" }, "cols": 1, "rows": 1 },
-        { "label": { "en": "Full" }, "cols": 2, "rows": 1 }
-    ]
-  }
-}
+```typescript
+import { ToolContract } from '../../core/tool-contract';
+import { TRAITS } from '../../core/types/traits';
+
+export const contract: ToolContract = {
+  id: 'uuid-generator',
+  metadata: {
+    name: { en: 'UUID Generator', fr: 'Generateur UUID' },
+    description: { en: 'Generate version 4 UUIDs.' },
+    icon: 'fingerprint',
+    version: '1.0.0',
+    categories: ['Developer'],
+    tags: ['uuid', 'guid', 'generator'],
+    color: '#10b981',
+  },
+  types: {
+    input: { traits: [TRAITS.text] },
+    output: { format: 'text' },
+  },
+  widget: {
+    supported: true,
+    defaultCols: 2,
+    defaultRows: 1,
+    presets: [
+      { label: { en: 'Compact' }, cols: 1, rows: 1 },
+      { label: { en: 'Full' }, cols: 2, rows: 1 },
+    ],
+  },
+  cost: 'low',
+};
 ```
 
 ### 4. Implement Component Logic
@@ -91,17 +107,18 @@ export class UuidGeneratorComponent {
 ```
 
 ### 5. Register the Tool (The Wiring)
-Since we don't scan directories at runtime, you must manually register the tool in **2 places**:
+Since we don't scan directories at runtime, you must manually register the tool in **1 place**:
 
-1.  **The Registry (`src/data/tool-registry.ts`):**
-    Copy the object from your `metadata.json` and paste it into the `TOOL_REGISTRY` array.
-
-2.  **The Lazy Map (`src/core/tool-registry.ts`):**
-    Add the dynamic import mapping. **Important:** The key must match your tool's `id`.
+1.  **The Registry (`src/core/tool-registry.ts`):**
+    Add component, contract, and kernel lazy loaders. **Important:** The key must match your tool's `id`.
     ```typescript
-    export const TOOL_COMPONENT_MAP = {
+    export const TOOL_REGISTRY_MAP = {
       // ... existing tools
-      'uuid-generator': () => import('../tools/uuid-generator/uuid-generator.component').then(m => m.UuidGeneratorComponent),
+      'uuid-generator': {
+        component: () => import('../tools/uuid-generator/uuid-generator.component').then(m => m.UuidGeneratorComponent),
+        contract: () => import('../tools/uuid-generator/uuid-generator.contract').then(m => m.contract),
+        kernel: () => import('../tools/uuid-generator/uuid-generator.kernel'),
+      },
     };
     ```
 
@@ -186,13 +203,13 @@ Utildex uses a **Scoped Translation** pattern. Each tool carries its own transla
 
 ## SEO (Search Engine Optimization)
 
-SEO is handled **automatically** by the `SeoService` based on your `metadata.json`.
+SEO is handled **automatically** by the `SeoService` based on your tool contract metadata.
 
 *   **Title:** The app sets `<title>` to `"${Tool Name} - Utildex"`.
-*   **Description:** The app sets `<meta name="description">` to your tool's description from metadata.
+*   **Description:** The app sets `<meta name="description">` to your tool's description from contract metadata.
 *   **Route:** The URL `#/tools/your-tool-id` is generated from the ID.
 
-**Requirement:** Ensure your `name` and `description` in `metadata.json` are descriptive and keyword-rich.
+**Requirement:** Ensure your `name` and `description` in `*.contract.ts` are descriptive and keyword-rich.
 
 ---
 

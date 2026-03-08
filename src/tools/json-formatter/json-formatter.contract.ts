@@ -1,0 +1,40 @@
+import { ToolContract } from '../../core/tool-contract';
+import { TRAITS } from '../../core/types/traits';
+
+export const contract: ToolContract = {
+  id: 'json-formatter',
+
+  metadata: {
+    name: {
+      en: 'JSON Formatter',
+      fr: 'Formateur JSON',
+      es: 'Formateador JSON',
+      zh: 'JSON 格式化',
+    },
+    description: {
+      en: 'Validate, format, and minify JSON data. Supports file drag and drop.',
+      fr: 'Validez, formatez et minifiez les données JSON. Supporte le glisser-déposer.',
+      es: 'Valida, formatea y minimiza datos JSON. Soporta arrastrar y soltar.',
+      zh: '验证、格式化和压缩 JSON 数据。支持文件拖放。',
+    },
+    icon: 'data_object',
+    version: '1.0.0',
+    categories: ['Developer'],
+    tags: ['json', 'format', 'prettify', 'minify', 'developer'],
+    featured: false,
+    color: '#8b5cf6',
+  },
+
+  types: {
+    input: { traits: [TRAITS.text, TRAITS.structured] },
+    output: { format: 'json' },
+  },
+
+  widget: {
+    supported: true,
+    defaultCols: 2,
+    defaultRows: 2,
+  },
+
+  cost: 'low',
+};

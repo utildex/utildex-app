@@ -6,7 +6,7 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-// import { PDFDocument, PageSizes } from 'pdf-lib';
+import { convertImagesToPdf, type PageSizeMode } from './img-to-pdf.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -342,7 +342,7 @@ export class ImgToPdfComponent {
   fileInput = viewChild<ElementRef>('fileInput');
 
   images = signal<ImageFile[]>([]);
-  pageSize = signal<'fit' | 'a4' | 'letter'>('a4');
+  pageSize = signal<PageSizeMode>('a4');
   isProcessing = signal(false);
 
   resultUrl = signal<string | null>(null);
@@ -424,70 +424,25 @@ export class ImgToPdfComponent {
     this.isProcessing.set(true);
 
     try {
-      const { PDFDocument, PageSizes } = await import('pdf-lib');
-      const pdfDoc = await PDFDocument.create();
+      const imageInputs = await Promise.all(
+        this.images().map(async (img) => ({
+          buffer: await img.file.arrayBuffer(),
+          mimeType: img.file.type,
+          name: img.file.name,
+        })),
+      );
 
-      for (const img of this.images()) {
-        const buffer = await img.file.arrayBuffer();
-        let embeddedImage;
+      const result = await convertImagesToPdf(imageInputs, this.pageSize());
 
-        if (img.file.type === 'image/jpeg') {
-          embeddedImage = await pdfDoc.embedJpg(buffer);
-        } else if (img.file.type === 'image/png') {
-          embeddedImage = await pdfDoc.embedPng(buffer);
-        } else {
-          try {
-            embeddedImage = await pdfDoc.embedPng(buffer);
-          } catch {
-            console.warn('Skipping unsupported image', img.file.name);
-            continue;
-          }
-        }
-
-        const imgDims = embeddedImage.scale(1);
-        const sizeMode = this.pageSize();
-
-        let pageWidth, pageHeight;
-
-        if (sizeMode === 'fit') {
-          pageWidth = imgDims.width;
-          pageHeight = imgDims.height;
-        } else if (sizeMode === 'a4') {
-          [pageWidth, pageHeight] = PageSizes.A4;
-        } else {
-          [pageWidth, pageHeight] = PageSizes.Letter;
-        }
-
-        const page = pdfDoc.addPage([pageWidth, pageHeight]);
-
-        if (sizeMode === 'fit') {
-          page.drawImage(embeddedImage, {
-            x: 0,
-            y: 0,
-            width: imgDims.width,
-            height: imgDims.height,
-          });
-        } else {
-          const margin = 20;
-          const maxWidth = pageWidth - margin * 2;
-          const maxHeight = pageHeight - margin * 2;
-
-          const scale = Math.min(maxWidth / imgDims.width, maxHeight / imgDims.height);
-          const w = imgDims.width * scale;
-          const h = imgDims.height * scale;
-
-          page.drawImage(embeddedImage, {
-            x: (pageWidth - w) / 2,
-            y: (pageHeight - h) / 2,
-            width: w,
-            height: h,
-          });
-        }
+      if (!result.success || !result.pdfBytes) {
+        this.toast.show(result.error ?? 'Conversion failed', 'error');
+        return;
       }
 
-      const bytes = await pdfDoc.save();
-      this.resultBytes.set(bytes);
-      const safeBytes = new Uint8Array(bytes);
+      this.resultBytes.set(result.pdfBytes);
+      const safeBuffer = new ArrayBuffer(result.pdfBytes.byteLength);
+      const safeBytes = new Uint8Array(safeBuffer);
+      safeBytes.set(result.pdfBytes);
       const blob = new Blob([safeBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       this.resultUrl.set(url);
