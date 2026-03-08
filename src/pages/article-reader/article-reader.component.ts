@@ -233,7 +233,7 @@ import zh from './i18n/zh';
                       class="hover:border-primary hover:ring-primary hover:bg-primary/5 group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 shadow-sm transition-all hover:shadow-md hover:ring-1 dark:border-slate-800 dark:bg-slate-900"
                     >
                       <img
-                        [src]="'https://flagcdn.com/w40/' + getLangFlag(lang) + '.png'"
+                        [src]="getLangFlagAsset(lang)"
                         class="h-4 w-6 rounded object-cover opacity-80 shadow-sm transition-opacity group-hover:opacity-100"
                       />
                       <span
@@ -518,7 +518,7 @@ export class ArticleReaderComponent implements OnInit {
     return this.i18n.supportedLanguages.find((l) => l.code === code)?.label || code;
   }
 
-  getLangFlag(code: string): string {
-    return this.i18n.supportedLanguages.find((l) => l.code === code)?.flagCode || 'us';
+  getLangFlagAsset(code: string): string {
+    return this.i18n.supportedLanguages.find((l) => l.code === code)?.flagAsset || '';
   }
 }

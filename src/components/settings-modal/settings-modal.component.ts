@@ -170,10 +170,7 @@ type ParsedData =
                           : 'border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
                       "
                     >
-                      <img
-                        [src]="'https://flagcdn.com/w40/' + lang.flagCode + '.png'"
-                        class="h-4 w-6 rounded object-cover shadow-sm"
-                      />
+                      <img [src]="lang.flagAsset" class="h-4 w-6 rounded object-cover shadow-sm" />
                       <span class="font-medium text-slate-900 dark:text-white">{{
                         lang.label
                       }}</span>
