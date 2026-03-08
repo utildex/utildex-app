@@ -25,7 +25,7 @@ import fr from './i18n/fr';
   template: `
     <!-- FULL PAGE MODE -->
     @if (!isWidget()) {
-      <!-- 'toolId' must match the ID in metadata.json for SEO and Header to work -->
+      <!-- 'toolId' must match the ID in your tool contract for SEO and Header to work -->
       <app-tool-layout toolId="my-new-tool">
         <ng-container *ngTemplateOutlet="mainContent"></ng-container>
       </app-tool-layout>
