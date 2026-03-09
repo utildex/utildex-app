@@ -25,7 +25,7 @@ import zh from './i18n/zh';
       <div class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close()"></div>
         <div
-          class="glass-surface animate-scale-in relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl"
+          class="glass-surface-strong animate-scale-in relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl"
         >
           <div
             class="flex items-center justify-between gap-4 border-b border-slate-100 p-6 dark:border-slate-800"
@@ -134,19 +134,11 @@ import zh from './i18n/zh';
                           {{ i18n.resolve(tool.name) }}
                         </h4>
                         <div class="mt-2 flex gap-2">
-                          @if (tool.widget?.presets?.length) {
-                            <span
-                              class="text-primary rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-700 dark:bg-slate-800"
-                            >
-                              {{ tool.widget?.presets?.length }} {{ t.map()['SIZE_PREFIX'] }}
-                            </span>
-                          } @else {
-                            <span
-                              class="rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-700 dark:bg-slate-800"
-                            >
-                              {{ tool.widget?.defaultCols }}x{{ tool.widget?.defaultRows }}
-                            </span>
-                          }
+                          <span
+                            class="text-primary rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] dark:border-slate-700 dark:bg-slate-800"
+                          >
+                            {{ getSizeCount(tool) }} {{ t.map()['SIZE_PREFIX'] }}
+                          </span>
                         </div>
                       </div>
                     </button>
@@ -164,7 +156,7 @@ import zh from './i18n/zh';
       <div class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close()"></div>
         <div
-          class="glass-surface animate-scale-in relative w-full max-w-md overflow-hidden rounded-2xl"
+          class="glass-surface-strong animate-scale-in relative w-full max-w-md overflow-hidden rounded-2xl"
         >
           <div
             class="flex items-center justify-between border-b border-slate-100 p-6 dark:border-slate-800"
@@ -294,6 +286,11 @@ export class DashboardModalsComponent {
 
   selectPreset(tool: ToolMetadata, preset: WidgetPreset) {
     this.submitPlacement({ type: 'tool', toolId: tool.id, w: preset.cols, h: preset.rows });
+  }
+
+  getSizeCount(tool: ToolMetadata): number {
+    const presets = tool.widget?.presets;
+    return presets && presets.length > 0 ? presets.length : 1;
   }
 
   submitPlacement(p: PendingPlacement) {
