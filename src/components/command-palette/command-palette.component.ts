@@ -34,7 +34,7 @@ interface CommandResult {
 
         <!-- Palette -->
         <div
-          class="animate-scale-in relative flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+          class="glass-surface animate-scale-in relative flex w-full max-w-2xl flex-col overflow-hidden rounded-xl"
         >
           <!-- Search Input -->
           <div class="flex items-center border-b border-slate-100 px-4 dark:border-slate-800">
@@ -51,16 +51,11 @@ interface CommandResult {
             <div class="flex gap-2">
               <button
                 (click)="toggleFilters()"
-                class="flex items-center gap-1 rounded border px-2 py-1 text-xs transition-colors"
-                [class.bg-slate-100]="isFilterOpen()"
-                [class.text-slate-900]="isFilterOpen()"
-                [class.text-slate-500]="!isFilterOpen()"
-                [class.border-slate-200]="!isFilterOpen()"
-                [class.border-slate-300]="isFilterOpen()"
-                [class.dark:bg-slate-800]="isFilterOpen()"
+                class="glass-control flex cursor-pointer items-center gap-1 rounded px-2 py-1 text-xs transition-colors"
+                [class.text-primary]="isFilterOpen()"
+                [class.font-semibold]="isFilterOpen()"
+                [class.text-slate-600]="!isFilterOpen()"
                 [class.dark:text-white]="isFilterOpen()"
-                [class.dark:border-slate-700]="!isFilterOpen()"
-                [class.dark:border-slate-600]="isFilterOpen()"
               >
                 <span class="material-symbols-outlined text-[16px]">tune</span>
                 <span class="hidden sm:inline">{{ t.map()['FILTER_BTN'] }}</span>
@@ -75,44 +70,30 @@ interface CommandResult {
           <!-- Filters & Sorting (Collapsible) -->
           @if (isFilterOpen()) {
             <div
-              class="animate-fade-in flex flex-col gap-3 border-b border-slate-100 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-800/50"
+              class="glass-subsection animate-fade-in flex flex-col gap-3 border-b p-3"
             >
               <!-- Categories -->
               <div class="flex flex-wrap gap-2">
                 <button
                   (click)="selectedCategory.set(null)"
-                  class="rounded-full border px-3 py-1 text-xs font-medium transition-colors"
-                  [class.bg-slate-900]="selectedCategory() === null"
-                  [class.text-white]="selectedCategory() === null"
-                  [class.border-slate-900]="selectedCategory() === null"
-                  [class.bg-white]="selectedCategory() !== null"
+                  class="glass-control cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors"
+                  [class.text-primary]="selectedCategory() === null"
+                  [class.ring-1]="selectedCategory() === null"
+                  [class.ring-primary]="selectedCategory() === null"
                   [class.text-slate-600]="selectedCategory() !== null"
-                  [class.border-slate-200]="selectedCategory() !== null"
-                  [class.dark:bg-white]="selectedCategory() === null"
-                  [class.dark:text-slate-900]="selectedCategory() === null"
-                  [class.dark:border-white]="selectedCategory() === null"
-                  [class.dark:bg-slate-800]="selectedCategory() !== null"
                   [class.dark:text-slate-300]="selectedCategory() !== null"
-                  [class.dark:border-slate-700]="selectedCategory() !== null"
                 >
                   {{ t.map()['CAT_ALL'] }}
                 </button>
                 @for (cat of categories(); track cat) {
                   <button
                     (click)="selectedCategory.set(cat)"
-                    class="rounded-full border px-3 py-1 text-xs font-medium transition-colors"
-                    [class.bg-slate-900]="selectedCategory() === cat"
-                    [class.text-white]="selectedCategory() === cat"
-                    [class.border-slate-900]="selectedCategory() === cat"
-                    [class.bg-white]="selectedCategory() !== cat"
+                    class="glass-control cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-colors"
+                    [class.text-primary]="selectedCategory() === cat"
+                    [class.ring-1]="selectedCategory() === cat"
+                    [class.ring-primary]="selectedCategory() === cat"
                     [class.text-slate-600]="selectedCategory() !== cat"
-                    [class.border-slate-200]="selectedCategory() !== cat"
-                    [class.dark:bg-white]="selectedCategory() === cat"
-                    [class.dark:text-slate-900]="selectedCategory() === cat"
-                    [class.dark:border-white]="selectedCategory() === cat"
-                    [class.dark:bg-slate-800]="selectedCategory() !== cat"
                     [class.dark:text-slate-300]="selectedCategory() !== cat"
-                    [class.dark:border-slate-700]="selectedCategory() !== cat"
                   >
                     {{ toolService.getCategoryName(cat) }}
                   </button>
@@ -125,6 +106,7 @@ interface CommandResult {
                   <span>{{ t.map()['SORT_BY'] }}:</span>
                   <button
                     (click)="sortBy.set('relevance')"
+                    class="cursor-pointer"
                     [class.font-bold]="sortBy() === 'relevance'"
                     [class.text-primary]="sortBy() === 'relevance'"
                   >
@@ -133,6 +115,7 @@ interface CommandResult {
                   <span class="text-slate-300">|</span>
                   <button
                     (click)="sortBy.set('name')"
+                    class="cursor-pointer"
                     [class.font-bold]="sortBy() === 'name'"
                     [class.text-primary]="sortBy() === 'name'"
                   >
@@ -141,7 +124,10 @@ interface CommandResult {
                 </div>
 
                 @if (selectedCategory() || sortBy() !== 'relevance') {
-                  <button (click)="resetFilters()" class="text-xs text-red-500 hover:underline">
+                  <button
+                    (click)="resetFilters()"
+                    class="cursor-pointer text-xs text-red-500 hover:underline"
+                  >
                     {{ t.map()['RESET_FILTERS'] }}
                   </button>
                 }
@@ -192,7 +178,7 @@ interface CommandResult {
 
           <!-- Footer -->
           <div
-            class="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-4 py-2 text-[10px] text-slate-400 dark:border-slate-800 dark:bg-slate-800/50"
+            class="glass-subsection flex justify-end gap-3 border-t px-4 py-2 text-[10px] text-slate-400"
           >
             <span class="flex items-center gap-1"
               ><span class="font-bold">↑↓</span> {{ t.map()['HINT_NAVIGATE'] }}</span

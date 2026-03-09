@@ -56,7 +56,7 @@ type ParsedData =
 
       <!-- Modal -->
       <div
-        class="animate-slide-up relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+        class="glass-surface animate-slide-up relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl"
       >
         <!-- Header -->
         <div

@@ -73,6 +73,7 @@ export class ToolService {
   // Search/Filter State
   searchQuery = signal<string>('');
   selectedTags = signal<Set<string>>(new Set<string>());
+  selectedCategories = signal<Set<string>>(new Set<string>());
   selectedCategory = signal<string | null>(null);
   sortOrder = signal<'name' | 'relevance' | 'popularity' | 'newest'>('name');
 
@@ -96,7 +97,7 @@ export class ToolService {
 
   filteredTools = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    const category = this.selectedCategory();
+    const selectedCategories = this.selectedCategories();
     const tags = this.selectedTags();
     const allTools = this.tools();
     const order = this.sortOrder();
@@ -108,7 +109,9 @@ export class ToolService {
         !query ||
         this.resolveSearchText(tool.name).includes(query) ||
         this.resolveSearchText(tool.description).includes(query);
-      const matchesCategory = category ? tool.categories.includes(category) : true;
+      const matchesCategory =
+        selectedCategories.size === 0 ||
+        tool.categories.some((toolCategory) => selectedCategories.has(toolCategory));
       const matchesTags = tags.size === 0 || tool.tags.some((tag) => tags.has(tag));
       return matchesSearch && matchesCategory && matchesTags;
     });
@@ -233,8 +236,26 @@ export class ToolService {
     });
   }
 
+  toggleCategory(category: string) {
+    this.selectedCategories.update((categories) => {
+      const next = new Set(categories);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+
+      this.selectedCategory.set(next.size === 1 ? [...next][0] : null);
+      return next;
+    });
+  }
+
+  clearCategories() {
+    this.selectedCategories.set(new Set<string>());
+    this.selectedCategory.set(null);
+  }
+
   setCategory(category: string | null) {
     this.selectedCategory.set(category);
+    if (category) this.selectedCategories.set(new Set([category]));
+    else this.selectedCategories.set(new Set<string>());
   }
   setSort(order: 'name' | 'newest' | 'relevance' | 'popularity') {
     this.sortOrder.set(order);
@@ -244,7 +265,7 @@ export class ToolService {
   }
   resetFilters() {
     this.searchQuery.set('');
-    this.selectedCategory.set(null);
+    this.clearCategories();
     this.selectedTags.set(new Set<string>());
     this.sortOrder.set('name');
   }

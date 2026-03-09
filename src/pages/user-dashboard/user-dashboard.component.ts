@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect, PLATFORM_ID } from '@angular/core';
+import { Component, inject, signal, computed, effect, PLATFORM_ID, HostListener } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolService, DashboardWidget, PendingPlacement } from '../../services/tool.service';
@@ -21,8 +21,10 @@ import { TourService } from '../../services/tour.service';
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     <div class="space-y-6 pb-8">
+
       <!-- Header -->
       <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+
         <div>
           <h1 class="flex items-center gap-3 text-3xl font-bold text-slate-900 dark:text-white">
             <span class="material-symbols-outlined text-primary text-3xl">dashboard</span>
@@ -35,7 +37,7 @@ import { TourService } from '../../services/tour.service';
           @if (isEditMode()) {
             <button
               (click)="isEditMode.set(false); cancelPlacement()"
-              class="bg-primary animate-fade-in rounded-xl px-6 py-2 text-sm font-bold text-white shadow-lg transition-colors hover:bg-blue-600"
+              class="glass-button text-primary animate-fade-in rounded-xl px-6 py-2 text-sm font-bold"
             >
               {{ t.map()['BTN_DONE'] }}
             </button>
@@ -43,7 +45,7 @@ import { TourService } from '../../services/tour.service';
             <button
               appTourTarget="tour-dashboard-edit"
               (click)="isEditMode.set(true)"
-              class="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+              class="glass-control flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
             >
               <span class="material-symbols-outlined text-lg">edit</span>
               {{ t.map()['BTN_EDIT'] }}
@@ -55,7 +57,7 @@ import { TourService } from '../../services/tour.service';
       <!-- Toolbar (Only in Edit Mode) -->
       @if (isEditMode() && !pendingPlacement() && !isMobile()) {
         <div
-          class="animate-fade-in-up sticky top-4 z-40 flex items-center gap-4 overflow-x-auto rounded-xl border border-slate-200 bg-white/90 p-4 shadow-xl backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/90"
+          class="glass-surface animate-fade-in-up sticky top-4 z-40 flex items-center gap-4 overflow-x-auto rounded-xl p-4"
         >
           <span class="mr-2 shrink-0 text-xs font-bold text-slate-400 uppercase">{{
             t.map()['LABEL_ADD']
@@ -64,7 +66,7 @@ import { TourService } from '../../services/tour.service';
           <button
             appTourTarget="tour-dashboard-add-widget"
             (click)="openAddModal()"
-            class="flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-bold whitespace-nowrap text-white shadow transition-opacity hover:opacity-90 dark:bg-white dark:text-slate-900"
+            class="glass-control text-primary flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold whitespace-nowrap transition-opacity hover:opacity-90"
           >
             <span class="material-symbols-outlined">add_circle</span>
             {{ t.map()['BTN_ADD_TOOL'] }}
@@ -75,7 +77,7 @@ import { TourService } from '../../services/tour.service';
           <button
             appTourTarget="tour-dashboard-add-filler"
             (click)="openFillerModal()"
-            class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-bold whitespace-nowrap text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            class="glass-control flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold whitespace-nowrap text-slate-700 transition-colors hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
           >
             <span class="material-symbols-outlined">widgets</span>
             {{ t.map()['BTN_ADD_FILLER'] }}
@@ -105,20 +107,20 @@ import { TourService } from '../../services/tour.service';
         <!-- Placement Message -->
         @if (pendingPlacement()) {
           <div
-            class="bg-primary/90 animate-fade-in-up sticky top-4 z-40 flex items-center justify-between rounded-xl px-6 py-4 text-white shadow-xl backdrop-blur-md"
+            class="glass-surface animate-fade-in-up border-primary/40 sticky top-4 z-40 flex items-center justify-between rounded-xl border px-6 py-4 text-slate-800 dark:text-slate-100"
           >
             <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined animate-bounce">ads_click</span>
+              <span class="material-symbols-outlined text-primary animate-bounce">ads_click</span>
               <div>
                 <p class="text-sm font-bold">{{ t.map()['MSG_PLACING'] }}</p>
-                <p class="text-xs opacity-90">
+                <p class="text-xs text-slate-500 dark:text-slate-400">
                   {{ isMobile() ? t.map()['MSG_MOBILE_TAP'] : t.map()['MSG_DESKTOP_CLICK'] }}
                 </p>
               </div>
             </div>
             <button
               (click)="cancelPlacement()"
-              class="rounded bg-white/20 px-3 py-1 text-xs font-bold hover:bg-white/30"
+              class="glass-control rounded-lg px-3 py-1 text-xs font-bold"
             >
               Cancel
             </button>
@@ -128,7 +130,7 @@ import { TourService } from '../../services/tour.service';
         <!-- Grid Canvas -->
         <div
           #gridContainer
-          class="relative w-full overflow-hidden rounded-2xl transition-all duration-300"
+          class="relative w-full overflow-hidden rounded-2xl border border-slate-200/70 transition-all duration-300 dark:border-slate-700/70"
           [ngClass]="{
             'bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] dark:bg-[radial-gradient(#334155_1px,transparent_1px)]':
               dashboardWidgets().length === 0,
@@ -139,9 +141,7 @@ import { TourService } from '../../services/tour.service';
           <!-- Empty State Hero -->
           @if (dashboardWidgets().length === 0 && !isEditMode() && !isMobile()) {
             <div class="absolute inset-0 -mt-20 flex flex-col items-center justify-center">
-              <div
-                class="animate-fade-in-up mb-6 rounded-full border border-slate-100 bg-slate-50 p-6 dark:border-slate-700 dark:bg-slate-800/50"
-              >
+              <div class="glass-surface animate-fade-in-up mb-6 rounded-2xl p-5">
                 <span class="material-symbols-outlined text-6xl text-slate-300"
                   >dashboard_customize</span
                 >
@@ -156,7 +156,7 @@ import { TourService } from '../../services/tour.service';
               </p>
               <button
                 (click)="isEditMode.set(true)"
-                class="bg-primary shadow-primary/30 animate-fade-in-up rounded-xl px-6 py-3 font-bold text-white shadow-lg transition-all delay-300 hover:scale-105 hover:bg-blue-600 active:scale-95"
+                class="glass-button text-primary animate-fade-in-up rounded-xl px-6 py-3 font-bold transition-all delay-300 hover:scale-105 active:scale-95"
               >
                 {{ t.map()['BTN_START'] }}
               </button>
@@ -234,6 +234,8 @@ import { TourService } from '../../services/tour.service';
               [style.height.px]="widget.layout.h * rowHeight"
               [class.z-10]="!isEditMode()"
               [class.z-20]="isEditMode()"
+              [class.cursor-grab]="isEditMode() && !pendingPlacement()"
+              (pointerdown)="onWidgetPointerDown($event, widget)"
             >
               <div class="group relative h-full w-full">
                 <app-widget-host
@@ -245,12 +247,12 @@ import { TourService } from '../../services/tour.service';
                 <!-- Edit Overlay with Buttons -->
                 @if (isEditMode() && !pendingPlacement()) {
                   <div
-                    class="border-primary/50 animate-fade-in absolute inset-0 z-30 flex items-center justify-center gap-3 rounded-xl border-2 bg-slate-900/10 opacity-0 backdrop-blur-[1px] transition-opacity group-hover:opacity-100 dark:bg-white/5"
+                    class="border-primary/40 animate-fade-in absolute inset-0 z-30 flex items-center justify-center gap-3 rounded-xl border-2 bg-slate-900/10 opacity-0 backdrop-blur-[2px] transition-opacity group-hover:opacity-100 dark:bg-white/5"
                   >
                     <!-- Move Button -->
                     <button
                       (click)="pickupWidget(widget)"
-                      class="rounded-full border border-slate-200 bg-white p-3 text-slate-700 shadow-lg transition-transform hover:scale-110 active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                      class="glass-control rounded-full p-3 text-slate-700 shadow-lg transition-transform hover:scale-110 active:scale-95 dark:text-white"
                       [title]="t.map()['BTN_MOVE']"
                     >
                       <span class="material-symbols-outlined">open_with</span>
@@ -328,6 +330,8 @@ export class UserDashboardComponent {
   // Placement State
   pendingPlacement = signal<PendingPlacement | null>(null);
   hoveredSlot = signal<{ x: number; y: number } | null>(null);
+  private dragActive = signal(false);
+  private draggedWidget = signal<DashboardWidget | null>(null);
 
   // Layout Config
   rowHeight = 200; // px
@@ -397,6 +401,19 @@ export class UserDashboardComponent {
     }
   }
 
+  @HostListener('document:pointerup')
+  onGlobalPointerUp() {
+    // Only auto-drop for drag-driven movement, not modal placement mode.
+    if (!this.dragActive()) return;
+    this.finalizeDraggedDrop();
+  }
+
+  @HostListener('document:pointercancel')
+  onGlobalPointerCancel() {
+    if (!this.dragActive()) return;
+    this.restoreDraggedWidget();
+  }
+
   cancelPlacement() {
     this.pendingPlacement.set(null);
     this.hoveredSlot.set(null);
@@ -449,6 +466,76 @@ export class UserDashboardComponent {
       h: widget.layout.h,
       data: widget.data,
     });
+  }
+
+  onWidgetPointerDown(event: PointerEvent, widget: DashboardWidget) {
+    if (!this.isEditMode() || !!this.pendingPlacement()) return;
+
+    const target = event.target as HTMLElement | null;
+    if (
+      target?.closest(
+        'button, a, input, textarea, select, label, [contenteditable="true"], [data-no-drag="true"]',
+      )
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    this.draggedWidget.set(widget);
+    this.dragActive.set(true);
+    this.pickupWidget(widget);
+    this.hoveredSlot.set({ x: widget.layout.x, y: widget.layout.y });
+  }
+
+  private finalizeDraggedDrop() {
+    this.dragActive.set(false);
+
+    const pending = this.pendingPlacement();
+    const slot = this.hoveredSlot();
+    if (!pending || !slot) {
+      this.restoreDraggedWidget();
+      return;
+    }
+
+    const canPlace = this.toolService.isPositionValid(
+      slot.x,
+      slot.y,
+      pending.w,
+      pending.h,
+      this.dashboardWidgets(),
+      this.cols,
+    );
+
+    if (!canPlace) {
+      this.toast.show(this.t.get('MSG_COLLISION'), 'error');
+      this.restoreDraggedWidget();
+      return;
+    }
+
+    const original = this.draggedWidget();
+    this.toolService.placeWidget({
+      instanceId: original?.instanceId ?? crypto.randomUUID(),
+      type: pending.type,
+      toolId: pending.toolId,
+      data: pending.data,
+      layout: { x: slot.x, y: slot.y, w: pending.w, h: pending.h },
+    });
+
+    this.draggedWidget.set(null);
+    this.pendingPlacement.set(null);
+    this.hoveredSlot.set(null);
+  }
+
+  private restoreDraggedWidget() {
+    const original = this.draggedWidget();
+    if (original) {
+      this.toolService.placeWidget(original);
+    }
+
+    this.draggedWidget.set(null);
+    this.pendingPlacement.set(null);
+    this.hoveredSlot.set(null);
+    this.dragActive.set(false);
   }
 
   deleteWidget(id: string) {

@@ -18,7 +18,7 @@ import zh from './i18n/zh';
     >
       <!-- Header -->
       <div
-        class="flex items-center justify-between border-b border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/50"
+        class="glass-subsection flex items-center justify-between border-b p-4"
       >
         <h3 class="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
           <span class="material-symbols-outlined text-slate-500">content_paste</span>
@@ -45,7 +45,7 @@ import zh from './i18n/zh';
         } @else {
           @for (item of history(); track item.id) {
             <div
-              class="group hover:border-primary dark:hover:border-primary relative rounded-lg border border-slate-100 bg-slate-50 p-3 transition-colors dark:border-slate-700 dark:bg-slate-800"
+              class="glass-surface glass-surface-hover group relative rounded-lg p-3 transition-colors"
             >
               <p class="mb-1 flex justify-between text-xs text-slate-400">
                 <span>{{ item.timestamp | date: 'shortTime' }}</span>

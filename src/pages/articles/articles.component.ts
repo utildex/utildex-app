@@ -37,32 +37,30 @@ import zh from './i18n/zh';
               type="text"
               [(ngModel)]="searchQuery"
               [placeholder]="t.map()['SEARCH_PLACEHOLDER']"
-              class="focus:ring-primary w-full rounded-xl border border-slate-200 bg-white py-2 pr-4 pl-10 text-slate-900 focus:ring-2 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+              class="glass-control focus:ring-primary h-11 w-full rounded-xl pr-4 pl-10 text-slate-900 placeholder-slate-500 transition-all focus:ring-2 focus:outline-none dark:text-white dark:placeholder-slate-400"
             />
           </div>
 
           <!-- View Toggle -->
-          <div class="flex self-start rounded-xl bg-slate-200 p-1 dark:bg-slate-700">
+          <div class="glass-control flex self-start rounded-xl p-1">
             <button
               (click)="viewMode.set('grid')"
-              class="flex items-center rounded-lg p-2 transition-all"
-              [class.bg-white]="viewMode() === 'grid'"
-              [class.shadow-sm]="viewMode() === 'grid'"
+              class="glass-control flex cursor-pointer items-center rounded-lg p-2 transition-all"
+              [class.ring-1]="viewMode() === 'grid'"
+              [class.ring-primary]="viewMode() === 'grid'"
               [class.text-primary]="viewMode() === 'grid'"
               [class.text-slate-500]="viewMode() !== 'grid'"
-              [class.dark:bg-slate-800]="viewMode() === 'grid'"
               [class.dark:text-white]="viewMode() === 'grid'"
             >
               <span class="material-symbols-outlined">grid_view</span>
             </button>
             <button
               (click)="viewMode.set('list')"
-              class="flex items-center rounded-lg p-2 transition-all"
-              [class.bg-white]="viewMode() === 'list'"
-              [class.shadow-sm]="viewMode() === 'list'"
+              class="glass-control flex cursor-pointer items-center rounded-lg p-2 transition-all"
+              [class.ring-1]="viewMode() === 'list'"
+              [class.ring-primary]="viewMode() === 'list'"
               [class.text-primary]="viewMode() === 'list'"
               [class.text-slate-500]="viewMode() !== 'list'"
-              [class.dark:bg-slate-800]="viewMode() === 'list'"
               [class.dark:text-white]="viewMode() === 'list'"
             >
               <span class="material-symbols-outlined">view_list</span>
@@ -75,11 +73,11 @@ import zh from './i18n/zh';
       <div class="flex flex-wrap gap-2">
         <button
           (click)="activeTag.set(null)"
-          class="rounded-full border px-3 py-1 text-sm font-medium transition-colors"
+          class="glass-control cursor-pointer rounded-full px-3 py-1 text-sm font-medium transition-colors hover:text-primary hover:ring-1 hover:ring-primary/40"
           [class]="
             !activeTag()
-              ? 'border-transparent bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-              : 'border-slate-200 bg-transparent text-slate-600 hover:border-slate-400 dark:border-slate-700 dark:text-slate-400'
+              ? 'text-primary ring-1 ring-primary font-semibold dark:text-white'
+              : 'text-slate-600 dark:text-slate-400'
           "
         >
           {{ t.map()['ALL_TAGS'] }}
@@ -87,11 +85,11 @@ import zh from './i18n/zh';
         @for (tag of allTags(); track tag) {
           <button
             (click)="activeTag.set(tag)"
-            class="rounded-full border px-3 py-1 text-sm font-medium transition-colors"
+            class="glass-control cursor-pointer rounded-full px-3 py-1 text-sm font-medium transition-colors hover:text-primary hover:ring-1 hover:ring-primary/40"
             [class]="
               activeTag() === tag
-                ? 'bg-primary border-primary text-white'
-                : 'hover:border-primary hover:text-primary border-slate-200 bg-transparent text-slate-600 dark:border-slate-700 dark:text-slate-400'
+                ? 'text-primary ring-1 ring-primary font-semibold dark:text-white'
+                : 'text-slate-600 dark:text-slate-400'
             "
           >
             {{ tag }}
@@ -101,7 +99,7 @@ import zh from './i18n/zh';
 
       <!-- Content -->
       @if (filteredArticles().length === 0) {
-        <div class="py-20 text-center text-slate-500">
+        <div class="glass-surface rounded-2xl py-20 text-center text-slate-500">
           <span class="material-symbols-outlined mb-4 text-5xl opacity-30">feed</span>
           <p>{{ t.map()['NO_RESULTS'] }}</p>
         </div>

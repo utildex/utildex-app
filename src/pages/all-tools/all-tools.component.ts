@@ -38,7 +38,7 @@ import zh from './i18n/zh';
               [ngModel]="searchQuery()"
               (ngModelChange)="toolService.setSearch($event)"
               [placeholder]="t.map()['SEARCH_PLACEHOLDER']"
-              class="focus:ring-primary w-full rounded-xl border border-slate-200 bg-white py-3 pr-4 pl-11 text-base shadow-sm transition-all focus:border-transparent focus:ring-2 dark:border-slate-700 dark:bg-slate-800"
+              class="glass-control focus:ring-primary h-12 w-full rounded-xl pr-4 pl-11 text-base text-slate-800 placeholder-slate-500 transition-all focus:ring-2 focus:outline-none dark:text-slate-100 dark:placeholder-slate-400"
             />
           </div>
 
@@ -66,31 +66,27 @@ import zh from './i18n/zh';
         <!-- Categories (Pills) -->
         <div class="flex flex-wrap gap-2 pb-2" appTourTarget="tour-filters">
           <button
-            (click)="toolService.setCategory(null)"
-            class="rounded-full px-4 py-2 text-sm font-medium shadow-sm transition-all"
-            [class.bg-slate-900]="selectedCategory() === null"
-            [class.text-white]="selectedCategory() === null"
-            [class.bg-white]="selectedCategory() !== null"
-            [class.text-slate-600]="selectedCategory() !== null"
-            [class.dark:bg-white]="selectedCategory() === null"
-            [class.dark:text-slate-900]="selectedCategory() === null"
-            [class.dark:bg-slate-800]="selectedCategory() !== null"
-            [class.dark:text-slate-300]="selectedCategory() !== null"
+            (click)="toolService.clearCategories()"
+            class="glass-control cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:text-primary hover:ring-1 hover:ring-primary/40"
+            [class.text-primary]="selectedCategories().size === 0"
+            [class.font-semibold]="selectedCategories().size === 0"
+            [class.ring-1]="selectedCategories().size === 0"
+            [class.ring-primary]="selectedCategories().size === 0"
+            [class.text-slate-600]="selectedCategories().size > 0"
+            [class.dark:text-slate-300]="selectedCategories().size > 0"
           >
             {{ t.map()['CAT_ALL'] }}
           </button>
           @for (cat of categories(); track cat) {
             <button
-              (click)="toolService.setCategory(cat)"
-              class="rounded-full px-4 py-2 text-sm font-medium shadow-sm transition-all"
-              [class.bg-slate-900]="selectedCategory() === cat"
-              [class.text-white]="selectedCategory() === cat"
-              [class.bg-white]="selectedCategory() !== cat"
-              [class.text-slate-600]="selectedCategory() !== cat"
-              [class.dark:bg-white]="selectedCategory() === cat"
-              [class.dark:text-slate-900]="selectedCategory() === cat"
-              [class.dark:bg-slate-800]="selectedCategory() !== cat"
-              [class.dark:text-slate-300]="selectedCategory() !== cat"
+              (click)="toolService.toggleCategory(cat)"
+              class="glass-control cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:text-primary hover:ring-1 hover:ring-primary/40"
+              [class.text-primary]="isCategorySelected(cat)"
+              [class.font-semibold]="isCategorySelected(cat)"
+              [class.ring-1]="isCategorySelected(cat)"
+              [class.ring-primary]="isCategorySelected(cat)"
+              [class.text-slate-600]="!isCategorySelected(cat)"
+              [class.dark:text-slate-300]="!isCategorySelected(cat)"
             >
               {{ toolService.getCategoryName(cat) }}
             </button>
@@ -103,8 +99,8 @@ import zh from './i18n/zh';
         <div class="flex items-center justify-between px-1">
           <!-- Dynamic Title if needed, or just showing count -->
           <h2 class="text-xl font-bold text-slate-800 dark:text-slate-200">
-            @if (selectedCategory()) {
-              {{ toolService.getCategoryName(selectedCategory()!) }}
+            @if (selectedCategories().size === 1) {
+              {{ toolService.getCategoryName(singleSelectedCategory()!) }}
             } @else {
               {{ t.map()['TITLE'] }}
             }
@@ -145,7 +141,7 @@ import zh from './i18n/zh';
               <button
                 (click)="prevPage()"
                 [disabled]="currentPage() === 1"
-                class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition-all hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                class="glass-control flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-slate-600 transition-all hover:scale-[1.03] disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-300"
               >
                 <span class="material-symbols-outlined text-sm">arrow_back</span>
               </button>
@@ -157,7 +153,7 @@ import zh from './i18n/zh';
               <button
                 (click)="nextPage()"
                 [disabled]="currentPage() === totalPages()"
-                class="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition-all hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-30 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                class="glass-control flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-slate-600 transition-all hover:scale-[1.03] disabled:cursor-not-allowed disabled:opacity-30 dark:text-slate-300"
               >
                 <span class="material-symbols-outlined text-sm">arrow_forward</span>
               </button>
@@ -193,10 +189,15 @@ export class AllToolsComponent {
 
   searchQuery = this.toolService.searchQuery;
   categories = this.toolService.categories;
-  selectedCategory = this.toolService.selectedCategory;
+  selectedCategories = this.toolService.selectedCategories;
   sortOrder = this.toolService.sortOrder;
   filteredTools = this.toolService.filteredTools;
   favorites = this.toolService.favorites;
+
+  singleSelectedCategory = computed(() => {
+    const selected = this.selectedCategories();
+    return selected.size === 1 ? [...selected][0] : null;
+  });
 
   // Pagination
   currentPage = signal(1);
@@ -265,6 +266,10 @@ export class AllToolsComponent {
 
   isFav(id: string): boolean {
     return this.favorites().has(id);
+  }
+
+  isCategorySelected(category: string): boolean {
+    return this.selectedCategories().has(category);
   }
 
   getSortLabel(): string {

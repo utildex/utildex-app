@@ -36,7 +36,7 @@ import zh from './i18n/zh';
         @for (cat of categories(); track cat) {
           <a
             [routerLink]="['/categories', cat] | localLink"
-            class="group hover:border-primary dark:hover:border-primary block rounded-xl border border-slate-200 bg-white p-6 transition-all hover:shadow-md dark:border-slate-700 dark:bg-slate-800"
+            class="glass-surface glass-surface-hover group block rounded-xl p-6 transition-all"
           >
             <div class="mb-4 flex items-center justify-between">
               <span
