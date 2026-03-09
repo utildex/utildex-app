@@ -41,7 +41,7 @@ import zh from './i18n/zh';
       >
         <a
           [routerLink]="'/articles' | localLink"
-          class="hover:text-primary group flex items-center gap-2 text-slate-500 transition-colors"
+          class="glass-control hover:text-primary group flex items-center gap-2 rounded-xl px-3 py-2 text-slate-500 transition-colors"
         >
           <span class="material-symbols-outlined transition-transform group-hover:-translate-x-1"
             >arrow_back</span
@@ -54,7 +54,7 @@ import zh from './i18n/zh';
           <div class="relative">
             <button
               (click)="togglePrefs()"
-              class="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:hover:bg-slate-900"
+              class="glass-control cursor-pointer rounded-full p-2 text-slate-500 transition-colors hover:text-primary"
               [title]="t.map()['READER_SETTINGS']"
             >
               <span class="material-symbols-outlined">text_fields</span>
@@ -62,7 +62,7 @@ import zh from './i18n/zh';
 
             @if (showPrefs()) {
               <div
-                class="animate-scale-in absolute top-full right-0 z-20 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-900"
+                class="glass-surface-strong animate-scale-in absolute top-full right-0 z-20 mt-2 w-64 rounded-xl p-4"
               >
                 <!-- Font Size -->
                 <div class="mb-4">
@@ -72,18 +72,16 @@ import zh from './i18n/zh';
                     }}</span>
                     <span class="text-xs text-slate-400">{{ fontSize() }}px</span>
                   </div>
-                  <div
-                    class="flex items-center gap-2 rounded-lg bg-slate-100 p-1 dark:bg-slate-800"
-                  >
+                  <div class="glass-subsection flex items-center gap-2 rounded-lg p-1">
                     <button
                       (click)="decreaseFontSize()"
-                      class="flex-1 rounded p-1 text-sm shadow-sm hover:bg-white dark:hover:bg-slate-700"
+                      class="glass-control cursor-pointer flex-1 rounded p-1 text-sm"
                     >
                       A-
                     </button>
                     <button
                       (click)="increaseFontSize()"
-                      class="flex-1 rounded p-1 text-lg shadow-sm hover:bg-white dark:hover:bg-slate-700"
+                      class="glass-control cursor-pointer flex-1 rounded p-1 text-lg"
                     >
                       A+
                     </button>
@@ -99,21 +97,21 @@ import zh from './i18n/zh';
                     <button
                       (click)="setFont('sans')"
                       [class.ring-2]="fontFamily() === 'sans'"
-                      class="ring-primary rounded bg-slate-50 p-2 font-sans text-sm hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
+                      class="glass-control ring-primary cursor-pointer rounded p-2 font-sans text-sm"
                     >
                       Sans
                     </button>
                     <button
                       (click)="setFont('serif')"
                       [class.ring-2]="fontFamily() === 'serif'"
-                      class="ring-primary rounded bg-slate-50 p-2 font-serif text-sm hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
+                      class="glass-control ring-primary cursor-pointer rounded p-2 font-serif text-sm"
                     >
                       Serif
                     </button>
                     <button
                       (click)="setFont('mono')"
                       [class.ring-2]="fontFamily() === 'mono'"
-                      class="ring-primary rounded bg-slate-50 p-2 font-mono text-sm hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700"
+                      class="glass-control ring-primary cursor-pointer rounded p-2 font-mono text-sm"
                     >
                       Mono
                     </button>
@@ -139,7 +137,7 @@ import zh from './i18n/zh';
               <div class="mb-6 flex flex-wrap items-center justify-center gap-2">
                 @for (tag of meta.tags; track tag) {
                   <span
-                    class="rounded bg-slate-100 px-2 py-1 text-xs font-bold tracking-wider text-slate-600 uppercase dark:bg-slate-900 dark:text-slate-400"
+                    class="glass-control rounded px-2 py-1 text-xs font-bold tracking-wider text-slate-600 uppercase dark:text-slate-300"
                     >{{ tag }}</span
                   >
                 }
@@ -180,7 +178,7 @@ import zh from './i18n/zh';
               <p class="mb-4 text-slate-500">{{ t.map()['THANKS_READING'] }}</p>
               <a
                 [routerLink]="'/articles' | localLink"
-                class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3 font-bold text-white transition-opacity hover:opacity-90 dark:bg-white dark:text-slate-900"
+                class="glass-button text-primary inline-flex items-center gap-2 rounded-full px-6 py-3 font-bold transition-opacity hover:opacity-90"
               >
                 <span class="material-symbols-outlined">arrow_back</span>
                 {{ t.map()['BACK_TO_ARTICLES'] }}
@@ -230,7 +228,7 @@ import zh from './i18n/zh';
                   @for (lang of alternativeLangs(); track lang) {
                     <button
                       (click)="overrideLang.set(lang)"
-                      class="hover:border-primary hover:ring-primary hover:bg-primary/5 group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-3 shadow-sm transition-all hover:shadow-md hover:ring-1 dark:border-slate-800 dark:bg-slate-900"
+                      class="glass-control hover:border-primary hover:ring-primary hover:bg-primary/5 group flex cursor-pointer items-center gap-3 rounded-xl px-5 py-3 transition-all hover:ring-1"
                     >
                       <img
                         [src]="getLangFlagAsset(lang)"
@@ -249,7 +247,7 @@ import zh from './i18n/zh';
               <div class="relative z-10 pt-12">
                 <a
                   [routerLink]="'/articles' | localLink"
-                  class="flex items-center gap-2 text-sm font-bold tracking-wider text-slate-400 uppercase transition-colors hover:text-slate-600 dark:hover:text-slate-200"
+                  class="glass-control flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold tracking-wider text-slate-400 uppercase transition-colors hover:text-slate-600 dark:hover:text-slate-200"
                 >
                   <span class="material-symbols-outlined text-lg">arrow_back</span>
                   {{ t.map()['BACK_TO_ARTICLES'] }}
