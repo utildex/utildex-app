@@ -190,6 +190,14 @@ Tools must work on mobile devices.
 *   Use `flex-col` on mobile and `flex-row` on desktop.
 *   Avoid fixed widths (e.g., `w-[500px]`). Use `max-w-xl` or percentages.
 
+### 6. Frosted Glass Surfaces (Concise Spec)
+Use this for card/modal surfaces that should match `tool-card`:
+*   **Base:** translucent background + blur + soft border (`background: rgba(..., ~0.5)`, `backdrop-filter: blur(20px) saturate(180%)`, `border: 1px solid rgba(..., low alpha)`).
+*   **Depth:** layered shadow with subtle inset highlight (outer shadow + `inset 0 0.5px 0 ...`).
+*   **Hover:** slight lift (`translateY(-2px to -3px)`), stronger colored shadow, and tinted border (prefer `color-mix` with tool/accent color).
+*   **Dark mode:** keep translucency (not opaque), lower border alpha, and use deeper shadows instead of brighter fills.
+*   **Scope:** prioritize reusable surfaces first (cards, modals, floating panels, secondary action buttons) before one-off decorative elements.
+
 ---
 
 ## Internationalization (i18n)
