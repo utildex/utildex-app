@@ -12,7 +12,7 @@ import zh from './i18n/zh';
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     <div
-      class="flex flex-wrap items-center gap-3 rounded-b-2xl border-t border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50"
+      class="glass-subsection flex flex-wrap items-center gap-3 rounded-b-2xl border-t p-4"
     >
       <div class="mr-auto flex items-center gap-2 text-sm font-medium text-slate-500">
         <span class="material-symbols-outlined text-lg" aria-hidden="true">check_circle</span>
@@ -23,7 +23,7 @@ import zh from './i18n/zh';
         @if (canCopy()) {
           <button
             (click)="copy()"
-            class="focus:ring-primary inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+            class="glass-control focus:ring-primary inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:text-slate-900 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:text-slate-200 dark:hover:text-white"
             [title]="t.map()['BTN_COPY']"
             [attr.aria-label]="t.map()['BTN_COPY']"
           >
@@ -36,7 +36,7 @@ import zh from './i18n/zh';
 
         <button
           (click)="download()"
-          class="focus:ring-primary inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+          class="glass-control focus:ring-primary inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:text-slate-900 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:text-slate-200 dark:hover:text-white"
           [title]="t.map()['BTN_DOWNLOAD']"
           [attr.aria-label]="t.map()['BTN_DOWNLOAD']"
         >
@@ -47,7 +47,7 @@ import zh from './i18n/zh';
         @if (canPrint()) {
           <button
             (click)="print()"
-            class="focus:ring-primary inline-flex items-center rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:bg-slate-50 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+            class="glass-control focus:ring-primary inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium text-slate-700 transition-all hover:text-slate-900 focus:ring-2 focus:ring-offset-2 focus:outline-none active:scale-95 dark:text-slate-200 dark:hover:text-white"
             [title]="t.map()['BTN_PRINT']"
             [attr.aria-label]="t.map()['BTN_PRINT']"
           >
