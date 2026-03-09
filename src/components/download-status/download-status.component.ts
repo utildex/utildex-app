@@ -15,7 +15,7 @@ import zh from './i18n/zh';
   template: `
     @if (offline.isDownloading()) {
       <div
-        class="animate-slide-up fixed right-4 bottom-4 z-50 w-80 rounded-xl border border-slate-200 bg-white p-4 shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+        class="glass-surface animate-slide-up fixed right-4 bottom-4 z-50 w-80 rounded-xl p-4"
       >
         <div class="mb-3 flex items-center justify-between">
           <h3 class="flex items-center gap-2 font-bold text-slate-900 dark:text-white">

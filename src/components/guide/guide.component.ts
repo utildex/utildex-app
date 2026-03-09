@@ -25,7 +25,7 @@ import zh from '../../i18n/zh';
       >
         <!-- Cloud Body -->
         <div
-          class="relative max-w-xs rounded-2xl border border-slate-200 bg-white/90 px-5 py-3 text-slate-900 shadow-xl backdrop-blur-md md:max-w-sm dark:border-slate-700 dark:bg-slate-800/90 dark:text-white"
+          class="glass-surface relative max-w-xs rounded-2xl px-5 py-3 text-slate-900 md:max-w-sm dark:text-white"
         >
           <!-- Text Content -->
           <p class="text-center text-sm leading-relaxed font-medium">
@@ -35,7 +35,7 @@ import zh from '../../i18n/zh';
           <!-- Triangle (Only if anchored) -->
           @if (state().targetRect) {
             <div
-              class="absolute h-4 w-4 rotate-45 transform border-r border-b border-slate-200 bg-white/90 dark:border-slate-700 dark:bg-slate-800/90"
+              class="glass-surface absolute h-4 w-4 rotate-45 transform border-r border-b"
               [style.left.px]="triangleLeft()"
               [class.-bottom-2]="isAbove()"
               [class.-top-2]="!isAbove()"

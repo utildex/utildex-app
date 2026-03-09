@@ -34,7 +34,7 @@ interface CommandResult {
 
         <!-- Palette -->
         <div
-          class="animate-scale-in relative flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+          class="glass-surface animate-scale-in relative flex w-full max-w-2xl flex-col overflow-hidden rounded-xl"
         >
           <!-- Search Input -->
           <div class="flex items-center border-b border-slate-100 px-4 dark:border-slate-800">
@@ -75,7 +75,7 @@ interface CommandResult {
           <!-- Filters & Sorting (Collapsible) -->
           @if (isFilterOpen()) {
             <div
-              class="animate-fade-in flex flex-col gap-3 border-b border-slate-100 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-800/50"
+              class="glass-subsection animate-fade-in flex flex-col gap-3 border-b p-3"
             >
               <!-- Categories -->
               <div class="flex flex-wrap gap-2">
@@ -192,7 +192,7 @@ interface CommandResult {
 
           <!-- Footer -->
           <div
-            class="flex justify-end gap-3 border-t border-slate-100 bg-slate-50 px-4 py-2 text-[10px] text-slate-400 dark:border-slate-800 dark:bg-slate-800/50"
+            class="glass-subsection flex justify-end gap-3 border-t px-4 py-2 text-[10px] text-slate-400"
           >
             <span class="flex items-center gap-1"
               ><span class="font-bold">↑↓</span> {{ t.map()['HINT_NAVIGATE'] }}</span

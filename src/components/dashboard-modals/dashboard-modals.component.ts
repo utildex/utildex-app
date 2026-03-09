@@ -25,7 +25,7 @@ import zh from './i18n/zh';
       <div class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close()"></div>
         <div
-          class="animate-scale-in relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+          class="glass-surface animate-scale-in relative flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl"
         >
           <div
             class="flex items-center justify-between gap-4 border-b border-slate-100 p-6 dark:border-slate-800"
@@ -164,7 +164,7 @@ import zh from './i18n/zh';
       <div class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close()"></div>
         <div
-          class="animate-scale-in relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900"
+          class="glass-surface animate-scale-in relative w-full max-w-md overflow-hidden rounded-2xl"
         >
           <div
             class="flex items-center justify-between border-b border-slate-100 p-6 dark:border-slate-800"

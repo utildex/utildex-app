@@ -46,7 +46,7 @@ import { computePosition, flip, shift, offset, autoUpdate, Placement } from '@fl
       <!-- Bubble -->
       <div
         #bubble
-        class="animate-fade-in fixed z-[10000] w-80 rounded-2xl border border-slate-200 bg-white p-6 shadow-2xl transition-all duration-300 dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface animate-fade-in fixed z-[10000] w-80 rounded-2xl p-6 transition-all duration-300"
         [ngStyle]="bubbleStyle()"
         role="dialog"
         aria-modal="true"
@@ -91,7 +91,7 @@ import { computePosition, flip, shift, offset, autoUpdate, Placement } from '@fl
           <button
             #nextBtn
             (click)="tour.nextStep()"
-            class="bg-primary rounded-lg px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-blue-600"
+            class="glass-button text-primary rounded-lg px-4 py-2 text-sm font-bold"
           >
             {{
               isLastStep()
