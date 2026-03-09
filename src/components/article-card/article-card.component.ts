@@ -16,7 +16,7 @@ import { I18nService } from '../../services/i18n.service';
         [href]="article().url"
         target="_blank"
         rel="noopener noreferrer"
-        class="group/article isolate block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface glass-surface-hover group/article isolate block overflow-hidden rounded-2xl transition-all duration-300"
         [class.flex-col]="layout() === 'grid'"
         [class.h-full]="layout() === 'grid'"
         [class.hover:-translate-y-2]="layout() === 'grid'"
@@ -31,7 +31,7 @@ import { I18nService } from '../../services/i18n.service';
     @else {
       <a
         [routerLink]="['/articles', article().id] | localLink"
-        class="group/article isolate block overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface glass-surface-hover group/article isolate block overflow-hidden rounded-2xl transition-all duration-300"
         [class.flex-col]="layout() === 'grid'"
         [class.h-full]="layout() === 'grid'"
         [class.hover:-translate-y-2]="layout() === 'grid'"
