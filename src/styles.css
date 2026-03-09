@@ -70,6 +70,36 @@
   html.density-compact {
     font-size: 14px;
   }
+
+  /* Centralize hand cursor behavior for interactive controls across the app. */
+  :where(
+    button,
+    [type='button'],
+    [type='submit'],
+    [type='reset'],
+    a[href],
+    [routerLink],
+    [role='button'],
+    [role='link'],
+    [role='tab'],
+    [role='menuitem'],
+    summary
+  ) {
+    cursor: pointer;
+  }
+
+  :where(
+    button,
+    [type='button'],
+    [type='submit'],
+    [type='reset'],
+    [routerLink],
+    [role='button'],
+    summary
+  ):disabled,
+  :where([aria-disabled='true']) {
+    cursor: not-allowed;
+  }
 }
 
 @layer utilities {
