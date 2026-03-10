@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, input } from '@angular/core';
+import { Component, HostListener, signal, computed, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
@@ -30,11 +30,11 @@ import zh from './i18n/zh';
     } @else {
       <!-- Widget Mode -->
       <div
-        class="relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface relative flex h-full flex-col overflow-hidden rounded-xl"
       >
         <!-- Widget Header -->
         <div
-          class="flex flex-shrink-0 items-center justify-between border-b border-slate-100 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-900/50"
+          class="glass-subsection flex flex-shrink-0 items-center justify-between border-b p-2"
         >
           <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-sm text-slate-500">markdown</span>
@@ -42,25 +42,34 @@ import zh from './i18n/zh';
               >Markdown</span
             >
           </div>
-          <!-- Toggle View -->
-          <div class="flex rounded bg-slate-200 p-0.5 dark:bg-slate-700">
+          <div class="flex items-center gap-2">
+            <!-- Toggle View -->
+            <div class="glass-control flex rounded p-0.5">
+              <button
+                (click)="activeTab.set('editor')"
+                class="rounded px-2 py-0.5 text-[10px] font-bold transition-colors"
+                [class.bg-white]="activeTab() === 'editor'"
+                [class.dark:bg-slate-600]="activeTab() === 'editor'"
+                [class.shadow-sm]="activeTab() === 'editor'"
+              >
+                Edit
+              </button>
+              <button
+                (click)="activeTab.set('preview')"
+                class="rounded px-2 py-0.5 text-[10px] font-bold transition-colors"
+                [class.bg-white]="activeTab() === 'preview'"
+                [class.dark:bg-slate-600]="activeTab() === 'preview'"
+                [class.shadow-sm]="activeTab() === 'preview'"
+              >
+                View
+              </button>
+            </div>
             <button
-              (click)="activeTab.set('editor')"
-              class="rounded px-2 py-0.5 text-[10px] font-bold transition-colors"
-              [class.bg-white]="activeTab() === 'editor'"
-              [class.dark:bg-slate-600]="activeTab() === 'editor'"
-              [class.shadow-sm]="activeTab() === 'editor'"
+              (click)="openExpanded()"
+              class="glass-control rounded p-1 text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
+              title="Expand"
             >
-              Edit
-            </button>
-            <button
-              (click)="activeTab.set('preview')"
-              class="rounded px-2 py-0.5 text-[10px] font-bold transition-colors"
-              [class.bg-white]="activeTab() === 'preview'"
-              [class.dark:bg-slate-600]="activeTab() === 'preview'"
-              [class.shadow-sm]="activeTab() === 'preview'"
-            >
-              View
+              <span class="material-symbols-outlined text-sm">open_in_full</span>
             </button>
           </div>
         </div>
@@ -70,11 +79,11 @@ import zh from './i18n/zh';
           @if (activeTab() === 'editor') {
             <textarea
               [(ngModel)]="rawMarkdown"
-              class="h-full w-full resize-none bg-transparent p-3 font-mono text-xs text-slate-800 focus:outline-none dark:text-slate-200"
+              class="h-full w-full resize-none overflow-auto bg-transparent p-3 font-mono text-xs text-slate-800 focus:outline-none dark:text-slate-200"
               [placeholder]="t.map()['PLACEHOLDER']"
             ></textarea>
           } @else {
-            <div class="h-full w-full overflow-y-auto bg-slate-50 p-3 dark:bg-slate-900/30">
+            <div class="h-full w-full overflow-y-auto p-3">
               <article
                 class="prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-pre:my-2 max-w-none"
                 [innerHTML]="parsedHtml()"
@@ -88,11 +97,11 @@ import zh from './i18n/zh';
     <!-- Full Tool Content Template -->
     <ng-template #mainContent>
       <div
-        class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface glass-surface-hover flex h-[min(74vh,46rem)] flex-col overflow-hidden rounded-2xl"
       >
         <!-- Toolbar -->
         <div
-          class="flex flex-shrink-0 items-center justify-between border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800"
+          class="glass-subsection flex flex-shrink-0 items-center justify-between border-b px-4 py-3"
         >
           <div class="flex items-center gap-2">
             <span class="material-symbols-outlined text-sm text-slate-400">edit_note</span>
@@ -103,6 +112,15 @@ import zh from './i18n/zh';
             </h3>
           </div>
           <div class="flex items-center gap-2">
+            <button
+              (click)="toggleExpanded()"
+              class="glass-button rounded-lg border p-1.5 text-slate-600 dark:text-slate-200"
+              [title]="isExpanded() ? 'Exit expanded view' : 'Expand editor'"
+            >
+              <span class="material-symbols-outlined text-base">
+                {{ isExpanded() ? 'close_fullscreen' : 'open_in_full' }}
+              </span>
+            </button>
             <span class="material-symbols-outlined text-sm text-slate-400">visibility</span>
             <h3
               class="text-xs font-bold tracking-wider text-slate-500 uppercase dark:text-slate-400"
@@ -113,14 +131,14 @@ import zh from './i18n/zh';
         </div>
 
         <!-- Split View -->
-        <div class="flex h-[500px] flex-1 flex-col overflow-hidden md:flex-row">
+        <div class="flex flex-1 flex-col overflow-hidden md:flex-row">
           <!-- Input -->
           <div
             class="group relative flex-1 border-b border-slate-200 md:border-r md:border-b-0 dark:border-slate-700"
           >
             <textarea
               [(ngModel)]="rawMarkdown"
-              class="h-full w-full resize-none bg-white p-6 font-mono text-sm text-slate-800 transition-colors focus:bg-slate-50 focus:outline-none dark:bg-slate-900 dark:text-slate-200 dark:focus:bg-slate-950/50"
+              class="h-full w-full resize-none overflow-auto bg-white p-6 font-mono text-sm text-slate-800 transition-colors focus:bg-slate-50 focus:outline-none dark:bg-slate-900 dark:text-slate-200 dark:focus:bg-slate-950/50"
               [placeholder]="t.map()['PLACEHOLDER']"
             ></textarea>
           </div>
@@ -134,6 +152,11 @@ import zh from './i18n/zh';
           </div>
         </div>
 
+        <div class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500">
+          <span>{{ wordCount() }} words • {{ charCount() }} chars</span>
+          <span class="text-slate-400">Markdown to HTML preview</span>
+        </div>
+
         <!-- Action Bar (Footer) -->
         <app-action-bar
           [content]="outputHtml()"
@@ -144,6 +167,61 @@ import zh from './i18n/zh';
         ></app-action-bar>
       </div>
     </ng-template>
+
+    @if (isExpanded()) {
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4 backdrop-blur-sm"
+        (click)="closeExpanded()"
+      >
+        <div
+          class="glass-surface-strong flex h-[96vh] w-[98vw] max-w-[1800px] flex-col overflow-hidden rounded-2xl"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="glass-subsection flex items-center justify-between border-b px-4 py-3">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm text-slate-500">markdown</span>
+              <span class="text-xs font-bold tracking-wider text-slate-500 uppercase">Expanded Markdown</span>
+            </div>
+            <button
+              (click)="closeExpanded()"
+              class="glass-button rounded-lg border p-1.5 text-slate-600 dark:text-slate-200"
+              title="Close expanded view"
+            >
+              <span class="material-symbols-outlined text-base">close</span>
+            </button>
+          </div>
+
+          <div class="flex flex-1 flex-col overflow-hidden md:flex-row">
+            <div class="flex-1 border-b border-slate-200 md:border-r md:border-b-0 dark:border-slate-700">
+              <textarea
+                [(ngModel)]="rawMarkdown"
+                class="h-full w-full resize-none overflow-auto bg-white p-6 font-mono text-sm text-slate-800 focus:outline-none dark:bg-slate-900 dark:text-slate-200"
+                [placeholder]="t.map()['PLACEHOLDER']"
+              ></textarea>
+            </div>
+            <div class="flex-1 overflow-y-auto bg-slate-50 p-6 dark:bg-slate-800/50">
+              <article
+                class="prose prose-slate dark:prose-invert prose-headings:font-bold prose-a:text-primary prose-code:text-pink-500 prose-pre:bg-slate-800 prose-pre:text-slate-100 max-w-none"
+                [innerHTML]="parsedHtml()"
+              ></article>
+            </div>
+          </div>
+
+          <div class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500">
+            <span>{{ wordCount() }} words • {{ charCount() }} chars</span>
+            <span class="text-slate-400">Esc to close</span>
+          </div>
+
+          <app-action-bar
+            [content]="outputHtml()"
+            filename="document.html"
+            mimeType="text/html"
+            source="Markdown"
+            [allowPrint]="true"
+          ></app-action-bar>
+        </div>
+      </div>
+    }
   `,
 })
 export class MarkdownPreviewComponent {
@@ -151,6 +229,7 @@ export class MarkdownPreviewComponent {
   widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
 
   t = inject(ScopedTranslationService);
+  isExpanded = signal(false);
 
   activeTab = signal<'editor' | 'preview'>('preview');
 
@@ -180,4 +259,33 @@ This is *italic*.
   outputHtml = computed(() => {
     return buildHtmlDocument(this.parsedHtml());
   });
+
+  toggleExpanded() {
+    this.isExpanded.update((expanded) => !expanded);
+  }
+
+  openExpanded() {
+    this.isExpanded.set(true);
+  }
+
+  closeExpanded() {
+    this.isExpanded.set(false);
+  }
+
+  wordCount() {
+    const text = this.rawMarkdown().trim();
+    if (!text) return 0;
+    return text.split(/\s+/).length;
+  }
+
+  charCount() {
+    return this.rawMarkdown().length;
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape' && this.isExpanded()) {
+      this.closeExpanded();
+    }
+  }
 }
