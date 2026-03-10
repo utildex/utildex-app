@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, signal, input } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, signal, input, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
@@ -185,15 +185,15 @@ import zh from './i18n/zh';
       </div>
     </ng-template>
 
-    @if (isExpanded()) {
+    <dialog
+      #expandedDialog
+      class="tool-modal-dialog"
+      (close)="onExpandedDialogClose()"
+      (click)="onExpandedDialogClick($event)"
+    >
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4 backdrop-blur-sm"
-        (click)="closeExpanded()"
+        class="tool-modal-panel glass-surface-strong flex h-[92vh] w-[min(96vw,1200px)] flex-col overflow-hidden rounded-2xl"
       >
-        <div
-          class="glass-surface-strong flex h-[92vh] w-[min(96vw,1200px)] flex-col overflow-hidden rounded-2xl"
-          (click)="$event.stopPropagation()"
-        >
           <div
             class="glass-subsection flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3"
           >
@@ -276,9 +276,8 @@ import zh from './i18n/zh';
               source="JSON Formatter"
             ></app-action-bar>
           }
-        </div>
       </div>
-    }
+    </dialog>
   `,
 })
 export class JsonFormatterComponent {
@@ -287,6 +286,7 @@ export class JsonFormatterComponent {
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
+  expandedDialog = viewChild<ElementRef<HTMLDialogElement>>('expandedDialog');
 
   content = signal<string>('');
   indentSize = signal<IndentOption>(2);
@@ -294,15 +294,33 @@ export class JsonFormatterComponent {
   isExpanded = signal(false);
 
   toggleExpanded() {
-    this.isExpanded.update((expanded) => !expanded);
+    if (this.isExpanded()) {
+      this.closeExpanded();
+    } else {
+      this.openExpanded();
+    }
   }
 
   openExpanded() {
+    const dialog = this.expandedDialog()?.nativeElement;
+    if (dialog && !dialog.open) dialog.showModal();
     this.isExpanded.set(true);
   }
 
   closeExpanded() {
+    const dialog = this.expandedDialog()?.nativeElement;
+    if (dialog?.open) dialog.close();
     this.isExpanded.set(false);
+  }
+
+  onExpandedDialogClose() {
+    this.isExpanded.set(false);
+  }
+
+  onExpandedDialogClick(event: MouseEvent) {
+    if (event.target === event.currentTarget) {
+      this.closeExpanded();
+    }
   }
 
   lineCount() {

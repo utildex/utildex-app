@@ -1,4 +1,4 @@
-import { Component, HostListener, signal, computed, inject, input } from '@angular/core';
+import { Component, ElementRef, HostListener, signal, computed, inject, input, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
@@ -168,15 +168,15 @@ import zh from './i18n/zh';
       </div>
     </ng-template>
 
-    @if (isExpanded()) {
+    <dialog
+      #expandedDialog
+      class="tool-modal-dialog"
+      (close)="onExpandedDialogClose()"
+      (click)="onExpandedDialogClick($event)"
+    >
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 p-4 backdrop-blur-sm"
-        (click)="closeExpanded()"
+        class="tool-modal-panel glass-surface-strong flex h-[96vh] w-[98vw] max-w-[1800px] flex-col overflow-hidden rounded-2xl"
       >
-        <div
-          class="glass-surface-strong flex h-[96vh] w-[98vw] max-w-[1800px] flex-col overflow-hidden rounded-2xl"
-          (click)="$event.stopPropagation()"
-        >
           <div class="glass-subsection flex items-center justify-between border-b px-4 py-3">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-sm text-slate-500">markdown</span>
@@ -199,7 +199,7 @@ import zh from './i18n/zh';
                 [placeholder]="t.map()['PLACEHOLDER']"
               ></textarea>
             </div>
-            <div class="flex-1 overflow-y-auto bg-slate-50 p-6 dark:bg-slate-800/50">
+            <div class="flex-1 overflow-y-auto bg-slate-50 p-6 dark:bg-slate-800">
               <article
                 class="prose prose-slate dark:prose-invert prose-headings:font-bold prose-a:text-primary prose-code:text-pink-500 prose-pre:bg-slate-800 prose-pre:text-slate-100 max-w-none"
                 [innerHTML]="parsedHtml()"
@@ -219,9 +219,8 @@ import zh from './i18n/zh';
             source="Markdown"
             [allowPrint]="true"
           ></app-action-bar>
-        </div>
       </div>
-    }
+    </dialog>
   `,
 })
 export class MarkdownPreviewComponent {
@@ -230,6 +229,7 @@ export class MarkdownPreviewComponent {
 
   t = inject(ScopedTranslationService);
   isExpanded = signal(false);
+  expandedDialog = viewChild<ElementRef<HTMLDialogElement>>('expandedDialog');
 
   activeTab = signal<'editor' | 'preview'>('preview');
 
@@ -261,15 +261,33 @@ This is *italic*.
   });
 
   toggleExpanded() {
-    this.isExpanded.update((expanded) => !expanded);
+    if (this.isExpanded()) {
+      this.closeExpanded();
+    } else {
+      this.openExpanded();
+    }
   }
 
   openExpanded() {
+    const dialog = this.expandedDialog()?.nativeElement;
+    if (dialog && !dialog.open) dialog.showModal();
     this.isExpanded.set(true);
   }
 
   closeExpanded() {
+    const dialog = this.expandedDialog()?.nativeElement;
+    if (dialog?.open) dialog.close();
     this.isExpanded.set(false);
+  }
+
+  onExpandedDialogClose() {
+    this.isExpanded.set(false);
+  }
+
+  onExpandedDialogClick(event: MouseEvent) {
+    if (event.target === event.currentTarget) {
+      this.closeExpanded();
+    }
   }
 
   wordCount() {
