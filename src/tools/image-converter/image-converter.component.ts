@@ -38,12 +38,12 @@ interface QueuedImage {
       <div
         appFileDrop
         (fileDropped)="handleFileDrop($event)"
-        class="relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface relative flex h-full flex-col overflow-hidden rounded-xl"
       >
         <!-- 1x1 -->
         @if (viewMode() === 'compact') {
           <div
-            class="flex h-6 items-center justify-center border-b border-slate-100 bg-slate-50 dark:border-slate-700 dark:bg-slate-900/50"
+            class="glass-subsection flex h-6 items-center justify-center border-b"
           >
             <span class="truncate px-1 text-[9px] font-bold text-slate-500 uppercase">{{
               t.map()['TITLE_SHORT']
@@ -88,7 +88,7 @@ interface QueuedImage {
         <!-- Standard -->
         @else {
           <div
-            class="bg-primary/5 flex items-center justify-between border-b border-slate-100 p-2 dark:border-slate-700 dark:bg-slate-900/50"
+            class="glass-subsection flex items-center justify-between border-b p-2"
           >
             <span class="text-primary px-1 text-xs font-bold uppercase">{{
               t.map()['TITLE']
@@ -135,10 +135,10 @@ interface QueuedImage {
           </div>
 
           @if (images().length > 0) {
-            <div class="grid grid-cols-2 gap-1 border-t border-slate-100 p-2 dark:border-slate-700">
+            <div class="glass-subsection grid grid-cols-2 gap-1 border-t p-2">
               <select
                 [(ngModel)]="targetFormat"
-                class="rounded border bg-slate-50 text-[10px] dark:bg-slate-900 dark:text-white"
+                class="glass-control rounded border text-[10px] dark:text-white"
               >
                 <option value="image/jpeg">JPG</option>
                 <option value="image/png">PNG</option>
@@ -177,14 +177,14 @@ interface QueuedImage {
 
     <ng-template #mainContent>
       <div
-        class="flex min-h-[500px] flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm md:p-8 dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface glass-surface-hover flex h-[min(78vh,50rem)] flex-col overflow-hidden rounded-2xl"
       >
         <!-- Toolbar -->
-        <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div class="glass-subsection flex flex-wrap items-center justify-between gap-4 border-b px-4 py-3">
           <div class="flex items-center gap-4">
             <button
               (click)="triggerUpload()"
-              class="flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-200 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+              class="glass-button flex items-center gap-2 rounded-lg border px-4 py-2 font-medium text-slate-700 dark:text-white"
             >
               <span class="material-symbols-outlined">add_photo_alternate</span>
               {{ t.map()['BTN_ADD'] }}
@@ -199,7 +199,7 @@ interface QueuedImage {
                 }}</span>
                 <select
                   [(ngModel)]="targetFormat"
-                  class="focus:ring-primary rounded-lg border border-slate-300 bg-slate-50 px-2 py-1 text-sm text-slate-900 focus:outline-none dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                  class="glass-control focus:ring-primary rounded-lg border px-2 py-1 text-sm text-slate-900 focus:outline-none dark:text-white"
                 >
                   <option value="image/jpeg">JPG</option>
                   <option value="image/png">PNG</option>
@@ -228,6 +228,24 @@ interface QueuedImage {
 
           @if (images().length > 0) {
             <div class="flex gap-2">
+              @if (doneCount() > 0) {
+                <button
+                  (click)="removeCompleted()"
+                  class="glass-button rounded-lg border px-3 py-2 text-xs font-medium text-slate-600 dark:text-slate-200"
+                >
+                  Remove completed
+                </button>
+              }
+
+              @if (errorCount() > 0) {
+                <button
+                  (click)="removeFailed()"
+                  class="glass-button rounded-lg border px-3 py-2 text-xs font-medium text-red-500"
+                >
+                  Remove failed
+                </button>
+              }
+
               <button
                 (click)="reset()"
                 class="px-4 py-2 text-slate-500 transition-colors hover:text-red-500"
@@ -263,11 +281,47 @@ interface QueuedImage {
           }
         </div>
 
+        @if (images().length > 0) {
+          <div class="glass-subsection flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold text-slate-500 uppercase">Quick presets</span>
+              <button
+                (click)="applyPreset('image/webp', 0.8)"
+                class="glass-button rounded-lg border px-2.5 py-1 text-xs font-medium text-slate-700 dark:text-slate-200"
+              >
+                WebP 80%
+              </button>
+              <button
+                (click)="applyPreset('image/jpeg', 0.85)"
+                class="glass-button rounded-lg border px-2.5 py-1 text-xs font-medium text-slate-700 dark:text-slate-200"
+              >
+                JPG 85%
+              </button>
+              <button
+                (click)="applyPreset('image/png', null)"
+                class="glass-button rounded-lg border px-2.5 py-1 text-xs font-medium text-slate-700 dark:text-slate-200"
+              >
+                PNG Lossless
+              </button>
+            </div>
+
+            <div class="text-right text-xs text-slate-500 dark:text-slate-300">
+              <div>
+                Projected: {{ formatBytes(projectedOutputSize()) }} from
+                {{ formatBytes(totalInputSize()) }}
+              </div>
+              <div class="font-semibold" [class.text-green-600]="projectedSavingsBytes() > 0">
+                Saving {{ formatBytes(projectedSavingsBytes()) }} ({{ projectedSavingsPercent() }}%)
+              </div>
+            </div>
+          </div>
+        }
+
         <!-- Grid -->
         <div
           appFileDrop
           (fileDropped)="handleFileDrop($event)"
-          class="relative min-h-[300px] flex-1 rounded-xl border-2 border-dashed bg-slate-50/50 p-4 transition-all dark:bg-slate-900/20"
+          class="relative m-4 min-h-0 flex-1 overflow-y-auto rounded-xl border-2 border-dashed bg-slate-50/50 p-4 transition-all dark:bg-slate-900/20"
           [class.border-slate-200]="images().length > 0"
           [class.dark:border-slate-700]="images().length > 0"
           [class.border-slate-300]="images().length === 0"
@@ -287,7 +341,7 @@ interface QueuedImage {
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               @for (img of images(); track img.id) {
                 <div
-                  class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
+                  class="glass-surface group relative flex flex-col overflow-hidden rounded-xl"
                 >
                   <div
                     class="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-700"
@@ -371,6 +425,30 @@ export class ImageConverterComponent {
       this.images().every((i) => i.status === 'done' || i.status === 'error'),
   );
 
+  doneCount = computed(() => this.images().filter((i) => i.status === 'done').length);
+  errorCount = computed(() => this.images().filter((i) => i.status === 'error').length);
+
+  totalInputSize = computed(() => this.images().reduce((sum, i) => sum + i.file.size, 0));
+
+  projectedOutputSize = computed(() => {
+    const format = this.targetFormat();
+    const qual = this.quality();
+    return this.images().reduce((sum, i) => {
+      if (i.resultSize) return sum + i.resultSize;
+      return sum + this.estimateOutputSize(i.file.size, format, qual);
+    }, 0);
+  });
+
+  projectedSavingsBytes = computed(() =>
+    Math.max(0, this.totalInputSize() - this.projectedOutputSize()),
+  );
+
+  projectedSavingsPercent = computed(() => {
+    const totalIn = this.totalInputSize();
+    if (!totalIn) return 0;
+    return Math.round((this.projectedSavingsBytes() / totalIn) * 100);
+  });
+
   viewMode = computed(() => {
     const config = this.widgetConfig();
     // 1x1 -> compact
@@ -429,6 +507,36 @@ export class ImageConverterComponent {
     });
     this.images.set([]);
     this.isProcessing.set(false);
+  }
+
+  removeCompleted() {
+    this.removeByStatus('done');
+  }
+
+  removeFailed() {
+    this.removeByStatus('error');
+  }
+
+  removeByStatus(status: ImageStatus) {
+    const toRemove = this.images().filter((i) => i.status === status);
+    toRemove.forEach((img) => {
+      URL.revokeObjectURL(img.previewUrl);
+      if (img.resultUrl) URL.revokeObjectURL(img.resultUrl);
+    });
+    this.images.update((curr) => curr.filter((i) => i.status !== status));
+  }
+
+  applyPreset(format: string, quality: number | null) {
+    this.targetFormat.set(format);
+    if (quality !== null) this.quality.set(quality);
+  }
+
+  estimateOutputSize(inputSize: number, format: string, quality: number): number {
+    // Heuristic projection for quick UX feedback before conversion runs.
+    if (format === 'image/png') return Math.round(inputSize * 0.95);
+    if (format === 'image/webp') return Math.round(inputSize * (0.35 + quality * 0.45));
+    if (format === 'image/jpeg') return Math.round(inputSize * (0.45 + quality * 0.5));
+    return inputSize;
   }
 
   async convertAll() {
