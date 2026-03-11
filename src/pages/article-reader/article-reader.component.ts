@@ -54,7 +54,7 @@ import zh from './i18n/zh';
           <div class="relative">
             <button
               (click)="togglePrefs()"
-              class="glass-control cursor-pointer rounded-full p-2 text-slate-500 transition-colors hover:text-primary"
+              class="glass-control hover:text-primary cursor-pointer rounded-full p-2 text-slate-500 transition-colors"
               [title]="t.map()['READER_SETTINGS']"
             >
               <span class="material-symbols-outlined">text_fields</span>
@@ -75,13 +75,13 @@ import zh from './i18n/zh';
                   <div class="glass-subsection flex items-center gap-2 rounded-lg p-1">
                     <button
                       (click)="decreaseFontSize()"
-                      class="glass-control cursor-pointer flex-1 rounded p-1 text-sm"
+                      class="glass-control flex-1 cursor-pointer rounded p-1 text-sm"
                     >
                       A-
                     </button>
                     <button
                       (click)="increaseFontSize()"
-                      class="glass-control cursor-pointer flex-1 rounded p-1 text-lg"
+                      class="glass-control flex-1 cursor-pointer rounded p-1 text-lg"
                     >
                       A+
                     </button>

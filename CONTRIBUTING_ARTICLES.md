@@ -12,7 +12,7 @@ This guide explains how to add new articles or translate existing ones.
 Articles are loaded on-demand via HTTP to keep the application lightweight.
 
 1.  **Registry (`src/data/article-registry.ts`)**: Defines metadata (Title, Author, Date, Tags) which is bundled with the app for instant lists/searching.
-2.  **Content Files (`public/assets/articles/{id}/{lang}.md`)**: Separate Markdown files that are lazy-loaded when the user opens an article.
+2.  **Content Files (`src/assets/articles/{id}/{lang}.md`)**: Separate Markdown files that are lazy-loaded when the user opens an article.
 
 ---
 
@@ -47,12 +47,12 @@ Open `src/data/article-registry.ts` and add a new entry to the `ARTICLE_REGISTRY
 ```
 
 ### 2. Create Content Files
-Create a new folder in `public/assets/articles/` matching your article ID.
+Create a new folder in `src/assets/articles/` matching your article ID.
 Inside that folder, create a Markdown file for each supported language code (e.g., `en.md`, `fr.md`).
 
 **Structure:**
 ```
-public/
+src/
   assets/
     articles/
       mastering-typescript/

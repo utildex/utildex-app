@@ -33,9 +33,7 @@ import fr from './i18n/fr';
     <!-- WIDGET MODE -->
     @else {
       <!-- The container should handle h-full and basic styling -->
-      <div
-        class="glass-surface relative flex h-full flex-col overflow-hidden rounded-xl"
-      >
+      <div class="glass-surface relative flex h-full flex-col overflow-hidden rounded-xl">
         <!-- Switch content based on widget size -->
         @switch (viewMode()) {
           <!-- 1x1: COMPACT -->
@@ -50,9 +48,7 @@ import fr from './i18n/fr';
 
           <!-- 2x1: WIDE -->
           @case ('wide') {
-            <div
-              class="glass-subsection flex h-6 items-center justify-between border-b px-2"
-            >
+            <div class="glass-subsection flex h-6 items-center justify-between border-b px-2">
               <span class="text-[10px] font-bold text-slate-500 uppercase">{{
                 t.map()['TITLE']
               }}</span>
@@ -65,9 +61,7 @@ import fr from './i18n/fr';
 
           <!-- 1x2: TALL -->
           @case ('tall') {
-            <div
-              class="glass-subsection flex h-6 items-center justify-center border-b"
-            >
+            <div class="glass-subsection flex h-6 items-center justify-center border-b">
               <span class="text-[10px] font-bold text-slate-500 uppercase">{{
                 t.map()['TITLE_SHORT']
               }}</span>
@@ -90,9 +84,7 @@ import fr from './i18n/fr';
 
     <!-- SHARED CONTENT (Main Page Logic) -->
     <ng-template #mainContent>
-      <div
-        class="glass-surface min-h-[400px] rounded-2xl p-6"
-      >
+      <div class="glass-surface min-h-[400px] rounded-2xl p-6">
         <div class="flex flex-col items-center gap-6 py-12 text-center">
           <span class="material-symbols-outlined text-primary text-5xl">construction</span>
 

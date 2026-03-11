@@ -245,6 +245,55 @@
       0 6px 18px -10px rgba(0, 0, 0, 0.4),
       inset 0 0.5px 0 0 rgba(255, 255, 255, 0.05);
   }
+
+  /* Shared expanded tool modal shell: keep this above dashboard layers and isolate panel blending. */
+  .tool-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    background: rgba(2, 6, 23, 0.74);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .tool-modal-panel {
+    position: relative;
+    isolation: isolate;
+    z-index: 1;
+  }
+
+  .tool-modal-dialog {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    max-width: none;
+    max-height: none;
+    width: auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  .tool-modal-dialog[open] {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 1rem;
+  }
+
+  .tool-modal-dialog:not([open]) {
+    display: none;
+  }
+
+  .tool-modal-dialog::backdrop {
+    background: rgba(2, 6, 23, 0.74);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
 }
 
 .material-symbols-outlined {

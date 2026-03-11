@@ -11,9 +11,7 @@ import zh from './i18n/zh';
   standalone: true,
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
-    <div
-      class="glass-subsection flex flex-wrap items-center gap-3 rounded-b-2xl border-t p-4"
-    >
+    <div class="glass-subsection flex flex-wrap items-center gap-3 rounded-b-2xl border-t p-4">
       <div class="mr-auto flex items-center gap-2 text-sm font-medium text-slate-500">
         <span class="material-symbols-outlined text-lg" aria-hidden="true">check_circle</span>
         {{ t.map()['READY_LABEL'] }}

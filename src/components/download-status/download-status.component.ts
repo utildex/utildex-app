@@ -14,9 +14,7 @@ import zh from './i18n/zh';
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     @if (offline.isDownloading()) {
-      <div
-        class="glass-surface animate-slide-up fixed right-4 bottom-4 z-50 w-80 rounded-xl p-4"
-      >
+      <div class="glass-surface animate-slide-up fixed right-4 bottom-4 z-50 w-80 rounded-xl p-4">
         <div class="mb-3 flex items-center justify-between">
           <h3 class="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
             <span class="material-symbols-outlined text-primary animate-bounce"

@@ -1,4 +1,12 @@
-import { Component, inject, signal, input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  inject,
+  signal,
+  input,
+  viewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
@@ -24,24 +32,27 @@ import zh from './i18n/zh';
       </app-tool-layout>
     } @else {
       <!-- Widget Mode -->
-      <div
-        class="relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800"
-      >
-        <div
-          class="flex items-center justify-between border-b border-slate-100 bg-slate-50 p-2 dark:border-slate-700 dark:bg-slate-900/50"
-        >
+      <div class="glass-surface relative flex h-full flex-col overflow-hidden rounded-xl">
+        <div class="glass-subsection flex items-center justify-between border-b p-2">
           <span class="px-1 text-xs font-bold text-slate-500 uppercase">JSON Formatter</span>
           <div class="flex gap-1">
             <button
+              (click)="openExpanded()"
+              class="glass-control rounded p-1 text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
+              title="Expand"
+            >
+              <span class="material-symbols-outlined text-sm">open_in_full</span>
+            </button>
+            <button
               (click)="minify()"
-              class="rounded p-1 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"
+              class="glass-control rounded p-1 text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
               title="Minify"
             >
               <span class="material-symbols-outlined text-sm">compress</span>
             </button>
             <button
               (click)="format()"
-              class="rounded p-1 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700"
+              class="glass-control rounded p-1 text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
               title="Format"
             >
               <span class="material-symbols-outlined text-sm">data_object</span>
@@ -60,11 +71,11 @@ import zh from './i18n/zh';
 
     <ng-template #mainContent>
       <div
-        class="flex h-[calc(100vh-16rem)] min-h-[500px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800"
+        class="glass-surface glass-surface-hover flex h-[min(72vh,44rem)] flex-col overflow-hidden rounded-2xl"
       >
         <!-- Toolbar -->
         <div
-          class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700 dark:bg-slate-800"
+          class="glass-subsection flex flex-wrap items-center justify-between gap-4 border-b px-4 py-3"
         >
           <div class="flex items-center gap-4">
             <div class="flex items-center gap-2">
@@ -74,7 +85,7 @@ import zh from './i18n/zh';
               <select
                 [(ngModel)]="indentSize"
                 (change)="format()"
-                class="focus:ring-primary focus:border-primary rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm text-slate-700 focus:outline-none dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
+                class="glass-control focus:ring-primary focus:border-primary rounded-lg border px-2 py-1 text-sm text-slate-700 focus:outline-none dark:text-slate-200"
               >
                 <option [ngValue]="2">{{ t.map()['TAB_2'] }}</option>
                 <option [ngValue]="4">{{ t.map()['TAB_4'] }}</option>
@@ -92,7 +103,7 @@ import zh from './i18n/zh';
             </button>
             <button
               (click)="minify()"
-              class="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+              class="glass-button rounded-lg border px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200"
             >
               {{ t.map()['BTN_MINIFY'] }}
             </button>
@@ -101,6 +112,15 @@ import zh from './i18n/zh';
               class="bg-primary rounded-lg px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600"
             >
               {{ t.map()['BTN_FORMAT'] }}
+            </button>
+            <button
+              (click)="toggleExpanded()"
+              class="glass-button rounded-lg border px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200"
+              [title]="isExpanded() ? 'Exit expanded view' : 'Expand editor'"
+            >
+              <span class="material-symbols-outlined align-middle text-base">
+                {{ isExpanded() ? 'close_fullscreen' : 'open_in_full' }}
+              </span>
             </button>
           </div>
         </div>
@@ -113,7 +133,7 @@ import zh from './i18n/zh';
             [(ngModel)]="content"
             (ngModelChange)="error.set(null)"
             [placeholder]="t.map()['INPUT_PLACEHOLDER']"
-            class="h-full w-full resize-none bg-white p-6 font-mono text-sm text-slate-800 transition-colors focus:outline-none dark:bg-slate-900 dark:text-slate-200"
+            class="h-full w-full resize-none overflow-auto bg-white p-6 font-mono text-sm text-slate-800 transition-colors focus:outline-none dark:bg-slate-900 dark:text-slate-200"
             [class.bg-red-50]="error()"
             [class.dark:bg-red-900/10]="error()"
           ></textarea>
@@ -143,6 +163,20 @@ import zh from './i18n/zh';
           }
         </div>
 
+        <!-- Status -->
+        <div
+          class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
+        >
+          <span>{{ lineCount() }} lines • {{ charCount() }} chars</span>
+          @if (content().trim()) {
+            @if (error()) {
+              <span class="text-red-500">Invalid JSON</span>
+            } @else {
+              <span class="text-emerald-600 dark:text-emerald-400">Valid JSON</span>
+            }
+          }
+        </div>
+
         <!-- Actions -->
         @if (content() && !error()) {
           <app-action-bar
@@ -154,6 +188,100 @@ import zh from './i18n/zh';
         }
       </div>
     </ng-template>
+
+    <dialog
+      #expandedDialog
+      class="tool-modal-dialog"
+      (close)="onExpandedDialogClose()"
+      (click)="onExpandedDialogClick($event)"
+    >
+      <div
+        class="tool-modal-panel glass-surface-strong flex h-[92vh] w-[min(96vw,1200px)] flex-col overflow-hidden rounded-2xl"
+      >
+        <div
+          class="glass-subsection flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-slate-500 uppercase">Expanded JSON Editor</span>
+            <span class="text-xs text-slate-400">Ctrl+Enter: Format, Ctrl+Shift+M: Minify</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <select
+              [(ngModel)]="indentSize"
+              class="glass-control focus:ring-primary focus:border-primary rounded-lg border px-2 py-1 text-sm text-slate-700 focus:outline-none dark:text-slate-200"
+            >
+              <option [ngValue]="2">{{ t.map()['TAB_2'] }}</option>
+              <option [ngValue]="4">{{ t.map()['TAB_4'] }}</option>
+              <option value="tab">{{ t.map()['TAB_TAB'] }}</option>
+            </select>
+            <button
+              (click)="minify()"
+              class="glass-button rounded-lg border px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200"
+            >
+              {{ t.map()['BTN_MINIFY'] }}
+            </button>
+            <button
+              (click)="format()"
+              class="bg-primary rounded-lg px-3 py-1.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-600"
+            >
+              {{ t.map()['BTN_FORMAT'] }}
+            </button>
+            <button
+              (click)="closeExpanded()"
+              class="glass-button rounded-lg border p-1.5 text-slate-600 dark:text-slate-200"
+              title="Close expanded view"
+            >
+              <span class="material-symbols-outlined text-base">close</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative flex-1">
+          <textarea
+            [(ngModel)]="content"
+            (ngModelChange)="error.set(null)"
+            [placeholder]="t.map()['INPUT_PLACEHOLDER']"
+            class="h-full w-full resize-none overflow-auto bg-white p-6 font-mono text-sm text-slate-800 focus:outline-none dark:bg-slate-900 dark:text-slate-200"
+            [class.bg-red-50]="error()"
+            [class.dark:bg-red-900/10]="error()"
+          ></textarea>
+
+          @if (error()) {
+            <div
+              class="absolute right-4 bottom-4 left-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-100 px-4 py-3 text-red-700 shadow-lg dark:border-red-800 dark:bg-red-900/80 dark:text-red-200"
+            >
+              <span class="material-symbols-outlined mt-0.5 text-xl">warning</span>
+              <div>
+                <strong class="block font-bold">{{ t.map()['ERROR_INVALID'] }}</strong>
+                <span class="font-mono text-sm opacity-90">{{ error() }}</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div
+          class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
+        >
+          <span>{{ lineCount() }} lines • {{ charCount() }} chars</span>
+          @if (content().trim()) {
+            @if (error()) {
+              <span class="text-red-500">Invalid JSON</span>
+            } @else {
+              <span class="text-emerald-600 dark:text-emerald-400">Valid JSON</span>
+            }
+          }
+        </div>
+
+        @if (content() && !error()) {
+          <app-action-bar
+            [content]="content()"
+            filename="data.json"
+            mimeType="application/json"
+            source="JSON Formatter"
+          ></app-action-bar>
+        }
+      </div>
+    </dialog>
   `,
 })
 export class JsonFormatterComponent {
@@ -162,10 +290,68 @@ export class JsonFormatterComponent {
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
+  expandedDialog = viewChild<ElementRef<HTMLDialogElement>>('expandedDialog');
 
   content = signal<string>('');
   indentSize = signal<IndentOption>(2);
   error = signal<string | null>(null);
+  isExpanded = signal(false);
+
+  toggleExpanded() {
+    if (this.isExpanded()) {
+      this.closeExpanded();
+    } else {
+      this.openExpanded();
+    }
+  }
+
+  openExpanded() {
+    const dialog = this.expandedDialog()?.nativeElement;
+    if (dialog && !dialog.open) dialog.showModal();
+    this.isExpanded.set(true);
+  }
+
+  closeExpanded() {
+    const dialog = this.expandedDialog()?.nativeElement;
+    if (dialog?.open) dialog.close();
+    this.isExpanded.set(false);
+  }
+
+  onExpandedDialogClose() {
+    this.isExpanded.set(false);
+  }
+
+  onExpandedDialogClick(event: MouseEvent) {
+    if (event.target === event.currentTarget) {
+      this.closeExpanded();
+    }
+  }
+
+  lineCount() {
+    if (!this.content()) return 0;
+    return this.content().split(/\r?\n/).length;
+  }
+
+  charCount() {
+    return this.content().length;
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    const isCmdOrCtrl = event.ctrlKey || event.metaKey;
+    if (!isCmdOrCtrl) return;
+
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.format();
+      return;
+    }
+
+    if (event.shiftKey && event.key.toLowerCase() === 'm') {
+      event.preventDefault();
+      this.minify();
+    }
+  }
 
   format() {
     if (!this.content().trim()) return;

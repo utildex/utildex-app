@@ -73,10 +73,10 @@ import zh from './i18n/zh';
       <div class="flex flex-wrap gap-2">
         <button
           (click)="activeTag.set(null)"
-          class="glass-control cursor-pointer rounded-full px-3 py-1 text-sm font-medium transition-colors hover:text-primary hover:ring-1 hover:ring-primary/40"
+          class="glass-control hover:text-primary hover:ring-primary/40 cursor-pointer rounded-full px-3 py-1 text-sm font-medium transition-colors hover:ring-1"
           [class]="
             !activeTag()
-              ? 'text-primary ring-1 ring-primary font-semibold dark:text-white'
+              ? 'text-primary ring-primary font-semibold ring-1 dark:text-white'
               : 'text-slate-600 dark:text-slate-400'
           "
         >
@@ -85,10 +85,10 @@ import zh from './i18n/zh';
         @for (tag of allTags(); track tag) {
           <button
             (click)="activeTag.set(tag)"
-            class="glass-control cursor-pointer rounded-full px-3 py-1 text-sm font-medium transition-colors hover:text-primary hover:ring-1 hover:ring-primary/40"
+            class="glass-control hover:text-primary hover:ring-primary/40 cursor-pointer rounded-full px-3 py-1 text-sm font-medium transition-colors hover:ring-1"
             [class]="
               activeTag() === tag
-                ? 'text-primary ring-1 ring-primary font-semibold dark:text-white'
+                ? 'text-primary ring-primary font-semibold ring-1 dark:text-white'
                 : 'text-slate-600 dark:text-slate-400'
             "
           >
