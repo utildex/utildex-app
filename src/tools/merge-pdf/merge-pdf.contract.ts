@@ -6,10 +6,10 @@ export const contract: ToolContract = {
   metadata: {
     name: { en: 'Merge PDF', fr: 'Fusionner PDF', es: 'Unir PDF', zh: '合并 PDF' },
     description: {
-      en: 'Combine multiple PDF files into a single document. Reorder easily.',
-      fr: 'Combinez plusieurs fichiers PDF en un seul document. Reorganisez facilement.',
-      es: 'Combine multiples archivos PDF en un solo documento. Reordene facilmente.',
-      zh: '将多个 PDF 文件合并为一个文档。轻松重新排序。',
+      en: 'Combine multiple PDF files into a single document. Reorder easily. No data leaves your device. Works fully offline; feel free to disconnect.',
+      fr: 'Combinez plusieurs fichiers PDF en un seul document. Reorganisez facilement. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
+      es: 'Combine multiples archivos PDF en un solo documento. Reordene facilmente. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
+      zh: '将多个 PDF 文件合并为一个文档，并轻松重新排序。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     },
     icon: 'join_full',
     version: '1.0.0',

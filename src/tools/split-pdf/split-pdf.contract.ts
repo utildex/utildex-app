@@ -6,10 +6,10 @@ export const contract: ToolContract = {
   metadata: {
     name: { en: 'Split PDF', fr: 'Diviser PDF', es: 'Dividir PDF', zh: '拆分 PDF' },
     description: {
-      en: 'Extract specific pages from a PDF document. Processed 100% locally.',
-      fr: 'Extrayez des pages specifiques dun document PDF. Traite 100% localement.',
-      es: 'Extraiga paginas especificas de un documento PDF. Procesado 100% localmente.',
-      zh: '从 PDF 文档中提取特定页面。100% 本地处理。',
+      en: 'Extract specific pages from a PDF document. No data leaves your device. Works fully offline; feel free to disconnect.',
+      fr: 'Extrayez des pages specifiques dun document PDF. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
+      es: 'Extraiga paginas especificas de un documento PDF. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
+      zh: '从 PDF 文档中提取特定页面。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     },
     icon: 'picture_as_pdf',
     version: '1.0.0',

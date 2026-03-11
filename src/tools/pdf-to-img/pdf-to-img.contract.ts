@@ -6,10 +6,10 @@ export const contract: ToolContract = {
   metadata: {
     name: { en: 'PDF to Image', fr: 'PDF en Image', es: 'PDF a Imagen', zh: 'PDF 转图片' },
     description: {
-      en: 'Convert PDF pages to JPG, PNG, or WebP images. High resolution supported.',
-      fr: 'Convertissez des pages PDF en images JPG, PNG ou WebP. Haute resolution supportee.',
-      es: 'Convierta paginas PDF a imagenes JPG, PNG o WebP. Alta resolucion soportada.',
-      zh: '将 PDF 页面转换为 JPG、PNG 或 WebP 图片。支持高分辨率。',
+      en: 'Convert PDF pages to JPG, PNG, or WebP images. No data leaves your device. Works fully offline; feel free to disconnect.',
+      fr: 'Convertissez des pages PDF en images JPG, PNG ou WebP. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
+      es: 'Convierta paginas PDF a imagenes JPG, PNG o WebP. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
+      zh: '将 PDF 页面转换为 JPG、PNG 或 WebP 图片。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     },
     icon: 'image',
     version: '1.0.0',
