@@ -67,7 +67,7 @@ import zh from './i18n/zh';
         <div class="flex flex-wrap gap-2 pb-2" appTourTarget="tour-filters">
           <button
             (click)="toolService.clearCategories()"
-            class="glass-control cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:text-primary hover:ring-1 hover:ring-primary/40"
+            class="glass-control hover:text-primary hover:ring-primary/40 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:ring-1"
             [class.text-primary]="selectedCategories().size === 0"
             [class.font-semibold]="selectedCategories().size === 0"
             [class.ring-1]="selectedCategories().size === 0"
@@ -80,7 +80,7 @@ import zh from './i18n/zh';
           @for (cat of categories(); track cat) {
             <button
               (click)="toolService.toggleCategory(cat)"
-              class="glass-control cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:text-primary hover:ring-1 hover:ring-primary/40"
+              class="glass-control hover:text-primary hover:ring-primary/40 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:ring-1"
               [class.text-primary]="isCategorySelected(cat)"
               [class.font-semibold]="isCategorySelected(cat)"
               [class.ring-1]="isCategorySelected(cat)"

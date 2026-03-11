@@ -17,9 +17,7 @@ import zh from './i18n/zh';
       class="flex h-full flex-col border-l border-slate-200 bg-white shadow-xl dark:border-slate-800 dark:bg-slate-900"
     >
       <!-- Header -->
-      <div
-        class="glass-subsection flex items-center justify-between border-b p-4"
-      >
+      <div class="glass-subsection flex items-center justify-between border-b p-4">
         <h3 class="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
           <span class="material-symbols-outlined text-slate-500">content_paste</span>
           {{ t.map()['TITLE'] }}

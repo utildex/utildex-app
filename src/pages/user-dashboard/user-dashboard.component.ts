@@ -1,4 +1,12 @@
-import { Component, inject, signal, computed, effect, PLATFORM_ID, HostListener } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  effect,
+  PLATFORM_ID,
+  HostListener,
+} from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolService, DashboardWidget, PendingPlacement } from '../../services/tool.service';
@@ -21,10 +29,8 @@ import { TourService } from '../../services/tour.service';
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     <div class="space-y-6 pb-8">
-
       <!-- Header -->
       <div class="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-
         <div>
           <h1 class="flex items-center gap-3 text-3xl font-bold text-slate-900 dark:text-white">
             <span class="material-symbols-outlined text-primary text-3xl">dashboard</span>

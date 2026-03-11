@@ -16,9 +16,7 @@ import zh from './i18n/zh';
       <div
         class="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/95 p-4 backdrop-blur"
       >
-        <div
-          class="glass-surface w-full max-w-lg overflow-hidden rounded-2xl"
-        >
+        <div class="glass-surface w-full max-w-lg overflow-hidden rounded-2xl">
           <div class="p-6 text-center">
             <div
               class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-900/30"

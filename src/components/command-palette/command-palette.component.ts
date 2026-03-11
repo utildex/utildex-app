@@ -69,9 +69,7 @@ interface CommandResult {
 
           <!-- Filters & Sorting (Collapsible) -->
           @if (isFilterOpen()) {
-            <div
-              class="glass-subsection animate-fade-in flex flex-col gap-3 border-b p-3"
-            >
+            <div class="glass-subsection animate-fade-in flex flex-col gap-3 border-b p-3">
               <!-- Categories -->
               <div class="flex flex-wrap gap-2">
                 <button

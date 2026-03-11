@@ -42,9 +42,7 @@ interface QueuedImage {
       >
         <!-- 1x1 -->
         @if (viewMode() === 'compact') {
-          <div
-            class="glass-subsection flex h-6 items-center justify-center border-b"
-          >
+          <div class="glass-subsection flex h-6 items-center justify-center border-b">
             <span class="truncate px-1 text-[9px] font-bold text-slate-500 uppercase">{{
               t.map()['TITLE_SHORT']
             }}</span>
@@ -87,9 +85,7 @@ interface QueuedImage {
         }
         <!-- Standard -->
         @else {
-          <div
-            class="glass-subsection flex items-center justify-between border-b p-2"
-          >
+          <div class="glass-subsection flex items-center justify-between border-b p-2">
             <span class="text-primary px-1 text-xs font-bold uppercase">{{
               t.map()['TITLE']
             }}</span>
@@ -180,7 +176,9 @@ interface QueuedImage {
         class="glass-surface glass-surface-hover flex h-[min(78vh,50rem)] flex-col overflow-hidden rounded-2xl"
       >
         <!-- Toolbar -->
-        <div class="glass-subsection flex flex-wrap items-center justify-between gap-4 border-b px-4 py-3">
+        <div
+          class="glass-subsection flex flex-wrap items-center justify-between gap-4 border-b px-4 py-3"
+        >
           <div class="flex items-center gap-4">
             <button
               (click)="triggerUpload()"
@@ -282,7 +280,9 @@ interface QueuedImage {
         </div>
 
         @if (images().length > 0) {
-          <div class="glass-subsection flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2">
+          <div
+            class="glass-subsection flex flex-wrap items-center justify-between gap-3 border-b px-4 py-2"
+          >
             <div class="flex flex-wrap items-center gap-2">
               <span class="text-xs font-bold text-slate-500 uppercase">Quick presets</span>
               <button
@@ -340,9 +340,7 @@ interface QueuedImage {
           } @else {
             <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
               @for (img of images(); track img.id) {
-                <div
-                  class="glass-surface group relative flex flex-col overflow-hidden rounded-xl"
-                >
+                <div class="glass-surface group relative flex flex-col overflow-hidden rounded-xl">
                   <div
                     class="relative aspect-square overflow-hidden bg-slate-100 dark:bg-slate-700"
                   >
