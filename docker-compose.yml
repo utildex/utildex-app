@@ -1,0 +1,8 @@
+services:
+  utildex:
+    build:
+      context: .
+      args:
+        APP_BASE_URL: ${APP_BASE_URL:-http://localhost:${PORT:-9526}}
+    ports:
+      - "${PORT:-9526}:80"
