@@ -5,14 +5,13 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ToolService } from './tool.service';
 import { ArticleService } from './article.service';
 import { I18nService } from './i18n.service';
+import { AppConfigService } from './app-config.service';
 import { filter } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SeoService {
-  private readonly baseUrl = 'https://utildex.com';
-
   private title: Title = inject(Title);
   private meta: Meta = inject(Meta);
   private router: Router = inject(Router);
@@ -20,6 +19,7 @@ export class SeoService {
   private toolService = inject(ToolService);
   private articleService = inject(ArticleService);
   private i18n = inject(I18nService);
+  private appConfig = inject(AppConfigService);
   private document = inject(DOCUMENT);
 
   private noIndexPaths = new Set(['/my-dashboard', '/history', '/preview-banner']);
@@ -55,7 +55,7 @@ export class SeoService {
 
     const path = this.normalizeCurrentPath();
 
-    link.setAttribute('href', this.baseUrl + path);
+    link.setAttribute('href', this.appConfig.getPublicBaseUrl() + path);
   }
 
   private updateHreflangTags() {
@@ -73,7 +73,7 @@ export class SeoService {
       }
 
       const cleanPath = `/${lang.code}${urlSuffix}`.replace('//', '/');
-      link.setAttribute('href', this.baseUrl + cleanPath);
+      link.setAttribute('href', this.appConfig.getPublicBaseUrl() + cleanPath);
     });
 
     let xDefault: HTMLLinkElement | null = head.querySelector(`link[hreflang='x-default']`);
@@ -84,7 +84,7 @@ export class SeoService {
       head.appendChild(xDefault);
     }
     const enPath = `/en${urlSuffix}`.replace('//', '/');
-    xDefault.setAttribute('href', this.baseUrl + enPath);
+    xDefault.setAttribute('href', this.appConfig.getPublicBaseUrl() + enPath);
   }
 
   private updateJsonLd() {
@@ -103,8 +103,8 @@ export class SeoService {
     let schema: any = {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'Utildex',
-      url: this.baseUrl,
+      name: this.appConfig.appName,
+      url: this.appConfig.getPublicBaseUrl(),
     };
 
     if (routeInfo.kind === 'tool' && routeInfo.toolId) {
@@ -123,7 +123,7 @@ export class SeoService {
             price: '0',
             priceCurrency: 'USD',
           },
-          url: `${this.baseUrl}${routeInfo.path}`,
+          url: `${this.appConfig.getPublicBaseUrl()}${routeInfo.path}`,
         };
       }
     } else if (routeInfo.kind === 'article' && routeInfo.articleId) {
@@ -140,15 +140,15 @@ export class SeoService {
           },
           publisher: {
             '@type': 'Organization',
-            name: 'Utildex',
+            name: this.appConfig.appName,
             logo: {
               '@type': 'ImageObject',
-              url: `${this.baseUrl}/assets/images/logo.png`,
+              url: `${this.appConfig.getPublicBaseUrl()}/assets/images/logo.png`,
             },
           },
           datePublished: article.date,
           description: this.i18n.resolve(article.summary),
-          mainEntityOfPage: `${this.baseUrl}${routeInfo.path}`,
+          mainEntityOfPage: `${this.appConfig.getPublicBaseUrl()}${routeInfo.path}`,
         };
       }
     }
@@ -206,12 +206,18 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:title', content: title });
     this.meta.updateTag({ property: 'og:description', content: desc });
     this.meta.updateTag({ property: 'og:type', content: 'website' });
-    this.meta.updateTag({ property: 'og:url', content: `${this.baseUrl}${routeInfo.path}` });
+    this.meta.updateTag({
+      property: 'og:url',
+      content: `${this.appConfig.getPublicBaseUrl()}${routeInfo.path}`,
+    });
 
     // Keep Twitter metadata aligned for static-host scraping fallbacks.
     this.meta.updateTag({ property: 'twitter:title', content: title });
     this.meta.updateTag({ property: 'twitter:description', content: desc });
-    this.meta.updateTag({ property: 'twitter:url', content: `${this.baseUrl}${routeInfo.path}` });
+    this.meta.updateTag({
+      property: 'twitter:url',
+      content: `${this.appConfig.getPublicBaseUrl()}${routeInfo.path}`,
+    });
 
     if (image) {
       this.meta.updateTag({ property: 'og:image', content: image });
@@ -280,10 +286,6 @@ export class SeoService {
   }
 
   private toAbsoluteUrl(url: string): string {
-    if (!url) return url;
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-
-    const cleaned = url.replace(/^\.\//, '/').replace(/^\.\.\//, '/');
-    return cleaned.startsWith('/') ? `${this.baseUrl}${cleaned}` : `${this.baseUrl}/${cleaned}`;
+    return this.appConfig.toAbsoluteUrl(url);
   }
 }
