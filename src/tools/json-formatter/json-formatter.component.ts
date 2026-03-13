@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   HostListener,
+  OnDestroy,
   inject,
   signal,
   input,
@@ -128,15 +129,25 @@ import zh from './i18n/zh';
         <!-- Editor Area -->
         <div class="group relative flex-1">
           <textarea
+            #editorTextarea
             appFileDrop
             (fileDropped)="handleFileDrop($event)"
             [(ngModel)]="content"
-            (ngModelChange)="error.set(null)"
+            (ngModelChange)="onEditorInput()"
+            (scroll)="onEditorScroll('main')"
             [placeholder]="t.map()['INPUT_PLACEHOLDER']"
             class="h-full w-full resize-none overflow-auto bg-white p-6 font-mono text-sm text-slate-800 transition-colors focus:outline-none dark:bg-slate-900 dark:text-slate-200"
             [class.bg-red-50]="error()"
             [class.dark:bg-red-900/10]="error()"
           ></textarea>
+
+          @if (errorLine() && mainErrorMarkerTop() !== null) {
+            <div
+              class="pointer-events-none absolute right-6 left-6 z-[1] rounded-md border border-red-200/70 bg-red-100/45 dark:border-red-700/60 dark:bg-red-900/20"
+              [style.top.px]="mainErrorMarkerTop()"
+              [style.height.px]="22"
+            ></div>
+          }
 
           <!-- File Drop Overlay Hint -->
           <div
@@ -150,16 +161,40 @@ import zh from './i18n/zh';
           </div>
 
           <!-- Error Message -->
-          @if (error()) {
+          @if (error() && isErrorBannerVisible()) {
             <div
               class="animate-fade-in absolute right-4 bottom-4 left-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-100 px-4 py-3 text-red-700 shadow-lg dark:border-red-800 dark:bg-red-900/80 dark:text-red-200"
             >
               <span class="material-symbols-outlined mt-0.5 text-xl">warning</span>
-              <div>
+              <div class="min-w-0 flex-1">
                 <strong class="block font-bold">{{ t.map()['ERROR_INVALID'] }}</strong>
                 <span class="font-mono text-sm opacity-90">{{ error() }}</span>
+                @if (errorLine() && errorColumn()) {
+                  <div class="mt-1 text-xs opacity-80">
+                    Line {{ errorLine() }}, Column {{ errorColumn() }}
+                  </div>
+                }
               </div>
+              <button
+                (click)="isErrorBannerVisible.set(false)"
+                class="rounded p-1 text-red-700/70 transition-colors hover:bg-red-200/70 hover:text-red-800 dark:text-red-200/80 dark:hover:bg-red-800/40"
+                title="Dismiss"
+                aria-label="Dismiss JSON error"
+              >
+                <span class="material-symbols-outlined text-base">close</span>
+              </button>
             </div>
+          }
+
+          @if (error() && !isErrorBannerVisible()) {
+            <button
+              (click)="showErrorBanner()"
+              class="absolute right-4 bottom-4 z-20 flex items-center gap-1 rounded-full border border-red-300 bg-red-100/95 px-3 py-1 text-xs font-semibold text-red-700 shadow-md transition-colors hover:bg-red-200 dark:border-red-800 dark:bg-red-900/80 dark:text-red-200"
+              title="Show JSON error"
+            >
+              <span class="material-symbols-outlined text-sm">warning</span>
+              Error
+            </button>
           }
         </div>
 
@@ -238,24 +273,58 @@ import zh from './i18n/zh';
 
         <div class="relative flex-1">
           <textarea
+            #expandedTextarea
             [(ngModel)]="content"
-            (ngModelChange)="error.set(null)"
+            (ngModelChange)="onEditorInput()"
+            (scroll)="onEditorScroll('expanded')"
             [placeholder]="t.map()['INPUT_PLACEHOLDER']"
             class="h-full w-full resize-none overflow-auto bg-white p-6 font-mono text-sm text-slate-800 focus:outline-none dark:bg-slate-900 dark:text-slate-200"
             [class.bg-red-50]="error()"
             [class.dark:bg-red-900/10]="error()"
           ></textarea>
 
-          @if (error()) {
+          @if (errorLine() && expandedErrorMarkerTop() !== null) {
+            <div
+              class="pointer-events-none absolute right-6 left-6 z-[1] rounded-md border border-red-200/70 bg-red-100/45 dark:border-red-700/60 dark:bg-red-900/20"
+              [style.top.px]="expandedErrorMarkerTop()"
+              [style.height.px]="22"
+            ></div>
+          }
+
+          @if (error() && isErrorBannerVisible()) {
             <div
               class="absolute right-4 bottom-4 left-4 flex items-start gap-3 rounded-xl border border-red-200 bg-red-100 px-4 py-3 text-red-700 shadow-lg dark:border-red-800 dark:bg-red-900/80 dark:text-red-200"
             >
               <span class="material-symbols-outlined mt-0.5 text-xl">warning</span>
-              <div>
+              <div class="min-w-0 flex-1">
                 <strong class="block font-bold">{{ t.map()['ERROR_INVALID'] }}</strong>
                 <span class="font-mono text-sm opacity-90">{{ error() }}</span>
+                @if (errorLine() && errorColumn()) {
+                  <div class="mt-1 text-xs opacity-80">
+                    Line {{ errorLine() }}, Column {{ errorColumn() }}
+                  </div>
+                }
               </div>
+              <button
+                (click)="isErrorBannerVisible.set(false)"
+                class="rounded p-1 text-red-700/70 transition-colors hover:bg-red-200/70 hover:text-red-800 dark:text-red-200/80 dark:hover:bg-red-800/40"
+                title="Dismiss"
+                aria-label="Dismiss JSON error"
+              >
+                <span class="material-symbols-outlined text-base">close</span>
+              </button>
             </div>
+          }
+
+          @if (error() && !isErrorBannerVisible()) {
+            <button
+              (click)="showErrorBanner()"
+              class="absolute right-4 bottom-4 z-20 flex items-center gap-1 rounded-full border border-red-300 bg-red-100/95 px-3 py-1 text-xs font-semibold text-red-700 shadow-md transition-colors hover:bg-red-200 dark:border-red-800 dark:bg-red-900/80 dark:text-red-200"
+              title="Show JSON error"
+            >
+              <span class="material-symbols-outlined text-sm">warning</span>
+              Error
+            </button>
           }
         </div>
 
@@ -284,18 +353,29 @@ import zh from './i18n/zh';
     </dialog>
   `,
 })
-export class JsonFormatterComponent {
+export class JsonFormatterComponent implements OnDestroy {
   isWidget = input<boolean>(false);
   widgetConfig = input<{ cols?: number; rows?: number } | null>(null);
 
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
   expandedDialog = viewChild<ElementRef<HTMLDialogElement>>('expandedDialog');
+  editorTextarea = viewChild<ElementRef<HTMLTextAreaElement>>('editorTextarea');
+  expandedTextarea = viewChild<ElementRef<HTMLTextAreaElement>>('expandedTextarea');
 
   content = signal<string>('');
   indentSize = signal<IndentOption>(2);
   error = signal<string | null>(null);
   isExpanded = signal(false);
+  errorPosition = signal<number | null>(null);
+  errorLine = signal<number | null>(null);
+  errorColumn = signal<number | null>(null);
+  isErrorBannerVisible = signal(false);
+  mainErrorMarkerTop = signal<number | null>(null);
+  expandedErrorMarkerTop = signal<number | null>(null);
+
+  private hideErrorBannerTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly errorBannerDurationMs = 4200;
 
   toggleExpanded() {
     if (this.isExpanded()) {
@@ -309,6 +389,7 @@ export class JsonFormatterComponent {
     const dialog = this.expandedDialog()?.nativeElement;
     if (dialog && !dialog.open) dialog.showModal();
     this.isExpanded.set(true);
+    setTimeout(() => this.updateErrorMarker('expanded'), 0);
   }
 
   closeExpanded() {
@@ -319,12 +400,30 @@ export class JsonFormatterComponent {
 
   onExpandedDialogClose() {
     this.isExpanded.set(false);
+    this.expandedErrorMarkerTop.set(null);
   }
 
   onExpandedDialogClick(event: MouseEvent) {
     if (event.target === event.currentTarget) {
       this.closeExpanded();
     }
+  }
+
+  onEditorInput() {
+    this.clearErrorState();
+  }
+
+  onEditorScroll(mode: 'main' | 'expanded') {
+    this.updateErrorMarker(mode);
+  }
+
+  showErrorBanner() {
+    this.isErrorBannerVisible.set(true);
+    this.clearErrorBannerTimer();
+    this.hideErrorBannerTimer = setTimeout(() => {
+      this.isErrorBannerVisible.set(false);
+      this.hideErrorBannerTimer = null;
+    }, this.errorBannerDurationMs);
   }
 
   lineCount() {
@@ -358,9 +457,9 @@ export class JsonFormatterComponent {
     const result = formatJson(this.content(), this.indentSize());
     if (result.success) {
       this.content.set(result.output);
-      this.error.set(null);
+      this.clearErrorState();
     } else {
-      this.error.set(result.error);
+      this.applyError(result.error);
     }
   }
 
@@ -369,15 +468,15 @@ export class JsonFormatterComponent {
     const result = minifyJson(this.content());
     if (result.success) {
       this.content.set(result.output);
-      this.error.set(null);
+      this.clearErrorState();
     } else {
-      this.error.set(result.error);
+      this.applyError(result.error);
     }
   }
 
   clear() {
     this.content.set('');
-    this.error.set(null);
+    this.clearErrorState();
   }
 
   handleFileDrop(files: FileList) {
@@ -386,11 +485,145 @@ export class JsonFormatterComponent {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.content.set(e.target?.result as string);
+        this.clearErrorState();
         this.format();
       };
       reader.readAsText(file);
     } else {
       this.toast.show('Please drop a JSON file', 'error');
     }
+  }
+
+  private applyError(message: string | null) {
+    this.error.set(message);
+    const parsed = this.extractJsonErrorLocation(message, this.content());
+    this.errorPosition.set(parsed?.position ?? null);
+    this.errorLine.set(parsed?.line ?? null);
+    this.errorColumn.set(parsed?.column ?? null);
+    this.showErrorBanner();
+
+    setTimeout(() => {
+      this.updateErrorMarker('main');
+      this.updateErrorMarker('expanded');
+      this.focusErrorPosition();
+    }, 0);
+  }
+
+  private clearErrorState() {
+    this.error.set(null);
+    this.errorPosition.set(null);
+    this.errorLine.set(null);
+    this.errorColumn.set(null);
+    this.mainErrorMarkerTop.set(null);
+    this.expandedErrorMarkerTop.set(null);
+    this.isErrorBannerVisible.set(false);
+    this.clearErrorBannerTimer();
+  }
+
+  private clearErrorBannerTimer() {
+    if (this.hideErrorBannerTimer) {
+      clearTimeout(this.hideErrorBannerTimer);
+      this.hideErrorBannerTimer = null;
+    }
+  }
+
+  ngOnDestroy() {
+    this.clearErrorBannerTimer();
+  }
+
+  private extractJsonErrorLocation(
+    errorMessage: string | null,
+    source: string,
+  ): { position: number; line: number; column: number } | null {
+    if (!errorMessage) return null;
+
+    const lineColumnMatch = errorMessage.match(/line\s*(\d+)\s*column\s*(\d+)/i);
+    if (lineColumnMatch) {
+      const line = Number(lineColumnMatch[1]);
+      const column = Number(lineColumnMatch[2]);
+      if (line > 0 && column > 0) {
+        const position = this.lineColumnToPosition(source, line, column);
+        return { position, line, column };
+      }
+    }
+
+    const positionMatch = errorMessage.match(/position\s*(\d+)/i);
+    if (positionMatch) {
+      const rawPosition = Number(positionMatch[1]);
+      if (Number.isFinite(rawPosition)) {
+        const clamped = Math.max(0, Math.min(rawPosition, source.length));
+        const { line, column } = this.positionToLineColumn(source, clamped);
+        return { position: clamped, line, column };
+      }
+    }
+
+    return null;
+  }
+
+  private positionToLineColumn(text: string, position: number): { line: number; column: number } {
+    const before = text.slice(0, position);
+    const lines = before.split(/\r?\n/);
+    return {
+      line: lines.length,
+      column: (lines[lines.length - 1]?.length ?? 0) + 1,
+    };
+  }
+
+  private lineColumnToPosition(text: string, line: number, column: number): number {
+    const targetLine = Math.max(1, line);
+    const targetColumn = Math.max(1, column);
+
+    let currentLine = 1;
+    let currentColumn = 1;
+
+    for (let i = 0; i < text.length; i += 1) {
+      if (currentLine === targetLine && currentColumn === targetColumn) {
+        return i;
+      }
+
+      const char = text[i];
+      if (char === '\n') {
+        currentLine += 1;
+        currentColumn = 1;
+      } else if (char !== '\r') {
+        currentColumn += 1;
+      }
+    }
+
+    return text.length;
+  }
+
+  private updateErrorMarker(mode: 'main' | 'expanded') {
+    const line = this.errorLine();
+    if (!line) {
+      if (mode === 'main') this.mainErrorMarkerTop.set(null);
+      else this.expandedErrorMarkerTop.set(null);
+      return;
+    }
+
+    const target =
+      mode === 'main' ? this.editorTextarea()?.nativeElement : this.expandedTextarea()?.nativeElement;
+    if (!target) return;
+
+    const style = window.getComputedStyle(target);
+    const lineHeight = Number.parseFloat(style.lineHeight) || 20;
+    const paddingTop = Number.parseFloat(style.paddingTop) || 0;
+    const top = paddingTop + (line - 1) * lineHeight - target.scrollTop;
+
+    if (mode === 'main') this.mainErrorMarkerTop.set(top);
+    else this.expandedErrorMarkerTop.set(top);
+  }
+
+  private focusErrorPosition() {
+    const position = this.errorPosition();
+    if (position == null) return;
+
+    const target = this.isExpanded()
+      ? this.expandedTextarea()?.nativeElement
+      : this.editorTextarea()?.nativeElement;
+    if (!target) return;
+
+    target.focus();
+    target.setSelectionRange(position, position + 1);
   }
 }
