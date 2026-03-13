@@ -7,6 +7,7 @@ import { pathToFileURL } from 'url';
 // Note: We access these via relative paths from /scripts/ to /src/
 import { LANGUAGES } from '../src/data/languages';
 import { ARTICLE_REGISTRY } from '../src/data/article-registry';
+import { resolvePublicBaseUrl } from '../src/core/app.config';
 
 interface ToolContractLike {
   id: string;
@@ -16,7 +17,9 @@ interface ToolContractLike {
 }
 
 // 2. Configuration
-const BASE_URL = 'https://utildex.com';
+const BASE_URL = resolvePublicBaseUrl({
+  envBaseUrl: process.env.SITEMAP_BASE_URL || process.env.APP_BASE_URL,
+});
 const OUT_DIR = path.join(process.cwd(), 'src');
 const OUT_FILE = path.join(OUT_DIR, 'sitemap.xml');
 

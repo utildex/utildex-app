@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { ToolService } from '../../services/tool.service';
+import { AppConfigService } from '../../services/app-config.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { generateQr, type QrType, type ErrorCorrectionLevel } from './qr-studio.kernel';
 import en from './i18n/en';
@@ -714,12 +715,13 @@ export class QrStudioComponent {
 
   t = inject(ScopedTranslationService);
   toolService = inject(ToolService);
+  appConfig = inject(AppConfigService);
 
   // State
   currentType = signal<QrType>('url');
 
   // Data Inputs
-  urlValue = signal('https://utildex.com');
+  urlValue = signal(this.appConfig.getPublicBaseUrl());
   textValue = signal('Hello World');
   wifiSsid = signal('');
   wifiPass = signal('');
