@@ -15,7 +15,12 @@ import { ActionBarComponent } from '../../components/action-bar/action-bar.compo
 import { FileDropDirective } from '../../directives/file-drop.directive';
 import { ToastService } from '../../services/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { formatJson, minifyJson, type IndentOption } from './json-formatter.kernel';
+import {
+  formatJson,
+  minifyJson,
+  type FormatResult,
+  type IndentOption,
+} from './json-formatter.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -35,26 +40,28 @@ import zh from './i18n/zh';
       <!-- Widget Mode -->
       <div class="glass-surface relative flex h-full flex-col overflow-hidden rounded-xl">
         <div class="glass-subsection flex items-center justify-between border-b p-2">
-          <span class="px-1 text-xs font-bold text-slate-500 uppercase">JSON Formatter</span>
+          <span class="px-1 text-xs font-bold text-slate-500 uppercase">{{
+            t.map()['WIDGET_TITLE']
+          }}</span>
           <div class="flex gap-1">
             <button
               (click)="openExpanded()"
               class="glass-control rounded p-1 text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
-              title="Expand"
+              [title]="t.map()['TITLE_EXPAND']"
             >
               <span class="material-symbols-outlined text-sm">open_in_full</span>
             </button>
             <button
               (click)="minify()"
               class="glass-control rounded p-1 text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
-              title="Minify"
+              [title]="t.map()['TITLE_MINIFY']"
             >
               <span class="material-symbols-outlined text-sm">compress</span>
             </button>
             <button
               (click)="format()"
               class="glass-control rounded p-1 text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
-              title="Format"
+              [title]="t.map()['TITLE_FORMAT']"
             >
               <span class="material-symbols-outlined text-sm">data_object</span>
             </button>
@@ -117,7 +124,9 @@ import zh from './i18n/zh';
             <button
               (click)="toggleExpanded()"
               class="glass-button rounded-lg border px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-200"
-              [title]="isExpanded() ? 'Exit expanded view' : 'Expand editor'"
+              [title]="
+                isExpanded() ? t.map()['TITLE_EXIT_EXPANDED'] : t.map()['TITLE_EXPAND_EDITOR']
+              "
             >
               <span class="material-symbols-outlined align-middle text-base">
                 {{ isExpanded() ? 'close_fullscreen' : 'open_in_full' }}
@@ -156,7 +165,7 @@ import zh from './i18n/zh';
             <div
               class="text-primary rounded-full bg-white px-4 py-2 font-bold shadow-lg dark:bg-slate-800"
             >
-              Drop JSON file here
+              {{ t.map()['DROP_HINT'] }}
             </div>
           </div>
 
@@ -171,15 +180,16 @@ import zh from './i18n/zh';
                 <span class="font-mono text-sm opacity-90">{{ error() }}</span>
                 @if (errorLine() && errorColumn()) {
                   <div class="mt-1 text-xs opacity-80">
-                    Line {{ errorLine() }}, Column {{ errorColumn() }}
+                    {{ t.map()['ERROR_LINE'] }} {{ errorLine() }}, {{ t.map()['ERROR_COLUMN'] }}
+                    {{ errorColumn() }}
                   </div>
                 }
               </div>
               <button
                 (click)="isErrorBannerVisible.set(false)"
                 class="rounded p-1 text-red-700/70 transition-colors hover:bg-red-200/70 hover:text-red-800 dark:text-red-200/80 dark:hover:bg-red-800/40"
-                title="Dismiss"
-                aria-label="Dismiss JSON error"
+                [title]="t.map()['TITLE_DISMISS_ERROR']"
+                [attr.aria-label]="t.map()['ARIA_DISMISS_ERROR']"
               >
                 <span class="material-symbols-outlined text-base">close</span>
               </button>
@@ -190,10 +200,10 @@ import zh from './i18n/zh';
             <button
               (click)="showErrorBanner()"
               class="absolute right-4 bottom-4 z-20 flex items-center gap-1 rounded-full border border-red-300 bg-red-100/95 px-3 py-1 text-xs font-semibold text-red-700 shadow-md transition-colors hover:bg-red-200 dark:border-red-800 dark:bg-red-900/80 dark:text-red-200"
-              title="Show JSON error"
+              [title]="t.map()['TITLE_SHOW_ERROR']"
             >
               <span class="material-symbols-outlined text-sm">warning</span>
-              Error
+              {{ t.map()['ERROR_CHIP'] }}
             </button>
           }
         </div>
@@ -202,12 +212,17 @@ import zh from './i18n/zh';
         <div
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
         >
-          <span>{{ lineCount() }} lines • {{ charCount() }} chars</span>
+          <span>
+            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} • {{ charCount() }}
+            {{ t.map()['STATUS_CHARS'] }}
+          </span>
           @if (content().trim()) {
             @if (error()) {
-              <span class="text-red-500">Invalid JSON</span>
+              <span class="text-red-500">{{ t.map()['STATUS_INVALID'] }}</span>
             } @else {
-              <span class="text-emerald-600 dark:text-emerald-400">Valid JSON</span>
+              <span class="text-emerald-600 dark:text-emerald-400">{{
+                t.map()['STATUS_VALID']
+              }}</span>
             }
           }
         </div>
@@ -218,7 +233,7 @@ import zh from './i18n/zh';
             [content]="content()"
             filename="data.json"
             mimeType="application/json"
-            source="JSON Formatter"
+            [source]="t.map()['ACTION_SOURCE']"
           ></app-action-bar>
         }
       </div>
@@ -237,8 +252,10 @@ import zh from './i18n/zh';
           class="glass-subsection flex flex-wrap items-center justify-between gap-3 border-b px-4 py-3"
         >
           <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-slate-500 uppercase">Expanded JSON Editor</span>
-            <span class="text-xs text-slate-400">Ctrl+Enter: Format, Ctrl+Shift+M: Minify</span>
+            <span class="text-xs font-bold text-slate-500 uppercase">{{
+              t.map()['EXPANDED_TITLE']
+            }}</span>
+            <span class="text-xs text-slate-400">{{ t.map()['EXPANDED_SHORTCUT_HINT'] }}</span>
           </div>
           <div class="flex items-center gap-2">
             <select
@@ -264,7 +281,7 @@ import zh from './i18n/zh';
             <button
               (click)="closeExpanded()"
               class="glass-button rounded-lg border p-1.5 text-slate-600 dark:text-slate-200"
-              title="Close expanded view"
+              [title]="t.map()['TITLE_CLOSE_EXPANDED']"
             >
               <span class="material-symbols-outlined text-base">close</span>
             </button>
@@ -301,15 +318,16 @@ import zh from './i18n/zh';
                 <span class="font-mono text-sm opacity-90">{{ error() }}</span>
                 @if (errorLine() && errorColumn()) {
                   <div class="mt-1 text-xs opacity-80">
-                    Line {{ errorLine() }}, Column {{ errorColumn() }}
+                    {{ t.map()['ERROR_LINE'] }} {{ errorLine() }}, {{ t.map()['ERROR_COLUMN'] }}
+                    {{ errorColumn() }}
                   </div>
                 }
               </div>
               <button
                 (click)="isErrorBannerVisible.set(false)"
                 class="rounded p-1 text-red-700/70 transition-colors hover:bg-red-200/70 hover:text-red-800 dark:text-red-200/80 dark:hover:bg-red-800/40"
-                title="Dismiss"
-                aria-label="Dismiss JSON error"
+                [title]="t.map()['TITLE_DISMISS_ERROR']"
+                [attr.aria-label]="t.map()['ARIA_DISMISS_ERROR']"
               >
                 <span class="material-symbols-outlined text-base">close</span>
               </button>
@@ -320,10 +338,10 @@ import zh from './i18n/zh';
             <button
               (click)="showErrorBanner()"
               class="absolute right-4 bottom-4 z-20 flex items-center gap-1 rounded-full border border-red-300 bg-red-100/95 px-3 py-1 text-xs font-semibold text-red-700 shadow-md transition-colors hover:bg-red-200 dark:border-red-800 dark:bg-red-900/80 dark:text-red-200"
-              title="Show JSON error"
+              [title]="t.map()['TITLE_SHOW_ERROR']"
             >
               <span class="material-symbols-outlined text-sm">warning</span>
-              Error
+              {{ t.map()['ERROR_CHIP'] }}
             </button>
           }
         </div>
@@ -331,12 +349,17 @@ import zh from './i18n/zh';
         <div
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
         >
-          <span>{{ lineCount() }} lines • {{ charCount() }} chars</span>
+          <span>
+            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} • {{ charCount() }}
+            {{ t.map()['STATUS_CHARS'] }}
+          </span>
           @if (content().trim()) {
             @if (error()) {
-              <span class="text-red-500">Invalid JSON</span>
+              <span class="text-red-500">{{ t.map()['STATUS_INVALID'] }}</span>
             } @else {
-              <span class="text-emerald-600 dark:text-emerald-400">Valid JSON</span>
+              <span class="text-emerald-600 dark:text-emerald-400">{{
+                t.map()['STATUS_VALID']
+              }}</span>
             }
           }
         </div>
@@ -346,7 +369,7 @@ import zh from './i18n/zh';
             [content]="content()"
             filename="data.json"
             mimeType="application/json"
-            source="JSON Formatter"
+            [source]="t.map()['ACTION_SOURCE']"
           ></app-action-bar>
         }
       </div>
@@ -459,7 +482,7 @@ export class JsonFormatterComponent implements OnDestroy {
       this.content.set(result.output);
       this.clearErrorState();
     } else {
-      this.applyError(result.error);
+      this.applyError(result);
     }
   }
 
@@ -470,7 +493,7 @@ export class JsonFormatterComponent implements OnDestroy {
       this.content.set(result.output);
       this.clearErrorState();
     } else {
-      this.applyError(result.error);
+      this.applyError(result);
     }
   }
 
@@ -490,16 +513,15 @@ export class JsonFormatterComponent implements OnDestroy {
       };
       reader.readAsText(file);
     } else {
-      this.toast.show('Please drop a JSON file', 'error');
+      this.toast.show(this.t.map()['TOAST_DROP_JSON'], 'error');
     }
   }
 
-  private applyError(message: string | null) {
-    this.error.set(message);
-    const parsed = this.extractJsonErrorLocation(message, this.content());
-    this.errorPosition.set(parsed?.position ?? null);
-    this.errorLine.set(parsed?.line ?? null);
-    this.errorColumn.set(parsed?.column ?? null);
+  private applyError(result: FormatResult) {
+    this.error.set(result.error);
+    this.errorPosition.set(result.errorDetails?.position ?? null);
+    this.errorLine.set(result.errorDetails?.line ?? null);
+    this.errorColumn.set(result.errorDetails?.column ?? null);
     this.showErrorBanner();
 
     setTimeout(() => {
@@ -531,68 +553,6 @@ export class JsonFormatterComponent implements OnDestroy {
     this.clearErrorBannerTimer();
   }
 
-  private extractJsonErrorLocation(
-    errorMessage: string | null,
-    source: string,
-  ): { position: number; line: number; column: number } | null {
-    if (!errorMessage) return null;
-
-    const lineColumnMatch = errorMessage.match(/line\s*(\d+)\s*column\s*(\d+)/i);
-    if (lineColumnMatch) {
-      const line = Number(lineColumnMatch[1]);
-      const column = Number(lineColumnMatch[2]);
-      if (line > 0 && column > 0) {
-        const position = this.lineColumnToPosition(source, line, column);
-        return { position, line, column };
-      }
-    }
-
-    const positionMatch = errorMessage.match(/position\s*(\d+)/i);
-    if (positionMatch) {
-      const rawPosition = Number(positionMatch[1]);
-      if (Number.isFinite(rawPosition)) {
-        const clamped = Math.max(0, Math.min(rawPosition, source.length));
-        const { line, column } = this.positionToLineColumn(source, clamped);
-        return { position: clamped, line, column };
-      }
-    }
-
-    return null;
-  }
-
-  private positionToLineColumn(text: string, position: number): { line: number; column: number } {
-    const before = text.slice(0, position);
-    const lines = before.split(/\r?\n/);
-    return {
-      line: lines.length,
-      column: (lines[lines.length - 1]?.length ?? 0) + 1,
-    };
-  }
-
-  private lineColumnToPosition(text: string, line: number, column: number): number {
-    const targetLine = Math.max(1, line);
-    const targetColumn = Math.max(1, column);
-
-    let currentLine = 1;
-    let currentColumn = 1;
-
-    for (let i = 0; i < text.length; i += 1) {
-      if (currentLine === targetLine && currentColumn === targetColumn) {
-        return i;
-      }
-
-      const char = text[i];
-      if (char === '\n') {
-        currentLine += 1;
-        currentColumn = 1;
-      } else if (char !== '\r') {
-        currentColumn += 1;
-      }
-    }
-
-    return text.length;
-  }
-
   private updateErrorMarker(mode: 'main' | 'expanded') {
     const line = this.errorLine();
     if (!line) {
@@ -602,7 +562,9 @@ export class JsonFormatterComponent implements OnDestroy {
     }
 
     const target =
-      mode === 'main' ? this.editorTextarea()?.nativeElement : this.expandedTextarea()?.nativeElement;
+      mode === 'main'
+        ? this.editorTextarea()?.nativeElement
+        : this.expandedTextarea()?.nativeElement;
     if (!target) return;
 
     const style = window.getComputedStyle(target);
