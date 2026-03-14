@@ -4,7 +4,8 @@
   "assetGroups": [
     {
       "name": "app",
-      "installMode": "lazy",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
       "resources": {
         "files": [
           "/index.html",
@@ -14,13 +15,28 @@
       }
     },
     {
-      "name": "assets",
+      "name": "assets-core",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/assets/theme-init.js",
+          "/assets/flags/**",
+          "/assets/fonts/**",
+          "/assets/images/**",
+          "/assets/pdfjs/**",
+          "/assets/styles/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    },
+    {
+      "name": "assets-articles",
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
         "files": [
-          "/assets/**",
-          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+          "/assets/articles/**"
         ]
       }
     }

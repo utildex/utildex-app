@@ -5,7 +5,11 @@ export default {
   BTN_DOWNLOADING: 'Descargando...',
   BUBBLE_PRELOAD_INFO: 'Guarda todas las herramientas en tu dispositivo para usarlas sin internet.',
   BUBBLE_HISTORY_INFO: 'Historial del texto copiado dentro de Utildex.',
+  NOTIFY_SW_NOT_READY:
+    'El motor offline se está finalizando. La página se recargará una vez para activar la recarga sin conexión.',
   NOTIFY_LIB_DOWNLOADED: '¡Biblioteca descargada! Ahora puedes desconectarte.',
+  NOTIFY_LIB_PARTIAL:
+    'La precarga terminó con algunos errores. Abre herramientas clave una vez en línea.',
   SECTION_OFFLINE: 'Sin conexión y datos',
   SETTING_SMART_DL: 'Descarga inteligente en segundo plano',
   WARN_MOBILE_DATA: 'Almacena herramientas automáticamente. Puede usar datos móviles.',
