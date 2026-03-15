@@ -20,7 +20,7 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(withFetch()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerImmediately'
     }),
     {
       provide: ErrorHandler,

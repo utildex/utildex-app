@@ -6,7 +6,11 @@ export default {
   BUBBLE_PRELOAD_INFO:
     'Enregistre tous les outils sur votre appareil pour une utilisation sans internet.',
   BUBBLE_HISTORY_INFO: 'Historique du texte copié dans les outils Utildex.',
+  NOTIFY_SW_NOT_READY:
+    'Le mode hors ligne se finalise. La page va se recharger une fois pour activer le rafraîchissement hors ligne.',
   NOTIFY_LIB_DOWNLOADED: 'Bibliothèque téléchargée ! Vous pouvez maintenant passer hors ligne.',
+  NOTIFY_LIB_PARTIAL:
+    'Le préchargement est terminé avec quelques erreurs. Ouvrez les outils clés en ligne une fois.',
   SECTION_OFFLINE: 'Hors ligne et données',
   SETTING_SMART_DL: 'Téléchargement intelligent en arrière-plan',
   WARN_MOBILE_DATA: 'Met en cache les outils automatiquement. Peut utiliser des données mobiles.',

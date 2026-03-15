@@ -5,7 +5,11 @@ export default {
   BTN_DOWNLOADING: 'Downloading...',
   BUBBLE_PRELOAD_INFO: 'Saves all tools to your device so you can use them without internet.',
   BUBBLE_HISTORY_INFO: 'History of text copied within Utildex tools.',
+  NOTIFY_SW_NOT_READY:
+    'Offline engine is finalizing. The page will reload once to enable offline refresh.',
   NOTIFY_LIB_DOWNLOADED: 'Library fully downloaded! You can now go offline.',
+  NOTIFY_LIB_PARTIAL:
+    'Library preload finished with some errors. Open key tools once while online.',
   SECTION_OFFLINE: 'Offline & Data',
   SETTING_SMART_DL: 'Smart Background Download',
   WARN_MOBILE_DATA: 'Automatically caches tools when idle. May use mobile data.',
