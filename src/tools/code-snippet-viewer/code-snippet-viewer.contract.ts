@@ -5,10 +5,10 @@ export const contract: ToolContract = {
   id: 'code-snippet-viewer',
   metadata: {
     name: {
-      en: 'Code Snippet Viewer (Beta)',
-      fr: 'Visionneuse de Snippets Code (Beta)',
-      es: 'Visor de Snippets de Codigo (Beta)',
-      zh: '代码片段展示器 (Beta)',
+      en: 'Code Snippet Viewer',
+      fr: 'Visionneuse de Snippets Code',
+      es: 'Visor de Snippets de Codigo',
+      zh: '代码片段展示器',
     },
     description: {
       en: 'Render code snippets with syntax highlighting, optional beautify, and clean image export. No data leaves your device. Works fully offline; feel free to disconnect.',
