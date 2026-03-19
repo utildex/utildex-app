@@ -17,6 +17,7 @@ export const FORMATS: Readonly<Record<string, FormatDefinition>> = {
   jpg: { id: 'jpg', traits: [t.file, t.binary, t.image, t.raster] },
   webp: { id: 'webp', traits: [t.file, t.binary, t.image, t.raster] },
   svg: { id: 'svg', traits: [t.file, t.text, t.image, t.vector] },
+  gif: { id: 'gif', traits: [t.file, t.image, t.video] },
   pdf: { id: 'pdf', traits: [t.file, t.binary, t.document] },
   json: { id: 'json', traits: [t.file, t.text, t.structured] },
   text: { id: 'text', traits: [t.file, t.text] },
