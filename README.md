@@ -13,7 +13,7 @@ Utildex is an offline-friendly, privacy-first tools platform that brings practic
 
 ### 1) Welcome Page (Main Page)
 
-![Utildex Welcome Page](./docs/screenshots/welcome-page.pngs
+![Utildex Welcome Page](./docs/screenshots/welcome-page.png
 ### 2) Dashboard (Widgets)
 The dashboard is a fully customizable grid-based workspace in which you can setup tool widgets and fillers (notes, images...). Widgets and fillers are tiles of dimension n x n with 1 <= n <= 3.
 
