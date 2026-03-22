@@ -35,6 +35,7 @@ const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
   'image-resizer': () => import('../tools/image-resizer/index'),
   'img-to-pdf': () => import('../tools/img-to-pdf/index'),
   'json-formatter': () => import('../tools/json-formatter/index'),
+  'jwt-decoder': () => import('../tools/jwt-decoder/index'),
   'lorem-ipsum': () => import('../tools/lorem-ipsum/index'),
   'markdown-preview': () => import('../tools/markdown-preview/index'),
   'merge-pdf': () => import('../tools/merge-pdf/index'),
