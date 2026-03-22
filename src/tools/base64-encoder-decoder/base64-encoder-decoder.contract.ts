@@ -32,7 +32,6 @@ export const contract: ToolContract = {
     defaultCols: 2,
     defaultRows: 2,
     presets: [
-      { label: { en: 'Compact', fr: 'Compact', es: 'Compacto', zh: '紧凑' }, cols: 1, rows: 1 },
       { label: { en: 'Wide', fr: 'Large', es: 'Ancho', zh: '宽屏' }, cols: 2, rows: 1 },
       { label: { en: 'Standard', fr: 'Standard', es: 'Estándar', zh: '标准' }, cols: 2, rows: 2 },
     ],

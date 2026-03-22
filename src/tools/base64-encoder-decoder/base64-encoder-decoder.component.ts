@@ -58,16 +58,61 @@ import zh from './i18n/zh';
           </div>
         </div>
 
-        @if (viewMode() === 'compact') {
-          <div class="flex flex-1 flex-col items-center justify-center gap-2 p-2 text-center">
-            <span class="material-symbols-outlined text-primary text-2xl">swap_horiz</span>
-            <div class="text-[10px] font-semibold text-slate-500 dark:text-slate-300">
-              {{ t.map()['WIDGET_HINT'] }}
+        @if (viewMode() === 'wide') {
+          <div class="flex flex-1 flex-col gap-2 p-2">
+            <div class="grid min-h-0 flex-1 grid-cols-2 gap-2">
+              <div class="glass-control flex min-h-0 flex-col rounded-lg border">
+                <div
+                  class="border-b px-2 py-1 text-[10px] font-bold tracking-wide text-slate-500 uppercase"
+                >
+                  {{ t.map()['INPUT_LABEL'] }}
+                </div>
+                <textarea
+                  [ngModel]="input()"
+                  (ngModelChange)="onInputChange($event)"
+                  [placeholder]="
+                    mode() === 'encode'
+                      ? t.map()['INPUT_PLACEHOLDER_ENCODE']
+                      : t.map()['INPUT_PLACEHOLDER_DECODE']
+                  "
+                  rows="3"
+                  class="min-h-0 flex-1 resize-none bg-transparent p-2 font-mono text-[11px] text-slate-700 outline-none placeholder:text-slate-400 dark:text-slate-100"
+                ></textarea>
+              </div>
+
+              <div class="glass-control flex min-h-0 flex-col rounded-lg border">
+                <div
+                  class="border-b px-2 py-1 text-[10px] font-bold tracking-wide text-slate-500 uppercase"
+                >
+                  {{ t.map()['OUTPUT_LABEL'] }}
+                </div>
+                <pre
+                  class="min-h-0 flex-1 overflow-auto p-2 font-mono text-[11px] break-words whitespace-pre-wrap text-slate-700 dark:text-slate-100"
+                  >{{ output() || t.map()['OUTPUT_PLACEHOLDER'] }}</pre
+                >
+              </div>
             </div>
-            <div
-              class="line-clamp-2 w-full rounded-md bg-white/40 px-2 py-1 text-[10px] text-slate-600 dark:bg-slate-900/40 dark:text-slate-300"
-            >
-              {{ previewOutput() || t.map()['OUTPUT_PLACEHOLDER'] }}
+
+            <div class="flex items-center gap-1">
+              <button
+                (click)="clearAll()"
+                class="glass-button flex-1 rounded-lg border px-2 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200"
+              >
+                {{ t.map()['BTN_CLEAR'] }}
+              </button>
+              <button
+                (click)="swapInputOutput()"
+                class="glass-button flex-1 rounded-lg border px-2 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200"
+              >
+                {{ t.map()['BTN_SWAP'] }}
+              </button>
+              <button
+                (click)="copyOutput()"
+                [disabled]="!output()"
+                class="bg-primary flex-1 rounded-lg px-2 py-1.5 text-xs font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {{ copied() ? t.map()['BTN_COPIED'] : t.map()['BTN_COPY'] }}
+              </button>
             </div>
           </div>
         } @else {
@@ -298,18 +343,14 @@ export class Base64EncoderDecoderComponent {
     const cols = (c?.['cols'] as number | undefined) ?? 2;
     const rows = (c?.['rows'] as number | undefined) ?? 2;
 
-    if (cols === 1 && rows === 1) return 'compact';
     if (cols === 2 && rows === 1) return 'wide';
-    if (cols === 1 && rows === 2) return 'tall';
-    return 'default';
+    return 'standard';
   });
 
   inputLength = computed(() => this.input().length);
   outputLength = computed(() => this.output().length);
   inputBytes = computed(() => this.toUtf8Bytes(this.input()).length);
   outputBytes = computed(() => this.toUtf8Bytes(this.output()).length);
-  previewOutput = computed(() => this.output().slice(0, 80));
-
   constructor() {
     this.recalculate(this.input());
   }
