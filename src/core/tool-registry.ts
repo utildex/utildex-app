@@ -27,6 +27,7 @@ type ToolIndexLoader = () => Promise<ToolIndexModule>;
  * This keeps tool discovery stable across dev/build targets (including Cloudflare Pages).
  */
 const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
+  'base64-encoder-decoder': () => import('../tools/base64-encoder-decoder/index'),
   'code-snippet-viewer': () => import('../tools/code-snippet-viewer/index'),
   'diff-checker': () => import('../tools/diff-checker/index'),
   'hash-generator': () => import('../tools/hash-generator/index'),
