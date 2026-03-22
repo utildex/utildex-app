@@ -49,6 +49,8 @@ Copy the contents of `src/templates/tool/` into your new directory. You should h
 This file defines how the app "sees" your tool.
 *   **id**: Must be unique and kebab-case.
 *   **metadata**: Name, description, icon, categories, tags, color.
+  *   **Description ending (required):** End every description with the local equivalent of: `No data leaves your device. Works fully offline; feel free to disconnect.`
+  *   Keep this privacy/offline guarantee explicit in each supported language.
 *   **types**: Input traits and output format.
 *   **widget**: Configuration for the dashboard grid.
 *   **cost**: One of `low`, `medium`, `high`.
@@ -158,6 +160,7 @@ viewMode = computed(() => {
 *   **Widget View (`isWidget()`):** A compact, dashboard-friendly version.
     *   **Do NOT** use `<app-tool-layout>` in widget mode.
     *   Use the `viewMode` logic to adapt to grid sizes.
+  *   Choose widget sizes carefully. If a size cannot be made genuinely useful for the tool (for example, complex structured outputs in 1x1), do not expose that preset.
     *   **Header Policy:** Every widget **MUST** include a visual header containing the Tool Icon and Tool Name/Title.
         *   *Exception:* Purely visual widgets (like an Image Frame) may omit the header if the content is self-explanatory.
 
@@ -203,6 +206,8 @@ Use this for card/modal surfaces that should match `tool-card`:
 ## Internationalization (i18n)
 
 Utildex uses a **Scoped Translation** pattern. Each tool carries its own translation dictionary.
+
+Quality rule: preserve proper language spelling and punctuation in translation files (including accents/diacritics such as French `é`, `à`, `ç`). Avoid ASCII-only transliteration for user-facing copy.
 
 1.  **Create translation files:** `src/tools/my-tool/i18n/en.ts`.
     ```typescript
