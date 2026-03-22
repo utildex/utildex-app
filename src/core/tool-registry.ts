@@ -45,6 +45,7 @@ const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
   'rotate-pdf': () => import('../tools/rotate-pdf/index'),
   'split-pdf': () => import('../tools/split-pdf/index'),
   'unit-converter': () => import('../tools/unit-converter/index'),
+  'url-encoder-decoder': () => import('../tools/url-encoder-decoder/index'),
 };
 
 function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
