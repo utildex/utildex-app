@@ -27,6 +27,7 @@ type ToolIndexLoader = () => Promise<ToolIndexModule>;
  * This keeps tool discovery stable across dev/build targets (including Cloudflare Pages).
  */
 const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
+  'base64-encoder-decoder': () => import('../tools/base64-encoder-decoder/index'),
   'code-snippet-viewer': () => import('../tools/code-snippet-viewer/index'),
   'diff-checker': () => import('../tools/diff-checker/index'),
   'hash-generator': () => import('../tools/hash-generator/index'),
@@ -34,6 +35,7 @@ const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
   'image-resizer': () => import('../tools/image-resizer/index'),
   'img-to-pdf': () => import('../tools/img-to-pdf/index'),
   'json-formatter': () => import('../tools/json-formatter/index'),
+  'jwt-decoder': () => import('../tools/jwt-decoder/index'),
   'lorem-ipsum': () => import('../tools/lorem-ipsum/index'),
   'markdown-preview': () => import('../tools/markdown-preview/index'),
   'merge-pdf': () => import('../tools/merge-pdf/index'),
@@ -43,6 +45,7 @@ const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
   'rotate-pdf': () => import('../tools/rotate-pdf/index'),
   'split-pdf': () => import('../tools/split-pdf/index'),
   'unit-converter': () => import('../tools/unit-converter/index'),
+  'url-encoder-decoder': () => import('../tools/url-encoder-decoder/index'),
 };
 
 function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
