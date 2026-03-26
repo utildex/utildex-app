@@ -1,21 +1,15 @@
-import { getFontEmbedCSS, toJpeg, toPng, toSvg } from 'html-to-image';
 import type { CodeSnippetKernel, StaticExportPlan } from './code-snippet-viewer.kernel';
+import {
+  applySharedStaticBackground,
+  createSharedAnimatedBackground,
+} from '../../core/export/shared-export-backgrounds';
+import {
+  SharedExportRenderer,
+  type SharedStaticExportFormat,
+} from '../../core/export/shared-export-renderer';
 
 type ExportFormat = 'png' | 'jpg' | 'svg' | 'gif';
 type StaticExportFormat = Exclude<ExportFormat, 'gif'>;
-
-interface GeneratedStar {
-  x: number;
-  y: number;
-  alpha: number;
-}
-
-interface GeneratedStarLayer {
-  size: number;
-  speed: number;
-  color: string;
-  stars: GeneratedStar[];
-}
 
 interface ExportNodeThemePreset {
   cardBorder: string;
@@ -83,7 +77,7 @@ const LIGHT_TOKEN_COLORS = [
 ] as const;
 
 export class SnippetExportRenderer {
-  private fontEmbedCss: string | null = null;
+  private readonly exportRenderer = new SharedExportRenderer();
 
   constructor(private readonly kernel: Pick<CodeSnippetKernel, 'encodeGif'>) {}
 
@@ -116,32 +110,17 @@ export class SnippetExportRenderer {
     format: StaticExportFormat,
     quality: ExportRenderQuality,
   ): Promise<string> {
-    const fontEmbedCSS = await this.getFontEmbedCss(node);
-    const options = {
-      cacheBust: true,
-      fontEmbedCSS,
-      backgroundColor: '#020617',
-      style: {
-        opacity: '1',
-      },
-    };
-
-    if (format === 'jpg') {
-      return toJpeg(node, {
-        ...options,
-        quality: quality.jpegQuality,
+    return this.exportRenderer.renderStatic(
+      node,
+      format as SharedStaticExportFormat,
+      {
         pixelRatio: quality.pixelRatio,
-      });
-    }
-
-    if (format === 'svg') {
-      return toSvg(node, options);
-    }
-
-    return toPng(node, {
-      ...options,
-      pixelRatio: quality.pixelRatio,
-    });
+        jpegQuality: quality.jpegQuality,
+      },
+      {
+        backgroundColor: '#020617',
+      },
+    );
   }
 
   private buildExportNode(
@@ -171,10 +150,9 @@ export class SnippetExportRenderer {
     });
 
     if (includeBackground) {
-      root.style.backgroundColor = '#020617';
-      root.style.background =
-        'radial-gradient(circle at 20% 18%, rgba(59, 130, 246, 0.18), transparent 36%), radial-gradient(circle at 84% 20%, rgba(16, 185, 129, 0.16), transparent 34%), linear-gradient(180deg, rgba(15, 23, 42, 0.62), rgba(2, 6, 23, 0.95))';
-      this.appendStaticExportStars(root, plan.scene.width, plan.scene.height);
+      applySharedStaticBackground(root, plan.scene.width, plan.scene.height, {
+        id: 'app-starfield-dark',
+      });
     } else {
       root.style.background = 'transparent';
     }
@@ -273,270 +251,25 @@ export class SnippetExportRenderer {
     fpsInput: number,
     quality: ExportRenderQuality,
   ): Promise<string> {
-    const fontEmbedCSS = await this.getFontEmbedCss(node);
-    const cardDataUrl = await toPng(node, {
-      cacheBust: true,
-      pixelRatio: 1,
-      backgroundColor: 'transparent',
-      fontEmbedCSS,
-      style: {
-        opacity: '1',
-      },
+    const animatedBackground = createSharedAnimatedBackground(plan.scene.width, plan.scene.height, {
+      id: 'app-starfield-dark',
     });
-    const cardImage = await this.loadImage(cardDataUrl);
-
-    const canvas = document.createElement('canvas');
-    canvas.width = plan.scene.width;
-    canvas.height = plan.scene.height;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    if (!ctx) {
-      throw new Error('Unable to initialize GIF renderer.');
-    }
-
-    const staticBackground = this.buildPrecompiledGifBackground(
-      plan.scene.width,
-      plan.scene.height,
-    );
-    const layers = this.generateStarLayers(plan.scene.width, plan.scene.height);
-    const fps = Math.max(1, Math.round(fpsInput));
-    const frameDelayMs = Math.max(20, Math.round(1000 / fps));
-    const frameCount = Math.max(8, Math.round((quality.gifDurationMs / 1000) * fps));
-    const frames: Array<{
-      rgba: Uint8ClampedArray;
-      width: number;
-      height: number;
-      delayMs: number;
-    }> = [];
-
-    for (let frameIndex = 0; frameIndex < frameCount; frameIndex += 1) {
-      const progress = (frameIndex / frameCount) * GIF_TRAVEL_PROGRESS_SCALE;
-      ctx.clearRect(0, 0, plan.scene.width, plan.scene.height);
-      ctx.drawImage(staticBackground, 0, 0, plan.scene.width, plan.scene.height);
-      this.drawAnimatedStars(ctx, plan.scene.width, plan.scene.height, layers, progress);
-      ctx.drawImage(cardImage, 0, 0, plan.scene.width, plan.scene.height);
-
-      const frameData = ctx.getImageData(0, 0, plan.scene.width, plan.scene.height);
-      frames.push({
-        rgba: frameData.data,
-        width: plan.scene.width,
-        height: plan.scene.height,
-        delayMs: frameDelayMs,
-      });
-    }
-
-    const result = await this.kernel.encodeGif(frames, {
-      repeat: 0,
+    return this.exportRenderer.renderGif({
+      sourceNode: node,
+      width: plan.scene.width,
+      height: plan.scene.height,
+      profile: 'reliable',
+      fps: fpsInput,
+      durationMs: quality.gifDurationMs,
       maxColors: quality.gifMaxColors,
+      drawFrame: (ctx, frameProgress, sourceImage) => {
+        const progress = frameProgress * GIF_TRAVEL_PROGRESS_SCALE;
+        ctx.drawImage(animatedBackground.baseCanvas, 0, 0, plan.scene.width, plan.scene.height);
+        animatedBackground.drawOverlayFrame(ctx, progress);
+        ctx.drawImage(sourceImage, 0, 0, plan.scene.width, plan.scene.height);
+      },
+      encodeGif: (frames, options) => this.kernel.encodeGif(frames, options),
     });
-
-    return URL.createObjectURL(result.blob);
-  }
-
-  private async loadImage(dataUrl: string): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.onload = () => resolve(image);
-      image.onerror = () => reject(new Error('Unable to load rendered export frame.'));
-      image.src = dataUrl;
-    });
-  }
-
-  private drawAnimatedStars(
-    ctx: CanvasRenderingContext2D,
-    width: number,
-    height: number,
-    layers: GeneratedStarLayer[],
-    progress: number,
-  ) {
-    for (const layer of layers) {
-      const travel = height + 240;
-      for (const star of layer.stars) {
-        let y = star.y - progress * travel * layer.speed;
-        y = (((y % travel) + travel) % travel) - 120;
-        const wrappedY = y + travel;
-
-        ctx.globalAlpha = star.alpha;
-        ctx.fillStyle = layer.color;
-        ctx.fillRect(star.x, y, layer.size, layer.size);
-        if (wrappedY < height + layer.size) {
-          ctx.fillRect(star.x, wrappedY, layer.size, layer.size);
-        }
-      }
-    }
-
-    ctx.globalAlpha = 1;
-  }
-
-  private buildPrecompiledGifBackground(width: number, height: number): HTMLCanvasElement {
-    const backgroundCanvas = document.createElement('canvas');
-    backgroundCanvas.width = width;
-    backgroundCanvas.height = height;
-    const bgCtx = backgroundCanvas.getContext('2d');
-    if (!bgCtx) {
-      return backgroundCanvas;
-    }
-
-    bgCtx.fillStyle = '#020617';
-    bgCtx.fillRect(0, 0, width, height);
-
-    const depthGradient = bgCtx.createLinearGradient(0, 0, 0, height);
-    depthGradient.addColorStop(0, 'rgba(15, 23, 42, 0.62)');
-    depthGradient.addColorStop(1, 'rgba(2, 6, 23, 0.95)');
-    bgCtx.fillStyle = depthGradient;
-    bgCtx.fillRect(0, 0, width, height);
-
-    const blueWash = bgCtx.createLinearGradient(0, 0, width * 0.62, height * 0.58);
-    blueWash.addColorStop(0, 'rgba(59, 130, 246, 0.22)');
-    blueWash.addColorStop(0.7, 'rgba(59, 130, 246, 0.04)');
-    blueWash.addColorStop(1, 'rgba(59, 130, 246, 0)');
-    bgCtx.fillStyle = blueWash;
-    bgCtx.fillRect(0, 0, width, height);
-
-    const greenWash = bgCtx.createLinearGradient(width, height * 0.08, width * 0.38, height * 0.72);
-    greenWash.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
-    greenWash.addColorStop(0.7, 'rgba(16, 185, 129, 0.03)');
-    greenWash.addColorStop(1, 'rgba(16, 185, 129, 0)');
-    bgCtx.fillStyle = greenWash;
-    bgCtx.fillRect(0, 0, width, height);
-
-    return backgroundCanvas;
-  }
-
-  private generateStarLayers(width: number, height: number): GeneratedStarLayer[] {
-    const area = width * height;
-    const densityFactor = Math.max(0.8, Math.min(1.4, area / (1080 * 1080)));
-
-    return [
-      this.createStarLayer(
-        Math.round(220 * densityFactor),
-        1,
-        0.44,
-        '#94a3b8',
-        width,
-        height,
-        [0.35, 0.75],
-      ),
-      this.createStarLayer(
-        Math.round(120 * densityFactor),
-        2,
-        0.32,
-        '#cbd5e1',
-        width,
-        height,
-        [0.45, 0.85],
-      ),
-      this.createStarLayer(
-        Math.round(70 * densityFactor),
-        3,
-        0.22,
-        '#e2e8f0',
-        width,
-        height,
-        [0.55, 0.95],
-      ),
-    ];
-  }
-
-  private createStarLayer(
-    count: number,
-    size: number,
-    speed: number,
-    color: string,
-    width: number,
-    height: number,
-    alphaRange: [number, number],
-  ): GeneratedStarLayer {
-    const stars: GeneratedStar[] = [];
-    for (let i = 0; i < count; i += 1) {
-      const rawAlpha = alphaRange[0] + Math.random() * (alphaRange[1] - alphaRange[0]);
-      stars.push({
-        x: Math.random() * width,
-        y: Math.random() * (height + 240) - 120,
-        alpha: Math.round(rawAlpha * 4) / 4,
-      });
-    }
-
-    return {
-      size,
-      speed,
-      color,
-      stars,
-    };
-  }
-
-  private appendStaticExportStars(root: HTMLDivElement, width: number, height: number) {
-    const areaScale = Math.max(0.8, Math.min(1.5, (width * height) / (1280 * 720)));
-    const starsSmall = this.createStarFieldShadow(Math.round(340 * areaScale), width, height, [
-      '#94a3b8',
-      '#cbd5e1',
-      '#e2e8f0',
-    ]);
-    const starsMedium = this.createStarFieldShadow(Math.round(130 * areaScale), width, height, [
-      '#cbd5e1',
-      '#e2e8f0',
-    ]);
-    const starsLarge = this.createStarFieldShadow(Math.round(58 * areaScale), width, height, [
-      '#e2e8f0',
-    ]);
-
-    const createLayer = (sizePx: number, shadow: string) => {
-      const layer = document.createElement('div');
-      this.applyInlineStyles(layer, {
-        position: 'absolute',
-        inset: '0',
-        pointerEvents: 'none',
-        overflow: 'hidden',
-      });
-
-      const star = document.createElement('div');
-      this.applyInlineStyles(star, {
-        position: 'absolute',
-        top: '0',
-        left: '0',
-        width: `${sizePx}px`,
-        height: `${sizePx}px`,
-        borderRadius: '999px',
-        background: 'transparent',
-        boxShadow: shadow,
-      });
-      layer.appendChild(star);
-
-      return layer;
-    };
-
-    root.appendChild(createLayer(1, starsSmall));
-    root.appendChild(createLayer(2, starsMedium));
-    root.appendChild(createLayer(3, starsLarge));
-  }
-
-  private createStarFieldShadow(
-    count: number,
-    width: number,
-    height: number,
-    colors: string[],
-  ): string {
-    const parts: string[] = [];
-    for (let index = 0; index < count; index += 1) {
-      const x = Math.floor(Math.random() * width);
-      const y = Math.floor(Math.random() * height);
-      const color = colors[Math.floor(Math.random() * colors.length)] ?? '#cbd5e1';
-      parts.push(`${x}px ${y}px ${color}`);
-    }
-    return parts.join(', ');
-  }
-
-  private async getFontEmbedCss(node: HTMLElement): Promise<string | undefined> {
-    if (this.fontEmbedCss !== null) {
-      return this.fontEmbedCss || undefined;
-    }
-
-    try {
-      this.fontEmbedCss = await getFontEmbedCSS(node);
-      return this.fontEmbedCss || undefined;
-    } catch {
-      this.fontEmbedCss = '';
-      return undefined;
-    }
   }
 
   private resolveExportThemePreset(

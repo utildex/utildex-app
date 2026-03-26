@@ -18,6 +18,8 @@ import { indentWithTab } from '@codemirror/commands';
 import { EditorView, keymap } from '@codemirror/view';
 import { basicSetup } from 'codemirror';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
+import { ProcessingLoaderComponent } from '../../components/processing-loader';
+import type { ProcessingLoaderState } from '../../components/processing-loader';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { ClipboardService } from '../../services/clipboard.service';
 import { DbService } from '../../services/db.service';
@@ -109,7 +111,7 @@ type ResizeDirection = 'e' | 's' | 'se';
   selector: 'app-code-snippet-viewer',
   standalone: true,
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, FormsModule, ToolLayoutComponent],
+  imports: [CommonModule, FormsModule, ToolLayoutComponent, ProcessingLoaderComponent],
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     @if (!isWidget()) {
@@ -374,6 +376,16 @@ type ResizeDirection = 'e' | 's' | 'se';
               </div>
             </div>
           }
+
+          <app-processing-loader
+            mode="overlay"
+            [active]="downloadLoaderActive()"
+            [state]="downloadLoaderState()"
+            [title]="t.map()['LOADER_EXPORT_TITLE']"
+            [messages]="downloadLoaderMessages()"
+            [tips]="downloadLoaderTips()"
+            [minVisibleMs]="550"
+          />
         </div>
       </div>
     </ng-template>
@@ -718,6 +730,8 @@ export class CodeSnippetViewerComponent implements AfterViewInit, OnDestroy {
   selectedDownloadFormat = signal<ExportFormat>('png');
   selectedDownloadQuality = signal<DownloadQualityId>('medium');
   selectedGifFps = signal<number>(10);
+  downloadLoaderActive = signal(false);
+  downloadLoaderState = signal<ProcessingLoaderState>('loading');
   detectedLanguage = signal<ResolvedSnippetLanguage>('plaintext');
   detectionConfidence = signal(1);
   resolvedCanvasWidth = signal(1280);
@@ -729,6 +743,8 @@ export class CodeSnippetViewerComponent implements AfterViewInit, OnDestroy {
     DOWNLOAD_QUALITY_PRESETS.high,
   ];
   readonly gifFpsOptions = [...GIF_FPS_OPTIONS];
+  readonly downloadLoaderMessages = signal<string[]>([]);
+  readonly downloadLoaderTips = signal<string[]>([]);
 
   private editorView: EditorView | null = null;
   private readonly editorThemeCompartment = new Compartment();
@@ -741,6 +757,7 @@ export class CodeSnippetViewerComponent implements AfterViewInit, OnDestroy {
     startWidth: number;
     startHeight: number;
   } | null = null;
+  private downloadLoaderCloseTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     effect(() => {
@@ -797,6 +814,7 @@ export class CodeSnippetViewerComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.clearDownloadLoaderCloseTimeout();
     window.removeEventListener('pointermove', this.onWindowPointerMove);
     window.removeEventListener('pointerup', this.onWindowPointerUp);
     this.editorView?.destroy();
@@ -1123,6 +1141,23 @@ export class CodeSnippetViewerComponent implements AfterViewInit, OnDestroy {
       document.activeElement.blur();
     }
 
+    this.clearDownloadLoaderCloseTimeout();
+    this.downloadLoaderState.set('loading');
+    this.downloadLoaderMessages.set(
+      format === 'gif'
+        ? [
+            this.t.map()['LOADER_MSG_PREP'],
+            this.t.map()['LOADER_MSG_RENDER'],
+            this.t.map()['LOADER_MSG_GIF_ENCODE'],
+          ]
+        : [this.t.map()['LOADER_MSG_PREP'], this.t.map()['LOADER_MSG_RENDER']],
+    );
+    this.downloadLoaderTips.set([
+      this.t.map()['LOADER_TIP_LOCAL'],
+      this.t.map()['LOADER_TIP_PERF'],
+    ]);
+    this.downloadLoaderActive.set(true);
+
     try {
       const selectedLanguage: SnippetLanguage =
         this.languageMode() === 'manual' ? this.manualLanguage() : 'auto';
@@ -1156,11 +1191,30 @@ export class CodeSnippetViewerComponent implements AfterViewInit, OnDestroy {
       });
 
       this.downloadDataUrl(rendered.outputUrl, rendered.filename);
+      this.finishDownloadLoader('success');
       this.toast.show(this.t.map()['TOAST_EXPORTED'], 'success');
     } catch (err) {
       console.error(err);
+      this.finishDownloadLoader('error');
       this.toast.show(this.t.map()['ERROR_EXPORT_FAILED'], 'error');
     }
+  }
+
+  private finishDownloadLoader(state: Extract<ProcessingLoaderState, 'success' | 'error'>): void {
+    this.downloadLoaderState.set(state);
+    this.downloadLoaderCloseTimeout = setTimeout(() => {
+      this.downloadLoaderActive.set(false);
+      this.downloadLoaderCloseTimeout = null;
+    }, 450);
+  }
+
+  private clearDownloadLoaderCloseTimeout(): void {
+    if (!this.downloadLoaderCloseTimeout) {
+      return;
+    }
+
+    clearTimeout(this.downloadLoaderCloseTimeout);
+    this.downloadLoaderCloseTimeout = null;
   }
 
   @HostListener('window:keydown', ['$event'])

@@ -100,12 +100,42 @@ async function encodeFrames(
   const repeat = options.repeat ?? 0;
   const maxColors = clamp(options.maxColors ?? 192, 2, 256);
   const format = options.quantizeFormat ?? 'rgb565';
-  const paletteSource = buildPaletteSource(normalizedFrames);
+  const antiBanding = options.antiBanding ?? false;
+  const antiBandingStrength = clamp(options.antiBandingStrength ?? 1.1, 0, 3);
+  const paletteSampleFrames = clamp(options.paletteSampleFrames ?? 8, 2, 24);
+  const paletteTargetPixelsPerFrame = clamp(
+    options.paletteTargetPixelsPerFrame ?? 60000,
+    2000,
+    200000,
+  );
+
+  const processedFrames = antiBanding
+    ? normalizedFrames.map((frame, frameIndex) => {
+        const dithered = new Uint8Array(frame.rgba);
+        applyAntiBandingDitherInPlace(
+          dithered,
+          frame.width,
+          frame.height,
+          frameIndex,
+          antiBandingStrength,
+        );
+        return {
+          ...frame,
+          rgba: dithered,
+        };
+      })
+    : normalizedFrames;
+
+  const paletteSource = buildPaletteSource(
+    processedFrames,
+    paletteSampleFrames,
+    paletteTargetPixelsPerFrame,
+  );
   const sharedPalette = gifenc.quantize(paletteSource, maxColors, { format });
 
   let totalDuration = 0;
 
-  normalizedFrames.forEach((frame, index) => {
+  processedFrames.forEach((frame, index) => {
     const delay = Math.max(20, Math.round(frame.delayMs ?? 90));
     totalDuration += delay;
 
@@ -132,10 +162,11 @@ async function encodeFrames(
 
 function buildPaletteSource(
   frames: Array<{ rgba: Uint8Array; width: number; height: number }>,
+  requestedSampleFrames: number,
+  targetPixelsPerFrame: number,
 ): Uint8Array {
-  const maxSampleFrames = Math.min(6, frames.length);
+  const maxSampleFrames = Math.min(requestedSampleFrames, frames.length);
   const frameStride = Math.max(1, Math.floor(frames.length / maxSampleFrames));
-  const pixelStride = 4;
   const sampledFrames: Array<{ rgba: Uint8Array; width: number; height: number }> = [];
 
   for (
@@ -150,22 +181,73 @@ function buildPaletteSource(
   }
 
   const pixelsPerFrame = sampledFrames[0].width * sampledFrames[0].height;
-  const sampledPixelsPerFrame = Math.ceil(pixelsPerFrame / pixelStride);
+  const sampleStep = Math.max(1, Math.ceil(Math.sqrt(pixelsPerFrame / targetPixelsPerFrame)));
+  const sampledPixelsPerFrame =
+    Math.ceil(sampledFrames[0].height / sampleStep) *
+    Math.ceil(sampledFrames[0].width / sampleStep);
   const buffer = new Uint8Array(sampledFrames.length * sampledPixelsPerFrame * 4);
   let writeOffset = 0;
 
   for (const frame of sampledFrames) {
-    for (let pixelIndex = 0; pixelIndex < pixelsPerFrame; pixelIndex += pixelStride) {
-      const rgbaIndex = pixelIndex * 4;
-      buffer[writeOffset] = frame.rgba[rgbaIndex];
-      buffer[writeOffset + 1] = frame.rgba[rgbaIndex + 1];
-      buffer[writeOffset + 2] = frame.rgba[rgbaIndex + 2];
-      buffer[writeOffset + 3] = frame.rgba[rgbaIndex + 3];
-      writeOffset += 4;
+    for (let y = 0; y < frame.height; y += sampleStep) {
+      for (let x = 0; x < frame.width; x += sampleStep) {
+        const rgbaIndex = (y * frame.width + x) * 4;
+        buffer[writeOffset] = frame.rgba[rgbaIndex];
+        buffer[writeOffset + 1] = frame.rgba[rgbaIndex + 1];
+        buffer[writeOffset + 2] = frame.rgba[rgbaIndex + 2];
+        buffer[writeOffset + 3] = frame.rgba[rgbaIndex + 3];
+        writeOffset += 4;
+      }
     }
   }
 
-  return buffer;
+  return writeOffset === buffer.length ? buffer : buffer.subarray(0, writeOffset);
+}
+
+function applyAntiBandingDitherInPlace(
+  rgba: Uint8Array,
+  width: number,
+  height: number,
+  frameIndex: number,
+  strength: number,
+): void {
+  const bayer4 = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5] as const;
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const offset = (y * width + x) * 4;
+      const alpha = rgba[offset + 3];
+      if (alpha < 8) {
+        continue;
+      }
+
+      const r = rgba[offset];
+      const g = rgba[offset + 1];
+      const b = rgba[offset + 2];
+
+      const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      const darkBoost = 1 + Math.pow(1 - luminance, 1.6) * 0.9;
+
+      const bayerIndex = ((y & 3) << 2) | (x & 3);
+      const ordered = (bayer4[bayerIndex] - 7.5) / 7.5;
+      const temporal = (((x * 13 + y * 17 + frameIndex * 19) & 7) - 3.5) / 7;
+      const delta = (ordered * 0.8 + temporal * 0.2) * strength * darkBoost;
+
+      rgba[offset] = clampByte(r + delta);
+      rgba[offset + 1] = clampByte(g + delta);
+      rgba[offset + 2] = clampByte(b + delta);
+    }
+  }
+}
+
+function clampByte(value: number): number {
+  if (value <= 0) {
+    return 0;
+  }
+  if (value >= 255) {
+    return 255;
+  }
+  return Math.round(value);
 }
 
 function clamp(value: number, min: number, max: number): number {
