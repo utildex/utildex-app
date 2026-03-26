@@ -12,6 +12,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
+import { ProcessingLoaderComponent } from '../../components/processing-loader';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { DbService } from '../../services/db.service';
 import { ToastService } from '../../services/toast.service';
@@ -45,6 +46,7 @@ import {
 } from './simple-2d-plots.kernel';
 import { PlotDropdownComponent, type PlotDropdownOption } from './plot-dropdown.component';
 import { PlotToggleComponent } from './plot-toggle.component';
+import type { ProcessingLoaderState } from '../../components/processing-loader';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -86,6 +88,7 @@ const DEFAULT_STATE: Simple2dState = {
     CommonModule,
     FormsModule,
     ToolLayoutComponent,
+    ProcessingLoaderComponent,
     PlotDropdownComponent,
     PlotToggleComponent,
   ],
@@ -556,6 +559,16 @@ const DEFAULT_STATE: Simple2dState = {
           </div>
         </div>
       }
+
+      <app-processing-loader
+        mode="overlay"
+        [active]="exportLoaderActive()"
+        [state]="exportLoaderState()"
+        [title]="t.map()['LOADER_EXPORT_TITLE']"
+        [messages]="exportLoaderMessages()"
+        [tips]="exportLoaderTips()"
+        [minVisibleMs]="550"
+      />
     </ng-template>
   `,
 })
@@ -598,6 +611,8 @@ export class Simple2dPlotsComponent {
   readonly gifFps = signal<number>(12);
   readonly gifDurationMs = signal<number>(3200);
   readonly gifMaxColors = signal<number>(160);
+  readonly exportLoaderActive = signal<boolean>(false);
+  readonly exportLoaderState = signal<ProcessingLoaderState>('loading');
 
   readonly presetOptions = computed<PlotDropdownOption[]>(() => [
     { value: 'single', label: this.t.map()['PRESET_SINGLE'] },
@@ -643,6 +658,23 @@ export class Simple2dPlotsComponent {
     this.editorTab() === 'style' ? this.styleJson() : this.dataJson(),
   );
 
+  readonly exportLoaderMessages = computed<string[]>(() => {
+    if (this.exportFormat() === 'gif') {
+      return [
+        this.t.map()['LOADER_MSG_PREP'],
+        this.t.map()['LOADER_MSG_RENDER'],
+        this.t.map()['LOADER_MSG_GIF_ENCODE'],
+      ];
+    }
+
+    return [this.t.map()['LOADER_MSG_PREP'], this.t.map()['LOADER_MSG_RENDER']];
+  });
+
+  readonly exportLoaderTips = computed<string[]>(() => [
+    this.t.map()['LOADER_TIP_LOCAL'],
+    this.t.map()['LOADER_TIP_PERF'],
+  ]);
+
   readonly activeLineNumbers = computed(() => {
     const lines = Math.max(1, this.activeEditorValue().split(/\r?\n/).length);
     return Array.from({ length: lines }, (_, index) => index + 1);
@@ -663,6 +695,7 @@ export class Simple2dPlotsComponent {
 
   private renderer: PrettyPlotRendererHandle | null = null;
   private readonly lastRenderedConfig = signal<PrettyPlotConfig | null>(null);
+  private exportLoaderCloseTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
     effect(() => {
@@ -722,6 +755,7 @@ export class Simple2dPlotsComponent {
     });
 
     this.destroyRef.onDestroy(() => {
+      this.clearExportLoaderCloseTimeout();
       this.safeDestroyRenderer();
     });
   }
@@ -851,6 +885,10 @@ export class Simple2dPlotsComponent {
       return;
     }
 
+    this.clearExportLoaderCloseTimeout();
+    this.exportLoaderState.set('loading');
+    this.exportLoaderActive.set(true);
+
     try {
       const format = this.exportFormat();
       const quality = this.exportQuality();
@@ -880,10 +918,29 @@ export class Simple2dPlotsComponent {
 
       this.downloadUrl(result.outputUrl, result.filename);
       this.exportModalOpen.set(false);
+      this.finishExportLoader('success');
       this.toast.show(this.t.map()['TOAST_EXPORT_OK'], 'success');
     } catch {
+      this.finishExportLoader('error');
       this.toast.show(this.t.map()['TOAST_EXPORT_FAIL'], 'error');
     }
+  }
+
+  private finishExportLoader(state: Extract<ProcessingLoaderState, 'success' | 'error'>): void {
+    this.exportLoaderState.set(state);
+    this.exportLoaderCloseTimeout = setTimeout(() => {
+      this.exportLoaderActive.set(false);
+      this.exportLoaderCloseTimeout = null;
+    }, 450);
+  }
+
+  private clearExportLoaderCloseTimeout(): void {
+    if (!this.exportLoaderCloseTimeout) {
+      return;
+    }
+
+    clearTimeout(this.exportLoaderCloseTimeout);
+    this.exportLoaderCloseTimeout = null;
   }
 
   private buildPlotConfig(): PrettyPlotConfig | null {

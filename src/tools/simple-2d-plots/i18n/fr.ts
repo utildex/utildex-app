@@ -53,6 +53,13 @@ export default {
   SCHEMA_STYLES: 'Styles: { seriesId: { color?, strokeWidth?, strokeDasharray? } }',
   STATUS_READY: 'Prêt',
   STATUS_ERROR: 'Erreur de données',
+  LOADER_EXPORT_TITLE: 'Export du graphique...',
+  LOADER_MSG_PREP: "Preparation des parametres d'export...",
+  LOADER_MSG_RENDER: 'Rendu du graphique pour export...',
+  LOADER_MSG_GIF_ENCODE: 'Encodage des images GIF...',
+  LOADER_TIP_LOCAL: 'Utildex fonctionne localement dans votre navigateur.',
+  LOADER_TIP_PERF:
+    "La vitesse d'export depend des performances de votre appareil et de votre navigateur.",
   TOAST_RENDERED: 'Graphique tracé avec succès.',
   TOAST_EXPORT_OK: 'Export créé.',
   TOAST_EXPORT_FAIL: 'Échec de l’export.',
