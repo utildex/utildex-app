@@ -52,7 +52,6 @@ export default {
   SCHEMA_STYLES: '样式: { seriesId: { color?, strokeWidth?, strokeDasharray? } }',
   STATUS_READY: '就绪',
   STATUS_ERROR: '数据错误',
-  STATUS_RENDERED: '图表已渲染',
   TOAST_RENDERED: '图表渲染成功。',
   TOAST_EXPORT_OK: '导出已生成。',
   TOAST_EXPORT_FAIL: '导出失败。',

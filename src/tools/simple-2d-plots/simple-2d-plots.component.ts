@@ -135,16 +135,6 @@ const DEFAULT_STATE: Simple2dState = {
         }
       }
 
-      .plot-status-text {
-        display: inline;
-      }
-
-      @media (max-width: 399px) {
-        .plot-status-text {
-          display: none;
-        }
-      }
-
       .export-sheet {
         position: fixed;
         right: 0;
@@ -372,13 +362,6 @@ const DEFAULT_STATE: Simple2dState = {
               >
                 ← {{ t.map()['BTN_BACK_TO_DATA'] }}
               </button>
-
-              <span
-                class="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-500 dark:bg-slate-800 dark:text-slate-300"
-              >
-                <span class="text-emerald-500">✓</span>
-                <span class="plot-status-text">{{ t.map()['STATUS_RENDERED'] }}</span>
-              </span>
 
               <button
                 type="button"
@@ -712,7 +695,6 @@ export class Simple2dPlotsComponent {
       }
 
       this.lastRenderedConfig.set(config);
-      this.statusText.set(this.t.map()['STATUS_RENDERED']);
       this.isRendering.set(false);
     });
 
@@ -843,7 +825,6 @@ export class Simple2dPlotsComponent {
     this.lastRenderedConfig.set(config);
     this.isRendering.set(true);
     this.step.set('plot');
-    this.statusText.set(this.t.map()['STATUS_RENDERED']);
     this.toast.show(this.t.map()['TOAST_RENDERED'], 'success');
   }
 

@@ -53,7 +53,6 @@ export default {
   SCHEMA_STYLES: 'Estilos: { seriesId: { color?, strokeWidth?, strokeDasharray? } }',
   STATUS_READY: 'Listo',
   STATUS_ERROR: 'Error de datos',
-  STATUS_RENDERED: 'Grafico renderizado',
   TOAST_RENDERED: 'Grafico renderizado correctamente.',
   TOAST_EXPORT_OK: 'Exportacion creada.',
   TOAST_EXPORT_FAIL: 'La exportacion fallo.',
