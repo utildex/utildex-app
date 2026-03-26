@@ -9,6 +9,10 @@ export interface RuntimeGifEncodeOptions {
   repeat?: number;
   maxColors?: number;
   quantizeFormat?: 'rgb565' | 'rgb444';
+  paletteSampleFrames?: number;
+  paletteTargetPixelsPerFrame?: number;
+  antiBanding?: boolean;
+  antiBandingStrength?: number;
 }
 
 export interface RuntimeGifEncodeResult {
