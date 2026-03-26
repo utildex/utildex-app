@@ -43,6 +43,7 @@ const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
   'pdf-to-img': () => import('../tools/pdf-to-img/index'),
   'qr-studio': () => import('../tools/qr-studio/index'),
   'rotate-pdf': () => import('../tools/rotate-pdf/index'),
+  'simple-2d-plots': () => import('../tools/simple-2d-plots/index'),
   'split-pdf': () => import('../tools/split-pdf/index'),
   'unit-converter': () => import('../tools/unit-converter/index'),
   'url-encoder-decoder': () => import('../tools/url-encoder-decoder/index'),
