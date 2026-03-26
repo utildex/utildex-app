@@ -49,6 +49,13 @@ export default {
   EXPORT_RESULT_LABEL: 'Resultado exportado',
   ERROR_EMPTY_EXPORT: 'Agrega codigo antes de exportar.',
   ERROR_EXPORT_FAILED: 'La exportacion fallo. Intentalo otra vez.',
+  LOADER_EXPORT_TITLE: 'Exportando snippet...',
+  LOADER_MSG_PREP: 'Preparando configuracion de exportacion...',
+  LOADER_MSG_RENDER: 'Renderizando tu snippet...',
+  LOADER_MSG_GIF_ENCODE: 'Codificando fotogramas GIF...',
+  LOADER_TIP_LOCAL: 'Utildex se ejecuta localmente en tu navegador.',
+  LOADER_TIP_PERF:
+    'La velocidad de exportacion depende del rendimiento de tu dispositivo y navegador.',
   TOAST_COPIED: 'Codigo copiado',
   TOAST_BEAUTIFIED: 'Snippet embellecido',
   TOAST_EXPORTED: 'Imagen exportada',
