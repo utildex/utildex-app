@@ -5,7 +5,6 @@ import {
   computed,
   effect,
   inject,
-  input,
   signal,
   viewChild,
 } from '@angular/core';
@@ -168,17 +167,11 @@ const DEFAULT_STATE: Simple2dState = {
     `,
   ],
   template: `
-    @if (!isWidget()) {
-      <app-tool-layout toolId="simple-2d-plots">
-        <div class="mx-4 flex w-[calc(100%-2rem)] justify-center">
-          <ng-container *ngTemplateOutlet="card"></ng-container>
-        </div>
-      </app-tool-layout>
-    } @else {
-      <div class="mx-1 h-full w-[calc(100%-0.5rem)]">
+    <app-tool-layout toolId="simple-2d-plots">
+      <div class="mx-4 flex w-[calc(100%-2rem)] justify-center">
         <ng-container *ngTemplateOutlet="card"></ng-container>
       </div>
-    }
+    </app-tool-layout>
 
     <ng-template #card>
       <div
@@ -573,9 +566,6 @@ const DEFAULT_STATE: Simple2dState = {
   `,
 })
 export class Simple2dPlotsComponent {
-  isWidget = input<boolean>(false);
-  widgetConfig = input<Record<string, unknown> | null>(null);
-
   readonly t = inject(ScopedTranslationService);
   private readonly db = inject(DbService);
   private readonly toast = inject(ToastService);

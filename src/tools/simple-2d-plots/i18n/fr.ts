@@ -1,6 +1,5 @@
 export default {
   TITLE: 'Graphiques 2D Simples',
-  WIDGET_TITLE: 'Graphiques 2D',
   PRESET_LABEL: 'Préréglage',
   PRESET_SINGLE: 'Série unique',
   PRESET_MULTI: 'Multi-série',

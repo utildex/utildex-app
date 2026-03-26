@@ -1,6 +1,5 @@
 export default {
   TITLE: '简单二维绘图',
-  WIDGET_TITLE: '二维绘图',
   PRESET_LABEL: '预设',
   PRESET_SINGLE: '单序列',
   PRESET_MULTI: '多序列',

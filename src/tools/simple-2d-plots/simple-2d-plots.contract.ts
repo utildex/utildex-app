@@ -28,14 +28,7 @@ export const contract: ToolContract = {
     output: { format: 'json' },
   },
   widget: {
-    supported: true,
-    defaultCols: 2,
-    defaultRows: 2,
-    presets: [
-      { label: { en: 'Compact' }, cols: 1, rows: 1 },
-      { label: { en: 'Standard' }, cols: 2, rows: 2 },
-      { label: { en: 'Wide' }, cols: 3, rows: 2 },
-    ],
+    supported: false,
   },
   cost: 'low',
 };

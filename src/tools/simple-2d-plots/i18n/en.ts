@@ -1,6 +1,5 @@
 export default {
   TITLE: 'Simple 2D Plots',
-  WIDGET_TITLE: '2D Plots',
   PRESET_LABEL: 'Preset',
   PRESET_SINGLE: 'Single Series',
   PRESET_MULTI: 'Multi Series',
