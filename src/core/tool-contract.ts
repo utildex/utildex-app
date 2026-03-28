@@ -7,7 +7,7 @@
 import { Trait } from './types/traits';
 import { FormatId } from './types/formats';
 import { I18nText, WidgetCapability } from '../data/types';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 export interface ToolContract {
   /** Unique tool identifier (matches route and registry key). */

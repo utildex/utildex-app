@@ -12,7 +12,7 @@
 
 import { Trait } from '../types/traits';
 import { FormatId } from '../types/formats';
-import { ToolContract } from '../tool-contract';
+import type { ToolContract } from '../tool-contract';
 import {
   formatMask,
   traitMask,

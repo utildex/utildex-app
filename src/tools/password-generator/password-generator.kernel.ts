@@ -7,7 +7,6 @@ export interface PasswordOptions {
   useLowercase: boolean;
   useNumbers: boolean;
   useSymbols: boolean;
-  rng?: () => number;
 }
 
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
@@ -24,11 +23,10 @@ export function generatePassword(options: PasswordOptions): string {
 
   if (!chars) return '';
 
-  const rng = options.rng ?? Math.random;
   const len = Math.max(1, options.length);
   let result = '';
   for (let i = 0; i < len; i++) {
-    result += chars.charAt(Math.floor(rng() * chars.length));
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
 }
@@ -45,8 +43,10 @@ export function scorePasswordStrength(options: PasswordOptions): number {
 }
 
 export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
+  const options: PasswordOptions = input;
+
   return {
-    password: generatePassword(input),
-    score: scorePasswordStrength(input),
+    password: generatePassword(options),
+    score: scorePasswordStrength(options),
   };
 }

@@ -80,6 +80,16 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     ),
 };
 
+function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {
+  if (contract.id !== toolId) {
+    throw new Error(
+      `Tool contract id mismatch for registry key "${toolId}": loaded contract.id="${contract.id}"`,
+    );
+  }
+
+  return contract;
+}
+
 function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
   const map: Record<string, ToolRegistryEntry> = {};
 
@@ -93,9 +103,13 @@ function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
       throw new Error(`Missing Angular component loader for tool id: ${toolId}`);
     }
 
+    const contract = () =>
+      coreEntry.contract().then((loadedContract) => assertContractIdMatchesToolId(toolId, loadedContract));
+
     map[toolId] = {
       ...coreEntry,
       component,
+      contract,
     };
   }
 

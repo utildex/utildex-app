@@ -1,4 +1,4 @@
-import { ToolContract } from './tool-contract';
+import type { ToolContract } from './tool-contract';
 
 export interface CoreRegistryEntry {
   contract: () => Promise<ToolContract>;
