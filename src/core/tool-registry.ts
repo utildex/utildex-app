@@ -4,6 +4,7 @@
 
 import { Type } from '@angular/core';
 import { ToolContract } from './tool-contract';
+import { CORE_REGISTRY } from './core-registry';
 
 export interface ToolRegistryEntry {
   /** Lazy loader for the Angular component (UI layer). */
@@ -14,74 +15,84 @@ export interface ToolRegistryEntry {
   kernel: () => Promise<Record<string, unknown>>;
 }
 
-interface ToolIndexModule {
-  contract: ToolContract;
-  loadComponent: () => Promise<Type<unknown>>;
-  loadKernel: () => Promise<Record<string, unknown>>;
-}
+type ComponentLoader = () => Promise<Type<unknown>>;
 
-type ToolIndexLoader = () => Promise<ToolIndexModule>;
-
-/**
- * Explicit loader map avoids relying on bundler-specific glob transforms.
- * This keeps tool discovery stable across dev/build targets (including Cloudflare Pages).
- */
-const TOOL_INDEX_LOADERS: Record<string, ToolIndexLoader> = {
-  'base64-encoder-decoder': () => import('../tools/base64-encoder-decoder/index'),
-  'code-snippet-viewer': () => import('../tools/code-snippet-viewer/index'),
-  'diff-checker': () => import('../tools/diff-checker/index'),
-  'hash-generator': () => import('../tools/hash-generator/index'),
-  'image-converter': () => import('../tools/image-converter/index'),
-  'image-resizer': () => import('../tools/image-resizer/index'),
-  'img-to-pdf': () => import('../tools/img-to-pdf/index'),
-  'json-formatter': () => import('../tools/json-formatter/index'),
-  'jwt-decoder': () => import('../tools/jwt-decoder/index'),
-  'lorem-ipsum': () => import('../tools/lorem-ipsum/index'),
-  'markdown-preview': () => import('../tools/markdown-preview/index'),
-  'merge-pdf': () => import('../tools/merge-pdf/index'),
-  'password-generator': () => import('../tools/password-generator/index'),
-  'pdf-to-img': () => import('../tools/pdf-to-img/index'),
-  'qr-studio': () => import('../tools/qr-studio/index'),
-  'rotate-pdf': () => import('../tools/rotate-pdf/index'),
-  'simple-2d-plots': () => import('../tools/simple-2d-plots/index'),
-  'split-pdf': () => import('../tools/split-pdf/index'),
-  'unit-converter': () => import('../tools/unit-converter/index'),
-  'url-encoder-decoder': () => import('../tools/url-encoder-decoder/index'),
+const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
+  'base64-encoder-decoder': () =>
+    import('../tools/base64-encoder-decoder/base64-encoder-decoder.component').then(
+      (m) => m.Base64EncoderDecoderComponent,
+    ),
+  'code-snippet-viewer': () =>
+    import('../tools/code-snippet-viewer/code-snippet-viewer.component').then(
+      (m) => m.CodeSnippetViewerComponent,
+    ),
+  'diff-checker': () =>
+    import('../tools/diff-checker/diff-checker.component').then((m) => m.DiffCheckerComponent),
+  'hash-generator': () =>
+    import('../tools/hash-generator/hash-generator.component').then((m) => m.HashGeneratorComponent),
+  'image-converter': () =>
+    import('../tools/image-converter/image-converter.component').then(
+      (m) => m.ImageConverterComponent,
+    ),
+  'image-resizer': () =>
+    import('../tools/image-resizer/image-resizer.component').then((m) => m.ImageResizerComponent),
+  'img-to-pdf': () =>
+    import('../tools/img-to-pdf/img-to-pdf.component').then((m) => m.ImgToPdfComponent),
+  'json-formatter': () =>
+    import('../tools/json-formatter/json-formatter.component').then((m) => m.JsonFormatterComponent),
+  'jwt-decoder': () =>
+    import('../tools/jwt-decoder/jwt-decoder.component').then((m) => m.JwtDecoderComponent),
+  'lorem-ipsum': () =>
+    import('../tools/lorem-ipsum/lorem-ipsum.component').then((m) => m.LoremIpsumComponent),
+  'markdown-preview': () =>
+    import('../tools/markdown-preview/markdown-preview.component').then(
+      (m) => m.MarkdownPreviewComponent,
+    ),
+  'merge-pdf': () => import('../tools/merge-pdf/merge-pdf.component').then((m) => m.MergePdfComponent),
+  'password-generator': () =>
+    import('../tools/password-generator/password-generator.component').then(
+      (m) => m.PasswordGeneratorComponent,
+    ),
+  'pdf-to-img': () => import('../tools/pdf-to-img/pdf-to-img.component').then((m) => m.PdfToImgComponent),
+  'qr-studio': () => import('../tools/qr-studio/qr-studio.component').then((m) => m.QrStudioComponent),
+  'rotate-pdf': () =>
+    import('../tools/rotate-pdf/rotate-pdf.component').then((m) => m.RotatePdfComponent),
+  'simple-2d-plots': () =>
+    import('../tools/simple-2d-plots/simple-2d-plots.component').then(
+      (m) => m.Simple2dPlotsComponent,
+    ),
+  'split-pdf': () => import('../tools/split-pdf/split-pdf.component').then((m) => m.SplitPdfComponent),
+  'unit-converter': () =>
+    import('../tools/unit-converter/unit-converter.component').then((m) => m.UnitConverterComponent),
+  'url-encoder-decoder': () =>
+    import('../tools/url-encoder-decoder/url-encoder-decoder.component').then(
+      (m) => m.UrlEncoderDecoderComponent,
+    ),
 };
 
 function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
   const map: Record<string, ToolRegistryEntry> = {};
 
-  for (const [declaredId, loadIndex] of Object.entries(TOOL_INDEX_LOADERS)) {
-    if (map[declaredId]) {
-      throw new Error(`Duplicate tool id detected while building registry: ${declaredId}`);
+  for (const [toolId, coreEntry] of Object.entries(CORE_REGISTRY)) {
+    if (map[toolId]) {
+      throw new Error(`Duplicate tool id detected while building registry: ${toolId}`);
     }
 
-    map[declaredId] = {
-      component: async () => {
-        const mod = await loadIndex();
-        return mod.loadComponent();
-      },
-      contract: async () => {
-        const mod = await loadIndex();
-        const contractId = mod.contract?.id;
-        if (!contractId) {
-          throw new Error(
-            `Tool index module for ${declaredId} does not export a valid contract id.`,
-          );
-        }
-        if (contractId !== declaredId) {
-          throw new Error(
-            `Tool index contract id mismatch: declared=${declaredId}, exported=${contractId}`,
-          );
-        }
-        return mod.contract;
-      },
-      kernel: async () => {
-        const mod = await loadIndex();
-        return mod.loadKernel();
-      },
+    const component = TOOL_COMPONENT_LOADERS[toolId];
+    if (!component) {
+      throw new Error(`Missing Angular component loader for tool id: ${toolId}`);
+    }
+
+    map[toolId] = {
+      ...coreEntry,
+      component,
     };
+  }
+
+  for (const toolId of Object.keys(TOOL_COMPONENT_LOADERS)) {
+    if (!CORE_REGISTRY[toolId]) {
+      throw new Error(`Component loader declared for unknown tool id: ${toolId}`);
+    }
   }
 
   return map;
