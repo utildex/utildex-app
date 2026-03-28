@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './qr-studio.schema';
 
 export const contract: ToolContract = {
   id: 'qr-studio',
@@ -29,7 +30,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.text] },
     output: { format: 'png' },
   },
-
+  schema,
   widget: {
     supported: true,
     defaultCols: 1,

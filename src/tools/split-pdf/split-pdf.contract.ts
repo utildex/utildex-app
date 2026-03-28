@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './split-pdf.schema';
 
 export const contract: ToolContract = {
   id: 'split-pdf',
@@ -21,6 +22,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.document] },
     output: { format: 'pdf' },
   },
+  schema,
   widget: {
     supported: true,
     defaultCols: 2,

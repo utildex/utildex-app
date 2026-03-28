@@ -1,4 +1,24 @@
+import type { z } from 'zod';
+import { schema } from './rotate-pdf.schema';
+
 export type RotationMode = 'all' | 'odd' | 'even' | 'specific';
+
+function base64ToArrayBuffer(base64: string): ArrayBuffer {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i += 1) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
 
 export function parseRange(rangeStr: string, max: number): number[] {
   const pages = new Set<number>();
@@ -57,13 +77,17 @@ export async function rotatePdfBytes(
   return new Uint8Array(bytes);
 }
 
-export async function run(input: {
-  sourceBytes: ArrayBuffer;
-  angle: number;
-  mode: RotationMode;
-  specificRange: string;
-}): Promise<{ bytes: Uint8Array }> {
+export async function run(
+  input: z.infer<typeof schema.input>,
+): Promise<z.infer<typeof schema.output>> {
   return {
-    bytes: await rotatePdfBytes(input.sourceBytes, input.angle, input.mode, input.specificRange),
+    bytes: bytesToBase64(
+      await rotatePdfBytes(
+        base64ToArrayBuffer(input.sourceBytes),
+        input.angle,
+        input.mode,
+        input.specificRange,
+      ),
+    ),
   };
 }

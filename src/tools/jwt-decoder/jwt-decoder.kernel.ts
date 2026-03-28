@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './jwt-decoder.schema';
+
 export interface JwtDecodeOptions {
   pretty: boolean;
   now?: number;
@@ -164,6 +167,8 @@ export function decodeJwt(tokenInput: string, options: JwtDecodeOptions): JwtDec
   return result;
 }
 
-export function run(input: { token: string; pretty?: boolean }): JwtDecodeResult {
+export function run(
+  input: z.infer<typeof schema.input>,
+): z.infer<typeof schema.output> {
   return decodeJwt(input.token, { pretty: input.pretty ?? true });
 }

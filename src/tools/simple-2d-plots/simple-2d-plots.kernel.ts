@@ -1,8 +1,10 @@
+import type { z } from 'zod';
 import type {
   PrettyPlotSharedXInput,
   PrettyPlotSingleSeriesInput,
   PrettyPlotSeriesStyle,
 } from '../../core/plotting/pretty';
+import { schema } from './simple-2d-plots.schema';
 
 export type Simple2dPresetId = 'single' | 'multi' | 'styled';
 
@@ -257,4 +259,63 @@ function toOptionalString(value: unknown): string | null {
 
   const trimmed = value.trim();
   return trimmed.length ? trimmed : null;
+}
+
+export function run(
+  input: z.infer<typeof schema.input>,
+): z.infer<typeof schema.output> {
+  if (input.preset === 'single') {
+    const parsed = parseSinglePresetInput(input.dataJson);
+    if (!parsed.ok || !parsed.value) {
+      return {
+        ok: false,
+        normalizedDataJson: null,
+        normalizedStyleJson: null,
+        error: parsed.error ?? 'Invalid plot data.',
+      };
+    }
+
+    return {
+      ok: true,
+      normalizedDataJson: JSON.stringify(parsed.value),
+      normalizedStyleJson: null,
+      error: null,
+    };
+  }
+
+  const parsed = parseMultiPresetInput(input.dataJson);
+  if (!parsed.ok || !parsed.value) {
+    return {
+      ok: false,
+      normalizedDataJson: null,
+      normalizedStyleJson: null,
+      error: parsed.error ?? 'Invalid plot data.',
+    };
+  }
+
+  if (input.preset === 'styled') {
+    const parsedStyle = parseStyleMap(input.styleJson ?? '{}');
+    if (!parsedStyle.ok || !parsedStyle.value) {
+      return {
+        ok: false,
+        normalizedDataJson: null,
+        normalizedStyleJson: null,
+        error: parsedStyle.error ?? 'Invalid style map.',
+      };
+    }
+
+    return {
+      ok: true,
+      normalizedDataJson: JSON.stringify(parsed.value),
+      normalizedStyleJson: JSON.stringify(parsedStyle.value),
+      error: null,
+    };
+  }
+
+  return {
+    ok: true,
+    normalizedDataJson: JSON.stringify(parsed.value),
+    normalizedStyleJson: null,
+    error: null,
+  };
 }

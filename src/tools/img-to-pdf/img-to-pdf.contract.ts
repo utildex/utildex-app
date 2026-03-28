@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './img-to-pdf.schema';
 
 export const contract: ToolContract = {
   id: 'img-to-pdf',
@@ -28,7 +29,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.image, TRAITS.raster] },
     output: { format: 'pdf' },
   },
-
+  schema,
   widget: {
     supported: true,
     defaultCols: 2,

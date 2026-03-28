@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './markdown-preview.schema';
 
 export const contract: ToolContract = {
   id: 'markdown-preview',
@@ -27,6 +28,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.text] },
     output: { format: 'text' },
   },
+  schema,
   widget: { supported: true, defaultCols: 2, defaultRows: 2 },
   cost: 'low',
 };

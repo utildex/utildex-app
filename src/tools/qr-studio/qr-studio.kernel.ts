@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './qr-studio.schema';
+
 /**
  * QR Studio Kernel — pure transformation logic.
  *
@@ -90,8 +93,11 @@ export async function generateQr(
  * Pipeline entry point — generate QR from text with defaults.
  */
 export async function run(
-  input: string,
-  qrCodeLib: { toDataURL: (content: string, options: Record<string, unknown>) => Promise<string> },
-): Promise<QrResult> {
+  input: z.infer<typeof schema.input>,
+): Promise<z.infer<typeof schema.output>> {
+  const module = await import('qrcode');
+  const qrCodeLib = (module.default || module) as {
+    toDataURL: (content: string, options: Record<string, unknown>) => Promise<string>;
+  };
   return generateQr({ type: 'text', text: input }, qrCodeLib);
 }

@@ -1,4 +1,5 @@
 import { ToolContract } from '../../core/tool-contract';
+import { schema } from './password-generator.schema';
 
 export const contract: ToolContract = {
   id: 'password-generator',
@@ -26,6 +27,7 @@ export const contract: ToolContract = {
     input: { traits: [] },
     output: { format: 'text' },
   },
+  schema,
   widget: {
     supported: true,
     defaultCols: 2,

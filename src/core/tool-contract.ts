@@ -7,6 +7,7 @@
 import { Trait } from './types/traits';
 import { FormatId } from './types/formats';
 import { I18nText, WidgetCapability } from '../data/types';
+import { z } from 'zod';
 
 export interface ToolContract {
   /** Unique tool identifier (matches route and registry key). */
@@ -28,6 +29,12 @@ export interface ToolContract {
   types: {
     input: { traits: readonly Trait[] };
     output: { format: FormatId };
+  };
+
+  /** Optional runtime schemas for MCP/pipeline validation. */
+  schema?: {
+    input: z.ZodTypeAny;
+    output: z.ZodTypeAny;
   };
 
   /** Widget configuration. */

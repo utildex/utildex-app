@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './json-formatter.schema';
+
 /**
  * JSON Formatter Kernel — pure transformation logic.
  *
@@ -163,6 +166,8 @@ function lineColumnToPosition(text: string, line: number, column: number): numbe
 /**
  * Pipeline entry point — format JSON with default settings.
  */
-export function run(input: string): FormatResult {
+export function run(
+  input: z.infer<typeof schema.input>,
+): z.infer<typeof schema.output> {
   return formatJson(input, 2);
 }

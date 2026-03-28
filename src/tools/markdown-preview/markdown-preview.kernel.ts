@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './markdown-preview.schema';
+
 export function parseMarkdownToHtml(markdown: string): string {
   let md = markdown;
   if (!md) return '';
@@ -41,6 +44,8 @@ ${contentHtml}
 </html>`;
 }
 
-export function run(input: string): { html: string } {
+export function run(
+  input: z.infer<typeof schema.input>,
+): z.infer<typeof schema.output> {
   return { html: parseMarkdownToHtml(input) };
 }

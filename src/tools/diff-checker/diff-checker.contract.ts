@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './diff-checker.schema';
 
 export const contract: ToolContract = {
   id: 'diff-checker',
@@ -26,6 +27,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.text] },
     output: { format: 'text' },
   },
+  schema,
   widget: {
     supported: true,
     defaultCols: 3,

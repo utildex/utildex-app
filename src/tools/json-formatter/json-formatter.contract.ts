@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './json-formatter.schema';
 
 export const contract: ToolContract = {
   id: 'json-formatter',
@@ -29,7 +30,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.text, TRAITS.structured] },
     output: { format: 'json' },
   },
-
+  schema,
   widget: {
     supported: true,
     defaultCols: 2,

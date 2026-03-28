@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './url-encoder-decoder.schema';
 
 export const contract: ToolContract = {
   id: 'url-encoder-decoder',
@@ -27,6 +28,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.text] },
     output: { format: 'text' },
   },
+  schema,
   widget: {
     supported: true,
     defaultCols: 2,
