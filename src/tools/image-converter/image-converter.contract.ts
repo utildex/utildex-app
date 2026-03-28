@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './image-converter.schema';
 
 export const contract: ToolContract = {
   id: 'image-converter',
@@ -26,6 +27,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.image, TRAITS.raster] },
     output: { format: 'png' },
   },
+  schema,
   widget: {
     supported: true,
     defaultCols: 2,

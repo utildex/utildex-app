@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './unit-converter.schema';
+
 export type UnitType = 'length' | 'weight' | 'temp';
 
 export interface UnitDef {
@@ -52,8 +55,6 @@ export function convertUnits(
   return base / toDef.factor;
 }
 
-export function run(input: { amount: number; from: string; to: string; type: UnitType }): {
-  result: number;
-} {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return { result: convertUnits(input.amount, input.from, input.to, input.type) };
 }

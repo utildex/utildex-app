@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './url-encoder-decoder.schema';
+
 export type UrlMode = 'encode' | 'decode';
 
 export interface UrlTransformOptions {
@@ -38,4 +41,8 @@ export function transformUrl(
   options: UrlTransformOptions,
 ): UrlTransformResult {
   return mode === 'encode' ? encodeUrl(input, options) : decodeUrl(input, options);
+}
+
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
+  return transformUrl(input.mode, input.input, { plusForSpace: input.plusForSpace ?? false });
 }

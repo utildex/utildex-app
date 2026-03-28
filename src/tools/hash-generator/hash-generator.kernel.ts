@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './hash-generator.schema';
+
 export type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 
 export function normalizeHash(raw: string, uppercase: boolean): string {
@@ -18,6 +21,6 @@ export function formatFileSize(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 
-export function run(input: { rawHash: string; uppercase: boolean }): { hash: string } {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return { hash: normalizeHash(input.rawHash, input.uppercase) };
 }

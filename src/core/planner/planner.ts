@@ -12,6 +12,7 @@
 
 import { Trait } from '../types/traits';
 import { FormatId } from '../types/formats';
+import type { ToolContract } from '../tool-contract';
 import {
   formatMask,
   traitMask,
@@ -75,4 +76,19 @@ export function checkFormatCompatibility(
     : `Format "${format}" is missing traits [${missing.join(', ')}] from required [${requiredTraits.join(', ')}].`;
 
   return { compatible, missingTraits: missing, explanation };
+}
+
+/**
+ * Return all contracts whose input traits are compatible with the source tool output format.
+ */
+export function getCompatibleTargets(toolId: string, allContracts: ToolContract[]): ToolContract[] {
+  const source = allContracts.find((contract) => contract.id === toolId);
+  if (!source) {
+    return [];
+  }
+
+  return allContracts.filter(
+    (target) =>
+      checkFormatCompatibility(source.types.output.format, target.types.input.traits).compatible,
+  );
 }

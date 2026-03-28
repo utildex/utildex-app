@@ -58,7 +58,8 @@
     "pdfjs-dist": "5.4.624",
     "prismjs": "1.30.0",
     "qrcode": "^1.5.4",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@angular/build": "^21.2.2",

@@ -1,4 +1,5 @@
 import Prism from 'prismjs';
+import type { z } from 'zod';
 import 'prismjs/components/prism-bash';
 import 'prismjs/components/prism-csharp';
 import 'prismjs/components/prism-java';
@@ -18,6 +19,7 @@ import {
   SUPPORTED_RESOLVED_SNIPPET_LANGUAGES,
 } from './code-snippet-viewer.language-extension';
 import { encodeGifWithRuntimeWorker } from '../../core/workers/gif/gif-encoder.runtime';
+import { schema } from './code-snippet-viewer.schema';
 
 /*
  * ============================================================================
@@ -458,7 +460,7 @@ export async function prepareStaticExportPlan(
   return getKernelInstance().prepareStaticExport(code, options);
 }
 
-export function run(input: string): HighlightResult {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return highlightSnippet(input, 'auto');
 }
 

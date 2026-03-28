@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './lorem-ipsum.schema';
+
 export interface LoremOptions {
   count: number;
   startWithLorem: boolean;
@@ -102,7 +105,7 @@ export function generateLorem(options: LoremOptions): string[] {
   return paragraphs;
 }
 
-export function run(input: { count: number; startWithLorem: boolean }): { paragraphs: string[] } {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return {
     paragraphs: generateLorem({ count: input.count, startWithLorem: input.startWithLorem }),
   };

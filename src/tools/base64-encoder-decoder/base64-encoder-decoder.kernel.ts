@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './base64-encoder-decoder.schema';
+
 export type Base64Mode = 'encode' | 'decode';
 
 export interface Base64TransformOptions {
@@ -66,4 +69,8 @@ export function transformBase64(
   options: Base64TransformOptions,
 ): Base64TransformResult {
   return mode === 'encode' ? encodeBase64(input, options) : decodeBase64(input, options);
+}
+
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
+  return transformBase64(input.mode, input.input, { urlSafe: input.urlSafe ?? false });
 }

@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './simple-2d-plots.schema';
 
 export const contract: ToolContract = {
   id: 'simple-2d-plots',
@@ -27,6 +28,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.text, TRAITS.structured] },
     output: { format: 'json' },
   },
+  schema,
   widget: {
     supported: false,
   },

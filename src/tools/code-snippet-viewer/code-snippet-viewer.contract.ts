@@ -1,5 +1,6 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { schema } from './code-snippet-viewer.schema';
 
 export const contract: ToolContract = {
   id: 'code-snippet-viewer',
@@ -27,6 +28,7 @@ export const contract: ToolContract = {
     input: { traits: [TRAITS.text] },
     output: { format: 'png' },
   },
+  schema,
   widget: {
     supported: false,
   },

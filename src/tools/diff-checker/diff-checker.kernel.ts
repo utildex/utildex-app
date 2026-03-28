@@ -1,3 +1,6 @@
+import type { z } from 'zod';
+import { schema } from './diff-checker.schema';
+
 export interface DiffChange {
   value: string;
   added?: boolean;
@@ -68,9 +71,6 @@ export function buildDiffRows(
   };
 }
 
-export function run(input: { changes: DiffChange[]; mode: DiffMode }): {
-  rows: DiffRow[];
-  stats: DiffStats;
-} {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return buildDiffRows(input.changes, input.mode);
 }

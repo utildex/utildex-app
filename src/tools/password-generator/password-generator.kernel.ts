@@ -1,10 +1,12 @@
+import type { z } from 'zod';
+import { schema } from './password-generator.schema';
+
 export interface PasswordOptions {
   length: number;
   useUppercase: boolean;
   useLowercase: boolean;
   useNumbers: boolean;
   useSymbols: boolean;
-  rng?: () => number;
 }
 
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
@@ -21,11 +23,10 @@ export function generatePassword(options: PasswordOptions): string {
 
   if (!chars) return '';
 
-  const rng = options.rng ?? Math.random;
   const len = Math.max(1, options.length);
   let result = '';
   for (let i = 0; i < len; i++) {
-    result += chars.charAt(Math.floor(rng() * chars.length));
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return result;
 }
@@ -41,9 +42,11 @@ export function scorePasswordStrength(options: PasswordOptions): number {
   return Math.min(4, Math.floor(score / 1.5));
 }
 
-export function run(input: PasswordOptions): { password: string; score: number } {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
+  const options: PasswordOptions = input;
+
   return {
-    password: generatePassword(input),
-    score: scorePasswordStrength(input),
+    password: generatePassword(options),
+    score: scorePasswordStrength(options),
   };
 }

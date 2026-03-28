@@ -1,4 +1,5 @@
 import { ToolContract } from '../../core/tool-contract';
+import { schema } from './lorem-ipsum.schema';
 
 export const contract: ToolContract = {
   id: 'lorem-ipsum',
@@ -20,6 +21,7 @@ export const contract: ToolContract = {
     input: { traits: [] },
     output: { format: 'text' },
   },
+  schema,
   widget: {
     supported: true,
     defaultCols: 2,
