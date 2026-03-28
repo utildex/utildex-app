@@ -105,9 +105,7 @@ export function generateLorem(options: LoremOptions): string[] {
   return paragraphs;
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return {
     paragraphs: generateLorem({ count: input.count, startWithLorem: input.startWithLorem }),
   };

@@ -41,7 +41,8 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
     kernel: () => import('../tools/img-to-pdf/img-to-pdf.kernel'),
   },
   'json-formatter': {
-    contract: () => import('../tools/json-formatter/json-formatter.contract').then((m) => m.contract),
+    contract: () =>
+      import('../tools/json-formatter/json-formatter.contract').then((m) => m.contract),
     kernel: () => import('../tools/json-formatter/json-formatter.kernel'),
   },
   'jwt-decoder': {
@@ -88,7 +89,8 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
     kernel: () => import('../tools/split-pdf/split-pdf.kernel'),
   },
   'unit-converter': {
-    contract: () => import('../tools/unit-converter/unit-converter.contract').then((m) => m.contract),
+    contract: () =>
+      import('../tools/unit-converter/unit-converter.contract').then((m) => m.contract),
     kernel: () => import('../tools/unit-converter/unit-converter.kernel'),
   },
   'url-encoder-decoder': {

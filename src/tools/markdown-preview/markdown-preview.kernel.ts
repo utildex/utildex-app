@@ -44,8 +44,6 @@ ${contentHtml}
 </html>`;
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return { html: parseMarkdownToHtml(input) };
 }

@@ -71,8 +71,6 @@ export function transformBase64(
   return mode === 'encode' ? encodeBase64(input, options) : decodeBase64(input, options);
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return transformBase64(input.mode, input.input, { urlSafe: input.urlSafe ?? false });
 }

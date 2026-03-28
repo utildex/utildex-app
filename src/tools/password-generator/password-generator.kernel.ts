@@ -44,9 +44,7 @@ export function scorePasswordStrength(options: PasswordOptions): number {
   return Math.min(4, Math.floor(score / 1.5));
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return {
     password: generatePassword(input),
     score: scorePasswordStrength(input),

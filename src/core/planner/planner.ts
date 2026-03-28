@@ -87,7 +87,8 @@ export function getCompatibleTargets(toolId: string, allContracts: ToolContract[
     return [];
   }
 
-  return allContracts.filter((target) =>
-    checkFormatCompatibility(source.types.output.format, target.types.input.traits).compatible,
+  return allContracts.filter(
+    (target) =>
+      checkFormatCompatibility(source.types.output.format, target.types.input.traits).compatible,
   );
 }

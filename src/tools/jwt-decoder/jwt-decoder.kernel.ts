@@ -167,8 +167,6 @@ export function decodeJwt(tokenInput: string, options: JwtDecodeOptions): JwtDec
   return result;
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return decodeJwt(input.token, { pretty: input.pretty ?? true });
 }

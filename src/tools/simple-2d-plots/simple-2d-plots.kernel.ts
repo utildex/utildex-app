@@ -261,9 +261,7 @@ function toOptionalString(value: unknown): string | null {
   return trimmed.length ? trimmed : null;
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   if (input.preset === 'single') {
     const parsed = parseSinglePresetInput(input.dataJson);
     if (!parsed.ok || !parsed.value) {

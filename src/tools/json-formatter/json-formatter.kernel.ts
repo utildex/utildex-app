@@ -166,8 +166,6 @@ function lineColumnToPosition(text: string, line: number, column: number): numbe
 /**
  * Pipeline entry point — format JSON with default settings.
  */
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return formatJson(input, 2);
 }

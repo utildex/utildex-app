@@ -43,8 +43,6 @@ export function transformUrl(
   return mode === 'encode' ? encodeUrl(input, options) : decodeUrl(input, options);
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return transformUrl(input.mode, input.input, { plusForSpace: input.plusForSpace ?? false });
 }

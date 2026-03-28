@@ -71,8 +71,6 @@ export function buildDiffRows(
   };
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return buildDiffRows(input.changes, input.mode);
 }

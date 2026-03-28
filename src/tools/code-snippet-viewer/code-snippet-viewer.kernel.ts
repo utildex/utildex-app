@@ -460,9 +460,7 @@ export async function prepareStaticExportPlan(
   return getKernelInstance().prepareStaticExport(code, options);
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return highlightSnippet(input, 'auto');
 }
 
