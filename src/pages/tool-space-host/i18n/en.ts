@@ -1,0 +1,15 @@
+export default {
+  BACK_TO_SPACES: 'Back to Tool Spaces',
+  BREADCRUMB_ROOT: 'Tool Spaces',
+  GROUPS_TITLE: 'Tool Groups',
+  TAGLINE_DEVELOPER: 'Essential tools for developers',
+  TAGLINE_OFFICE: 'Practical tools for document and office workflows',
+  SPACE_NOT_FOUND_TITLE: 'Tool Space Not Found',
+  SPACE_NOT_FOUND_DESC: 'The requested tool space does not exist or could not be loaded.',
+  NO_TOOLS_TITLE: 'No tools available in this space',
+  NO_TOOLS_DESC: 'This tool space has no valid tools yet.',
+  LOAD_ERROR_TITLE: 'Tool failed to load',
+  LOAD_ERROR_DESC: 'This tool could not be loaded in the current space.',
+  BROWSE_ALL_TOOLS: 'Browse All Tools',
+  LOADING_TOOL: 'Loading tool...',
+};

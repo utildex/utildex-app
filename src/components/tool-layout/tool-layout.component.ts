@@ -1,5 +1,5 @@
 import { Component, input, inject, computed, effect } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ToolService } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
@@ -16,18 +16,20 @@ import zh from './i18n/zh';
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     <div class="mx-auto max-w-5xl">
-      <!-- Breadcrumb -->
-      <nav class="mb-6 flex items-center text-sm font-medium text-slate-500">
-        <a
-          [routerLink]="'/tools' | localLink"
-          class="hover:text-primary flex items-center gap-1 transition-colors"
-        >
-          <span class="material-symbols-outlined text-sm">arrow_back</span>
-          {{ t.map()['BACK_TO_TOOLS'] }}
-        </a>
-        <span class="mx-2 text-slate-300 dark:text-slate-600">/</span>
-        <span class="truncate text-slate-900 dark:text-slate-200">{{ name() }}</span>
-      </nav>
+      @if (showInlineBreadcrumb()) {
+        <!-- Breadcrumb -->
+        <nav class="mb-6 flex items-center text-sm font-medium text-slate-500">
+          <a
+            [routerLink]="backPath() | localLink"
+            class="hover:text-primary flex items-center gap-1 transition-colors"
+          >
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            {{ backLabel() }}
+          </a>
+          <span class="mx-2 text-slate-300 dark:text-slate-600">/</span>
+          <span class="truncate text-slate-900 dark:text-slate-200">{{ name() }}</span>
+        </nav>
+      }
 
       @if (tool(); as tInfo) {
         <!-- Standardized Header -->
@@ -134,11 +136,25 @@ export class ToolLayoutComponent {
   toolId = input.required<string>();
   toolService = inject(ToolService);
   i18n = inject(I18nService);
+  router = inject(Router);
   t = inject(ScopedTranslationService);
 
   tool = computed(() => this.toolService.tools().find((t) => t.id === this.toolId()));
   name = computed(() => (this.tool() ? this.i18n.resolve(this.tool()!.name) : ''));
   description = computed(() => (this.tool() ? this.i18n.resolve(this.tool()!.description) : ''));
+
+  backPath = computed(() => {
+    const spaceId = this.resolveSpaceIdFromUrl();
+    return spaceId ? `/spaces/${spaceId}` : '/tools';
+  });
+
+  backLabel = computed(() => {
+    return this.resolveSpaceIdFromUrl()
+      ? this.t.map()['BACK_TO_SPACE']
+      : this.t.map()['BACK_TO_TOOLS'];
+  });
+
+  showInlineBreadcrumb = computed(() => this.resolveSpaceIdFromUrl() === null);
 
   isFav = computed(() => this.toolService.favorites().has(this.toolId()));
 
@@ -154,5 +170,26 @@ export class ToolLayoutComponent {
 
   toggleFav() {
     this.toolService.toggleFavorite(this.toolId());
+  }
+
+  private resolveSpaceIdFromUrl(): string | null {
+    const path = this.router.url.split('?')[0].split('#')[0];
+    const segments = path.split('/').filter(Boolean);
+    const spacesIndex = segments.indexOf('spaces');
+
+    if (spacesIndex === -1) {
+      return null;
+    }
+
+    const rawSpaceId = segments[spacesIndex + 1];
+    if (!rawSpaceId) {
+      return null;
+    }
+
+    try {
+      return decodeURIComponent(rawSpaceId);
+    } catch {
+      return rawSpaceId;
+    }
   }
 }

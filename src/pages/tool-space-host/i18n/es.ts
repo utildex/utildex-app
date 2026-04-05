@@ -1,0 +1,15 @@
+export default {
+  BACK_TO_SPACES: 'Volver a Espacios de Herramientas',
+  BREADCRUMB_ROOT: 'Espacios de Herramientas',
+  GROUPS_TITLE: 'Grupos de Herramientas',
+  TAGLINE_DEVELOPER: 'Herramientas esenciales para desarrolladores',
+  TAGLINE_OFFICE: 'Herramientas practicas para documentos y flujos de oficina',
+  SPACE_NOT_FOUND_TITLE: 'Espacio de Herramientas no encontrado',
+  SPACE_NOT_FOUND_DESC: 'El espacio solicitado no existe o no se pudo cargar.',
+  NO_TOOLS_TITLE: 'No hay herramientas en este espacio',
+  NO_TOOLS_DESC: 'Este espacio todavia no contiene herramientas validas.',
+  LOAD_ERROR_TITLE: 'No se pudo cargar la herramienta',
+  LOAD_ERROR_DESC: 'Esta herramienta no se pudo cargar en este espacio.',
+  BROWSE_ALL_TOOLS: 'Ver todas las herramientas',
+  LOADING_TOOL: 'Cargando herramienta...',
+};

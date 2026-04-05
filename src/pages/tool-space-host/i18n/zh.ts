@@ -1,0 +1,15 @@
+export default {
+  BACK_TO_SPACES: '返回工具空间',
+  BREADCRUMB_ROOT: '工具空间',
+  GROUPS_TITLE: '工具分组',
+  TAGLINE_DEVELOPER: '开发者必备工具集',
+  TAGLINE_OFFICE: '面向文档处理与日常办公的实用工具集',
+  SPACE_NOT_FOUND_TITLE: '未找到工具空间',
+  SPACE_NOT_FOUND_DESC: '请求的工具空间不存在，或暂时无法加载。',
+  NO_TOOLS_TITLE: '此空间暂无可用工具',
+  NO_TOOLS_DESC: '该工具空间目前还没有可用的有效工具。',
+  LOAD_ERROR_TITLE: '工具加载失败',
+  LOAD_ERROR_DESC: '该工具无法在当前空间中加载。',
+  BROWSE_ALL_TOOLS: '浏览全部工具',
+  LOADING_TOOL: '正在加载工具...',
+};

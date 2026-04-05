@@ -5,6 +5,8 @@ export default {
   BTN_DOWNLOADING: 'Descargando...',
   BUBBLE_PRELOAD_INFO: 'Guarda todas las herramientas en tu dispositivo para usarlas sin internet.',
   BUBBLE_HISTORY_INFO: 'Historial del texto copiado dentro de Utildex.',
+  BUBBLE_TOOL_SPACES_INFO:
+    'Espacios curados que agrupan herramientas para desarrollo, limpieza de datos y flujos de trabajo enfocados.',
   NOTIFY_SW_NOT_READY:
     'El motor offline se está finalizando. La página se recargará una vez para activar la recarga sin conexión.',
   NOTIFY_LIB_DOWNLOADED: '¡Biblioteca descargada! Ahora puedes desconectarte.',
@@ -15,6 +17,7 @@ export default {
   WARN_MOBILE_DATA: 'Almacena herramientas automáticamente. Puede usar datos móviles.',
 
   NAV_ALL_TOOLS: 'Herramientas',
+  NAV_TOOL_SPACES: 'Espacios de Herramientas',
   FOOTER_CATEGORIES: 'Categorías',
   NAV_HISTORY: 'Historial',
   NAV_DASHBOARD: 'Mi Tablero',

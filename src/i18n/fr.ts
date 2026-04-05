@@ -1,11 +1,13 @@
 export default {
   BTN_DOWNLOAD_LIBRARY: 'Télécharger la bibliothèque hors ligne',
   BTN_PRELOAD: 'Précharger la bibliothèque',
-  EARLY_PREVIEW: 'Preview Développeur',
+  EARLY_PREVIEW: 'Aperçu développeur',
   BTN_DOWNLOADING: 'Téléchargement...',
   BUBBLE_PRELOAD_INFO:
     'Enregistre tous les outils sur votre appareil pour une utilisation sans internet.',
   BUBBLE_HISTORY_INFO: 'Historique du texte copié dans les outils Utildex.',
+  BUBBLE_TOOL_SPACES_INFO:
+    'Espaces organisés qui regroupent des outils utiles pour le développement, le nettoyage de données et des flux de travail ciblés.',
   NOTIFY_SW_NOT_READY:
     'Le mode hors ligne se finalise. La page va se recharger une fois pour activer le rafraîchissement hors ligne.',
   NOTIFY_LIB_DOWNLOADED: 'Bibliothèque téléchargée ! Vous pouvez maintenant passer hors ligne.',
@@ -16,11 +18,12 @@ export default {
   WARN_MOBILE_DATA: 'Met en cache les outils automatiquement. Peut utiliser des données mobiles.',
 
   NAV_ALL_TOOLS: 'Tous les outils',
+  NAV_TOOL_SPACES: "Espaces d'outils",
   FOOTER_CATEGORIES: 'Catégories',
   NAV_HISTORY: 'Historique',
   NAV_DASHBOARD: 'Mon Tableau',
   FOOTER_ARTICLES: 'Blog',
-  FOOTER_COPYRIGHT: '© 2026 Utildex. Local-first. Source Available.',
+  FOOTER_COPYRIGHT: '© 2026 Utildex. Priorité au local. Source disponible.',
   FOOTER_CONTRIBUTE: 'Contribuer',
   FOOTER_PRIVACY: 'Confidentialité',
   FOOTER_LEGAL: 'Mentions Légales',
