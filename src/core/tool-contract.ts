@@ -37,6 +37,15 @@ export interface ToolContract {
     output: z.ZodTypeAny;
   };
 
+  /**
+   * Optional MCP compatibility metadata.
+   *
+   * `compatible` defaults to `true` when omitted.
+   */
+  mcp?: {
+    compatible?: boolean;
+  };
+
   /** Widget configuration. */
   widget: WidgetCapability;
 

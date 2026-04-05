@@ -29,6 +29,9 @@ export const contract: ToolContract = {
     output: { format: 'png' },
   },
   schema,
+  mcp: {
+    compatible: false,
+  },
   widget: {
     supported: true,
     defaultCols: 2,
