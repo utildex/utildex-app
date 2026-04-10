@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "exports": {
+    "./headless": {
+      "types": "./dist-headless/types/headless/index.d.ts",
+      "default": "./dist-headless/headless/index.js"
+    }
+  },
   "engines": {
     "node": ">=24"
   },
@@ -10,6 +16,7 @@
     "dev": "ng serve",
     "prebuild": "npm run check:integrity && npm run check:tool-ids && npm run format && npm run lint && tsx scripts/generate-sitemap.ts && tsx scripts/generate-mcp-manifest.ts",
     "build": "ng build",
+    "build:headless": "esbuild src/headless/index.ts --bundle --platform=node --format=esm --target=node24 --outfile=dist-headless/headless/index.js && tsc -p tsconfig.headless.types.json",
     "preview": "ng serve --configuration=production",
     "check:integrity": "tsx scripts/check-integrity.ts",
     "check:tool-ids": "tsx scripts/check-tool-ids.ts",
