@@ -9,6 +9,7 @@ export default defineConfig([
   {
     ignores: [
       "dist/",
+      "dist-headless/",
       "node_modules/",
       ".angular/",
       "*.min.js",

@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dist-headless
+src/assets/mcp/
 *.local
 
 # Editor directories and files
