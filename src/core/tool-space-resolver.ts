@@ -1,9 +1,5 @@
 import { ToolMetadata } from '../data/types';
-import {
-  ToolSpaceDefinition,
-  ToolSpaceGroupDefinition,
-  ToolSpaceIssue,
-} from './tool-space';
+import { ToolSpaceDefinition, ToolSpaceGroupDefinition, ToolSpaceIssue } from './tool-space';
 
 export interface ResolvedToolSpaceGroup {
   id: string;
