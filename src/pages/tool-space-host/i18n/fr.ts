@@ -1,0 +1,15 @@
+export default {
+  BACK_TO_SPACES: "Retour aux espaces d'outils",
+  BREADCRUMB_ROOT: "Espaces d'outils",
+  GROUPS_TITLE: "Groupes d'outils",
+  TAGLINE_DEVELOPER: 'Outils essentiels pour les développeurs',
+  TAGLINE_OFFICE: 'Outils pratiques pour les flux bureautiques et documentaires',
+  SPACE_NOT_FOUND_TITLE: "Espace d'outils introuvable",
+  SPACE_NOT_FOUND_DESC: "L'espace d'outils demandé n'existe pas ou n'a pas pu être chargé.",
+  NO_TOOLS_TITLE: 'Aucun outil disponible dans cet espace',
+  NO_TOOLS_DESC: "Cet espace d'outils ne contient pas encore d'outils valides.",
+  LOAD_ERROR_TITLE: "Impossible de charger l'outil",
+  LOAD_ERROR_DESC: "Cet outil n'a pas pu être chargé dans cet espace.",
+  BROWSE_ALL_TOOLS: 'Voir tous les outils',
+  LOADING_TOOL: "Chargement de l'outil...",
+};

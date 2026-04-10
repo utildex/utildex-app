@@ -13,7 +13,7 @@ export const STORAGE_KEYS = {
   PREFIX_TOOLS: 'tools.',
   PREFIX_APP: 'utildex-', // Legacy/Global prefix
 
-  PREFERENCES: ['theme', 'lang', 'color', 'font', 'density'],
+  PREFERENCES: ['theme', 'lang', 'color', 'font', 'density', 'tool-space', 'tool-space-last-tools'],
 } as const;
 
 /**

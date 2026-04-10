@@ -8,6 +8,7 @@ import { pathToFileURL } from 'url';
 import { LANGUAGES } from '../src/data/languages';
 import { ARTICLE_REGISTRY } from '../src/data/article-registry';
 import { resolvePublicBaseUrl } from '../src/core/app.config';
+import { TOOL_SPACES_REGISTRY } from '../src/data/tool-space-registry';
 
 interface ToolContractLike {
   id: string;
@@ -49,6 +50,8 @@ async function generateSitemap() {
     urls.push(getUrlEntry(`${BASE_URL}/${code}`, today, 'daily', 1.0));
     // Tools Index
     urls.push(getUrlEntry(`${BASE_URL}/${code}/tools`, today, 'daily', 0.9));
+    // Tool Spaces Index
+    urls.push(getUrlEntry(`${BASE_URL}/${code}/spaces`, today, 'weekly', 0.8));
     // Articles Index
     urls.push(getUrlEntry(`${BASE_URL}/${code}/articles`, today, 'weekly', 0.8));
     // Categories Index
@@ -84,6 +87,14 @@ async function generateSitemap() {
     const catSlug = encodeURIComponent(cat);
     LANGUAGES.forEach((lang) => {
       urls.push(getUrlEntry(`${BASE_URL}/${lang.code}/categories/${catSlug}`, today, 'weekly', 0.6));
+    });
+  });
+
+  // E. Tool Spaces
+  TOOL_SPACES_REGISTRY.forEach((space) => {
+    const spaceSlug = encodeURIComponent(space.id);
+    LANGUAGES.forEach((lang) => {
+      urls.push(getUrlEntry(`${BASE_URL}/${lang.code}/spaces/${spaceSlug}`, today, 'weekly', 0.7));
     });
   });
 

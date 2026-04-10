@@ -5,6 +5,7 @@ export default {
   BTN_DOWNLOADING: '下载中...',
   BUBBLE_PRELOAD_INFO: '将所有工具保存到您的设备，以便离线使用。',
   BUBBLE_HISTORY_INFO: 'Utildex 工具内复制文本的历史记录。',
+  BUBBLE_TOOL_SPACES_INFO: '精选工具空间，可将开发、数据清洗与高频流程工具集中到同一工作区。',
   NOTIFY_SW_NOT_READY: '离线引擎正在完成初始化。页面将自动刷新一次以启用离线刷新。',
   NOTIFY_LIB_DOWNLOADED: '库已完全下载！现在可以离线使用。',
   NOTIFY_LIB_PARTIAL: '预加载已完成，但有部分失败。请在联网时先打开关键工具一次。',
@@ -13,6 +14,7 @@ export default {
   WARN_MOBILE_DATA: '空闲时自动缓存工具。可能会消耗移动数据。',
 
   NAV_ALL_TOOLS: '所有工具',
+  NAV_TOOL_SPACES: '工具空间',
   FOOTER_CATEGORIES: '分类',
   NAV_HISTORY: '历史',
   NAV_DASHBOARD: '我的仪表盘',

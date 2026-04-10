@@ -73,6 +73,28 @@ export const routes: Routes = [
         title: 'All Tools - Utildex',
       },
       {
+        path: 'spaces',
+        loadComponent: () =>
+          import('./pages/tool-spaces/tool-spaces.component').then((m) => m.ToolSpacesComponent),
+        title: 'Tool Spaces - Utildex',
+      },
+      {
+        path: 'spaces/:spaceId/:toolId',
+        loadComponent: () =>
+          import('./pages/tool-space-host/tool-space-host.component').then(
+            (m) => m.ToolSpaceHostComponent,
+          ),
+        title: 'Tool Space - Utildex',
+      },
+      {
+        path: 'spaces/:spaceId',
+        loadComponent: () =>
+          import('./pages/tool-space-host/tool-space-host.component').then(
+            (m) => m.ToolSpaceHostComponent,
+          ),
+        title: 'Tool Space - Utildex',
+      },
+      {
         path: 'articles',
         loadComponent: () =>
           import('./pages/articles/articles.component').then((m) => m.ArticlesComponent),

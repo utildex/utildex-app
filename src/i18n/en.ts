@@ -5,6 +5,8 @@ export default {
   BTN_DOWNLOADING: 'Downloading...',
   BUBBLE_PRELOAD_INFO: 'Saves all tools to your device so you can use them without internet.',
   BUBBLE_HISTORY_INFO: 'History of text copied within Utildex tools.',
+  BUBBLE_TOOL_SPACES_INFO:
+    'Curated workspaces that bundle related tools for coding, data cleanup, and focused workflows.',
   NOTIFY_SW_NOT_READY:
     'Offline engine is finalizing. The page will reload once to enable offline refresh.',
   NOTIFY_LIB_DOWNLOADED: 'Library fully downloaded! You can now go offline.',
@@ -15,6 +17,7 @@ export default {
   WARN_MOBILE_DATA: 'Automatically caches tools when idle. May use mobile data.',
 
   NAV_ALL_TOOLS: 'All Tools',
+  NAV_TOOL_SPACES: 'Tool Spaces',
   FOOTER_CATEGORIES: 'Categories',
   NAV_HISTORY: 'History',
   NAV_DASHBOARD: 'My Dashboard',

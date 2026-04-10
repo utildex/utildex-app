@@ -29,6 +29,22 @@ To keep assets maintainable and avoid scattered URL/path construction, all share
 
 Rule: if a resource may be reused by more than one component, or may evolve over time, add it to a central registry first.
 
+### Tool Spaces
+
+Tool Spaces are shared across UI and headless/MCP discovery.
+
+Reference: `docs/platform/tool-spaces/README.md`.
+
+When updating Tool Spaces:
+
+1. Edit or add a space contract in `src/data/tool-spaces/*/space.contract.ts`.
+2. Register it in `src/data/tool-space-registry.ts`.
+3. Ensure each `toolId` exactly matches a registered tool ID.
+4. Keep group and tool ordering intentional (do not reorder without UX/API reason).
+5. Validate with `npm run build:headless` and review space issues from the headless APIs when using `mcpCompatibleOnly`.
+
+Important: shared space resolution belongs in `src/core/tool-space-resolver.ts`. Do not duplicate resolution logic in UI-only or headless-only layers.
+
 ---
 
 ## Adding a New Tool

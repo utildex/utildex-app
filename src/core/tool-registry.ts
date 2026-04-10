@@ -104,7 +104,9 @@ function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
     }
 
     const contract = () =>
-      coreEntry.contract().then((loadedContract) => assertContractIdMatchesToolId(toolId, loadedContract));
+      coreEntry
+        .contract()
+        .then((loadedContract) => assertContractIdMatchesToolId(toolId, loadedContract));
 
     map[toolId] = {
       ...coreEntry,

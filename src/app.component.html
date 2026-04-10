@@ -74,6 +74,16 @@
             >
               {{ t.map()['NAV_ALL_TOOLS'] }}
             </a>
+            <a
+              [routerLink]="'/spaces' | localLink"
+              [appBubble]="'BUBBLE_TOOL_SPACES_INFO'"
+              [bubblePos]="'bottom'"
+              routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+              class="flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <span class="material-symbols-outlined text-sm">space_dashboard</span>
+              {{ t.map()['NAV_TOOL_SPACES'] }}
+            </a>
           </nav>
 
           <div class="mx-1 hidden h-6 w-px bg-slate-200 md:block dark:bg-slate-700"></div>
@@ -184,6 +194,14 @@
               class="rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
             >
               {{ t.map()['NAV_ALL_TOOLS'] }}
+            </a>
+            <a
+              [routerLink]="'/spaces' | localLink"
+              (click)="mobileMenuOpen.set(false)"
+              class="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
+            >
+              <span class="material-symbols-outlined text-sm">space_dashboard</span>
+              {{ t.map()['NAV_TOOL_SPACES'] }}
             </a>
 
             <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>

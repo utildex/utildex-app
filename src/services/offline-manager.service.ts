@@ -14,6 +14,8 @@ const OFFLINE_ROUTE_LOADERS: Array<() => Promise<unknown>> = [
   () => import('../pages/terms/terms.component'),
   () => import('../pages/all-tools/all-tools.component'),
   () => import('../pages/tool-host/tool-host.component'),
+  () => import('../pages/tool-spaces/tool-spaces.component'),
+  () => import('../pages/tool-space-host/tool-space-host.component'),
 ];
 
 @Injectable({
