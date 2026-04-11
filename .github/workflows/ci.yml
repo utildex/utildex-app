@@ -33,6 +33,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Build Headless
+        run: npm run build:headless
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
