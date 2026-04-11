@@ -88,6 +88,21 @@
 
           <div class="mx-1 hidden h-6 w-px bg-slate-200 md:block dark:bg-slate-700"></div>
 
+          @if (updates.isUpdateAvailable()) {
+            <button
+              [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
+              [bubblePos]="'bottom'"
+              (click)="updates.applyUpdateAndReload()"
+              [disabled]="updates.isUpdating()"
+              class="animate-glow-pulse bg-primary mr-1 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-white shadow-lg transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 md:flex"
+            >
+              <span class="material-symbols-outlined text-lg">system_update_alt</span>
+              <span class="text-xs font-bold">{{
+                updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE']
+              }}</span>
+            </button>
+          }
+
           <!-- Command Palette Trigger (Desktop) -->
           <button
             (click)="openCommandPalette()"
@@ -179,6 +194,7 @@
               <span class="material-symbols-outlined">search</span>
               {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
             </button>
+
             <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
             <a
               [routerLink]="'/my-dashboard' | localLink"

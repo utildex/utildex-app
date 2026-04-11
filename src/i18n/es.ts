@@ -7,6 +7,10 @@ export default {
   BUBBLE_HISTORY_INFO: 'Historial del texto copiado dentro de Utildex.',
   BUBBLE_TOOL_SPACES_INFO:
     'Espacios curados que agrupan herramientas para desarrollo, limpieza de datos y flujos de trabajo enfocados.',
+  BTN_UPDATE_AVAILABLE: 'Actualización disponible',
+  BTN_UPDATING: 'Actualizando...',
+  BUBBLE_UPDATE_AVAILABLE:
+    'Hay una nueva versión de Utildex. Puede incluir nuevas herramientas, mejoras y correcciones de seguridad. Haz clic para actualizar.',
   NOTIFY_SW_NOT_READY:
     'El motor offline se está finalizando. La página se recargará una vez para activar la recarga sin conexión.',
   NOTIFY_LIB_DOWNLOADED: '¡Biblioteca descargada! Ahora puedes desconectarte.',

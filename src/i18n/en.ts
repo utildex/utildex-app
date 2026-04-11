@@ -7,6 +7,10 @@ export default {
   BUBBLE_HISTORY_INFO: 'History of text copied within Utildex tools.',
   BUBBLE_TOOL_SPACES_INFO:
     'Curated workspaces that bundle related tools for coding, data cleanup, and focused workflows.',
+  BTN_UPDATE_AVAILABLE: 'Update Available',
+  BTN_UPDATING: 'Updating...',
+  BUBBLE_UPDATE_AVAILABLE:
+    'A new Utildex version is ready. It may include new tools, improvements, and security fixes. Click to update now.',
   NOTIFY_SW_NOT_READY:
     'Offline engine is finalizing. The page will reload once to enable offline refresh.',
   NOTIFY_LIB_DOWNLOADED: 'Library fully downloaded! You can now go offline.',

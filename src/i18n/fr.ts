@@ -8,6 +8,10 @@ export default {
   BUBBLE_HISTORY_INFO: 'Historique du texte copié dans les outils Utildex.',
   BUBBLE_TOOL_SPACES_INFO:
     'Espaces organisés qui regroupent des outils utiles pour le développement, le nettoyage de données et des flux de travail ciblés.',
+  BTN_UPDATE_AVAILABLE: 'Mise à jour disponible',
+  BTN_UPDATING: 'Mise à jour...',
+  BUBBLE_UPDATE_AVAILABLE:
+    'Une nouvelle version de Utildex est prête. Elle peut inclure de nouveaux outils, des améliorations et des correctifs de sécurité. Cliquez pour mettre à jour.',
   NOTIFY_SW_NOT_READY:
     'Le mode hors ligne se finalise. La page va se recharger une fois pour activer le rafraîchissement hors ligne.',
   NOTIFY_LIB_DOWNLOADED: 'Bibliothèque téléchargée ! Vous pouvez maintenant passer hors ligne.',
