@@ -30,6 +30,7 @@ import zh from './i18n/zh';
 import { filter } from 'rxjs/operators';
 import { TourService } from './services/tour.service';
 import { FontLoaderService } from './services/font-loader.service';
+import { AppUpdateService } from './services/app-update.service';
 
 @Component({
   selector: 'app-root',
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit {
   offline = inject(OfflineManagerService);
   tour = inject(TourService);
   fonts = inject(FontLoaderService);
+  updates = inject(AppUpdateService);
   t = inject(ScopedTranslationService);
   router: Router = inject(Router);
 
