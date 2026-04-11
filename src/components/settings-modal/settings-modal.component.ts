@@ -52,11 +52,14 @@ type ParsedData =
   template: `
     <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <!-- Backdrop -->
-      <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close.emit()"></div>
+      <div
+        class="absolute inset-0 bg-slate-900/22 backdrop-blur-[2px] dark:bg-slate-900/45 dark:backdrop-blur-sm"
+        (click)="close.emit()"
+      ></div>
 
       <!-- Modal -->
       <div
-        class="glass-surface animate-slide-up relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl"
+        class="glass-surface-strong animate-slide-up relative flex max-h-[85vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-white/80 shadow-2xl shadow-slate-900/10 dark:border-white/10 dark:shadow-black/40"
       >
         <!-- Header -->
         <div

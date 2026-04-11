@@ -25,7 +25,7 @@ import { CommonModule } from '@angular/common';
 
       <!-- Animated Colorful Stars (Light Mode) -->
       <div
-        class="stars-container opacity-100 mix-blend-multiply transition-opacity duration-700 dark:opacity-0"
+        class="stars-container stars-container-light opacity-100 mix-blend-multiply transition-opacity duration-700 dark:opacity-0"
       >
         <div class="stars-sm" [style.box-shadow]="starsColorSmall"></div>
         <div class="stars-md" [style.box-shadow]="starsColorMedium"></div>
@@ -33,7 +33,7 @@ import { CommonModule } from '@angular/common';
       </div>
 
       <!-- Animated Stars (Dark Mode) -->
-      <div class="stars-container opacity-0 transition-opacity duration-700 dark:opacity-100">
+      <div class="stars-container stars-container-dark opacity-0 transition-opacity duration-700 dark:opacity-100">
         <div class="stars-sm" [style.box-shadow]="starsSmall"></div>
         <div class="stars-md" [style.box-shadow]="starsMedium"></div>
         <div class="stars-lg" [style.box-shadow]="starsLarge"></div>
@@ -74,6 +74,19 @@ import { CommonModule } from '@angular/common';
         width: 3px;
         height: 3px;
         animation: star-anim 100s linear infinite;
+      }
+
+      .stars-container-light .stars-sm {
+        width: 2px;
+        height: 2px;
+      }
+      .stars-container-light .stars-md {
+        width: 3px;
+        height: 3px;
+      }
+      .stars-container-light .stars-lg {
+        width: 4px;
+        height: 4px;
       }
 
       @keyframes star-anim {
