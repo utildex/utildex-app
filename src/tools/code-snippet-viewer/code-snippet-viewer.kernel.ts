@@ -1,16 +1,16 @@
 import Prism from 'prismjs';
 import type { z } from 'zod';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-csharp';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-julia';
-import 'prismjs/components/prism-markdown';
-import 'prismjs/components/prism-ocaml';
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-sql';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-yaml';
+import 'prismjs/components/prism-bash.js';
+import 'prismjs/components/prism-csharp.js';
+import 'prismjs/components/prism-java.js';
+import 'prismjs/components/prism-json.js';
+import 'prismjs/components/prism-julia.js';
+import 'prismjs/components/prism-markdown.js';
+import 'prismjs/components/prism-ocaml.js';
+import 'prismjs/components/prism-python.js';
+import 'prismjs/components/prism-sql.js';
+import 'prismjs/components/prism-typescript.js';
+import 'prismjs/components/prism-yaml.js';
 import {
   detectLanguageWithHighlight,
   getPrettierParser,
