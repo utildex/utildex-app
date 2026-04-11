@@ -49,6 +49,17 @@ interface HeadlessCatalog {
   metadataById: Map<string, ToolMetadata>;
 }
 
+interface ResolvedHeadlessSpaces {
+  spaces: ResolvedToolSpace[];
+  issues: ToolSpaceIssue[];
+  spaceMap: ReadonlyMap<string, ResolvedToolSpace>;
+}
+
+type HeadlessSpaceCacheKey = 'all' | 'mcp-only';
+
+let headlessCatalogPromise: Promise<HeadlessCatalog> | null = null;
+const headlessSpacesPromiseByKey = new Map<HeadlessSpaceCacheKey, Promise<ResolvedHeadlessSpaces>>();
+
 function resolveI18nText(value: unknown): string {
   if (typeof value === 'string') {
     return value;
@@ -129,11 +140,36 @@ async function buildHeadlessCatalog(): Promise<HeadlessCatalog> {
   };
 }
 
-async function resolveHeadlessSpaces(options: HeadlessToolSpacesOptions = {}): Promise<{
-  spaces: ResolvedToolSpace[];
-  issues: ToolSpaceIssue[];
-}> {
-  const catalog = await buildHeadlessCatalog();
+function cloneHeadlessSummary(summary: HeadlessToolSummary): HeadlessToolSummary {
+  return {
+    ...summary,
+    categories: [...summary.categories],
+    tags: [...summary.tags],
+    inputTraits: [...summary.inputTraits],
+  };
+}
+
+async function getHeadlessCatalog(): Promise<HeadlessCatalog> {
+  if (headlessCatalogPromise) {
+    return headlessCatalogPromise;
+  }
+
+  headlessCatalogPromise = buildHeadlessCatalog().catch((error) => {
+    headlessCatalogPromise = null;
+    throw error;
+  });
+
+  return headlessCatalogPromise;
+}
+
+function getHeadlessSpaceCacheKey(options: HeadlessToolSpacesOptions): HeadlessSpaceCacheKey {
+  return options.mcpCompatibleOnly ? 'mcp-only' : 'all';
+}
+
+async function resolveHeadlessSpacesUncached(
+  options: HeadlessToolSpacesOptions = {},
+): Promise<ResolvedHeadlessSpaces> {
+  const catalog = await getHeadlessCatalog();
 
   const allowedToolIds = options.mcpCompatibleOnly
     ? new Set(
@@ -155,7 +191,27 @@ async function resolveHeadlessSpaces(options: HeadlessToolSpacesOptions = {}): P
   return {
     spaces,
     issues: collectToolSpaceRuntimeIssues(TOOL_SPACES_REGISTRY, spaces, knownToolIds),
+    spaceMap: getResolvedToolSpaceMap(spaces),
   };
+}
+
+async function resolveHeadlessSpaces(
+  options: HeadlessToolSpacesOptions = {},
+): Promise<ResolvedHeadlessSpaces> {
+  const cacheKey = getHeadlessSpaceCacheKey(options);
+  const cached = headlessSpacesPromiseByKey.get(cacheKey);
+
+  if (cached) {
+    return cached;
+  }
+
+  const nextPromise = resolveHeadlessSpacesUncached(options).catch((error) => {
+    headlessSpacesPromiseByKey.delete(cacheKey);
+    throw error;
+  });
+  headlessSpacesPromiseByKey.set(cacheKey, nextPromise);
+
+  return nextPromise;
 }
 
 async function loadKernelRun(toolId: string): Promise<(input: unknown) => Promise<unknown>> {
@@ -173,21 +229,23 @@ async function loadKernelRun(toolId: string): Promise<(input: unknown) => Promis
 export async function listHeadlessTools(
   options: ListHeadlessToolsOptions = {},
 ): Promise<HeadlessToolSummary[]> {
-  const catalog = await buildHeadlessCatalog();
+  const catalog = await getHeadlessCatalog();
   const summaries = catalog.summaries;
 
   if (options.mcpCompatibleOnly) {
-    return summaries.filter((summary) => summary.mcpCompatible);
+    return summaries
+      .filter((summary) => summary.mcpCompatible)
+      .map((summary) => cloneHeadlessSummary(summary));
   }
 
-  return summaries;
+  return summaries.map((summary) => cloneHeadlessSummary(summary));
 }
 
 export async function listHeadlessSpaces(
   options: HeadlessToolSpacesOptions = {},
 ): Promise<ResolvedToolSpace[]> {
   const resolved = await resolveHeadlessSpaces(options);
-  return resolved.spaces;
+  return structuredClone(resolved.spaces);
 }
 
 export async function getHeadlessSpace(
@@ -195,15 +253,15 @@ export async function getHeadlessSpace(
   options: HeadlessToolSpacesOptions = {},
 ): Promise<ResolvedToolSpace | null> {
   const resolved = await resolveHeadlessSpaces(options);
-  const spaceMap = getResolvedToolSpaceMap(resolved.spaces);
-  return spaceMap.get(spaceId) ?? null;
+  const space = resolved.spaceMap.get(spaceId);
+  return space ? structuredClone(space) : null;
 }
 
 export async function listHeadlessSpaceIssues(
   options: HeadlessToolSpacesOptions = {},
 ): Promise<ToolSpaceIssue[]> {
   const resolved = await resolveHeadlessSpaces(options);
-  return resolved.issues;
+  return structuredClone(resolved.issues);
 }
 
 export async function listHeadlessToolsInSpace(
