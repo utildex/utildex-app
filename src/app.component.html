@@ -195,6 +195,21 @@
               {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
             </button>
 
+            @if (updates.isUpdateAvailable()) {
+              <button
+                [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
+                [bubblePos]="'bottom'"
+                (click)="updates.applyUpdateAndReload(); mobileMenuOpen.set(false)"
+                [disabled]="updates.isUpdating()"
+                class="animate-glow-pulse border-primary/50 text-primary bg-primary/5 flex w-full items-center gap-2 rounded-xl border px-4 py-3 text-left font-bold disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                <span class="material-symbols-outlined">system_update_alt</span>
+                {{
+                  updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE']
+                }}
+              </button>
+            }
+
             <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
             <a
               [routerLink]="'/my-dashboard' | localLink"
