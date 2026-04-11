@@ -7,6 +7,7 @@ Utildex is an offline-friendly, privacy-first tools platform that brings practic
 ## Contents
 - [Screenshots](#screenshots)
 - [Self-host (Docker Compose)](#self-host-docker-compose)
+- [Headless Build](#headless-build)
 
 
 ## Screenshots
@@ -42,3 +43,45 @@ Then open `http://localhost:9526`.
 Optional overrides:
 `PORT=9384 docker compose up --build`
 `APP_BASE_URL=https://your-domain.tld docker compose up --build`
+
+## Headless Build
+
+Build a non-UI headless API bundle:
+
+`npm run build:headless`
+
+Output:
+
+`dist-headless/headless/index.js`
+
+Type declarations:
+
+`dist-headless/types/headless/index.d.ts`
+
+API exports:
+
+- `listHeadlessTools(options)`
+- `getHeadlessTool(toolId)`
+- `callHeadlessTool(toolId, input, options)`
+- `listHeadlessSpaces(options)`
+- `getHeadlessSpace(spaceId, options)`
+- `listHeadlessToolsInSpace(spaceId, options)`
+- `listHeadlessSpaceIssues(options)`
+
+Quick example:
+
+`node -e "import('./dist-headless/headless/index.js').then(async (m)=>{const tools=await m.listHeadlessTools({mcpCompatibleOnly:true});console.log(tools.length);})"`
+
+If this package is installed or linked into another Node project, consumers can import it with:
+
+```ts
+import { listHeadlessTools, callHeadlessTool } from 'utildex/headless';
+
+const tools = await listHeadlessTools({ mcpCompatibleOnly: true });
+const result = await callHeadlessTool('base64-encoder-decoder', {
+	mode: 'encode',
+	input: 'hello',
+});
+
+console.log(tools.length, result);
+```

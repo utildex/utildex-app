@@ -45,6 +45,38 @@ When updating Tool Spaces:
 
 Important: shared space resolution belongs in `src/core/tool-space-resolver.ts`. Do not duplicate resolution logic in UI-only or headless-only layers.
 
+### Headless Node Packaging (Important)
+
+The headless build is designed for Node runtime loading of dependencies.
+
+- Build command: `npm run build:headless`
+- Current strategy (in `package.json`): `esbuild ... --packages=external ...`
+
+What this means:
+
+1. App source is bundled into `dist-headless/headless/index.js`.
+2. NPM dependencies are **not** inlined; Node resolves them at runtime from `node_modules`.
+
+Contributors must apply this pattern in these cases:
+
+1. A kernel imports a dependency that mixes CJS/ESM internals (avoid relying on bundled interop behavior).
+2. A dependency has browser-only paths or globals (for example DOM globals) and should not execute at headless module load time.
+3. A dependency is only needed for one code path/tool and should be loaded lazily in function scope.
+4. A kernel uses package subpath imports that Node ESM must resolve directly at runtime.
+
+Rules for headless-safe kernel code:
+
+1. Avoid top-level runtime imports for browser-only or heavy optional dependencies; use lazy `import(...)` in the function that needs it.
+2. Keep kernel entrypoints import-safe in Node (headless should load even if a non-MCP/browser tool exists).
+3. For package subpath imports used at runtime by Node ESM, use explicit resolvable specifiers (for example including `.js` when required by the package layout).
+
+Validation checklist for this use case:
+
+1. Run `npm run build:headless`.
+2. Run a Node smoke call through `dist-headless/headless/index.js` for the tool you changed.
+3. If the tool is MCP-compatible, verify it works with `requireMcpCompatible: true`.
+4. Re-check `listHeadlessSpaceIssues({ mcpCompatibleOnly: true })` when compatibility flags or space composition are affected.
+
 ---
 
 ## Adding a New Tool
@@ -138,20 +170,33 @@ export class UuidGeneratorComponent {
 ```
 
 ### 5. Register the Tool (The Wiring)
-Since we don't scan directories at runtime, you must manually register the tool in **1 place**:
+Since we don't scan directories at runtime, you must manually register the tool in **2 places**:
 
-1.  **The Registry (`src/core/tool-registry.ts`):**
-    Add component, contract, and kernel lazy loaders. **Important:** The key must match your tool's `id`.
+1.  **Core registry (`src/core/core-registry.ts`):**
+    Add contract and kernel lazy loaders. The key must match your tool `id`.
     ```typescript
-    export const TOOL_REGISTRY_MAP = {
+    export const CORE_REGISTRY = {
       // ... existing tools
       'uuid-generator': {
-        component: () => import('../tools/uuid-generator/uuid-generator.component').then(m => m.UuidGeneratorComponent),
-        contract: () => import('../tools/uuid-generator/uuid-generator.contract').then(m => m.contract),
+        contract: () => import('../tools/uuid-generator/uuid-generator.contract').then((m) => m.contract),
         kernel: () => import('../tools/uuid-generator/uuid-generator.kernel'),
       },
     };
     ```
+
+2.  **UI component loader map (`src/core/tool-registry.ts`):**
+    Add the component loader in `TOOL_COMPONENT_LOADERS`.
+    ```typescript
+    const TOOL_COMPONENT_LOADERS = {
+      // ... existing tools
+      'uuid-generator': () =>
+        import('../tools/uuid-generator/uuid-generator.component').then(
+          (m) => m.UuidGeneratorComponent,
+        ),
+    };
+    ```
+
+`TOOL_REGISTRY_MAP` is built from `CORE_REGISTRY` + `TOOL_COMPONENT_LOADERS`, so both entries are required.
 
 ---
 

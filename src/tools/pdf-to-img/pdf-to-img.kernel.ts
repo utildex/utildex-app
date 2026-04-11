@@ -1,9 +1,22 @@
-import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy, PDFPageProxy } from 'pdfjs-dist';
 import type { z } from 'zod';
 import { schema } from './pdf-to-img.schema';
 
 export const mcpCompatible = false;
+
+type PdfJsModule = {
+  getDocument: (params: { data: ArrayBuffer }) => { promise: Promise<PDFDocumentProxy> };
+};
+
+let pdfJsModulePromise: Promise<PdfJsModule> | null = null;
+
+function getPdfJsModule(): Promise<PdfJsModule> {
+  if (!pdfJsModulePromise) {
+    pdfJsModulePromise = import('pdfjs-dist').then((module) => module as unknown as PdfJsModule);
+  }
+
+  return pdfJsModulePromise;
+}
 
 function base64ToArrayBuffer(base64: string): ArrayBuffer {
   const binary = atob(base64);
@@ -62,6 +75,7 @@ export async function renderThumbnails(doc: PDFDocumentProxy): Promise<PageThumb
 }
 
 export async function loadPdf(fileBytes: ArrayBuffer): Promise<PDFDocumentProxy> {
+  const pdfjsLib = await getPdfJsModule();
   const loadingTask = pdfjsLib.getDocument({ data: fileBytes });
   return loadingTask.promise;
 }
