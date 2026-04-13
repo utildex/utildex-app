@@ -92,11 +92,14 @@ Copy the contents of `src/templates/tool/` into your new directory. You should h
 *   `uuid-generator.contract.ts` (Metadata + type contract)
 *   `uuid-generator.kernel.ts` (Pure processing logic)
 *   `i18n/` (Localization files: `en.ts`, `fr.ts`, etc.)
+*   `i18n/contract.i18n.ts` (Contract metadata translations, language-first)
 
 ### 3. Configure Contract (`*.contract.ts`)
 This file defines how the app "sees" your tool.
 *   **id**: Must be unique and kebab-case.
 *   **metadata**: Name, description, icon, categories, tags, color.
+  *   Do not inline locale maps in the contract. Keep contract translations in `i18n/contract.i18n.ts` inside the tool folder.
+  *   Use shared mappers from `src/core/i18n-mapper.ts` to generate i18n objects from the dictionary.
   *   **Description ending (required):** End every description with the local equivalent of: `No data leaves your device. Works fully offline; feel free to disconnect.`
   *   Keep this privacy/offline guarantee explicit in each supported language.
 *   **types**: Input traits and output format.
@@ -106,12 +109,14 @@ This file defines how the app "sees" your tool.
 ```typescript
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
+import { mapLocalizedField, mapLocalizedNestedField } from '../../core/i18n-mapper';
+import { contractI18n } from './i18n/contract.i18n';
 
 export const contract: ToolContract = {
   id: 'uuid-generator',
   metadata: {
-    name: { en: 'UUID Generator', fr: 'Generateur UUID' },
-    description: { en: 'Generate version 4 UUIDs.' },
+    name: mapLocalizedField(contractI18n, 'name'),
+    description: mapLocalizedField(contractI18n, 'description'),
     icon: 'fingerprint',
     version: '1.0.0',
     categories: ['Developer'],
@@ -127,12 +132,45 @@ export const contract: ToolContract = {
     defaultCols: 2,
     defaultRows: 1,
     presets: [
-      { label: { en: 'Compact' }, cols: 1, rows: 1 },
-      { label: { en: 'Full' }, cols: 2, rows: 1 },
+      {
+        label: mapLocalizedNestedField(contractI18n, 'widgetPresets', 'compact'),
+        cols: 1,
+        rows: 1,
+      },
+      {
+        label: mapLocalizedNestedField(contractI18n, 'widgetPresets', 'full'),
+        cols: 2,
+        rows: 1,
+      },
     ],
   },
   cost: 'low',
 };
+```
+
+Example `i18n/contract.i18n.ts`:
+
+```typescript
+export const contractI18n = {
+  en: {
+    name: 'UUID Generator',
+    description:
+      'Generate version 4 UUIDs. No data leaves your device. Works fully offline; feel free to disconnect.',
+    widgetPresets: {
+      compact: 'Compact',
+      full: 'Full',
+    },
+  },
+  fr: {
+    name: 'Generateur UUID',
+    description:
+      'Generez des UUID version 4. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
+    widgetPresets: {
+      compact: 'Compact',
+      full: 'Complet',
+    },
+  },
+} as const;
 ```
 
 ### 4. Implement Component Logic
@@ -285,6 +323,12 @@ Quality rule: preserve proper language spelling and punctuation in translation f
     ```html
     <button>{{ t.map()['BTN_GENERATE'] }}</button>
     ```
+
+Contract metadata i18n is separate from UI text i18n:
+
+1. Keep contract translations in `src/tools/<tool-id>/i18n/contract.i18n.ts` with language-first top-level keys.
+2. In `*.contract.ts`, map values with `mapLocalizedField(...)` and `mapLocalizedNestedField(...)`.
+3. Avoid embedding `{ en, fr, ... }` objects directly in contracts.
 
 ---
 
