@@ -1,7 +1,7 @@
 import { ToolContract } from '../../core/tool-contract';
 import { TRAITS } from '../../core/types/traits';
 import { contractI18n } from './i18n/contract.i18n';
-import { mapLocalizedField, mapLocalizedNestedField } from '../../core/i18n-mapper';
+import { mapLocalizedField } from '../../core/i18n-mapper';
 import { schema } from './rotate-pdf.schema';
 
 export const contract: ToolContract = {

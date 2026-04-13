@@ -1,10 +1,10 @@
 type LocaleRecord = Record<string, unknown>;
 type LocaleDictionary = Record<string, LocaleRecord>;
 
-export function mapLocalizedField<
-  T extends LocaleDictionary,
-  K extends keyof T[keyof T] & string,
->(dictionary: T, key: K): Record<string, string> {
+export function mapLocalizedField<T extends LocaleDictionary, K extends keyof T[keyof T] & string>(
+  dictionary: T,
+  key: K,
+): Record<string, string> {
   return Object.fromEntries(
     Object.entries(dictionary).map(([lang, value]) => [lang, value[key] as string]),
   );

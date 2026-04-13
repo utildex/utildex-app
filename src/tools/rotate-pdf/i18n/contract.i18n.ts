@@ -16,6 +16,7 @@ export const contractI18n = {
   },
   zh: {
     name: '旋转 PDF',
-    description: '永久旋转 PDF 文档的所有或选定页面。数据不会离开你的设备。完全离线运行；你可以断开网络。',
+    description:
+      '永久旋转 PDF 文档的所有或选定页面。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

@@ -25,7 +25,8 @@ export const contractI18n = {
   },
   zh: {
     name: 'Lorem Ipsum',
-    description: '生成带有可调节段落数量的占位符文本。数据不会离开你的设备。完全离线运行；你可以断开网络。',
+    description:
+      '生成带有可调节段落数量的占位符文本。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
       default: '默认',
     },

@@ -16,6 +16,7 @@ export const contractI18n = {
   },
   zh: {
     name: 'Markdown 预览',
-    description: '即时编写和预览 Markdown 格式文本。数据不会离开你的设备。完全离线运行；你可以断开网络。',
+    description:
+      '即时编写和预览 Markdown 格式文本。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

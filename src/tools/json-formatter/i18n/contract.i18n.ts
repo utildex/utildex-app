@@ -16,6 +16,7 @@ export const contractI18n = {
   },
   zh: {
     name: 'JSON 格式化',
-    description: '验证、格式化和压缩 JSON 数据。数据不会离开你的设备。完全离线运行；你可以断开网络。',
+    description:
+      '验证、格式化和压缩 JSON 数据。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

@@ -33,7 +33,9 @@ import { CommonModule } from '@angular/common';
       </div>
 
       <!-- Animated Stars (Dark Mode) -->
-      <div class="stars-container stars-container-dark opacity-0 transition-opacity duration-700 dark:opacity-100">
+      <div
+        class="stars-container stars-container-dark opacity-0 transition-opacity duration-700 dark:opacity-100"
+      >
         <div class="stars-sm" [style.box-shadow]="starsSmall"></div>
         <div class="stars-md" [style.box-shadow]="starsMedium"></div>
         <div class="stars-lg" [style.box-shadow]="starsLarge"></div>

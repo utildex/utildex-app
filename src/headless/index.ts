@@ -58,7 +58,10 @@ interface ResolvedHeadlessSpaces {
 type HeadlessSpaceCacheKey = 'all' | 'mcp-only';
 
 let headlessCatalogPromise: Promise<HeadlessCatalog> | null = null;
-const headlessSpacesPromiseByKey = new Map<HeadlessSpaceCacheKey, Promise<ResolvedHeadlessSpaces>>();
+const headlessSpacesPromiseByKey = new Map<
+  HeadlessSpaceCacheKey,
+  Promise<ResolvedHeadlessSpaces>
+>();
 
 function resolveI18nText(value: unknown): string {
   if (typeof value === 'string') {

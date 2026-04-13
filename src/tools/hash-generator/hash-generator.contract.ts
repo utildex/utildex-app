@@ -31,7 +31,11 @@ export const contract: ToolContract = {
         cols: 2,
         rows: 2,
       },
-      { label: mapLocalizedNestedField(contractI18n, 'widgetPresets', 'compact'), cols: 2, rows: 1 },
+      {
+        label: mapLocalizedNestedField(contractI18n, 'widgetPresets', 'compact'),
+        cols: 2,
+        rows: 1,
+      },
     ],
   },
   cost: 'medium',

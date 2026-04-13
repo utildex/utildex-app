@@ -31,7 +31,8 @@ export const contractI18n = {
   },
   zh: {
     name: '二维码工作室',
-    description: '生成用于 URL、WiFi 和文本的静态隐私二维码。数据不会离开你的设备。完全离线运行；你可以断开网络。',
+    description:
+      '生成用于 URL、WiFi 和文本的静态隐私二维码。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
       small: '小',
       wide: '宽',
