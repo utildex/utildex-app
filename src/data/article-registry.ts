@@ -1,4 +1,5 @@
 import { I18nText } from './types';
+import { articleRegistryI18n } from './articles/i18n/article-registry.i18n';
 
 export type ArticleType = 'internal' | 'external';
 
@@ -16,18 +17,27 @@ export interface ArticleMetadata {
   url?: string; // Required if type === 'external'
 }
 
+type ArticleId = keyof (typeof articleRegistryI18n)['en'];
+type ArticleTextEntry = { title: string; summary: string };
+
+function articleLocalizedText(articleId: ArticleId, key: 'title' | 'summary'): I18nText {
+  const perLanguage = Object.entries(articleRegistryI18n) as Array<
+    [string, Partial<Record<ArticleId, ArticleTextEntry>>]
+  >;
+
+  return Object.fromEntries(
+    perLanguage
+      .map(([lang, values]) => [lang, values[articleId]?.[key]])
+      .filter(([, value]) => typeof value === 'string'),
+  );
+}
+
 export const ARTICLE_REGISTRY: ArticleMetadata[] = [
   {
     id: 'local-first-philosophy',
     type: 'internal',
-    title: {
-      en: 'Why Local-First Software Matters',
-      fr: 'Pourquoi le logiciel Local-First est important',
-    },
-    summary: {
-      en: 'Discover the benefits of privacy, speed, and ownership that come with local-first applications.',
-      fr: "Découvrez les avantages de la confidentialité, de la vitesse et de la propriété qu'apportent les applications local-first.",
-    },
+    title: articleLocalizedText('local-first-philosophy', 'title'),
+    summary: articleLocalizedText('local-first-philosophy', 'summary'),
     thumbnail: '../assets/articles/local-first-philosophy/thumbnail.webp',
     date: '2025-05-15',
     tags: ['Philosophy', 'Dev', 'Privacy'],
@@ -38,14 +48,8 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
   {
     id: 'productivity-tips',
     type: 'internal',
-    title: {
-      en: '10 Tips to Boost Developer Productivity',
-      fr: '10 Astuces pour booster la productivité',
-    },
-    summary: {
-      en: 'Small changes in your workflow that can yield massive results over time.',
-      fr: 'De petits changements dans votre flux de travail qui peuvent donner des résultats massifs.',
-    },
+    title: articleLocalizedText('productivity-tips', 'title'),
+    summary: articleLocalizedText('productivity-tips', 'summary'),
     thumbnail: '../assets/articles/productivity-tips/thumbnail.webp',
     date: '2025-06-10',
     tags: ['Tips', 'Productivity'],
@@ -62,18 +66,8 @@ export const ARTICLE_REGISTRY: ArticleMetadata[] = [
   {
     id: 'external-open-source-redhat',
     type: 'external',
-    title: {
-      en: 'What is Open Source Software ?',
-      fr: 'Qu’est-ce qu’un logiciel open source ?',
-      es: '¿Qué es el software de código abierto?',
-      zh: '什么是开源软件？',
-    },
-    summary: {
-      en: 'Red Hat’s definition of open source software and how it is developed and shared.',
-      fr: 'La définition du logiciel open source selon Red Hat et son mode de développement et de collaboration.',
-      es: 'La definición del software de código abierto según Red Hat y cómo se desarrolla y comparte.',
-      zh: 'Red Hat 对开源软件的定义，以及其开发和共享方式。',
-    },
+    title: articleLocalizedText('external-open-source-redhat', 'title'),
+    summary: articleLocalizedText('external-open-source-redhat', 'summary'),
     thumbnail: '../assets/images/external-thumbnails/external-open-source-redhat-thumbnail.webp',
     date: '2025-04-20',
     tags: ['Open Source', 'Red Hat', 'External'],
