@@ -1,39 +1,21 @@
 import type { ToolSpaceDefinition } from '../../../core/tool-space';
+import { contractI18n } from './i18n/contract.i18n';
+import { mapLocalizedField, mapLocalizedNestedField } from '../../../core/i18n-mapper';
 
 export const officeToolSpaceContract: ToolSpaceDefinition = {
   id: 'office',
-  name: {
-    en: 'Office Space',
-    fr: 'Espace bureautique',
-    es: 'Espacio de oficina',
-    zh: '办公空间',
-  },
-  description: {
-    en: 'Merge, split, and convert documents for everyday office tasks.',
-    fr: 'Fusionnez, separez et convertissez des documents pour les taches bureautiques du quotidien.',
-    es: 'Fusiona, divide y convierte documentos para tareas de oficina del dia a dia.',
-    zh: '面向日常办公任务的文档合并、拆分与格式转换工作流。',
-  },
+  name: mapLocalizedField(contractI18n, 'name'),
+  description: mapLocalizedField(contractI18n, 'description'),
   icon: 'work',
   groups: [
     {
       id: 'pdf-workflow',
-      label: {
-        en: 'PDF Workflow',
-        fr: 'Flux PDF',
-        es: 'Flujo PDF',
-        zh: 'PDF 工作流',
-      },
+      label: mapLocalizedNestedField(contractI18n, 'groups', 'pdfWorkflow'),
       toolIds: ['merge-pdf', 'split-pdf', 'rotate-pdf', 'img-to-pdf', 'pdf-to-img'],
     },
     {
       id: 'productivity',
-      label: {
-        en: 'Productivity Helpers',
-        fr: 'Outils de productivite',
-        es: 'Ayudas de productividad',
-        zh: '效率工具',
-      },
+      label: mapLocalizedNestedField(contractI18n, 'groups', 'productivity'),
       toolIds: ['lorem-ipsum', 'qr-studio', 'unit-converter'],
     },
   ],
