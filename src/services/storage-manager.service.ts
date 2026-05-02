@@ -24,7 +24,7 @@ export class StorageManagerService {
   private db = inject(DbService);
 
   private getDefinitions() {
-    const isSynedex = (APP_CONFIG.appId as any) === 'synedex';
+    const appId = APP_CONFIG.appId as string;
 
     return [
       {
@@ -67,8 +67,8 @@ export class StorageManagerService {
       },
       {
         id: 'tools',
-        labelKey: isSynedex ? 'CAT_GAMES' : 'CAT_TOOLS',
-        icon: isSynedex ? 'videogame_asset' : 'construction',
+        labelKey: appId === 'synedex' ? 'CAT_GAMES' : 'CAT_TOOLS',
+        icon: appId === 'synedex' ? 'videogame_asset' : 'construction',
         patterns: [
           new RegExp(`^${STORAGE_KEYS.PREFIX_STATE}(?!${STORAGE_KEYS.PREFERENCES.join('|')})`),
           new RegExp(`^${STORAGE_KEYS.PREFIX_TOOLS.replace('.', '\\.')}`),
@@ -82,7 +82,7 @@ export class StorageManagerService {
         patterns: [/^app_blobs/],
         apps: ['utildex'],
       },
-    ].filter(def => def.apps.includes(APP_CONFIG.appId as any));
+    ].filter(def => def.apps.includes(APP_CONFIG.appId as string));
   }
 
   async getStats(): Promise<StorageStats> {
@@ -120,10 +120,9 @@ export class StorageManagerService {
         s.getAll(),
       );
       if (records) {
-        const isSynedex = (APP_CONFIG.appId as any) === 'synedex';
+        const appPrefix = APP_CONFIG.appId + '_';
         for (const rec of records) {
-          const isSynedexScope = rec.scope.startsWith('synedex_');
-          if (isSynedexScope !== isSynedex) continue;
+          if (!rec.scope.startsWith(appPrefix)) continue;
 
           const size = JSON.stringify(rec.data).length * 2;
           this.addToStats(stats, rec.scope, size, 'tools');
@@ -213,10 +212,9 @@ export class StorageManagerService {
         s.getAll(),
       );
       if (records) {
-        const isSynedex = (APP_CONFIG.appId as any) === 'synedex';
+        const appPrefix = APP_CONFIG.appId + '_';
         for (const r of records) {
-          const isSynedexScope = r.scope.startsWith('synedex_');
-          if (isSynedexScope !== isSynedex) continue;
+          if (!r.scope.startsWith(appPrefix)) continue;
 
           details.push({ key: r.scope, value: JSON.stringify(r.data) });
         }
@@ -264,8 +262,8 @@ export class StorageManagerService {
     if (categoryId === 'tools') {
       const records = await this.db.run<DbRecord[]>('readonly', this.db.STORES.RECORDS, (s) => s.getAll());
       if (records) {
-        const isSynedex = (APP_CONFIG.appId as any) === 'synedex';
-        const toDelete = records.filter(r => r.scope.startsWith('synedex_') === isSynedex);
+        const appPrefix = APP_CONFIG.appId + '_';
+        const toDelete = records.filter(r => r.scope.startsWith(appPrefix));
         for (const r of toDelete) {
           if (r.id) await this.db.records.delete(r.id);
         }
@@ -289,7 +287,6 @@ export class StorageManagerService {
       }
 
       // Clear LocalStorage explicitly for the current app
-      const isSynedex = (APP_CONFIG.appId as any) === 'synedex';
       Object.keys(localStorage).forEach((key) => {
         if (key.startsWith(STORAGE_KEYS.PREFIX_APP)) {
            // We keep the old aggressive approach for local storage, 
@@ -324,7 +321,7 @@ export class StorageManagerService {
     exportObj['meta'] = {
       version: 2,
       date: new Date().toISOString(),
-      appName: (APP_CONFIG.appId as any) === 'synedex' ? 'Synedex' : 'Utildex',
+      appName: APP_CONFIG.appName,
     };
 
     // 1. Export Config
@@ -346,8 +343,8 @@ export class StorageManagerService {
       s.getAll(),
     );
     if (records) {
-      const isSynedex = (APP_CONFIG.appId as any) === 'synedex';
-      const filteredRecords = records.filter(r => r.scope.startsWith('synedex_') === isSynedex);
+      const appPrefix = APP_CONFIG.appId + '_';
+      const filteredRecords = records.filter(r => r.scope.startsWith(appPrefix));
       if (filteredRecords.length > 0) {
         exportObj['records'] = filteredRecords;
         estimatedSize += JSON.stringify(filteredRecords).length;
@@ -393,8 +390,7 @@ export class StorageManagerService {
   async importData(jsonContent: string): Promise<boolean> {
     try {
       const data = JSON.parse(jsonContent);
-      const isSynedex = (APP_CONFIG.appId as any) === 'synedex';
-      const expectedApp = isSynedex ? 'Synedex' : 'Utildex';
+      const expectedApp = APP_CONFIG.appName;
 
       if (!data.meta || data.meta.appName !== expectedApp) {
         throw new Error(`Invalid backup file. Expected ${expectedApp} data.`);
