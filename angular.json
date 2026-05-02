@@ -33,16 +33,6 @@
                 "glob": "_headers",
                 "input": "src",
                 "output": "."
-              },
-              {
-                "glob": "robots.txt",
-                "input": "src",
-                "output": "."
-              },
-              {
-                "glob": "sitemap.xml",
-                "input": "src",
-                "output": "."
               }
             ],
             "styles": ["src/styles.css"],
@@ -84,6 +74,126 @@
               "extractLicenses": true,
               "outputHashing": "all"
             },
+            "utildex": {
+              "serviceWorker": "ngsw-config.json",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "outputHashing": "all",
+              "outputPath": {
+                "base": "./dist/utildex",
+                "browser": "."
+              },
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/assets",
+                  "output": "assets"
+                },
+                {
+                  "glob": "_redirects",
+                  "input": "src",
+                  "output": "."
+                },
+                {
+                  "glob": "_headers",
+                  "input": "src",
+                  "output": "."
+                },
+                {
+                  "glob": "*",
+                  "input": "src/seo/utildex",
+                  "output": "."
+                }
+              ]
+            },
+            "synedex": {
+              "serviceWorker": "ngsw-config.json",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
+              "index": {
+                "input": "index.synedex.html",
+                "output": "index.html"
+              },
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "outputHashing": "all",
+              "outputPath": {
+                "base": "./dist/synedex",
+                "browser": "."
+              },
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/assets",
+                  "output": "assets",
+                  "ignore": [
+                    "mcp/**"
+                  ]
+                },
+                {
+                  "glob": "_redirects",
+                  "input": "src",
+                  "output": "."
+                },
+                {
+                  "glob": "_headers",
+                  "input": "src",
+                  "output": "."
+                },
+                {
+                  "glob": "*",
+                  "input": "src/seo/synedex",
+                  "output": "."
+                },
+                {
+                  "glob": "manifest.synedex.webmanifest",
+                  "input": ".",
+                  "output": "."
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "index.tsx",
+                  "with": "index.synedex.tsx"
+                },
+                {
+                  "replace": "app.config.ts",
+                  "with": "app.config.synedex.ts"
+                },
+                {
+                  "replace": "src/core/core-registry.ts",
+                  "with": "src/core/core-registry.synedex.ts"
+                },
+                {
+                  "replace": "src/core/tool-registry.ts",
+                  "with": "src/core/tool-registry.synedex.ts"
+                },
+                {
+                  "replace": "src/data/tool-space-registry.ts",
+                  "with": "src/data/tool-space-registry.synedex.ts"
+                },
+                {
+                  "replace": "src/services/offline-route-loaders.ts",
+                  "with": "src/services/offline-route-loaders.synedex.ts"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -100,6 +210,12 @@
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"
+            },
+            "utildex": {
+              "buildTarget": "app:build:utildex"
+            },
+            "synedex": {
+              "buildTarget": "app:build:synedex"
             },
             "development": {
               "buildTarget": "app:build:development"

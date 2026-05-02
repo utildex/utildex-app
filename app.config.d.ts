@@ -1,6 +1,8 @@
 export declare const APP_CONFIG_DATA: {
-    readonly appName: "Utildex";
+    readonly appId: "utildex" | "synedex";
+    readonly appName: string;
     readonly hosting: {
-        readonly defaultPublicBaseUrl: "https://utildex.com";
+        readonly defaultPublicBaseUrl: string;
     };
+    readonly githubUrl: string;
 };

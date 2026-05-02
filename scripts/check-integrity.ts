@@ -73,22 +73,30 @@ async function main() {
     success = false;
   }
 
-  // 2. Tools I18n
-  console.log('Checking Tools I18n...');
-  const toolsDir = path.join(process.cwd(), 'src', 'tools');
-  if (fs.existsSync(toolsDir)) {
-    const tools = fs.readdirSync(toolsDir, { withFileTypes: true })
+  // 2. Module I18n (per app roots)
+  console.log('Checking Module I18n...');
+  const moduleRoots = [
+    { label: 'utildex-tools', dir: path.join(process.cwd(), 'src', 'utildex-tools') },
+    { label: 'synedex-games', dir: path.join(process.cwd(), 'src', 'synedex-games') },
+  ];
+
+  for (const root of moduleRoots) {
+    if (!fs.existsSync(root.dir)) {
+      continue;
+    }
+
+    const modules = fs.readdirSync(root.dir, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name);
 
-    for (const tool of tools) {
-      const i18nDir = path.join(toolsDir, tool, 'i18n');
+    for (const moduleName of modules) {
+      const i18nDir = path.join(root.dir, moduleName, 'i18n');
       if (fs.existsSync(i18nDir)) {
-         if (!await validateI18nDir(i18nDir, `Tool: ${tool}`)) {
+         if (!await validateI18nDir(i18nDir, `Module (${root.label}): ${moduleName}`)) {
            success = false;
          }
       } else {
-        console.warn(`[WARNING] Tool ${tool} has no i18n folder.`);
+        console.warn(`[WARNING] Module ${root.label}/${moduleName} has no i18n folder.`);
       }
     }
   }

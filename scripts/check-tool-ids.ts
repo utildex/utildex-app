@@ -6,34 +6,55 @@ interface ContractLike {
   id: string;
 }
 
+interface ModuleRoot {
+  label: string;
+  dir: string;
+}
+
 async function main() {
-  const toolsDir = path.join(process.cwd(), 'src', 'tools');
-  const folders = fs
-    .readdirSync(toolsDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name);
+  const roots: ModuleRoot[] = [
+    {
+      label: 'utildex-tools',
+      dir: path.join(process.cwd(), 'src', 'utildex-tools'),
+    },
+    {
+      label: 'synedex-games',
+      dir: path.join(process.cwd(), 'src', 'synedex-games'),
+    },
+  ];
 
   const ids: string[] = [];
   const folderIdMismatches: string[] = [];
 
-  for (const folder of folders) {
-    const indexFile = path.join(toolsDir, folder, 'index.ts');
-    if (!fs.existsSync(indexFile)) {
-      throw new Error(`[tool-ids] Missing tool index file: ${indexFile}`);
+  for (const root of roots) {
+    if (!fs.existsSync(root.dir)) {
+      continue;
     }
 
-    const mod = (await import(pathToFileURL(indexFile).href)) as { contract?: ContractLike };
-    const id = mod.contract?.id;
+    const folders = fs
+      .readdirSync(root.dir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
 
-    if (!id) {
-      throw new Error(`[tool-ids] Missing contract.id in ${indexFile}`);
+    for (const folder of folders) {
+      const indexFile = path.join(root.dir, folder, 'index.ts');
+      if (!fs.existsSync(indexFile)) {
+        throw new Error(`[tool-ids] Missing module index file (${root.label}): ${indexFile}`);
+      }
+
+      const mod = (await import(pathToFileURL(indexFile).href)) as { contract?: ContractLike };
+      const id = mod.contract?.id;
+
+      if (!id) {
+        throw new Error(`[tool-ids] Missing contract.id in ${indexFile}`);
+      }
+
+      if (id !== folder) {
+        folderIdMismatches.push(`${root.label}/${folder} -> ${id}`);
+      }
+
+      ids.push(id);
     }
-
-    if (id !== folder) {
-      folderIdMismatches.push(`${folder} -> ${id}`);
-    }
-
-    ids.push(id);
   }
 
   if (folderIdMismatches.length > 0) {
@@ -55,7 +76,7 @@ async function main() {
   }
 
   console.log(
-    `[tool-ids] OK: ${ids.length} tools validated (unique contract.id + folder name matches contract.id).`,
+    `[tool-ids] OK: ${ids.length} modules validated (unique contract.id + folder name matches contract.id).`,
   );
 }
 
