@@ -8,24 +8,24 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="fixed inset-0 overflow-hidden" style="z-index: -50;">
       <!-- Deep Space Base -->
-      <div class="absolute inset-0 bg-slate-50 transition-colors duration-700 dark:bg-[#020617]">
+      <div class="absolute inset-0 bg-slate-50 transition-colors duration-150 dark:bg-[#020617]">
         <!-- Subtle Dark Gradient Mesh -->
         <div
-          class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-[#0f172a] to-black opacity-0 transition-opacity duration-700 dark:opacity-100"
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-slate-900 via-[#0f172a] to-black opacity-0 transition-opacity duration-150 dark:opacity-100"
         ></div>
         <div
-          class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-950/30 via-transparent to-transparent opacity-0 transition-opacity duration-700 dark:opacity-40"
+          class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-950/30 via-transparent to-transparent opacity-0 transition-opacity duration-150 dark:opacity-40"
         ></div>
 
         <!-- Light Mode Gradient Mesh (Enhanced for visibility) -->
         <div
-          class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-50 via-slate-50 to-white opacity-100 transition-opacity duration-700 dark:opacity-0"
+          class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-50 via-slate-50 to-white opacity-100 transition-opacity duration-150 dark:opacity-0"
         ></div>
       </div>
 
       <!-- Animated Colorful Stars (Light Mode) -->
       <div
-        class="stars-container stars-container-light opacity-100 mix-blend-multiply transition-opacity duration-700 dark:opacity-0"
+        class="stars-container stars-container-light opacity-100 mix-blend-multiply transition-opacity duration-150 dark:opacity-0"
       >
         <div class="stars-sm" [style.box-shadow]="starsColorSmall"></div>
         <div class="stars-md" [style.box-shadow]="starsColorMedium"></div>
@@ -34,7 +34,7 @@ import { CommonModule } from '@angular/common';
 
       <!-- Animated Stars (Dark Mode) -->
       <div
-        class="stars-container stars-container-dark opacity-0 transition-opacity duration-700 dark:opacity-100"
+        class="stars-container stars-container-dark opacity-0 transition-opacity duration-150 dark:opacity-100"
       >
         <div class="stars-sm" [style.box-shadow]="starsSmall"></div>
         <div class="stars-md" [style.box-shadow]="starsMedium"></div>

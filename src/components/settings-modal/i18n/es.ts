@@ -23,6 +23,7 @@ export default {
   CAT_HISTORY: 'Historial',
   CAT_PREFS: 'Preferencias',
   CAT_TOOLS: 'Estados de Herramientas',
+  CAT_GAMES: 'Estados de Juegos',
   CAT_PETS: 'Mascotas Virtuales',
   CAT_FILES: 'Archivos',
 

@@ -13,6 +13,7 @@ import { OfflineManagerService } from '../../services/offline-manager.service'; 
 import { VirtualPetsService } from '../../services/virtual-pets.service';
 import { TourService } from '../../services/tour.service';
 import { TourTargetDirective } from '../../directives/tour-target.directive';
+import { APP_CONFIG } from '../../core/app.config';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -313,6 +314,7 @@ type ParsedData =
 
               <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
+              @if (appConfig.appId !== 'synedex') {
               <!-- Tour -->
               <section class="space-y-6">
                 <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">
@@ -330,6 +332,7 @@ type ParsedData =
                   </button>
                 </div>
               </section>
+              }
             </div>
           }
 
@@ -656,6 +659,7 @@ export class SettingsModalComponent {
   tour = inject(TourService);
   petsService = inject(VirtualPetsService);
   private router = inject(Router);
+  appConfig = APP_CONFIG;
 
   // UI State
   activeTab = signal<Tab>('general');

@@ -31,6 +31,7 @@ import { filter } from 'rxjs/operators';
 import { TourService } from './services/tour.service';
 import { FontLoaderService } from './services/font-loader.service';
 import { AppUpdateService } from './services/app-update.service';
+import { AppFooterComponent } from './components/app-footer/app-footer.component';
 
 @Component({
   selector: 'app-root',
@@ -52,6 +53,7 @@ import { AppUpdateService } from './services/app-update.service';
     BackgroundComponent,
     VirtualPetsComponent,
     LocalLinkPipe,
+    AppFooterComponent,
     TourOverlayComponent,
     TourTargetDirective,
   ],

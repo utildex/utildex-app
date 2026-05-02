@@ -23,6 +23,7 @@ export default {
   CAT_HISTORY: '使用历史',
   CAT_PREFS: '偏好设置',
   CAT_TOOLS: '工具状态',
+  CAT_GAMES: '游戏状态',
   CAT_PETS: '恐龙宠物',
   CAT_FILES: '文件',
 
