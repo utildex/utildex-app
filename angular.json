@@ -116,7 +116,7 @@
               ]
             },
             "synedex": {
-              "serviceWorker": "ngsw-config.json",
+              "serviceWorker": "ngsw-config.synedex.json",
               "optimization": {
                 "scripts": true,
                 "styles": {

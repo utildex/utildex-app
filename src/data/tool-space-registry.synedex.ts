@@ -9,7 +9,7 @@ export const TOOL_SPACES_REGISTRY: ToolSpaceDefinition[] = [
 
 export function getToolSpacesForApp(appId: AppId): ToolSpaceDefinition[] {
   return TOOL_SPACES_REGISTRY.filter((space) => {
-    const owner = space.appName ?? 'synedex';
+    const owner = space.appName ?? 'shared';
     return owner === 'shared' || owner === appId;
   });
 }
