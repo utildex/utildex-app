@@ -1,0 +1,18 @@
+{
+  "name": "Synedex",
+  "short_name": "Synedex",
+  "theme_color": "#0f766e",
+  "background_color": "#0b1f1d",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/?source=pwa",
+  "icons": [
+    {
+      "src": "assets/images/synedex_logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "portrait",
+  "description": "A local-first platform for cognitive wellness games and mindful practice."
+}
