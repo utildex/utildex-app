@@ -1,4 +1,5 @@
 import { I18nText } from '../data/types';
+import type { AppId } from './app.config';
 
 export interface ToolSpaceGroupDefinition {
   id: string;
@@ -9,6 +10,7 @@ export interface ToolSpaceGroupDefinition {
 
 export interface ToolSpaceDefinition {
   id: string;
+  appName?: AppId | 'shared';
   name: I18nText;
   description?: I18nText;
   icon: string;

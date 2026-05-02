@@ -169,27 +169,27 @@ export class SeoService {
       currentRoute = currentRoute.firstChild;
     }
 
-    let title = 'Utildex - Local-First Modular Toolbox';
+    let title = `${this.appConfig.appName} - Local-First Modular Toolbox`;
     let desc =
-      'A modular collection of independent utilities that run entirely in your browser. Private, offline-ready, and source available.';
+      `A modular collection of independent utilities and games that run entirely in your browser. Private, offline-ready, and source available.`;
     let image = ''; // Default OG Image if available
 
     if (routeInfo.kind === 'tool' && routeInfo.toolId) {
       const tool = this.toolService.tools().find((t) => t.id === routeInfo.toolId);
 
       if (tool) {
-        title = `${this.i18n.resolve(tool.name)} - Utildex`;
+        title = `${this.i18n.resolve(tool.name)} - ${this.appConfig.appName}`;
         desc = this.i18n.resolve(tool.description);
       }
     } else if (routeInfo.kind === 'article') {
       const article = routeInfo.articleId ? this.articleService.getById(routeInfo.articleId) : null;
       if (article) {
-        title = `${this.i18n.resolve(article.title)} - Utildex`;
+        title = `${this.i18n.resolve(article.title)} - ${this.appConfig.appName}`;
         desc = this.i18n.resolve(article.summary);
         image = this.toAbsoluteUrl(article.thumbnail);
       } else {
-        title = 'Articles - Utildex';
-        desc = 'Guides, tutorials, and insights on local-first development.';
+        title = `Articles - ${this.appConfig.appName}`;
+        desc = `Guides, tutorials, and insights for ${this.appConfig.appName}.`;
       }
     } else {
       const routeTitle = currentRoute.snapshot.title;

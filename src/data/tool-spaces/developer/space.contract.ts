@@ -4,6 +4,7 @@ import { mapLocalizedField, mapLocalizedNestedField } from '../../../core/i18n-m
 
 export const developerToolSpaceContract: ToolSpaceDefinition = {
   id: 'developer',
+  appName: 'utildex',
   name: mapLocalizedField(contractI18n, 'name'),
   description: mapLocalizedField(contractI18n, 'description'),
   icon: 'terminal',

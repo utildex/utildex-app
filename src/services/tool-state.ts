@@ -12,16 +12,20 @@ import { DbService } from './db.service';
  *   inc() { this.state.update(s => ({ count: s.count + 1 })); }
  * }
  */
+import { APP_CONFIG } from '../core/app.config';
+
 export class ToolState<T extends object> {
   private internalState: WritableSignal<T>;
   private dbId: number | undefined;
   private isLoaded = false;
+  private readonly namespacedScope: string;
 
   constructor(
     private scope: string,
     private defaultState: T,
     private db: DbService,
   ) {
+    this.namespacedScope = (APP_CONFIG.appId as string) === 'utildex' ? scope : `${APP_CONFIG.appId as string}_${scope}`;
     this.internalState = signal<T>(defaultState);
     this.init();
   }
@@ -57,7 +61,7 @@ export class ToolState<T extends object> {
 
   private async init() {
     try {
-      const records = await this.db.records.list(this.scope);
+      const records = await this.db.records.list(this.namespacedScope);
       if (records && records.length > 0) {
         records.sort((a, b) => (b.id || 0) - (a.id || 0));
 
@@ -71,12 +75,12 @@ export class ToolState<T extends object> {
           const duplicates = records.slice(1);
           Promise.all(
             duplicates.map((d) => (d.id ? this.db.records.delete(d.id) : Promise.resolve())),
-          ).catch((err) => console.warn(`[ToolState] Cleanup failed for ${this.scope}`, err));
+          ).catch((err) => console.warn(`[ToolState] Cleanup failed for ${this.namespacedScope}`, err));
         }
       }
       this.isLoaded = true;
     } catch (e) {
-      console.warn(`ToolState load failed for ${this.scope}`, e);
+      console.warn(`ToolState load failed for ${this.namespacedScope}`, e);
       // Fallback to defaults (already set)
       this.isLoaded = true;
     }
@@ -98,9 +102,9 @@ export class ToolState<T extends object> {
         if (this.dbId) {
           await this.db.records.delete(this.dbId);
         }
-        this.dbId = await this.db.records.add(this.scope, data);
+        this.dbId = await this.db.records.add(this.namespacedScope, data);
       } catch (err) {
-        console.error(`[ToolState] Failed to save state for ${this.scope}`, err);
+        console.error(`[ToolState] Failed to save state for ${this.namespacedScope}`, err);
       }
     }, 500);
   }

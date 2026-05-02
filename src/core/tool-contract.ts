@@ -7,6 +7,7 @@
 import { Trait } from './types/traits';
 import { FormatId } from './types/formats';
 import { I18nText, WidgetCapability } from '../data/types';
+import type { AppId } from './app.config';
 import type { z } from 'zod';
 
 export interface ToolContract {
@@ -15,6 +16,8 @@ export interface ToolContract {
 
   /** Tool metadata sourced from each tool's contract. */
   metadata: {
+    /** App ownership tag used for app-scoped loading (defaults to 'utildex' when omitted). */
+    appName?: AppId | 'shared';
     name: I18nText;
     description: I18nText;
     icon: string;
