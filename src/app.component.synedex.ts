@@ -8,7 +8,6 @@ import { ShortcutService } from './services/shortcut.service';
 import { SeoService } from './services/seo.service';
 import { AppConfigService } from './services/app-config.service';
 import { OfflineManagerService } from './services/offline-manager.service';
-import { TourService } from './services/tour.service';
 import { FontLoaderService } from './services/font-loader.service';
 import { AppUpdateService } from './services/app-update.service';
 import { provideTranslation, ScopedTranslationService } from './core/i18n';
@@ -22,9 +21,7 @@ import { NetworkStatusComponent } from './components/network-status/network-stat
 import { DashboardModalsComponent } from './components/dashboard-modals/dashboard-modals.component';
 import { DownloadStatusComponent } from './components/download-status/download-status.component';
 import { GuideComponent } from './components/guide/guide.component';
-import { TourOverlayComponent } from './components/tour-overlay/tour-overlay.component';
 import { BubbleDirective } from './directives/bubble.directive';
-import { TourTargetDirective } from './directives/tour-target.directive';
 import { VirtualPetsComponent } from './components/virtual-pets/virtual-pets.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
 import { LocalLinkPipe } from './core/pipes/local-link.pipe';
@@ -54,7 +51,6 @@ import zh from './i18n/zh';
     VirtualPetsComponent,
     AppFooterComponent,
     LocalLinkPipe,
-    TourTargetDirective,
   ],
   templateUrl: './app.component.synedex.html',
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
@@ -68,7 +64,6 @@ export class SynedexAppComponent implements OnInit {
   seoService = inject(SeoService);
   appConfig = inject(AppConfigService);
   offline = inject(OfflineManagerService);
-  tour = inject(TourService);
   private readonly fonts = inject(FontLoaderService);
   updates = inject(AppUpdateService);
   t = inject(ScopedTranslationService);
@@ -76,7 +71,6 @@ export class SynedexAppComponent implements OnInit {
   sidebarOpen = signal(false);
   mobileMenuOpen = signal(false);
   settingsOpen = signal(false);
-  showTourFab = signal(false);
   isWelcomePage = signal(false);
 
   @ViewChild(CommandPaletteComponent) commandPalette!: CommandPaletteComponent;
@@ -85,10 +79,6 @@ export class SynedexAppComponent implements OnInit {
 
   ngOnInit(): void {
     this.fonts.observeMaterialSymbolsUsage();
-
-    setTimeout(() => {
-      this.showTourFab.set(true);
-    }, 1500);
   }
 
   constructor() {
@@ -100,14 +90,6 @@ export class SynedexAppComponent implements OnInit {
       const url = this.router.url.split('?')[0];
       const segments = url.split('/').filter((s) => s.length > 0);
       this.isWelcomePage.set(segments.length === 1);
-    });
-
-    this.tour.actionEvents$.subscribe((action) => {
-      if (action === 'open-settings') {
-        this.settingsOpen.set(true);
-      } else if (action === 'close-settings') {
-        this.settingsOpen.set(false);
-      }
     });
   }
 

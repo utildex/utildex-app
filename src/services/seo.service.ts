@@ -254,7 +254,7 @@ export class SeoService {
 
     const pathNoLang = segments.length > 0 ? `/${segments.join('/')}` : '/';
 
-    if (segments[0] === 'tools' && segments[1]) {
+    if (segments[0] === this.appConfig.toolsRouteSegment && segments[1]) {
       return {
         path,
         pathNoLang,

@@ -3,6 +3,7 @@ import { I18nService } from './i18n.service';
 import { DbService } from './db.service';
 import { TOOL_REGISTRY_MAP } from '../core/tool-registry';
 import { ToolContract } from '../core/tool-contract';
+import { APP_CONFIG } from '../core/app.config';
 import {
   I18nText,
   WidgetPreset,
@@ -371,7 +372,7 @@ export class ToolService {
           this.contractCache.set(id, contract);
           const metadata: ToolMetadata = {
             id: contract.id,
-            routePath: `tools/${contract.id}`,
+            routePath: `${APP_CONFIG.toolsRouteSegment}/${contract.id}`,
             name: contract.metadata.name,
             description: contract.metadata.description,
             icon: contract.metadata.icon,
@@ -400,7 +401,7 @@ export class ToolService {
 
   private async loadFavorites() {
     try {
-      const saved = await this.db.get<string[]>('utildex-favorites');
+      const saved = await this.db.get<string[]>(`${APP_CONFIG.appId}-favorites`);
       if (saved) this.favorites.set(new Set<string>(saved));
     } catch (e) {
       console.warn('Failed to load favorites', e);
@@ -408,12 +409,12 @@ export class ToolService {
   }
 
   private persistFavorites(favs: Set<string>) {
-    this.db.set('utildex-favorites', [...favs]);
+    this.db.set(`${APP_CONFIG.appId}-favorites`, [...favs]);
   }
 
   private async loadUsageStats() {
     try {
-      const saved = await this.db.get<ToolUsageStats>('utildex-usage');
+      const saved = await this.db.get<ToolUsageStats>(`${APP_CONFIG.appId}-usage`);
       if (saved) this.usageStats.set(saved);
     } catch (e) {
       console.warn('Failed to load usage', e);
@@ -421,12 +422,12 @@ export class ToolService {
   }
 
   private persistUsageStats(stats: ToolUsageStats) {
-    this.db.set('utildex-usage', stats);
+    this.db.set(`${APP_CONFIG.appId}-usage`, stats);
   }
 
   private async loadDashboard() {
     try {
-      const saved = await this.db.get<DashboardWidget[]>('utildex-dashboard-v2');
+      const saved = await this.db.get<DashboardWidget[]>(`${APP_CONFIG.appId}-dashboard-v2`);
       if (saved) this.dashboardWidgets.set(saved);
     } catch (e) {
       console.warn('Failed to load dashboard', e);
@@ -434,7 +435,7 @@ export class ToolService {
   }
 
   private persistDashboard(items: DashboardWidget[]) {
-    this.db.set('utildex-dashboard-v2', items);
+    this.db.set(`${APP_CONFIG.appId}-dashboard-v2`, items);
   }
 
   private resolveSearchText(text: I18nText): string {

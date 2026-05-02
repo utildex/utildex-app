@@ -6,7 +6,6 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { SynedexAppComponent } from './src/app.component.synedex';
 import { routes } from './src/app.routes.synedex';
 import { GlobalErrorHandler } from './src/core/global-error-handler';
-import { TOUR_STEPS, DEFAULT_TOUR_STEPS } from './src/core/tour.config';
 
 bootstrapApplication(SynedexAppComponent, {
   providers: [
@@ -21,6 +20,5 @@ bootstrapApplication(SynedexAppComponent, {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler,
     },
-    { provide: TOUR_STEPS, useValue: DEFAULT_TOUR_STEPS },
   ],
 }).catch((err) => console.error(err));

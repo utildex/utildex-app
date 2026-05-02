@@ -1,6 +1,7 @@
 export const APP_CONFIG_DATA = {
   appId: 'utildex',
   appName: 'Utildex',
+  toolsRouteSegment: 'tools',
   hosting: {
     defaultPublicBaseUrl: 'https://utildex.com',
   },

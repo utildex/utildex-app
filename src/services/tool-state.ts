@@ -25,7 +25,7 @@ export class ToolState<T extends object> {
     private defaultState: T,
     private db: DbService,
   ) {
-    this.namespacedScope = (APP_CONFIG.appId as string) === 'utildex' ? scope : `${APP_CONFIG.appId as string}_${scope}`;
+    this.namespacedScope = `${APP_CONFIG.appId as string}_${scope}`;
     this.internalState = signal<T>(defaultState);
     this.init();
   }

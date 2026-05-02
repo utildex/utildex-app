@@ -7,6 +7,7 @@ import { APP_CONFIG, getAppId, resolvePublicBaseUrl, toAbsoluteUrl } from '../co
 export class AppConfigService {
   readonly appId = getAppId();
   readonly appName = APP_CONFIG.appName;
+  readonly toolsRouteSegment = APP_CONFIG.toolsRouteSegment;
   readonly githubUrl = APP_CONFIG.githubUrl;
   readonly config = APP_CONFIG;
 
