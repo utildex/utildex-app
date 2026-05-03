@@ -18,7 +18,7 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {
-  const owner = entry.appName ?? 'shared';
+  const owner = entry.appName ?? 'synedex';
   return owner === 'shared' || owner === appId;
 }
 

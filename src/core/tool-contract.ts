@@ -20,7 +20,7 @@ export interface ToolContract {
      *  - `'utildex'` / `'synedex'`: only loaded for that app.
      *  - `'shared'`: loaded for both apps.
      *  - Omitted: inherits the registry file's default (`'utildex'` in core-registry.ts,
-     *    `'shared'` in core-registry.synedex.ts). Always set explicitly to avoid surprises. */
+     *    `'synedex'` in core-registry.synedex.ts). Always set explicitly to avoid surprises. */
     appName?: AppId | 'shared';
     name: I18nText;
     description: I18nText;
