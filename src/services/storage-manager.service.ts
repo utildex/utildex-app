@@ -82,7 +82,7 @@ export class StorageManagerService {
         patterns: [/^app_blobs/],
         apps: ['utildex'],
       },
-    ].filter(def => def.apps.includes(APP_CONFIG.appId as string));
+    ].filter((def) => def.apps.includes(APP_CONFIG.appId as string));
   }
 
   async getStats(): Promise<StorageStats> {
@@ -260,10 +260,12 @@ export class StorageManagerService {
 
     // 2. Clear Records if category is 'tools'
     if (categoryId === 'tools') {
-      const records = await this.db.run<DbRecord[]>('readonly', this.db.STORES.RECORDS, (s) => s.getAll());
+      const records = await this.db.run<DbRecord[]>('readonly', this.db.STORES.RECORDS, (s) =>
+        s.getAll(),
+      );
       if (records) {
         const appPrefix = APP_CONFIG.appId + '_';
-        const toDelete = records.filter(r => r.scope.startsWith(appPrefix));
+        const toDelete = records.filter((r) => r.scope.startsWith(appPrefix));
         for (const r of toDelete) {
           if (r.id) await this.db.records.delete(r.id);
         }
@@ -289,8 +291,8 @@ export class StorageManagerService {
       // Clear LocalStorage explicitly for the current app
       Object.keys(localStorage).forEach((key) => {
         if (key.startsWith(STORAGE_KEYS.PREFIX_APP)) {
-           // We keep the old aggressive approach for local storage, 
-           // but could refine if we added more synedex-specific local storage keys.
+          // We keep the old aggressive approach for local storage,
+          // but could refine if we added more synedex-specific local storage keys.
           localStorage.removeItem(key);
         }
       });
@@ -344,7 +346,7 @@ export class StorageManagerService {
     );
     if (records) {
       const appPrefix = APP_CONFIG.appId + '_';
-      const filteredRecords = records.filter(r => r.scope.startsWith(appPrefix));
+      const filteredRecords = records.filter((r) => r.scope.startsWith(appPrefix));
       if (filteredRecords.length > 0) {
         exportObj['records'] = filteredRecords;
         estimatedSize += JSON.stringify(filteredRecords).length;

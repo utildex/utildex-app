@@ -17,7 +17,15 @@ export const STORAGE_KEYS = {
   PREFIX_TOOLS: 'tools.',
   PREFIX_APP: `${appId}-`,
 
-  PREFERENCES: ['theme', 'lang', 'color', 'font', 'density', 'tool-space', 'tool-space-last-tools'] as const,
+  PREFERENCES: [
+    'theme',
+    'lang',
+    'color',
+    'font',
+    'density',
+    'tool-space',
+    'tool-space-last-tools',
+  ] as const,
 };
 
 /**

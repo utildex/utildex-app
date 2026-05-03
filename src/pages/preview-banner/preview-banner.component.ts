@@ -94,10 +94,19 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
               class="mb-6 flex h-32 w-32 items-center justify-center overflow-hidden rounded-3xl bg-white shadow-2xl"
             >
               @if (mode() === 'utildex') {
-                <img src="/assets/images/logo_utildex_128.jpeg" class="h-full w-full object-cover" crossorigin="anonymous" />
+                <img
+                  src="/assets/images/logo_utildex_128.jpeg"
+                  class="h-full w-full object-cover"
+                  crossorigin="anonymous"
+                />
               } @else {
-                <div class="p-4 w-full h-full flex items-center justify-center">
-                  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-full w-full drop-shadow-sm">
+                <div class="flex h-full w-full items-center justify-center p-4">
+                  <svg
+                    viewBox="0 0 100 100"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-full w-full drop-shadow-sm"
+                  >
                     <rect x="0" y="0" width="28" height="28" rx="8" fill="#22d3ee" />
                     <rect x="36" y="0" width="28" height="28" rx="8" fill="#2dd4bf" />
                     <rect x="72" y="0" width="28" height="28" rx="8" fill="#34d399" />
@@ -114,7 +123,7 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
 
             <!-- Title -->
             <h1
-              class="relative z-10 mb-4 text-9xl font-black tracking-tighter text-white drop-shadow-xl font-utx-sans"
+              class="font-utx-sans relative z-10 mb-4 text-9xl font-black tracking-tighter text-white drop-shadow-xl"
             >
               {{ mode() === 'utildex' ? 'Utildex' : 'Synedex' }}
             </h1>
@@ -126,18 +135,66 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
                 class="absolute top-1/2 -left-32 flex h-24 w-24 -translate-y-1/2 -rotate-12 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
                 @if (mode() === 'utildex') {
-                  <svg class="w-12 h-12 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                  <svg
+                    class="h-12 w-12 text-blue-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                    ></path>
+                  </svg>
                 } @else {
-                  <svg class="w-12 h-12 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                  <svg
+                    class="h-12 w-12 text-blue-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                    ></path>
+                  </svg>
                 }
               </div>
               <div
                 class="absolute bottom-0 -left-16 flex h-20 w-20 rotate-6 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
                 @if (mode() === 'utildex') {
-                  <svg class="w-10 h-10 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <svg
+                    class="h-10 w-10 text-emerald-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                  </svg>
                 } @else {
-                  <svg class="w-10 h-10 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                  <svg
+                    class="h-10 w-10 text-emerald-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    ></path>
+                  </svg>
                 }
               </div>
 
@@ -146,18 +203,71 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
                 class="absolute top-1/2 -right-32 flex h-24 w-24 -translate-y-1/2 rotate-12 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
                 @if (mode() === 'utildex') {
-                  <svg class="w-12 h-12 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  <svg
+                    class="h-12 w-12 text-violet-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    ></path>
+                  </svg>
                 } @else {
-                  <svg class="w-12 h-12 text-violet-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  <svg
+                    class="h-12 w-12 text-violet-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    ></path>
+                  </svg>
                 }
               </div>
               <div
                 class="absolute -right-16 bottom-0 flex h-20 w-20 -rotate-6 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
                 @if (mode() === 'utildex') {
-                  <svg class="w-10 h-10 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 3h6m-3-3v6"></path></svg>
+                  <svg
+                    class="h-10 w-10 text-amber-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 3h6m-3-3v6"
+                    ></path>
+                  </svg>
                 } @else {
-                  <svg class="w-10 h-10 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <svg
+                    class="h-10 w-10 text-amber-300"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                    ></path>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
                 }
               </div>
             </div>
@@ -184,7 +294,13 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
           class="relative flex items-center justify-center bg-transparent"
           style="width: 1024px; height: 1024px;"
         >
-          <svg width="1024" height="1024" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="1024"
+            height="1024"
+            viewBox="0 0 100 100"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <rect x="0" y="0" width="28" height="28" rx="8" fill="#22d3ee" />
             <rect x="36" y="0" width="28" height="28" rx="8" fill="#2dd4bf" />
             <rect x="72" y="0" width="28" height="28" rx="8" fill="#34d399" />
@@ -211,7 +327,7 @@ export class PreviewBannerComponent {
   async downloadBanner() {
     try {
       const currentMode = this.mode();
-      
+
       if (currentMode === 'synedex-logo') {
         if (!this.logo) return;
         const dataUrl = await toPng(this.logo.nativeElement, {
@@ -233,7 +349,8 @@ export class PreviewBannerComponent {
           pixelRatio: 1,
         });
         const link = document.createElement('a');
-        link.download = currentMode === 'utildex' ? 'preview-banner-utildex.jpg' : 'preview-banner-synedex.jpg';
+        link.download =
+          currentMode === 'utildex' ? 'preview-banner-utildex.jpg' : 'preview-banner-synedex.jpg';
         link.href = dataUrl;
         link.click();
       }

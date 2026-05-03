@@ -75,7 +75,9 @@ export class ToolState<T extends object> {
           const duplicates = records.slice(1);
           Promise.all(
             duplicates.map((d) => (d.id ? this.db.records.delete(d.id) : Promise.resolve())),
-          ).catch((err) => console.warn(`[ToolState] Cleanup failed for ${this.namespacedScope}`, err));
+          ).catch((err) =>
+            console.warn(`[ToolState] Cleanup failed for ${this.namespacedScope}`, err),
+          );
         }
       }
       this.isLoaded = true;

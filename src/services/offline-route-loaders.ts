@@ -8,10 +8,7 @@ export const OFFLINE_ROUTE_LOADERS: Array<() => Promise<unknown>> = (() => {
   ];
 
   if (appId === 'synedex') {
-    return [
-      ...commonRoutes,
-      () => import('../pages/synedex-welcome/synedex-welcome.component'),
-    ];
+    return [...commonRoutes, () => import('../pages/synedex-welcome/synedex-welcome.component')];
   }
 
   // Utildex routes

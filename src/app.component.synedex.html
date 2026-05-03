@@ -37,10 +37,10 @@
               </svg>
             </div>
             @if (!isWelcomePage()) {
-              <span
-                class="group-hover:text-primary text-xl font-bold tracking-tight text-slate-900 transition-colors dark:text-white"
-                >Synedex</span
-              >
+            <span
+              class="group-hover:text-primary text-xl font-bold tracking-tight text-slate-900 transition-colors dark:text-white"
+              >Synedex</span
+            >
             }
           </a>
         </div>
@@ -108,7 +108,6 @@
               }}</span
             >
           </button>
-
 
           <a
             [href]="appConfig.githubUrl"
@@ -181,8 +180,6 @@
             <span class="material-symbols-outlined">settings</span>
             {{ t.map()['TOUR_TITLE_SETTINGS_OPEN'] || 'Settings' }}
           </button>
-
-
         </nav>
       </div>
     </div>
@@ -222,10 +219,7 @@
   <app-dashboard-modals></app-dashboard-modals>
   } @if (settingsOpen()) { @defer (when settingsOpen()) {
   <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
-  } }
-
-
-  @defer (on immediate) {
+  } } @defer (on immediate) {
   <app-virtual-pets></app-virtual-pets>
   }
 </div>

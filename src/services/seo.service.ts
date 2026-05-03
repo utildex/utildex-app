@@ -170,8 +170,7 @@ export class SeoService {
     }
 
     let title = `${this.appConfig.appName} - Local-First Modular Toolbox`;
-    let desc =
-      `A modular collection of independent utilities and games that run entirely in your browser. Private, offline-ready, and source available.`;
+    let desc = `A modular collection of independent utilities and games that run entirely in your browser. Private, offline-ready, and source available.`;
     let image = ''; // Default OG Image if available
 
     if (routeInfo.kind === 'tool' && routeInfo.toolId) {

@@ -52,27 +52,54 @@ const COLOR_LIST = Object.values(COLORS);
 function buildBrainNodes(): BrainNode[] {
   const contour: [number, number][] = [
     /* ── Frontal lobe outline ── */
-    [30, 84], [28, 70], [32, 56], [40, 44], [50, 34],
+    [30, 84],
+    [28, 70],
+    [32, 56],
+    [40, 44],
+    [50, 34],
     /* ── Parietal lobe (top) ── */
-    [62, 24], [76, 18], [92, 14], [108, 16], [122, 22],
+    [62, 24],
+    [76, 18],
+    [92, 14],
+    [108, 16],
+    [122, 22],
     /* ── Occipital lobe (back) ── */
-    [135, 32], [144, 44], [150, 58], [152, 72], [148, 84],
+    [135, 32],
+    [144, 44],
+    [150, 58],
+    [152, 72],
+    [148, 84],
     /* ── Cerebellum ── */
-    [150, 93], [154, 103], [150, 112], [140, 118],
+    [150, 93],
+    [154, 103],
+    [150, 112],
+    [140, 118],
     /* ── Brain stem ── */
-    [135, 126], [130, 135], [122, 135], [120, 126],
+    [135, 126],
+    [130, 135],
+    [122, 135],
+    [120, 126],
     /* ── Temporal lobe (bottom contour) ── */
-    [130, 112], [118, 108], [104, 110], [88, 112],
-    [72, 110], [58, 104], [45, 96], [34, 90]
+    [130, 112],
+    [118, 108],
+    [104, 110],
+    [88, 112],
+    [72, 110],
+    [58, 104],
+    [45, 96],
+    [34, 90],
   ];
 
   const isInside = (pt: [number, number], vs: [number, number][]) => {
-    const x = pt[0], y = pt[1];
+    const x = pt[0],
+      y = pt[1];
     let inside = false;
     for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-      const xi = vs[i][0], yi = vs[i][1];
-      const xj = vs[j][0], yj = vs[j][1];
-      const intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+      const xi = vs[i][0],
+        yi = vs[i][1];
+      const xj = vs[j][0],
+        yj = vs[j][1];
+      const intersect = yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
       if (intersect) inside = !inside;
     }
     return inside;
@@ -82,7 +109,7 @@ function buildBrainNodes(): BrainNode[] {
   const pointsToGenerate = 180;
   let added = 0;
   let attempts = 0;
-  
+
   while (added < pointsToGenerate && attempts < 3000) {
     const x = 20 + Math.random() * 140;
     const y = 10 + Math.random() * 130;
@@ -122,10 +149,7 @@ function buildEdges(nodes: BrainNode[], threshold: number): [number, number][] {
 /**
  * Build adjacency list from edges.
  */
-function buildAdjacency(
-  nodeCount: number,
-  edges: [number, number][],
-): Map<number, number[]> {
+function buildAdjacency(nodeCount: number, edges: [number, number][]): Map<number, number[]> {
   const adj = new Map<number, number[]>();
   for (let i = 0; i < nodeCount; i++) adj.set(i, []);
   for (const [a, b] of edges) {
@@ -262,7 +286,7 @@ function buildAdjacency(
         align-items: center;
         z-index: 10;
         opacity: 0;
-        animation: syn-cta-enter-absolute 700ms cubic-bezier(0.22, 1, 0.36, 1) 1.0s forwards;
+        animation: syn-cta-enter-absolute 700ms cubic-bezier(0.22, 1, 0.36, 1) 1s forwards;
       }
 
       @keyframes syn-cta-enter {
@@ -292,13 +316,17 @@ function buildAdjacency(
         font-weight: 500;
         letter-spacing: 0.05em;
         color: #0f172a;
-        background: linear-gradient(120deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+        background: linear-gradient(
+          120deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          rgba(255, 255, 255, 0.1) 100%
+        );
         backdrop-filter: blur(16px) saturate(140%);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
         border: 1px solid rgba(255, 255, 255, 0.5);
         border-left: 1px solid rgba(255, 255, 255, 0.8);
         border-top: 1px solid rgba(255, 255, 255, 0.8);
-        box-shadow: 
+        box-shadow:
           0 8px 32px -8px rgba(14, 154, 167, 0.25),
           inset 0 0 20px rgba(255, 255, 255, 0.3);
         cursor: pointer;
@@ -324,7 +352,7 @@ function buildAdjacency(
 
       .syn-cta:hover {
         transform: translateY(-3px);
-        box-shadow: 
+        box-shadow:
           0 12px 40px -8px rgba(14, 154, 167, 0.4),
           inset 0 0 30px rgba(255, 255, 255, 0.6);
         border-radius: 8px 32px 8px 32px; /* Invert asymmetry on hover */
@@ -359,7 +387,7 @@ function buildAdjacency(
         border-color: rgba(255, 255, 255, 0.1);
         border-left: 1px solid rgba(255, 255, 255, 0.25);
         border-top: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 
+        box-shadow:
           0 8px 32px -8px rgba(56, 189, 248, 0.2),
           inset 0 0 20px rgba(14, 154, 167, 0.1);
       }
@@ -369,7 +397,7 @@ function buildAdjacency(
       }
 
       :host-context(.dark) .syn-cta:hover {
-        box-shadow: 
+        box-shadow:
           0 12px 40px -8px rgba(56, 189, 248, 0.4),
           inset 0 0 30px rgba(14, 154, 167, 0.3),
           0 0 15px rgba(56, 189, 248, 0.2);
@@ -491,7 +519,9 @@ export class SynedexWelcomeComponent implements AfterViewInit, OnDestroy {
   private readonly SVG_NS = 'http://www.w3.org/2000/svg';
 
   ngAfterViewInit(): void {
-    this.nodeEls = Array.from(this.nodesGroupRef.nativeElement.querySelectorAll('.syn-node')) as SVGCircleElement[];
+    this.nodeEls = Array.from(
+      this.nodesGroupRef.nativeElement.querySelectorAll('.syn-node'),
+    ) as SVGCircleElement[];
     this.nodeOpacities = new Array(this.nodes.length).fill(0.25);
 
     this.initImpulses();
@@ -597,10 +627,10 @@ export class SynedexWelcomeComponent implements AfterViewInit, OnDestroy {
       // Render head + halo
       const hxStr = x.toFixed(1);
       const hyStr = y.toFixed(1);
-      
+
       this.impulseHalos[i].setAttribute('cx', hxStr);
       this.impulseHalos[i].setAttribute('cy', hyStr);
-      
+
       this.impulseEls[i].setAttribute('cx', hxStr);
       this.impulseEls[i].setAttribute('cy', hyStr);
 
@@ -617,9 +647,7 @@ export class SynedexWelcomeComponent implements AfterViewInit, OnDestroy {
         const filtered = neighbors.filter((n) => n !== imp.from);
         const candidates = filtered.length > 0 ? filtered : neighbors;
         const next =
-          candidates.length > 0
-            ? candidates[Math.floor(Math.random() * candidates.length)]
-            : 0;
+          candidates.length > 0 ? candidates[Math.floor(Math.random() * candidates.length)] : 0;
 
         imp.from = imp.to;
         imp.to = next;

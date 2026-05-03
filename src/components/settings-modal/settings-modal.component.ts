@@ -316,23 +316,23 @@ type ParsedData =
               <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
               @if (appConfig.appId !== 'synedex') {
-              <!-- Tour -->
-              <section class="space-y-6">
-                <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">
-                  {{ t.map()['SECTION_TOUR'] }}
-                </h3>
-                <div class="flex items-center justify-between">
-                  <span class="font-medium text-slate-700 dark:text-slate-300">{{
-                    t.map()['LABEL_REACTIVATE_TOUR']
-                  }}</span>
-                  <button
-                    (click)="reactivateTour()"
-                    class="bg-primary rounded-lg px-4 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-600"
-                  >
-                    {{ t.map()['BTN_START_TOUR'] }}
-                  </button>
-                </div>
-              </section>
+                <!-- Tour -->
+                <section class="space-y-6">
+                  <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">
+                    {{ t.map()['SECTION_TOUR'] }}
+                  </h3>
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium text-slate-700 dark:text-slate-300">{{
+                      t.map()['LABEL_REACTIVATE_TOUR']
+                    }}</span>
+                    <button
+                      (click)="reactivateTour()"
+                      class="bg-primary rounded-lg px-4 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-600"
+                    >
+                      {{ t.map()['BTN_START_TOUR'] }}
+                    </button>
+                  </div>
+                </section>
               }
             </div>
           }
