@@ -19,6 +19,13 @@ Synedex is the cognitive wellness and games variant of this codebase. It is buil
   - [6. Wire the component registry](#6-wire-the-component-registry)
   - [7. Add a route](#7-add-a-route)
   - [8. Add a tool space (optional)](#8-add-a-tool-space-optional)
+- [Internationalisation (i18n)](#internationalisation-i18n)
+  - [Two i18n files per game](#two-i18n-files-per-game)
+  - [Component strings](#component-strings)
+  - [Contract metadata strings](#contract-metadata-strings)
+  - [Using translations in the component](#using-translations-in-the-component)
+  - [Supported languages and fallback](#supported-languages-and-fallback)
+  - [Integrity check](#integrity-check)
 - [Registry Architecture](#registry-architecture)
   - [core-registry.synedex.ts](#core-registrysynedexts)
   - [tool-registry.synedex.ts](#tool-registrysynedexts)
@@ -227,6 +234,155 @@ Keep the Synedex route manifest intentionally minimal. Do not add Utildex-only r
 ### 8. Add a tool space (optional)
 
 Tool spaces for Synedex are declared in `src/data/tool-space-registry.synedex.ts`. Spaces group games into task-oriented collections displayed in the UI. See [Tool Spaces Platform](../tool-spaces/README.md) for full details.
+
+---
+
+## Internationalisation (i18n)
+
+Every game has two separate i18n concerns: **component strings** (UI labels, button text, error messages) and **contract metadata strings** (name and description shown in listings). These are kept in separate files for a deliberate reason — contract metadata is loaded at build time by the registry, while component strings are loaded lazily at runtime when the user opens the game.
+
+### Two i18n files per game
+
+```
+src/synedex-games/<game-id>/i18n/
+├── en.ts              ← component strings (English, the reference)
+├── fr.ts              ← component strings (French)
+├── es.ts              ← component strings (Spanish)
+├── zh.ts              ← component strings (Chinese)
+└── contract.i18n.ts   ← contract name + description, all languages in one file
+```
+
+### Component strings
+
+Each language file is a plain `export default` object with flat string keys:
+
+```typescript
+// src/synedex-games/focus-grid/i18n/en.ts
+export default {
+  BTN_START: 'Start',
+  BTN_PAUSE: 'Pause',
+  LABEL_SCORE: 'Score',
+  LABEL_LEVEL: 'Level',
+  MSG_GAME_OVER: 'Game over',
+};
+```
+
+```typescript
+// src/synedex-games/focus-grid/i18n/fr.ts
+export default {
+  BTN_START: 'Démarrer',
+  BTN_PAUSE: 'Pause',
+  LABEL_SCORE: 'Score',
+  LABEL_LEVEL: 'Niveau',
+  MSG_GAME_OVER: 'Partie terminée',
+};
+```
+
+Rules:
+- Keys are `SCREAMING_SNAKE_CASE` strings.
+- Values are plain strings only — no interpolation markers, no nested objects. If a string needs a dynamic value, compose it in the component with string concatenation.
+- Every key present in `en.ts` must also be present in every other language file. The integrity check (`scripts/check-integrity.ts`) enforces this and fails the build if any key is missing.
+- Extra keys in non-English files (keys not in `en.ts`) produce a build **warning**, not an error — but they are dead code and should be removed.
+
+### Contract metadata strings
+
+`contract.i18n.ts` is a **multi-language dictionary** in a single file, organised language-first:
+
+```typescript
+// src/synedex-games/focus-grid/i18n/contract.i18n.ts
+export const contractI18n = {
+  en: {
+    name: 'Focus Grid',
+    description:
+      'Train your attention and spatial memory with a progressive grid challenge. No data leaves your device. Works fully offline; feel free to disconnect.',
+  },
+  fr: {
+    name: 'Grille de Concentration',
+    description:
+      'Entraînez votre attention et votre mémoire spatiale. Aucune donnée ne quitte votre appareil. Fonctionne entièrement hors ligne ; vous pouvez couper internet.',
+  },
+  es: {
+    name: 'Cuadrícula de Concentración',
+    description:
+      'Entrena tu atención y memoria espacial. Ningún dato sale de tu dispositivo. Funciona completamente sin conexión; puedes desconectar internet.',
+  },
+  zh: {
+    name: '专注方格',
+    description:
+      '通过渐进式方格挑战训练您的注意力和空间记忆。您的数据不会离开设备。完全离线运行，请随意断开网络。',
+  },
+} as const;
+```
+
+This dictionary is consumed by `mapLocalizedField` from `src/core/i18n-mapper.ts` to produce the `Record<string, string>` objects expected by `ToolContract`:
+
+```typescript
+// focus-grid.contract.ts
+import { mapLocalizedField } from '../../core/i18n-mapper';
+import { contractI18n } from './i18n/contract.i18n';
+
+metadata: {
+  name: mapLocalizedField(contractI18n, 'name'),
+  description: mapLocalizedField(contractI18n, 'description'),
+}
+```
+
+`mapLocalizedField` walks the dictionary and extracts `{ en: '...', fr: '...', es: '...', zh: '...' }` for the given key. The integrity check does **not** cover `contract.i18n.ts` — you must manually ensure all four languages are present.
+
+The description must always end with the privacy/offline guarantee in every language. See `CONTRIBUTING.md` for the required phrasing per language.
+
+### Using translations in the component
+
+Inject `ScopedTranslationService` (provided via `provideTranslation`) and access the reactive translation map via `t.map()`:
+
+```typescript
+// focus-grid.component.ts
+import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
+import en from './i18n/en';
+import fr from './i18n/fr';
+import es from './i18n/es';
+import zh from './i18n/zh';
+
+@Component({
+  providers: [
+    provideTranslation({
+      en: () => en,
+      fr: () => fr,
+      es: () => es,
+      zh: () => zh,
+    }),
+  ],
+  template: `
+    <button>{{ t.map()['BTN_START'] }}</button>
+    <span>{{ t.map()['LABEL_SCORE'] }}: {{ score() }}</span>
+  `,
+})
+export class FocusGridComponent {
+  t = inject(ScopedTranslationService);
+}
+```
+
+`provideTranslation` registers both the loader map and `ScopedTranslationService` as component-scoped providers. `t.map()` is a signal — Angular will re-render automatically when the user switches language.
+
+To read a single string imperatively (e.g. for a toast message), use `t.get('KEY')`:
+
+```typescript
+this.toast.show(this.t.get('MSG_GAME_OVER'), 'info');
+```
+
+### Supported languages and fallback
+
+The four supported languages are `en`, `fr`, `es`, `zh`. If the user's active language has no loader (or the loader throws), `ScopedTranslationService` automatically falls back to `en`. You must always provide all four loaders in `provideTranslation`.
+
+### Integrity check
+
+`scripts/check-integrity.ts` validates component i18n automatically as part of the pre-build step. For each game in `src/synedex-games/`, it:
+
+1. Confirms that `en.ts`, `fr.ts`, `es.ts`, and `zh.ts` all exist.
+2. Loads all four files and compares their key sets against `en.ts`.
+3. Errors on any missing key; warns on any extra key.
+
+A failed integrity check blocks the build. Fix it by adding the missing key to the relevant language file before re-running.
 
 ---
 
