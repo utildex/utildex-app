@@ -8,12 +8,6 @@ export interface CoreRegistryEntry {
 }
 
 export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
-  'ufov-training': {
-    appName: 'synedex',
-    contract: () =>
-      import('../synedex-games/ufov-training/ufov-training.contract').then((m) => m.contract),
-    kernel: () => import('../synedex-games/ufov-training/ufov-training.kernel'),
-  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {

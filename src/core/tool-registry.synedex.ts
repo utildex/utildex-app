@@ -16,10 +16,6 @@ export interface ToolRegistryEntry {
 type ComponentLoader = () => Promise<Type<unknown>>;
 
 const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
-  'ufov-training': () =>
-    import('../synedex-games/ufov-training/ufov-training.component').then(
-      (m) => m.UfovTrainingComponent,
-    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {
