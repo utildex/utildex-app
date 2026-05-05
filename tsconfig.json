@@ -31,7 +31,8 @@
     }
   },
   "files": [
-    "./index.tsx"
+    "./index.tsx",
+    "./index.synedex.tsx"
   ],
   "include": [
     "src/**/*.ts"

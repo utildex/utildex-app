@@ -15,6 +15,7 @@ export interface ArticleMetadata {
   readingTime: number; // minutes
   type: ArticleType;
   url?: string; // Required if type === 'external'
+  appName?: 'utildex' | 'synedex'; // Which app owns this article (defaults to 'utildex')
 }
 
 type ArticleId = keyof (typeof articleRegistryI18n)['en'];

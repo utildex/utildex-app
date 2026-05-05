@@ -21,6 +21,7 @@ export default {
   WARN_MOBILE_DATA: 'Almacena herramientas automáticamente. Puede usar datos móviles.',
 
   NAV_ALL_TOOLS: 'Herramientas',
+  NAV_GAMES: 'Juegos',
   NAV_TOOL_SPACES: 'Espacios de Herramientas',
   FOOTER_CATEGORIES: 'Categorías',
   NAV_HISTORY: 'Historial',

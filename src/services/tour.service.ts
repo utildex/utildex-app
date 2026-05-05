@@ -5,6 +5,7 @@ import { I18nService } from './i18n.service';
 import { LocalLinkPipe } from '../core/pipes/local-link.pipe';
 import { TOUR_STEPS } from '../core/tour.config';
 import { Subject } from 'rxjs';
+import { APP_CONFIG } from '../core/app.config';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class TourService {
   private localLink = new LocalLinkPipe();
   readonly steps = inject(TOUR_STEPS);
 
-  private readonly TOUR_DISMISSED_KEY = 'utildex-tour-dismissed';
+  private readonly TOUR_DISMISSED_KEY = `${APP_CONFIG.appId as string}-tour-dismissed`;
 
   isActive = signal(false);
   currentStepIndex = signal(0);

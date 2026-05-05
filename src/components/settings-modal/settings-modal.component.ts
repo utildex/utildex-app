@@ -13,6 +13,8 @@ import { OfflineManagerService } from '../../services/offline-manager.service'; 
 import { VirtualPetsService } from '../../services/virtual-pets.service';
 import { TourService } from '../../services/tour.service';
 import { TourTargetDirective } from '../../directives/tour-target.directive';
+import { APP_CONFIG } from '../../core/app.config';
+import { STORAGE_KEYS, getPrefKey } from '../../core/storage-keys';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -313,23 +315,25 @@ type ParsedData =
 
               <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
-              <!-- Tour -->
-              <section class="space-y-6">
-                <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">
-                  {{ t.map()['SECTION_TOUR'] }}
-                </h3>
-                <div class="flex items-center justify-between">
-                  <span class="font-medium text-slate-700 dark:text-slate-300">{{
-                    t.map()['LABEL_REACTIVATE_TOUR']
-                  }}</span>
-                  <button
-                    (click)="reactivateTour()"
-                    class="bg-primary rounded-lg px-4 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-600"
-                  >
-                    {{ t.map()['BTN_START_TOUR'] }}
-                  </button>
-                </div>
-              </section>
+              @if (appConfig.appId !== 'synedex') {
+                <!-- Tour -->
+                <section class="space-y-6">
+                  <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">
+                    {{ t.map()['SECTION_TOUR'] }}
+                  </h3>
+                  <div class="flex items-center justify-between">
+                    <span class="font-medium text-slate-700 dark:text-slate-300">{{
+                      t.map()['LABEL_REACTIVATE_TOUR']
+                    }}</span>
+                    <button
+                      (click)="reactivateTour()"
+                      class="bg-primary rounded-lg px-4 py-2 text-sm font-bold text-white shadow-sm transition-colors hover:bg-blue-600"
+                    >
+                      {{ t.map()['BTN_START_TOUR'] }}
+                    </button>
+                  </div>
+                </section>
+              }
             </div>
           }
 
@@ -656,6 +660,7 @@ export class SettingsModalComponent {
   tour = inject(TourService);
   petsService = inject(VirtualPetsService);
   private router = inject(Router);
+  appConfig = APP_CONFIG;
 
   // UI State
   activeTab = signal<Tab>('general');
@@ -783,7 +788,7 @@ export class SettingsModalComponent {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `utildex-backup-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `${APP_CONFIG.appId}-backup-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -840,28 +845,28 @@ export class SettingsModalComponent {
 
   cleanKey(key: string): string {
     const map: Record<string, string> = {
-      'utildex-clipboard-history': 'KEY_CLIPBOARD_HISTORY',
-      'utildex-usage': 'KEY_USAGE',
-      'utildex-favorites': 'KEY_FAVORITES',
-      'utildex-dashboard-v2': 'KEY_DASHBOARD_V2',
-      'utildex-state-theme': 'KEY_THEME',
-      'utildex-state-lang': 'KEY_LANG',
-      'utildex-state-color': 'KEY_COLOR',
-      'utildex-state-font': 'KEY_FONT',
-      'utildex-state-density': 'KEY_DENSITY',
+      [STORAGE_KEYS.CLIPBOARD_HISTORY]: 'KEY_CLIPBOARD_HISTORY',
+      [STORAGE_KEYS.USAGE_STATS]: 'KEY_USAGE',
+      [STORAGE_KEYS.FAVORITES]: 'KEY_FAVORITES',
+      [STORAGE_KEYS.DASHBOARD_V2]: 'KEY_DASHBOARD_V2',
+      [getPrefKey('theme')]: 'KEY_THEME',
+      [getPrefKey('lang')]: 'KEY_LANG',
+      [getPrefKey('color')]: 'KEY_COLOR',
+      [getPrefKey('font')]: 'KEY_FONT',
+      [getPrefKey('density')]: 'KEY_DENSITY',
     };
 
     if (map[key]) {
       return this.t.get(map[key]);
     }
 
-    if (key.startsWith('utildex-state-')) {
-      const toolId = key.replace('utildex-state-', '');
+    if (key.startsWith(STORAGE_KEYS.PREFIX_STATE)) {
+      const toolId = key.replace(STORAGE_KEYS.PREFIX_STATE, '');
       return this.t.get('KEY_STATE_PREFIX') + this.resolveToolName(toolId);
     }
 
     return key
-      .replace('utildex-', '')
+      .replace(STORAGE_KEYS.PREFIX_APP, '')
       .replace(/-/g, ' ')
       .replace(/\b\w/g, (l) => l.toUpperCase());
   }
@@ -888,12 +893,12 @@ export class SettingsModalComponent {
 
   parseData(key: string, value: string): ParsedData {
     try {
-      if (key === 'utildex-clipboard-history') {
+      if (key === STORAGE_KEYS.CLIPBOARD_HISTORY) {
         const arr = JSON.parse(value);
         return { type: 'clipboard', data: Array.isArray(arr) ? arr : [] };
       }
 
-      if (key === 'utildex-usage') {
+      if (key === STORAGE_KEYS.USAGE_STATS) {
         const obj = JSON.parse(value) as Record<string, { count: number; lastUsed: number }>;
         const stats = Object.entries(obj)
           .map(([id, stat]) => ({
@@ -905,13 +910,13 @@ export class SettingsModalComponent {
         return { type: 'usage', data: stats };
       }
 
-      if (key === 'utildex-favorites') {
+      if (key === STORAGE_KEYS.FAVORITES) {
         const arr = JSON.parse(value);
         const names = Array.isArray(arr) ? arr.map((id) => this.resolveToolName(id)) : [];
         return { type: 'favorites', data: names };
       }
 
-      if (key === 'utildex-dashboard-v2') {
+      if (key === STORAGE_KEYS.DASHBOARD_V2) {
         const arr = JSON.parse(value);
         return { type: 'dashboard', data: { count: Array.isArray(arr) ? arr.length : 0 } };
       }

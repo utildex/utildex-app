@@ -14,9 +14,10 @@ import {
   resolveToolSpaces,
 } from '../core/tool-space-resolver';
 import type { ResolvedToolSpace } from '../core/tool-space-resolver';
-import { DEFAULT_TOOL_SPACE_ID, TOOL_SPACES_REGISTRY } from '../data/tool-space-registry';
+import { DEFAULT_TOOL_SPACE_ID, getToolSpacesForApp } from '../data/tool-space-registry';
 import { PersistenceService } from './persistence.service';
 import { ToolService } from './tool.service';
+import { AppConfigService } from './app-config.service';
 
 export type { ResolvedToolSpace, ResolvedToolSpaceGroup } from '../core/tool-space-resolver';
 
@@ -49,8 +50,11 @@ function areStringRecordsEqual(
 export class ToolSpacesService {
   private toolService = inject(ToolService);
   private persistence = inject(PersistenceService);
+  private appConfig = inject(AppConfigService);
 
-  private spaceDefinitions = signal<ToolSpaceDefinition[]>(TOOL_SPACES_REGISTRY);
+  private spaceDefinitions = signal<ToolSpaceDefinition[]>(
+    getToolSpacesForApp(this.appConfig.appId),
+  );
 
   selectedSpaceId = signal<string>(DEFAULT_TOOL_SPACE_ID);
   lastSelectedToolBySpace = signal<Record<string, string>>({});

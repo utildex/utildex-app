@@ -1,0 +1,225 @@
+<app-background></app-background>
+
+<div class="relative flex h-screen flex-col overflow-hidden supports-[height:100dvh]:h-[100dvh]">
+  <header
+    class="z-40 w-full flex-shrink-0 bg-gradient-to-b from-white/10 via-transparent to-transparent shadow-none backdrop-blur-[2px] transition-all duration-300 dark:from-slate-900/60 dark:via-slate-900/40 dark:to-transparent"
+  >
+    <div class="max-w-full px-4 sm:px-6 lg:px-8">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex flex-shrink-0 items-center gap-2 overflow-hidden">
+          <a
+            [routerLink]="'/' | localLink"
+            class="group flex flex-shrink-0 items-center gap-3 focus:outline-none"
+          >
+            <div class="h-9 w-9 transition-transform duration-200 group-hover:scale-105">
+              <svg
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-full w-full drop-shadow-sm"
+              >
+                <rect x="0" y="0" width="28" height="28" rx="8" class="fill-cyan-400" />
+                <rect x="36" y="0" width="28" height="28" rx="8" class="fill-teal-400" />
+                <rect x="72" y="0" width="28" height="28" rx="8" class="fill-emerald-400" />
+                <rect x="0" y="36" width="28" height="28" rx="8" class="fill-sky-400" />
+                <rect x="36" y="36" width="28" height="28" rx="8" class="fill-indigo-400" />
+                <circle
+                  cx="86"
+                  cy="50"
+                  r="13"
+                  stroke="currentColor"
+                  stroke-width="8"
+                  class="text-slate-900 dark:text-white"
+                />
+                <rect x="0" y="72" width="28" height="28" rx="8" class="fill-blue-400" />
+                <rect x="36" y="72" width="28" height="28" rx="8" class="fill-violet-400" />
+                <rect x="72" y="72" width="28" height="28" rx="8" class="fill-lime-400" />
+              </svg>
+            </div>
+            @if (!isWelcomePage()) {
+            <span
+              class="group-hover:text-primary text-xl font-bold tracking-tight text-slate-900 transition-colors dark:text-white"
+              >Synedex</span
+            >
+            }
+          </a>
+        </div>
+
+        <div class="flex flex-1 items-center justify-end gap-2 md:flex-none">
+          <nav class="mr-2 hidden gap-1 md:flex">
+            <a
+              [routerLink]="'/games' | localLink"
+              routerLinkActive="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white"
+              class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              {{ t.map()['NAV_GAMES'] || 'Games' }}
+            </a>
+          </nav>
+
+          <div class="mx-1 hidden h-6 w-px bg-slate-200 md:block dark:bg-slate-700"></div>
+
+          @if (updates.isUpdateAvailable()) {
+          <button
+            [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
+            [bubblePos]="'bottom'"
+            (click)="updates.applyUpdateAndReload()"
+            [disabled]="updates.isUpdating()"
+            class="animate-glow-pulse bg-primary mr-1 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-white shadow-lg transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 md:flex"
+          >
+            <span class="material-symbols-outlined text-lg">system_update_alt</span>
+            <span class="text-xs font-bold"
+              >{{ updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE']
+              }}</span
+            >
+          </button>
+          }
+
+          <button
+            (click)="openCommandPalette()"
+            class="glass-control mr-1 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-slate-500 transition-all hover:text-slate-900 md:flex dark:text-slate-300 dark:hover:text-white"
+            title="Command Palette (Cmd+K)"
+          >
+            <span class="material-symbols-outlined text-lg">search</span>
+            <span
+              class="rounded border border-slate-300 px-1 font-mono text-xs dark:border-slate-600"
+              >⌘K</span
+            >
+          </button>
+
+          <button
+            (click)="toggleSettings()"
+            class="hidden h-10 w-10 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 focus:ring-2 focus:ring-slate-500 focus:outline-none md:flex dark:hover:bg-slate-800"
+            aria-label="Open Settings"
+          >
+            <span class="material-symbols-outlined text-xl leading-none"> settings </span>
+          </button>
+
+          <button
+            [appBubble]="'BUBBLE_PRELOAD_INFO'"
+            [bubblePos]="'bottom'"
+            (click)="offline.downloadLibrary()"
+            [disabled]="offline.isDownloading()"
+            class="glass-control mr-1 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-slate-500 transition-all hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50 md:flex dark:text-slate-300 dark:hover:text-white"
+            [title]="t.map()['BTN_DOWNLOAD_LIBRARY'] || 'Download Library'"
+          >
+            <span class="material-symbols-outlined text-lg">cloud_download</span>
+            <span class="text-xs font-bold"
+              >{{ offline.isDownloading() ? t.map()['BTN_DOWNLOADING'] : t.map()['BTN_PRELOAD']
+              }}</span
+            >
+          </button>
+
+          <a
+            [href]="appConfig.githubUrl"
+            target="_blank"
+            class="hidden p-2 text-slate-500 transition-colors hover:text-slate-900 md:block dark:hover:text-white"
+            aria-label="Github"
+          >
+            <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+              <path
+                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+              />
+            </svg>
+          </a>
+
+          <button
+            (click)="toggleMobileMenu()"
+            class="focus:ring-primary ml-auto rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:ring-2 focus:outline-none md:hidden dark:text-slate-300 dark:hover:bg-slate-800"
+          >
+            <span class="material-symbols-outlined">
+              {{ mobileMenuOpen() ? 'close' : 'menu' }}
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    @if (mobileMenuOpen()) {
+    <div
+      class="animate-fade-in absolute top-16 left-0 z-40 w-full border-b border-slate-200 bg-white shadow-xl md:hidden dark:border-slate-800 dark:bg-slate-900"
+    >
+      <div class="space-y-4 px-4 py-6">
+        <nav class="flex flex-col space-y-2">
+          <button
+            (click)="openCommandPalette(); mobileMenuOpen.set(false)"
+            class="flex w-full items-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-left font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+          >
+            <span class="material-symbols-outlined">search</span>
+            {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
+          </button>
+
+          @if (updates.isUpdateAvailable()) {
+          <button
+            [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
+            [bubblePos]="'bottom'"
+            (click)="updates.applyUpdateAndReload(); mobileMenuOpen.set(false)"
+            [disabled]="updates.isUpdating()"
+            class="animate-glow-pulse border-primary/50 text-primary bg-primary/5 flex w-full items-center gap-2 rounded-xl border px-4 py-3 text-left font-bold disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            <span class="material-symbols-outlined">system_update_alt</span>
+            {{ updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE'] }}
+          </button>
+          }
+
+          <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
+
+          <a
+            [routerLink]="'/games' | localLink"
+            (click)="mobileMenuOpen.set(false)"
+            class="rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
+          >
+            {{ t.map()['NAV_GAMES'] || 'Games' }}
+          </a>
+
+          <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
+
+          <button
+            (click)="toggleSettings(); mobileMenuOpen.set(false)"
+            class="glass-control flex w-full items-center gap-2 rounded-xl px-4 py-3 text-left font-medium text-slate-700 dark:text-slate-300"
+          >
+            <span class="material-symbols-outlined">settings</span>
+            {{ t.map()['TOUR_TITLE_SETTINGS_OPEN'] || 'Settings' }}
+          </button>
+        </nav>
+      </div>
+    </div>
+    }
+  </header>
+
+  <div class="relative flex flex-1 overflow-hidden">
+    <main class="w-full flex-1 overflow-x-hidden overflow-y-auto">
+      <div class="mx-auto flex min-h-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
+        <router-outlet></router-outlet>
+        <app-footer class="mt-auto w-full"></app-footer>
+      </div>
+    </main>
+
+    <aside
+      class="fixed inset-y-0 right-0 z-50 w-80 transform bg-white shadow-2xl transition-transform duration-300 md:relative md:transform-none md:border-l md:border-slate-200 md:shadow-none dark:bg-slate-900 md:dark:border-slate-800"
+      [class.translate-x-full]="!sidebarOpen()"
+      [class.md:hidden]="!sidebarOpen()"
+      [class.md:block]="sidebarOpen()"
+    >
+      <app-clipboard-history></app-clipboard-history>
+    </aside>
+
+    @if (sidebarOpen()) {
+    <div class="fixed inset-0 z-45 bg-black/20 md:hidden" (click)="sidebarOpen.set(false)"></div>
+    }
+  </div>
+
+  <app-toast></app-toast>
+  <app-network-status></app-network-status>
+  <app-download-status></app-download-status>
+  <app-command-palette></app-command-palette>
+  <app-error-overlay></app-error-overlay>
+
+  @defer (on idle) {
+  <app-guide></app-guide>
+  <app-dashboard-modals></app-dashboard-modals>
+  } @if (settingsOpen()) { @defer (when settingsOpen()) {
+  <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
+  } } @defer (on immediate) {
+  <app-virtual-pets></app-virtual-pets>
+  }
+</div>

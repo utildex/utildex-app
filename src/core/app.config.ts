@@ -1,11 +1,21 @@
 import { APP_CONFIG_DATA } from '../../app.config';
 
+export type AppId = 'utildex' | 'synedex';
+
 export interface ResolvePublicBaseUrlOptions {
   envBaseUrl?: string | undefined;
   runtimeOrigin?: string | undefined;
 }
 
 export const APP_CONFIG = APP_CONFIG_DATA;
+
+export function getAppId(): AppId {
+  return APP_CONFIG.appId as AppId;
+}
+
+export function isAppId(value: string): value is AppId {
+  return value === 'utildex' || value === 'synedex';
+}
 
 export function normalizeBaseUrl(url: string): string {
   const trimmed = url.trim();

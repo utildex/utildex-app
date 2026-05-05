@@ -5,7 +5,7 @@ import { pathToFileURL } from 'url';
 import type { ToolContract } from '../src/core/tool-contract';
 import { validateToolSpaceDefinitions } from '../src/core/tool-space';
 import type { ToolSpaceDefinition } from '../src/core/tool-space';
-import { TOOL_SPACES_REGISTRY } from '../src/data/tool-space-registry';
+import { getToolSpacesForApp } from '../src/data/tool-space-registry';
 import type { I18nText } from '../src/data/types';
 
 const SPACE_PAGE_SIZE = 50;
@@ -13,6 +13,7 @@ const GROUP_TOOL_PAGE_SIZE = 25;
 
 const OUT_ROOT = path.join(process.cwd(), 'src', 'assets', 'mcp');
 const WEB_ROOT = '/assets/mcp';
+const ACTIVE_APP_ID = 'utildex';
 
 const FALLBACK_SPACE_ID = 'all-other-tools';
 const FALLBACK_GROUP_ID = 'other-tools';
@@ -22,6 +23,7 @@ interface ToolIndexModule {
 }
 
 interface CompiledTool {
+  appName: 'utildex' | 'synedex' | 'shared';
   id: string;
   title: string;
   oneLine: string;
@@ -143,7 +145,7 @@ function countTopCategories(tools: CompiledTool[]): string[] {
 }
 
 async function loadToolContracts(): Promise<CompiledTool[]> {
-  const toolsDir = path.join(process.cwd(), 'src', 'tools');
+  const toolsDir = path.join(process.cwd(), 'src', 'utildex-tools');
   const toolFolders = fs
     .readdirSync(toolsDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
@@ -171,6 +173,7 @@ async function loadToolContracts(): Promise<CompiledTool[]> {
       }
 
       return {
+        appName: contract.metadata.appName ?? 'utildex',
         id: contract.id,
         title: resolveI18n(contract.metadata.name, 'en'),
         oneLine: toOneLine(resolveI18n(contract.metadata.description, 'en')),
@@ -198,7 +201,7 @@ async function loadToolContracts(): Promise<CompiledTool[]> {
     seen.add(tool.id);
   }
 
-  return loadedTools;
+  return loadedTools.filter((tool) => tool.appName === 'shared' || tool.appName === ACTIVE_APP_ID);
 }
 
 function addFallbackSpaceIfNeeded(
@@ -253,7 +256,10 @@ async function main() {
   const tools = await loadToolContracts();
   const toolMap = new Map<string, CompiledTool>(tools.map((tool) => [tool.id, tool]));
 
-  const spaces = addFallbackSpaceIfNeeded(cloneToolSpaces(TOOL_SPACES_REGISTRY), tools.map((tool) => tool.id));
+  const spaces = addFallbackSpaceIfNeeded(
+    cloneToolSpaces(getToolSpacesForApp(ACTIVE_APP_ID)),
+    tools.map((tool) => tool.id),
+  );
 
   const definitionIssues = validateToolSpaceDefinitions(spaces);
   const definitionErrors = definitionIssues.filter((issue) => issue.severity === 'error');

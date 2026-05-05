@@ -3,20 +3,7 @@ import { TOOL_REGISTRY_MAP } from '../core/tool-registry';
 import { PersistenceService } from './persistence.service';
 import { DbService } from './db.service';
 import { GuideService } from './guide.service';
-
-const OFFLINE_ROUTE_LOADERS: Array<() => Promise<unknown>> = [
-  () => import('../pages/user-dashboard/user-dashboard.component'),
-  () => import('../pages/categories/categories.component'),
-  () => import('../pages/category-detail/category-detail.component'),
-  () => import('../pages/history/history.component'),
-  () => import('../pages/legal/legal.component'),
-  () => import('../pages/privacy/privacy.component'),
-  () => import('../pages/terms/terms.component'),
-  () => import('../pages/all-tools/all-tools.component'),
-  () => import('../pages/tool-host/tool-host.component'),
-  () => import('../pages/tool-spaces/tool-spaces.component'),
-  () => import('../pages/tool-space-host/tool-space-host.component'),
-];
+import { OFFLINE_ROUTE_LOADERS } from './offline-route-loaders';
 
 @Injectable({
   providedIn: 'root',

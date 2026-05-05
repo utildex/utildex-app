@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { DbService, DbRecord } from './db.service';
 import { STORAGE_KEYS, getPrefKey } from '../core/storage-keys';
+import { APP_CONFIG } from '../core/app.config';
 
 export interface StorageCategory {
   id: string;
@@ -22,62 +23,73 @@ export interface StorageStats {
 export class StorageManagerService {
   private db = inject(DbService);
 
-  // Categorization Logic
-  private readonly DEFINITIONS = [
-    {
-      id: 'dashboard',
-      labelKey: 'CAT_DASHBOARD',
-      icon: 'dashboard',
-      patterns: [new RegExp(`^${STORAGE_KEYS.DASHBOARD_V2}$`)],
-    },
-    {
-      id: 'favorites',
-      labelKey: 'CAT_FAVORITES',
-      icon: 'star',
-      patterns: [new RegExp(`^${STORAGE_KEYS.FAVORITES}$`)],
-    },
-    {
-      id: 'history',
-      labelKey: 'CAT_HISTORY',
-      icon: 'history',
-      patterns: [
-        new RegExp(`^${STORAGE_KEYS.CLIPBOARD_HISTORY}$`),
-        new RegExp(`^${STORAGE_KEYS.USAGE_STATS}$`),
-      ],
-    },
-    {
-      id: 'prefs',
-      labelKey: 'CAT_PREFS',
-      icon: 'tune',
-      patterns: STORAGE_KEYS.PREFERENCES.map((p) => new RegExp(`^${getPrefKey(p)}$`)),
-    },
-    {
-      id: 'pets',
-      labelKey: 'CAT_PETS',
-      icon: 'pets',
-      patterns: [/^utildex-state-active-pets$/],
-    },
-    {
-      id: 'tools',
-      labelKey: 'CAT_TOOLS',
-      icon: 'construction',
-      patterns: [
-        new RegExp(`^${STORAGE_KEYS.PREFIX_STATE}(?!${STORAGE_KEYS.PREFERENCES.join('|')})`),
-        new RegExp(`^${STORAGE_KEYS.PREFIX_TOOLS.replace('.', '\\.')}`),
-      ],
-    },
-    {
-      id: 'files',
-      labelKey: 'CAT_FILES',
-      icon: 'folder',
-      patterns: [/^app_blobs/],
-    },
-  ];
+  private getDefinitions() {
+    const appId = APP_CONFIG.appId as string;
+
+    return [
+      {
+        id: 'dashboard',
+        labelKey: 'CAT_DASHBOARD',
+        icon: 'dashboard',
+        patterns: [new RegExp(`^${STORAGE_KEYS.DASHBOARD_V2}$`)],
+        apps: ['utildex'],
+      },
+      {
+        id: 'favorites',
+        labelKey: 'CAT_FAVORITES',
+        icon: 'star',
+        patterns: [new RegExp(`^${STORAGE_KEYS.FAVORITES}$`)],
+        apps: ['utildex', 'synedex'],
+      },
+      {
+        id: 'history',
+        labelKey: 'CAT_HISTORY',
+        icon: 'history',
+        patterns: [
+          new RegExp(`^${STORAGE_KEYS.CLIPBOARD_HISTORY}$`),
+          new RegExp(`^${STORAGE_KEYS.USAGE_STATS}$`),
+        ],
+        apps: ['utildex'],
+      },
+      {
+        id: 'prefs',
+        labelKey: 'CAT_PREFS',
+        icon: 'tune',
+        patterns: STORAGE_KEYS.PREFERENCES.map((p) => new RegExp(`^${getPrefKey(p)}$`)),
+        apps: ['utildex', 'synedex'],
+      },
+      {
+        id: 'pets',
+        labelKey: 'CAT_PETS',
+        icon: 'pets',
+        patterns: [new RegExp(`^${getPrefKey('active-pets')}$`)],
+        apps: ['utildex', 'synedex'],
+      },
+      {
+        id: 'tools',
+        labelKey: appId === 'synedex' ? 'CAT_GAMES' : 'CAT_TOOLS',
+        icon: appId === 'synedex' ? 'videogame_asset' : 'construction',
+        patterns: [
+          new RegExp(`^${STORAGE_KEYS.PREFIX_STATE}(?!${STORAGE_KEYS.PREFERENCES.join('|')})`),
+          new RegExp(`^${STORAGE_KEYS.PREFIX_TOOLS.replace('.', '\\.')}`),
+        ],
+        apps: ['utildex', 'synedex'],
+      },
+      {
+        id: 'files',
+        labelKey: 'CAT_FILES',
+        icon: 'folder',
+        patterns: [/^app_blobs/],
+        apps: ['utildex'],
+      },
+    ].filter((def) => def.apps.includes(APP_CONFIG.appId as string));
+  }
 
   async getStats(): Promise<StorageStats> {
+    const definitions = this.getDefinitions();
     const stats: StorageStats = {
       totalBytes: 0,
-      categories: this.DEFINITIONS.map((def) => ({
+      categories: definitions.map((def) => ({
         id: def.id,
         labelKey: def.labelKey,
         icon: def.icon,
@@ -108,7 +120,10 @@ export class StorageManagerService {
         s.getAll(),
       );
       if (records) {
+        const appPrefix = APP_CONFIG.appId + '_';
         for (const rec of records) {
+          if (!rec.scope.startsWith(appPrefix)) continue;
+
           const size = JSON.stringify(rec.data).length * 2;
           this.addToStats(stats, rec.scope, size, 'tools');
         }
@@ -159,7 +174,8 @@ export class StorageManagerService {
 
     // 2. Try Regex Matching (Global Fallback or Config sorting)
     for (const cat of stats.categories) {
-      const def = this.DEFINITIONS.find((d) => d.id === cat.id);
+      const definitions = this.getDefinitions();
+      const def = definitions.find((d) => d.id === cat.id);
       if (def && def.patterns.some((p) => p.test(key))) {
         cat.keys.push(key);
         cat.sizeBytes += size;
@@ -180,8 +196,9 @@ export class StorageManagerService {
     );
 
     if (configKeys) {
+      const definitions = this.getDefinitions();
       for (const k of configKeys) {
-        const def = this.DEFINITIONS.find((d) => d.id === categoryId);
+        const def = definitions.find((d) => d.id === categoryId);
         if (def && def.patterns.some((p) => p.test(k))) {
           const v = await this.db.config.read(k);
           details.push({ key: k, value: JSON.stringify(v) });
@@ -195,7 +212,10 @@ export class StorageManagerService {
         s.getAll(),
       );
       if (records) {
+        const appPrefix = APP_CONFIG.appId + '_';
         for (const r of records) {
+          if (!r.scope.startsWith(appPrefix)) continue;
+
           details.push({ key: r.scope, value: JSON.stringify(r.data) });
         }
       }
@@ -227,7 +247,8 @@ export class StorageManagerService {
       s.getAllKeys(),
     );
     if (configKeys) {
-      const def = this.DEFINITIONS.find((d) => d.id === categoryId);
+      const definitions = this.getDefinitions();
+      const def = definitions.find((d) => d.id === categoryId);
       if (def) {
         for (const key of configKeys) {
           if (def.patterns.some((p) => p.test(key))) {
@@ -239,7 +260,16 @@ export class StorageManagerService {
 
     // 2. Clear Records if category is 'tools'
     if (categoryId === 'tools') {
-      await this.db.run('readwrite', this.db.STORES.RECORDS, (s) => s.clear());
+      const records = await this.db.run<DbRecord[]>('readonly', this.db.STORES.RECORDS, (s) =>
+        s.getAll(),
+      );
+      if (records) {
+        const appPrefix = APP_CONFIG.appId + '_';
+        const toDelete = records.filter((r) => r.scope.startsWith(appPrefix));
+        for (const r of toDelete) {
+          if (r.id) await this.db.records.delete(r.id);
+        }
+      }
     }
 
     // 3. Clear Blobs if category is 'files'
@@ -252,15 +282,17 @@ export class StorageManagerService {
     try {
       console.warn('Initiating Factory Reset...');
 
-      // 1. Clear IndexedDB Stores
-      await this.db.run('readwrite', this.db.STORES.CONFIG, (s) => s.clear());
-      await this.db.run('readwrite', this.db.STORES.RECORDS, (s) => s.clear());
-      await this.db.run('readwrite', this.db.STORES.BLOBS, (s) => s.clear());
+      // Clear categories dynamically based on app definitions
+      const defs = this.getDefinitions();
+      for (const def of defs) {
+        await this.clearCategory(def.id);
+      }
 
-      // 2. Clear LocalStorage (Specific Keys or All)
-      // We'll be aggressive but safe: Clear utildex keys
+      // Clear LocalStorage explicitly for the current app
       Object.keys(localStorage).forEach((key) => {
         if (key.startsWith(STORAGE_KEYS.PREFIX_APP)) {
+          // We keep the old aggressive approach for local storage,
+          // but could refine if we added more synedex-specific local storage keys.
           localStorage.removeItem(key);
         }
       });
@@ -268,7 +300,6 @@ export class StorageManagerService {
       console.log('Factory Reset Complete.');
     } catch (e) {
       console.error('Factory Reset Failed', e);
-      // Fallback: Try clearing LocalStorage anyway
       localStorage.clear();
     }
   }
@@ -292,7 +323,7 @@ export class StorageManagerService {
     exportObj['meta'] = {
       version: 2,
       date: new Date().toISOString(),
-      appName: 'Utildex',
+      appName: APP_CONFIG.appName,
     };
 
     // 1. Export Config
@@ -314,8 +345,12 @@ export class StorageManagerService {
       s.getAll(),
     );
     if (records) {
-      exportObj['records'] = records;
-      estimatedSize += JSON.stringify(records).length;
+      const appPrefix = APP_CONFIG.appId + '_';
+      const filteredRecords = records.filter((r) => r.scope.startsWith(appPrefix));
+      if (filteredRecords.length > 0) {
+        exportObj['records'] = filteredRecords;
+        estimatedSize += JSON.stringify(filteredRecords).length;
+      }
     }
 
     // 3. Export Blobs (Files)
@@ -357,8 +392,10 @@ export class StorageManagerService {
   async importData(jsonContent: string): Promise<boolean> {
     try {
       const data = JSON.parse(jsonContent);
-      if (!data.meta || data.meta.appName !== 'Utildex') {
-        throw new Error('Invalid backup file');
+      const expectedApp = APP_CONFIG.appName;
+
+      if (!data.meta || data.meta.appName !== expectedApp) {
+        throw new Error(`Invalid backup file. Expected ${expectedApp} data.`);
       }
 
       // Clear existing state
