@@ -287,30 +287,32 @@ type ParsedData =
                   </button>
                 </div>
 
-                <!-- Virtual Pets -->
-                <div class="flex items-center justify-between">
-                  <div>
-                    <span class="font-medium text-slate-700 dark:text-slate-300">{{
-                      t.map()['LABEL_PETS']
-                    }}</span>
-                    <p class="text-xs text-slate-500">{{ t.map()['LABEL_PETS_DESC'] }}</p>
+                @if (appConfig.appId !== 'synedex') {
+                  <!-- Virtual Pets -->
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <span class="font-medium text-slate-700 dark:text-slate-300">{{
+                        t.map()['LABEL_PETS']
+                      }}</span>
+                      <p class="text-xs text-slate-500">{{ t.map()['LABEL_PETS_DESC'] }}</p>
+                    </div>
+                    <button
+                      (click)="petsService.toggle()"
+                      class="focus:ring-primary relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-slate-900"
+                      [class.bg-primary]="petsService.enabled()"
+                      [class.bg-slate-200]="!petsService.enabled()"
+                      [class.dark:bg-slate-700]="!petsService.enabled()"
+                    >
+                      <span
+                        class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
+                        [class.translate-x-6]="petsService.enabled()"
+                        [class.translate-x-1]="!petsService.enabled()"
+                      ></span>
+                    </button>
                   </div>
-                  <button
-                    (click)="petsService.toggle()"
-                    class="focus:ring-primary relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-slate-900"
-                    [class.bg-primary]="petsService.enabled()"
-                    [class.bg-slate-200]="!petsService.enabled()"
-                    [class.dark:bg-slate-700]="!petsService.enabled()"
-                  >
-                    <span
-                      class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform"
-                      [class.translate-x-6]="petsService.enabled()"
-                      [class.translate-x-1]="!petsService.enabled()"
-                    ></span>
-                  </button>
-                </div>
 
-                <!-- Virtual Pets extra options removed: "Désactiver sur petits écrans" (controle supprimé par demande utilisateur) -->
+                  <!-- Virtual Pets extra options removed: "Désactiver sur petits écrans" (controle supprimé par demande utilisateur) -->
+                }
               </section>
 
               <div class="h-px bg-slate-100 dark:bg-slate-800"></div>

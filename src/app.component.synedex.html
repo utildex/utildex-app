@@ -94,21 +94,6 @@
             <span class="material-symbols-outlined text-xl leading-none"> settings </span>
           </button>
 
-          <button
-            [appBubble]="'BUBBLE_PRELOAD_INFO'"
-            [bubblePos]="'bottom'"
-            (click)="offline.downloadLibrary()"
-            [disabled]="offline.isDownloading()"
-            class="glass-control mr-1 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-slate-500 transition-all hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50 md:flex dark:text-slate-300 dark:hover:text-white"
-            [title]="t.map()['BTN_DOWNLOAD_LIBRARY'] || 'Download Library'"
-          >
-            <span class="material-symbols-outlined text-lg">cloud_download</span>
-            <span class="text-xs font-bold"
-              >{{ offline.isDownloading() ? t.map()['BTN_DOWNLOADING'] : t.map()['BTN_PRELOAD']
-              }}</span
-            >
-          </button>
-
           <a
             [href]="appConfig.githubUrl"
             target="_blank"
@@ -186,40 +171,19 @@
     }
   </header>
 
-  <div class="relative flex flex-1 overflow-hidden">
-    <main class="w-full flex-1 overflow-x-hidden overflow-y-auto">
-      <div class="mx-auto flex min-h-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
-        <router-outlet></router-outlet>
-        <app-footer class="mt-auto w-full"></app-footer>
-      </div>
-    </main>
-
-    <aside
-      class="fixed inset-y-0 right-0 z-50 w-80 transform bg-white shadow-2xl transition-transform duration-300 md:relative md:transform-none md:border-l md:border-slate-200 md:shadow-none dark:bg-slate-900 md:dark:border-slate-800"
-      [class.translate-x-full]="!sidebarOpen()"
-      [class.md:hidden]="!sidebarOpen()"
-      [class.md:block]="sidebarOpen()"
-    >
-      <app-clipboard-history></app-clipboard-history>
-    </aside>
-
-    @if (sidebarOpen()) {
-    <div class="fixed inset-0 z-45 bg-black/20 md:hidden" (click)="sidebarOpen.set(false)"></div>
-    }
-  </div>
+  <main class="relative w-full flex-1 overflow-x-hidden overflow-y-auto">
+    <div class="mx-auto flex min-h-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
+      <router-outlet></router-outlet>
+      <app-footer class="mt-auto w-full"></app-footer>
+    </div>
+  </main>
 
   <app-toast></app-toast>
   <app-network-status></app-network-status>
-  <app-download-status></app-download-status>
   <app-command-palette></app-command-palette>
   <app-error-overlay></app-error-overlay>
 
-  @defer (on idle) {
-  <app-guide></app-guide>
-  <app-dashboard-modals></app-dashboard-modals>
-  } @if (settingsOpen()) { @defer (when settingsOpen()) {
+  @if (settingsOpen()) { @defer (when settingsOpen()) {
   <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
-  } } @defer (on immediate) {
-  <app-virtual-pets></app-virtual-pets>
-  }
+  } }
 </div>

@@ -63,7 +63,7 @@ export class StorageManagerService {
         labelKey: 'CAT_PETS',
         icon: 'pets',
         patterns: [new RegExp(`^${getPrefKey('active-pets')}$`)],
-        apps: ['utildex', 'synedex'],
+        apps: ['utildex'],
       },
       {
         id: 'tools',
