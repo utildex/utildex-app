@@ -172,7 +172,8 @@
   ACTION_DO_IMPORT: 'Importar',
   ACTION_OPEN_FULL_HISTORY: 'Ver historial completo',
   EXPORT_CHOICE_TITLE: 'Exportar datos de Sudoku',
-  EXPORT_CHOICE_DESC: 'Elige como exportar tus preferencias, partida guardada, historial y estadisticas.',
+  EXPORT_CHOICE_DESC:
+    'Elige como exportar tus preferencias, partida guardada, historial y estadisticas.',
   IMPORT_CHOICE_TITLE: 'Importar datos de Sudoku',
   IMPORT_CHOICE_DESC: 'Elige como proporcionar un export previamente generado.',
   EXPORT_TEXT_TITLE: 'Exportar como texto JSON',

@@ -155,8 +155,15 @@ export function runSudokuSelfTests(): RuntimeTestReport {
       const logical = analyzeSudokuLogic(board!);
       assert(logical.solved, 'Expected logical analysis to solve sample puzzle');
       assert(!logical.contradiction, 'Logical analysis should not produce contradiction');
-      assert(logical.stats.nakedSingles + logical.stats.hiddenSingles > 0, 'Expected logical placements');
-      assertEqual(boardToString(board!), original, 'Logical analysis should not mutate input board');
+      assert(
+        logical.stats.nakedSingles + logical.stats.hiddenSingles > 0,
+        'Expected logical placements',
+      );
+      assertEqual(
+        boardToString(board!),
+        original,
+        'Logical analysis should not mutate input board',
+      );
     }),
 
     runCase('solveSudoku solves the known sample puzzle', () => {
@@ -201,7 +208,11 @@ export function runSudokuSelfTests(): RuntimeTestReport {
     runCase('generateSolvedBoard is deterministic for a fixed seed', () => {
       const a = generateSolvedBoard(777777);
       const b = generateSolvedBoard(777777);
-      assertEqual(boardToString(a), boardToString(b), 'Same seed should generate the same solved board');
+      assertEqual(
+        boardToString(a),
+        boardToString(b),
+        'Same seed should generate the same solved board',
+      );
     }),
 
     runCase('generateSudokuForLevel builds a unique playable puzzle', () => {
@@ -224,8 +235,16 @@ export function runSudokuSelfTests(): RuntimeTestReport {
       const a = generateSudokuForLevel(3, { seed: 12345, maxAttempts: 8 });
       const b = generateSudokuForLevel(3, { seed: 12345, maxAttempts: 8 });
 
-      assertEqual(a.puzzleString, b.puzzleString, 'Puzzle generation should be deterministic by seed');
-      assertEqual(a.solutionString, b.solutionString, 'Solution generation should be deterministic by seed');
+      assertEqual(
+        a.puzzleString,
+        b.puzzleString,
+        'Puzzle generation should be deterministic by seed',
+      );
+      assertEqual(
+        a.solutionString,
+        b.solutionString,
+        'Solution generation should be deterministic by seed',
+      );
     }),
 
     runCase('generateSudokuForLevel keeps requested level in canonical seed sweep', () => {
@@ -267,7 +286,10 @@ export function runSudokuSelfTests(): RuntimeTestReport {
       assert(grade.solvable, 'Puzzle should be solvable');
       assert(grade.score >= 1 && grade.score <= 100, 'Score should be within 1..100');
       assert(grade.clueCount > 0, 'Clue count should be positive');
-      assert(grade.levelNumber >= 1 && grade.levelNumber <= 20, 'Level number should be within 1..20');
+      assert(
+        grade.levelNumber >= 1 && grade.levelNumber <= 20,
+        'Level number should be within 1..20',
+      );
       assert(!grade.techniqueStats.usedSearch, 'Sample puzzle should not require search fallback');
     }),
 
@@ -280,7 +302,10 @@ export function runSudokuSelfTests(): RuntimeTestReport {
 
       const parsedPuzzle = parseSudoku(SAMPLE_PUZZLE);
       const parsedSolution = parseSudoku(result.solvedPuzzle!);
-      assert(parsedPuzzle !== null && parsedSolution !== null, 'Expected parseable puzzle/solution');
+      assert(
+        parsedPuzzle !== null && parsedSolution !== null,
+        'Expected parseable puzzle/solution',
+      );
       assert(
         isValidSolvedBoardForPuzzle(parsedPuzzle!, parsedSolution!),
         'run() solution should be valid for input puzzle',

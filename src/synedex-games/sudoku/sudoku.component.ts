@@ -388,18 +388,19 @@ function createEmptyNotes(): Array<Set<number>> {
 export class SudokuComponent implements OnDestroy {
   readonly digits = DIGITS;
   readonly levels = SUDOKU_LEVELS;
-  readonly levelGroups: Array<{ groupName: SudokuGroupName; levels: SudokuLevelDefinition[] }> = (() => {
-    const groups: Array<{ groupName: SudokuGroupName; levels: SudokuLevelDefinition[] }> = [];
-    for (const level of SUDOKU_LEVELS) {
-      let group = groups.find((g) => g.groupName === level.groupName);
-      if (!group) {
-        group = { groupName: level.groupName, levels: [] };
-        groups.push(group);
+  readonly levelGroups: Array<{ groupName: SudokuGroupName; levels: SudokuLevelDefinition[] }> =
+    (() => {
+      const groups: Array<{ groupName: SudokuGroupName; levels: SudokuLevelDefinition[] }> = [];
+      for (const level of SUDOKU_LEVELS) {
+        let group = groups.find((g) => g.groupName === level.groupName);
+        if (!group) {
+          group = { groupName: level.groupName, levels: [] };
+          groups.push(group);
+        }
+        group.levels.push(level);
       }
-      group.levels.push(level);
-    }
-    return groups;
-  })();
+      return groups;
+    })();
   readonly boardIndices = Array.from({ length: 81 }, (_, i) => i);
   readonly isDev = isDevMode();
   private persistence = inject(PersistenceService);
@@ -1212,7 +1213,8 @@ export class SudokuComponent implements OnDestroy {
   }
 
   useHint() {
-    const target = this.cellValue(this.selectedIndex()) === 0 ? this.selectedIndex() : this.nextEmptyIndex();
+    const target =
+      this.cellValue(this.selectedIndex()) === 0 ? this.selectedIndex() : this.nextEmptyIndex();
     if (target < 0) {
       this.gameMessage.set(this.tr('MESSAGE_NO_HINT_NEEDED'));
       this.error.set('');
@@ -1291,7 +1293,9 @@ export class SudokuComponent implements OnDestroy {
   isSameAsSelected(index: number): boolean {
     const selectedValue = this.cellValue(this.selectedIndex());
     return (
-      selectedValue !== 0 && index !== this.selectedIndex() && this.cellValue(index) === selectedValue
+      selectedValue !== 0 &&
+      index !== this.selectedIndex() &&
+      this.cellValue(index) === selectedValue
     );
   }
 

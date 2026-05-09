@@ -258,15 +258,8 @@ function assertHardestTechniqueConsistent(grade: SudokuGrade, label: string): vo
         `${label}: locked-candidates reported but stats.lockedCandidates=0`,
       );
       assert(s.nakedPairs === 0, `${label}: locked-candidates reported but stats.nakedPairs>0`);
-      assert(
-        s.hiddenPairs === 0,
-        `${label}: locked-candidates reported but stats.hiddenPairs>0`,
-      );
-      assertEqual(
-        s.usedSearch,
-        false,
-        `${label}: locked-candidates reported but usedSearch=true`,
-      );
+      assert(s.hiddenPairs === 0, `${label}: locked-candidates reported but stats.hiddenPairs>0`);
+      assertEqual(s.usedSearch, false, `${label}: locked-candidates reported but usedSearch=true`);
       break;
     case 'hidden-single':
       assert(s.hiddenSingles > 0, `${label}: hidden-single reported but stats.hiddenSingles=0`);
@@ -502,11 +495,7 @@ export function runSudokuGraderTests(): GraderTestReport {
 
     runCase('clueCount matches manual count for HARD fixture', () => {
       const grade = gradeSudoku(boardFromString(HARD_PUZZLE));
-      assertEqual(
-        grade.clueCount,
-        manualCountCluesString(HARD_PUZZLE),
-        'HARD clueCount mismatch',
-      );
+      assertEqual(grade.clueCount, manualCountCluesString(HARD_PUZZLE), 'HARD clueCount mismatch');
     }),
 
     runCase('SOLVED board grades as easiest level with technique=none', () => {

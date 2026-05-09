@@ -172,13 +172,15 @@
   ACTION_DO_IMPORT: 'Importer',
   ACTION_OPEN_FULL_HISTORY: 'Voir tout l’historique',
   EXPORT_CHOICE_TITLE: 'Exporter les données Sudoku',
-  EXPORT_CHOICE_DESC: 'Choisissez comment exporter vos préférences, sauvegarde, historique et statistiques.',
+  EXPORT_CHOICE_DESC:
+    'Choisissez comment exporter vos préférences, sauvegarde, historique et statistiques.',
   IMPORT_CHOICE_TITLE: 'Importer des données Sudoku',
   IMPORT_CHOICE_DESC: 'Choisissez comment fournir un export précédemment généré.',
   EXPORT_TEXT_TITLE: 'Exporter en JSON texte',
   IMPORT_TEXT_TITLE: 'Importer depuis un JSON texte',
   CONFIRM_TITLE: 'Êtes-vous sûr ?',
   JOURNEY_HISTORY_TITLE: 'Parties récentes',
-  JOURNEY_HISTORY_EMPTY: 'Aucune partie jouée pour le moment. Lancez un niveau pour commencer votre progression.',
+  JOURNEY_HISTORY_EMPTY:
+    'Aucune partie jouée pour le moment. Lancez un niveau pour commencer votre progression.',
   RESUME_HINT: 'Une partie sauvegardée est en cours.',
 };

@@ -120,16 +120,6 @@ const TECHNIQUE_RANK: Record<SudokuTechnique, number> = {
   search: 6,
 };
 
-const TECHNIQUE_SCORE_BANDS: Record<SudokuTechnique, readonly [number, number]> = {
-  none: [6, 12],
-  'naked-single': [6, 20],
-  'hidden-single': [10, 34],
-  'locked-candidates': [18, 52],
-  'naked-pair': [28, 68],
-  'hidden-pair': [40, 84],
-  search: [64, 100],
-};
-
 const SCORE_BANDS: ReadonlyArray<readonly [number, number]> = [
   [6, 10],
   [10, 14],
@@ -204,11 +194,7 @@ const PEERS: readonly number[][] = Array.from({ length: BOARD_SIZE }, (_, index)
   const col = index % GRID_SIZE;
   const box = Math.floor(row / BOX_SIZE) * BOX_SIZE + Math.floor(col / BOX_SIZE);
 
-  const set = new Set<number>([
-    ...ROW_UNITS[row],
-    ...COL_UNITS[col],
-    ...BOX_UNITS[box],
-  ]);
+  const set = new Set<number>([...ROW_UNITS[row], ...COL_UNITS[col], ...BOX_UNITS[box]]);
   set.delete(index);
   return [...set];
 });
@@ -354,7 +340,12 @@ function createInitialCandidates(board: SudokuBoard): number[] | null {
   return candidates;
 }
 
-function placeValue(board: SudokuBoard, candidates: number[], index: number, digit: number): boolean {
+function placeValue(
+  board: SudokuBoard,
+  candidates: number[],
+  index: number,
+  digit: number,
+): boolean {
   if (board[index] !== 0 && board[index] !== digit) {
     return false;
   }
@@ -381,7 +372,10 @@ function placeValue(board: SudokuBoard, candidates: number[], index: number, dig
   return true;
 }
 
-function applyNakedSingles(board: SudokuBoard, candidates: number[]): { placed: number; valid: boolean } {
+function applyNakedSingles(
+  board: SudokuBoard,
+  candidates: number[],
+): { placed: number; valid: boolean } {
   const placements: Array<[number, number]> = [];
 
   for (let index = 0; index < BOARD_SIZE; index += 1) {
@@ -409,7 +403,10 @@ function applyNakedSingles(board: SudokuBoard, candidates: number[]): { placed: 
   return { placed: placements.length, valid: true };
 }
 
-function applyHiddenSingles(board: SudokuBoard, candidates: number[]): { placed: number; valid: boolean } {
+function applyHiddenSingles(
+  board: SudokuBoard,
+  candidates: number[],
+): { placed: number; valid: boolean } {
   const placements = new Map<number, number>();
 
   for (const unit of ALL_UNITS) {
@@ -525,7 +522,10 @@ function applyLockedCandidates(
   return { applications, valid: true };
 }
 
-function applyNakedPairs(board: SudokuBoard, candidates: number[]): { applications: number; valid: boolean } {
+function applyNakedPairs(
+  board: SudokuBoard,
+  candidates: number[],
+): { applications: number; valid: boolean } {
   let applications = 0;
 
   for (const unit of ALL_UNITS) {
@@ -582,10 +582,7 @@ function applyNakedPairs(board: SudokuBoard, candidates: number[]): { applicatio
 
 function sameTwoCells(cellsA: number[], cellsB: number[]): boolean {
   return (
-    cellsA.length === 2 &&
-    cellsB.length === 2 &&
-    cellsA[0] === cellsB[0] &&
-    cellsA[1] === cellsB[1]
+    cellsA.length === 2 && cellsB.length === 2 && cellsA[0] === cellsB[0] && cellsA[1] === cellsB[1]
   );
 }
 
@@ -715,11 +712,7 @@ function levelBumpFromPressure(pressure: number): number {
 function calibratedScoreForLevel(level: SudokuLevelDefinition, pressure: number): number {
   const span = Math.max(1, level.scoreMax - level.scoreMin);
   const pressureRatio = clamp(pressure / 10, 0, 1);
-  return clamp(
-    Math.round(level.scoreMin + pressureRatio * span),
-    level.scoreMin,
-    level.scoreMax,
-  );
+  return clamp(Math.round(level.scoreMin + pressureRatio * span), level.scoreMin, level.scoreMax);
 }
 
 function generationDistance(target: SudokuLevelDefinition, grade: SudokuGrade): number {
@@ -1267,7 +1260,13 @@ export function generateSudokuForLevel(
       const bandDistance = generationBandDistance(level, grade);
       if (bandDistance < bestLevelMatchDistance) {
         bestLevelMatchDistance = bandDistance;
-        bestLevelMatchCandidate = buildGeneratedPuzzle(level, puzzleForGrade, solution, grade, attemptSeed);
+        bestLevelMatchCandidate = buildGeneratedPuzzle(
+          level,
+          puzzleForGrade,
+          solution,
+          grade,
+          attemptSeed,
+        );
       }
     }
 

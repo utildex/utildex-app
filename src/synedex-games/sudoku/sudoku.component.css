@@ -532,10 +532,228 @@ textarea:focus-visible,
     width: 100%;
   }
 }
-.sudoku-menu__header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}.sudoku-menu__heading{flex:1 1 auto;min-width:0}.sudoku-menu__heading p{margin:.15rem 0 .5rem}.sudoku-progress-line{display:inline-block;background:var(--card2,rgba(255,255,255,.06));padding:.35rem .75rem;border-radius:999px;font-size:.85rem;color:var(--muted,#aaa)}.sudoku-icon-button--ghost{border-color:transparent;background:transparent}.sudoku-mode-pill{display:inline-flex;align-self:center;background:var(--card2,rgba(255,255,255,.06));padding:.25rem;border-radius:999px;gap:.25rem;margin:.5rem auto}.sudoku-mode-pill button{appearance:none;border:0;background:transparent;color:inherit;padding:.45rem 1.1rem;border-radius:999px;font:inherit;font-weight:600;cursor:pointer;transition:background .15s,color .15s}.sudoku-mode-pill button.is-active{background:var(--user);color:#fff}.sudoku-field--centered{max-width:420px;margin:0 auto;width:100%}.sudoku-quick-stage,.sudoku-journey-stage{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.5rem 0}.sudoku-button--hero{font-size:1.05rem;padding:.85rem 2rem;display:inline-flex;align-items:center;gap:.5rem;border-radius:999px}.sudoku-journey-stage{padding-top:1rem}.sudoku-journey-history{width:100%;max-width:520px;position:relative;padding-top:.5rem}.sudoku-journey-history h2{font-size:1rem;margin:0 0 .5rem}.sudoku-journey-history__list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.4rem;max-height:280px;overflow:hidden;-webkit-mask-image:linear-gradient(to bottom,#000 60%,transparent 100%);mask-image:linear-gradient(to bottom,#000 60%,transparent 100%)}.sudoku-journey-history__list li{display:flex;justify-content:space-between;gap:.75rem;background:var(--card2,rgba(255,255,255,.04));border:1px solid var(--line);border-radius:.5rem;padding:.5rem .75rem;font-size:.9rem}.sudoku-journey-history__list li span{color:var(--muted,#aaa);font-size:.8rem;white-space:nowrap}.sudoku-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:1rem;animation:sudoku-fade-in .15s ease-out}@keyframes sudoku-fade-in{from{opacity:0}to{opacity:1}}.sudoku-modal__panel{background:var(--card);border:1px solid var(--line);border-radius:.75rem;padding:1.25rem;max-width:560px;width:100%;max-height:85vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:1rem}.sudoku-modal__panel--narrow{max-width:420px}.sudoku-modal__header{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-bottom:.25rem}.sudoku-modal__header h2{margin:0;font-size:1.1rem}.sudoku-modal__section{display:flex;flex-direction:column;gap:.5rem}.sudoku-modal__section h3{margin:0;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted,#aaa)}.sudoku-modal__actions{display:flex;flex-wrap:wrap;gap:.5rem}.sudoku-modal__actions--end{justify-content:flex-end}.sudoku-modal__desc{margin:0;color:var(--muted,#bbb);font-size:.9rem}.sudoku-modal__choices{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}.sudoku-choice-card{appearance:none;background:var(--card2,rgba(255,255,255,.04));border:1px solid var(--line);border-radius:.6rem;padding:1.25rem .75rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;cursor:pointer;color:inherit;font:inherit;transition:border-color .15s,background .15s}.sudoku-choice-card:hover{border-color:var(--user);background:var(--card2,rgba(255,255,255,.08))}.sudoku-choice-card .material-symbols-outlined{font-size:2rem;color:var(--user)}@media (max-width:480px){.sudoku-modal__choices{grid-template-columns:1fr}}
+.sudoku-menu__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.sudoku-menu__heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sudoku-menu__heading p {
+  margin: 0.15rem 0 0.5rem;
+}
+.sudoku-progress-line {
+  display: inline-block;
+  background: var(--card2, rgba(255, 255, 255, 0.06));
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--muted, #aaa);
+}
+.sudoku-icon-button--ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.sudoku-mode-pill {
+  display: inline-flex;
+  align-self: center;
+  background: var(--card2, rgba(255, 255, 255, 0.06));
+  padding: 0.25rem;
+  border-radius: 999px;
+  gap: 0.25rem;
+  margin: 0.5rem auto;
+}
+.sudoku-mode-pill button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.sudoku-mode-pill button.is-active {
+  background: var(--user);
+  color: #fff;
+}
+.sudoku-field--centered {
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+}
+.sudoku-quick-stage,
+.sudoku-journey-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
+.sudoku-button--hero {
+  font-size: 1.05rem;
+  padding: 0.85rem 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+}
+.sudoku-journey-stage {
+  padding-top: 1rem;
+}
+.sudoku-journey-history {
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  padding-top: 0.5rem;
+}
+.sudoku-journey-history h2 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+.sudoku-journey-history__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 280px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+.sudoku-journey-history__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--card2, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+.sudoku-journey-history__list li span {
+  color: var(--muted, #aaa);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.sudoku-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: sudoku-fade-in 0.15s ease-out;
+}
+@keyframes sudoku-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sudoku-modal__panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sudoku-modal__panel--narrow {
+  max-width: 420px;
+}
+.sudoku-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.sudoku-modal__header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.sudoku-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sudoku-modal__section h3 {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted, #aaa);
+}
+.sudoku-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.sudoku-modal__actions--end {
+  justify-content: flex-end;
+}
+.sudoku-modal__desc {
+  margin: 0;
+  color: var(--muted, #bbb);
+  font-size: 0.9rem;
+}
+.sudoku-modal__choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.sudoku-choice-card {
+  appearance: none;
+  background: var(--card2, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  padding: 1.25rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.sudoku-choice-card:hover {
+  border-color: var(--user);
+  background: var(--card2, rgba(255, 255, 255, 0.08));
+}
+.sudoku-choice-card .material-symbols-outlined {
+  font-size: 2rem;
+  color: var(--user);
+}
+@media (max-width: 480px) {
+  .sudoku-modal__choices {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* === Menu glow-up (begin) === */
-
 
 /* === Sudoku menu (Synedex calm design) === */
 
@@ -567,10 +785,14 @@ textarea:focus-visible,
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 14px 36px -24px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 14px 36px -24px rgba(0, 0, 0, 0.4);
 }
 :host-context(.dark) .sudoku-menu {
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 18px 48px -28px rgba(0, 0, 0, 0.7);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.02) inset,
+    0 18px 48px -28px rgba(0, 0, 0, 0.7);
 }
 
 /* Header */
@@ -605,7 +827,9 @@ textarea:focus-visible,
   height: 2.25rem;
   border-radius: 8px;
   color: var(--muted);
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 .sudoku-icon-button--ghost:hover {
   background: var(--related);
@@ -626,9 +850,13 @@ textarea:focus-visible,
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--muted);
-  transition: color 0.15s ease, background-color 0.15s ease;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
 }
-.sudoku-mode-pill button:hover { color: var(--text); }
+.sudoku-mode-pill button:hover {
+  color: var(--text);
+}
 .sudoku-mode-pill button.is-active {
   background: var(--user);
   color: #fff;
@@ -676,13 +904,18 @@ textarea:focus-visible,
   border-color: var(--user);
   color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-  transition: filter 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+  transition:
+    filter 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.15s ease;
 }
 .sudoku-button--hero:hover {
   filter: brightness(1.05);
   box-shadow: 0 4px 12px -4px color-mix(in oklab, var(--user) 50%, transparent);
 }
-.sudoku-button--hero:active { transform: translateY(1px); }
+.sudoku-button--hero:active {
+  transform: translateY(1px);
+}
 .sudoku-button--hero .material-symbols-outlined {
   font-size: 1.15rem;
 }
@@ -762,8 +995,12 @@ textarea:focus-visible,
 }
 
 /* Settings modal: subtle, consistent. No gradient titles. */
-.sudoku-modal { background: rgba(0, 0, 0, 0.45); }
-:host-context(.dark) .sudoku-modal { background: rgba(0, 0, 0, 0.6); }
+.sudoku-modal {
+  background: rgba(0, 0, 0, 0.45);
+}
+:host-context(.dark) .sudoku-modal {
+  background: rgba(0, 0, 0, 0.6);
+}
 .sudoku-modal__panel {
   border-radius: 12px;
   border-color: var(--line);
@@ -776,21 +1013,27 @@ textarea:focus-visible,
   font-weight: 700;
   color: var(--text);
 }
-.sudoku-modal__section { gap: 0.45rem; }
+.sudoku-modal__section {
+  gap: 0.45rem;
+}
 .sudoku-modal__section h3 {
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   color: var(--muted);
 }
-.sudoku-modal__actions { gap: 0.4rem; }
+.sudoku-modal__actions {
+  gap: 0.4rem;
+}
 
 /* Choice cards (export/import): calm hover */
 .sudoku-choice-card {
   background: var(--field);
   padding: 1rem 0.75rem;
   border-radius: 8px;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
 }
 .sudoku-choice-card:hover {
   border-color: color-mix(in oklab, var(--user) 50%, var(--line));
@@ -806,11 +1049,19 @@ textarea:focus-visible,
   animation: sudoku-menu-in 220ms ease-out;
 }
 @keyframes sudoku-menu-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sudoku-menu { animation: none; }
+  .sudoku-menu {
+    animation: none;
+  }
 }
 
 /* Mobile: keep tight, no extra void */
@@ -828,6 +1079,8 @@ textarea:focus-visible,
     flex-direction: row;
     align-items: flex-start;
   }
-  .sudoku-menu__heading h1 { font-size: 1.4rem; }
+  .sudoku-menu__heading h1 {
+    font-size: 1.4rem;
+  }
 }
 /* === end sudoku menu === */
