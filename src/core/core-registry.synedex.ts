@@ -8,6 +8,11 @@ export interface CoreRegistryEntry {
 }
 
 export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
+  sudoku: {
+    appName: 'synedex',
+    contract: () => import('../synedex-games/sudoku/sudoku.contract').then((m) => m.contract),
+    kernel: () => import('../synedex-games/sudoku/sudoku.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {

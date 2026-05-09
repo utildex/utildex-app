@@ -16,6 +16,7 @@ export interface ToolRegistryEntry {
 type ComponentLoader = () => Promise<Type<unknown>>;
 
 const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
+  sudoku: () => import('../synedex-games/sudoku/sudoku.component').then((m) => m.SudokuComponent),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {
