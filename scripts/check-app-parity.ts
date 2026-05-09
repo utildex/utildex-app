@@ -5,6 +5,10 @@
  *   - Every key in CORE_REGISTRY must have a matching entry in TOOL_COMPONENT_LOADERS.
  *   - Every key in TOOL_COMPONENT_LOADERS must have a matching entry in CORE_REGISTRY.
  *
+ * Also verifies that every Utildex "base" file in the dual-app split has its
+ * matching `*.synedex.*` sibling (and vice-versa) so contributors cannot
+ * accidentally remove one half of the pair.
+ *
  * Checked for both utildex and synedex variants.
  * Run via: tsx scripts/check-app-parity.ts
  */
@@ -108,6 +112,59 @@ function checkRegistryParity(
   return ok;
 }
 
+/**
+ * Files in the dual-app split that MUST exist as paired siblings.
+ * Each entry is the Utildex "base" path; the Synedex variant is derived by
+ * inserting `.synedex` before the final extension.
+ *
+ * Update this list when adding a new file-replacement pair to angular.json.
+ */
+const DUAL_APP_FILE_PAIRS: string[] = [
+  'app.config.ts',
+  'index.html',
+  'index.tsx',
+  'manifest.webmanifest',
+  'ngsw-config.json',
+  'src/app.component.html',
+  'src/app.component.ts',
+  'src/app.routes.ts',
+  'src/core/core-registry.ts',
+  'src/core/tool-registry.ts',
+  'src/data/tool-space-registry.ts',
+  'src/services/offline-route-loaders.ts',
+];
+
+function toSynedexVariant(basePath: string): string {
+  const ext = path.extname(basePath); // e.g. '.ts'
+  const stem = basePath.slice(0, -ext.length);
+  return `${stem}.synedex${ext}`;
+}
+
+function checkDualAppFilePairs(): boolean {
+  const cwd = process.cwd();
+  const missing: string[] = [];
+
+  for (const base of DUAL_APP_FILE_PAIRS) {
+    const synedex = toSynedexVariant(base);
+    if (!fs.existsSync(path.join(cwd, base))) missing.push(base);
+    if (!fs.existsSync(path.join(cwd, synedex))) missing.push(synedex);
+  }
+
+  if (missing.length > 0) {
+    console.error(
+      '[ERROR] [dual-app] Missing paired file(s) — every entry in DUAL_APP_FILE_PAIRS\n' +
+        '        must exist as both the Utildex base file and the Synedex variant:\n' +
+        missing.map((p) => `  - ${p}`).join('\n'),
+    );
+    return false;
+  }
+
+  console.log(
+    `[OK]    [dual-app] File-pair parity passed (${DUAL_APP_FILE_PAIRS.length} pairs)`,
+  );
+  return true;
+}
+
 async function main() {
   console.log('Starting App Registry Parity Check...\n');
   let success = true;
@@ -131,6 +188,10 @@ async function main() {
       'synedex',
     )
   ) {
+    success = false;
+  }
+
+  if (!checkDualAppFilePairs()) {
     success = false;
   }
 
