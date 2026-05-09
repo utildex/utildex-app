@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { getToolComponent } from '../../core/tool-registry';
 import { ToolService } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
+import { APP_CONFIG } from '../../core/app.config';
 
 @Component({
   selector: 'app-tool-host',
@@ -87,6 +88,6 @@ export class ToolHostComponent {
   }
 
   goBack() {
-    this.router.navigate(['/', this.i18n.currentLang(), 'tools']);
+    this.router.navigate(['/', this.i18n.currentLang(), APP_CONFIG.toolsRouteSegment]);
   }
 }

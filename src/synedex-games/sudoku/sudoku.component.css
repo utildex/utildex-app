@@ -1,0 +1,1086 @@
+:host {
+  display: block;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.sudoku-shell,
+.sudoku-widget {
+  --page: #f7f3ea;
+  --card: #fff;
+  --cell: #fff;
+  --field: #fbfaf7;
+  --text: #262626;
+  --muted: #6f6b63;
+  --line: #d7d2c7;
+  --box: #4f5053;
+  --user: #315f86;
+  --select: #dbeafe;
+  --related: #eef3f6;
+  --same: #e7edf6;
+  --bad: #c76b62;
+  --bad-bg: #f9e3e0;
+  --ok: #2f7d5b;
+  --focus: #2563eb;
+  color: var(--text);
+}
+:host-context(.dark) .sudoku-shell,
+:host-context(.dark) .sudoku-widget {
+  --page: #161616;
+  --card: #252525;
+  --cell: #2d2d2d;
+  --field: #303030;
+  --text: #f1f1ed;
+  --muted: #9ca8b3;
+  --line: #656565;
+  --box: #c9c9c4;
+  --user: #91b9df;
+  --select: #3d5364;
+  --related: #343d46;
+  --same: #3d4650;
+  --bad: #d58a7d;
+  --bad-bg: #4b302e;
+  --ok: #8fc7a4;
+  --focus: #93c5fd;
+}
+.sudoku-shell {
+  min-height: min(86vh, 58rem);
+  width: min(100%, 82rem);
+  margin: auto;
+  border-radius: 16px;
+  background: var(--page);
+  padding: 1rem;
+}
+.sudoku-widget,
+.sudoku-game-card,
+.sudoku-data-panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.sudoku-widget,
+.sudoku-data-panel {
+  padding: 1rem;
+}
+.sudoku-widget {
+  height: 100%;
+}
+.sudoku-menu,
+.sudoku-data,
+.sudoku-play,
+.sudoku-data-panel {
+  display: grid;
+  gap: 1rem;
+}
+.sudoku-menu {
+  max-width: 44rem;
+  margin: auto;
+  padding: 1rem 0;
+}
+.sudoku-menu__header,
+.sudoku-surface-header,
+.sudoku-panel-heading,
+.sudoku-game-header,
+.sudoku-game-footer,
+.sudoku-settings__header,
+.sudoku-seed-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h1 {
+  font-size: 2rem;
+  line-height: 1.05;
+}
+h2 {
+  font-size: 1rem;
+}
+h3 {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+p,
+.sudoku-empty,
+.sudoku-stat-grid span {
+  color: var(--muted);
+  line-height: 1.5;
+}
+.sudoku-progress-line,
+.sudoku-resume-note,
+.sudoku-timer,
+.sudoku-alert {
+  border-radius: 999px;
+  background: var(--related);
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 650;
+  padding: 0.5rem 0.75rem;
+}
+.sudoku-alert {
+  border-radius: 8px;
+}
+.sudoku-alert--error {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+.sudoku-alert--success {
+  color: var(--ok);
+}
+select,
+input,
+textarea {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+}
+select,
+textarea {
+  width: 100%;
+  padding: 0.65rem;
+}
+.sudoku-field,
+.sudoku-textarea-field {
+  display: grid;
+  gap: 0.4rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+textarea {
+  min-height: 10rem;
+  resize: vertical;
+  font:
+    0.78rem/1.45 ui-monospace,
+    Consolas,
+    monospace;
+}
+.sudoku-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.sudoku-switch input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--user);
+}
+.sudoku-primary-actions,
+.sudoku-tertiary-actions,
+.sudoku-migration-actions,
+.sudoku-settings__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.sudoku-button,
+.sudoku-link-button,
+.sudoku-file-button,
+.sudoku-icon-button,
+.sudoku-tabs button,
+.sudoku-keypad button,
+.sudoku-cell,
+.sudoku-segmented button {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+  font-weight: 650;
+}
+.sudoku-button,
+.sudoku-file-button {
+  min-height: 2.35rem;
+  padding: 0.55rem 0.8rem;
+}
+.sudoku-button--primary,
+.sudoku-tabs button.is-active,
+.sudoku-button.is-active,
+.sudoku-keypad button.is-active,
+.sudoku-segmented button.is-active {
+  border-color: var(--user);
+  background: var(--user);
+  color: #fff;
+}
+.sudoku-link-button {
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+  padding: 0.45rem;
+}
+.sudoku-button--danger {
+  color: var(--bad);
+}
+.sudoku-icon-button {
+  display: grid;
+  min-width: 2.35rem;
+  min-height: 2.35rem;
+  place-items: center;
+}
+.sudoku-button:disabled {
+  opacity: 0.45;
+}
+.sudoku-game-card {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+}
+.sudoku-game-header {
+  align-items: center;
+  flex-wrap: wrap;
+}
+.sudoku-game-header h1 {
+  font-size: 1.35rem;
+}
+.sudoku-game-header p {
+  font-weight: 650;
+}
+.sudoku-game-title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sudoku-timer-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.sudoku-new-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.sudoku-icon-button.is-active {
+  border-color: var(--user);
+  background: var(--user);
+  color: #fff;
+}
+.sudoku-settings__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--card);
+  padding: 0.25rem 0 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+.sudoku-timer {
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.sudoku-game-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 18rem);
+  gap: 1rem;
+  align-items: start;
+}
+.sudoku-board {
+  display: grid;
+  aspect-ratio: 1;
+  width: min(100%, 48rem, calc(100vh - 9rem));
+  margin: auto;
+  grid-template: repeat(9, 1fr) / repeat(9, 1fr);
+  overflow: hidden;
+  border: 2px solid var(--box);
+  background: var(--box);
+}
+.sudoku-cell {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  place-items: center;
+  border-radius: 0;
+  border-color: var(--line);
+  background: var(--cell);
+  font-size: 2rem;
+  line-height: 1;
+}
+.sudoku-cell.is-related {
+  background: var(--related);
+}
+.sudoku-cell.is-same {
+  background: var(--same);
+}
+.sudoku-cell.is-selected {
+  z-index: 2;
+  background: var(--select);
+  outline: 3px solid var(--focus);
+  outline-offset: -3px;
+}
+.sudoku-cell.is-given {
+  color: var(--text);
+  font-weight: 800;
+}
+.sudoku-cell.has-value:not(.is-given) {
+  color: var(--user);
+}
+.sudoku-cell.has-conflict {
+  color: var(--bad);
+  background: var(--bad-bg);
+}
+.sudoku-cell.box-edge-right {
+  border-right-width: 2px;
+  border-right-color: var(--box);
+}
+.sudoku-cell.box-edge-bottom {
+  border-bottom-width: 2px;
+  border-bottom-color: var(--box);
+}
+.sudoku-notes {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  color: var(--muted);
+  font-size: 0.66rem;
+  line-height: 1;
+}
+.sudoku-notes span {
+  display: grid;
+  place-items: center;
+}
+.sudoku-play-controls {
+  display: grid;
+  gap: 0.75rem;
+}
+.sudoku-toolbar,
+.sudoku-keypad,
+.sudoku-remaining,
+.sudoku-stat-grid {
+  display: grid;
+  gap: 0.45rem;
+}
+.sudoku-toolbar {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.sudoku-keypad {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.sudoku-keypad button {
+  aspect-ratio: 1.3;
+  font-size: 1.15rem;
+}
+.sudoku-remaining {
+  grid-template-columns: repeat(3, 1fr);
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.sudoku-game-footer {
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line);
+  padding-top: 0.7rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+.sudoku-settings {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: stretch end;
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: 10px;
+}
+.sudoku-settings__panel {
+  display: grid;
+  gap: 0.9rem;
+  width: min(100%, 25rem);
+  max-height: 100%;
+  overflow: auto;
+  background: var(--card);
+  border-left: 1px solid var(--line);
+  padding: 1rem;
+}
+.sudoku-settings__section {
+  display: grid;
+  gap: 0.7rem;
+  border-top: 1px solid var(--line);
+  padding-top: 0.85rem;
+}
+.sudoku-segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  padding: 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--field);
+}
+.sudoku-segmented button {
+  border-color: transparent;
+  padding: 0.5rem;
+}
+.sudoku-setup,
+.sudoku-stat-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.sudoku-tabs {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-self: flex-start;
+  border-radius: 9px;
+  background: var(--field);
+  padding: 0.3rem;
+}
+.sudoku-tabs button {
+  border-color: transparent;
+  padding: 0.5rem 0.75rem;
+}
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+.sudoku-file-button:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+@media (max-width: 980px) {
+  .sudoku-game-main {
+    grid-template-columns: 1fr;
+  }
+  .sudoku-board {
+    width: min(100%, 42rem, calc(100vh - 12rem));
+  }
+  .sudoku-play-controls {
+    max-width: 42rem;
+    width: 100%;
+    margin: auto;
+  }
+  .sudoku-toolbar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .sudoku-keypad {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+  .sudoku-keypad button {
+    aspect-ratio: 1;
+  }
+  .sudoku-toolbar--bottom {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 700px) {
+  .sudoku-shell {
+    min-height: 100vh;
+    border-radius: 0;
+    padding: 0.65rem;
+  }
+  .sudoku-menu__header,
+  .sudoku-surface-header,
+  .sudoku-panel-heading,
+  .sudoku-game-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sudoku-game-card {
+    padding: 0.7rem;
+  }
+  .sudoku-game-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+  }
+  .sudoku-game-header h1 {
+    font-size: 1.1rem;
+  }
+  .sudoku-board {
+    width: min(100%, calc(100vh - 15rem));
+  }
+  .sudoku-cell {
+    font-size: 1.35rem;
+  }
+  .sudoku-notes {
+    font-size: 0.48rem;
+  }
+  .sudoku-toolbar,
+  .sudoku-setup,
+  .sudoku-stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .sudoku-keypad {
+    position: sticky;
+    bottom: 0.4rem;
+    z-index: 5;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--card);
+    padding: 0.35rem;
+  }
+  .sudoku-remaining {
+    grid-template-columns: repeat(9, 1fr);
+  }
+  .sudoku-settings {
+    position: fixed;
+    border-radius: 0;
+  }
+  .sudoku-settings__panel {
+    width: 100%;
+  }
+}
+.sudoku-menu__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.sudoku-menu__heading {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.sudoku-menu__heading p {
+  margin: 0.15rem 0 0.5rem;
+}
+.sudoku-progress-line {
+  display: inline-block;
+  background: var(--card2, rgba(255, 255, 255, 0.06));
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--muted, #aaa);
+}
+.sudoku-icon-button--ghost {
+  border-color: transparent;
+  background: transparent;
+}
+.sudoku-mode-pill {
+  display: inline-flex;
+  align-self: center;
+  background: var(--card2, rgba(255, 255, 255, 0.06));
+  padding: 0.25rem;
+  border-radius: 999px;
+  gap: 0.25rem;
+  margin: 0.5rem auto;
+}
+.sudoku-mode-pill button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+}
+.sudoku-mode-pill button.is-active {
+  background: var(--user);
+  color: #fff;
+}
+.sudoku-field--centered {
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+}
+.sudoku-quick-stage,
+.sudoku-journey-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
+.sudoku-button--hero {
+  font-size: 1.05rem;
+  padding: 0.85rem 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+}
+.sudoku-journey-stage {
+  padding-top: 1rem;
+}
+.sudoku-journey-history {
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  padding-top: 0.5rem;
+}
+.sudoku-journey-history h2 {
+  font-size: 1rem;
+  margin: 0 0 0.5rem;
+}
+.sudoku-journey-history__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-height: 280px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
+}
+.sudoku-journey-history__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: var(--card2, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+}
+.sudoku-journey-history__list li span {
+  color: var(--muted, #aaa);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.sudoku-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: sudoku-fade-in 0.15s ease-out;
+}
+@keyframes sudoku-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sudoku-modal__panel {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  max-width: 560px;
+  width: 100%;
+  max-height: 85vh;
+  overflow: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sudoku-modal__panel--narrow {
+  max-width: 420px;
+}
+.sudoku-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.sudoku-modal__header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.sudoku-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.sudoku-modal__section h3 {
+  margin: 0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted, #aaa);
+}
+.sudoku-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.sudoku-modal__actions--end {
+  justify-content: flex-end;
+}
+.sudoku-modal__desc {
+  margin: 0;
+  color: var(--muted, #bbb);
+  font-size: 0.9rem;
+}
+.sudoku-modal__choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.sudoku-choice-card {
+  appearance: none;
+  background: var(--card2, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  padding: 1.25rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.sudoku-choice-card:hover {
+  border-color: var(--user);
+  background: var(--card2, rgba(255, 255, 255, 0.08));
+}
+.sudoku-choice-card .material-symbols-outlined {
+  font-size: 2rem;
+  color: var(--user);
+}
+@media (max-width: 480px) {
+  .sudoku-modal__choices {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Menu glow-up (begin) === */
+
+/* === Sudoku menu (Synedex calm design) === */
+
+/* Menu screen: shell becomes a vertically-centered stage so the menu card
+   sits in the optical middle of the viewport instead of floating at the top
+   over a sea of empty space. */
+.sudoku-shell:has(.sudoku-menu) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min(86vh, 58rem);
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Inner menu = the actual card. Sized to its content, calm rhythm. */
+.sudoku-menu {
+  width: min(100%, 32rem);
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 1.35rem;
+  gap: 1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 14px 36px -24px rgba(0, 0, 0, 0.4);
+}
+:host-context(.dark) .sudoku-menu {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.02) inset,
+    0 18px 48px -28px rgba(0, 0, 0, 0.7);
+}
+
+/* Header */
+.sudoku-menu__header {
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.sudoku-menu__heading h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.sudoku-menu__heading p {
+  margin: 0.2rem 0 0.55rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+.sudoku-progress-line {
+  background: var(--related);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 0.3rem 0.7rem;
+}
+
+/* Settings cog: quiet ghost. */
+.sudoku-icon-button--ghost {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 8px;
+  color: var(--muted);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+.sudoku-icon-button--ghost:hover {
+  background: var(--related);
+  color: var(--text);
+}
+
+/* Mode pill: clean segmented control */
+.sudoku-mode-pill {
+  align-self: center;
+  background: var(--field);
+  border: 1px solid var(--line);
+  padding: 0.2rem;
+  gap: 0.15rem;
+  margin: 0.25rem auto 0;
+}
+.sudoku-mode-pill button {
+  padding: 0.4rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+.sudoku-mode-pill button:hover {
+  color: var(--text);
+}
+.sudoku-mode-pill button.is-active {
+  background: var(--user);
+  color: #fff;
+  box-shadow: none;
+}
+
+/* Level field */
+.sudoku-field--centered {
+  max-width: 100%;
+  gap: 0.35rem;
+  text-align: left;
+}
+.sudoku-field--centered > span {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.sudoku-field--centered select {
+  padding: 0.6rem 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+  text-align-last: left;
+}
+.sudoku-field--centered select:hover {
+  border-color: color-mix(in oklab, var(--user) 45%, var(--line));
+}
+
+/* Stages: tighter, no excessive vertical padding. */
+.sudoku-quick-stage,
+.sudoku-journey-stage {
+  gap: 0.65rem;
+  padding: 0.5rem 0 0.25rem;
+}
+
+/* Primary action: solid accent, calm. No pulse, no rainbow. */
+.sudoku-button--hero {
+  font-size: 0.98rem;
+  font-weight: 700;
+  padding: 0.7rem 1.5rem;
+  gap: 0.4rem;
+  border-radius: 10px;
+  background: var(--user);
+  border-color: var(--user);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transition:
+    filter 0.15s ease,
+    transform 0.12s ease,
+    box-shadow 0.15s ease;
+}
+.sudoku-button--hero:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 4px 12px -4px color-mix(in oklab, var(--user) 50%, transparent);
+}
+.sudoku-button--hero:active {
+  transform: translateY(1px);
+}
+.sudoku-button--hero .material-symbols-outlined {
+  font-size: 1.15rem;
+}
+
+/* Resume link: low-emphasis, readable. */
+.sudoku-quick-stage .sudoku-link-button,
+.sudoku-journey-stage .sudoku-link-button {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+}
+.sudoku-quick-stage .sudoku-link-button:hover,
+.sudoku-journey-stage .sudoku-link-button:hover {
+  background: var(--related);
+  color: var(--text);
+}
+
+/* Alerts: calm, color-coded but soft */
+.sudoku-menu .sudoku-alert {
+  border-radius: 8px;
+  padding: 0.55rem 0.8rem;
+  font-size: 0.83rem;
+  font-weight: 500;
+  text-align: center;
+}
+.sudoku-menu .sudoku-alert--info {
+  background: var(--related);
+  color: var(--text);
+}
+.sudoku-menu .sudoku-alert--warning {
+  background: color-mix(in oklab, var(--bad-bg) 70%, var(--related));
+  color: var(--bad);
+}
+
+/* Journey history block */
+.sudoku-journey-history {
+  margin-top: 0.5rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+}
+.sudoku-journey-history h2 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+  text-align: left;
+}
+.sudoku-journey-history__list {
+  gap: 0.3rem;
+  max-height: 220px;
+}
+.sudoku-journey-history__list li {
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.85rem;
+}
+.sudoku-journey-history__list li strong {
+  font-weight: 600;
+  color: var(--text);
+}
+.sudoku-journey-history__list li span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.sudoku-journey-history > .sudoku-link-button {
+  display: inline-block;
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+.sudoku-journey-history > .sudoku-link-button:hover {
+  color: var(--text);
+}
+
+/* Settings modal: subtle, consistent. No gradient titles. */
+.sudoku-modal {
+  background: rgba(0, 0, 0, 0.45);
+}
+:host-context(.dark) .sudoku-modal {
+  background: rgba(0, 0, 0, 0.6);
+}
+.sudoku-modal__panel {
+  border-radius: 12px;
+  border-color: var(--line);
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.45);
+  padding: 1.1rem;
+  gap: 0.85rem;
+}
+.sudoku-modal__header h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.sudoku-modal__section {
+  gap: 0.45rem;
+}
+.sudoku-modal__section h3 {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.sudoku-modal__actions {
+  gap: 0.4rem;
+}
+
+/* Choice cards (export/import): calm hover */
+.sudoku-choice-card {
+  background: var(--field);
+  padding: 1rem 0.75rem;
+  border-radius: 8px;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+.sudoku-choice-card:hover {
+  border-color: color-mix(in oklab, var(--user) 50%, var(--line));
+  background: color-mix(in oklab, var(--user) 6%, var(--field));
+}
+.sudoku-choice-card .material-symbols-outlined {
+  font-size: 1.6rem;
+  color: var(--user);
+}
+
+/* Tiny entrance for the menu only. Subtle. */
+.sudoku-menu {
+  animation: sudoku-menu-in 220ms ease-out;
+}
+@keyframes sudoku-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sudoku-menu {
+    animation: none;
+  }
+}
+
+/* Mobile: keep tight, no extra void */
+@media (max-width: 700px) {
+  .sudoku-shell:has(.sudoku-menu) {
+    min-height: calc(100vh - 6rem);
+    padding: 1rem 0.75rem;
+  }
+  .sudoku-menu {
+    width: 100%;
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .sudoku-menu__header {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .sudoku-menu__heading h1 {
+    font-size: 1.4rem;
+  }
+}
+/* === end sudoku menu === */

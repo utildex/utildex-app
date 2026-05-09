@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DB_STORES } from '../core/storage-keys';
+import { APP_CONFIG } from '../core/app.config';
 
 export interface DbRecord {
   id?: number;
@@ -12,7 +13,7 @@ export interface DbRecord {
   providedIn: 'root',
 })
 export class DbService {
-  private dbName = 'utildex-db';
+  private readonly dbName = `${APP_CONFIG.appId as string}-db`;
   private version = 2; // Bumped Schema Version
   private dbPromise: Promise<IDBDatabase> | null = null;
 

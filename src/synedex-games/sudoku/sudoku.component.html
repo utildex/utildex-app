@@ -1,0 +1,1078 @@
+@if (isWidget()) {
+  <div class="sudoku-widget">
+    <div class="sudoku-widget__title">{{ t.map()['TITLE'] }}</div>
+    <div class="sudoku-widget__copy">{{ t.map()['WIDGET_COPY'] }}</div>
+    <div class="sudoku-widget__meta">
+      {{ widgetConfig()?.['cols'] }}x{{ widgetConfig()?.['rows'] }}
+    </div>
+  </div>
+} @else {
+  <section class="sudoku-shell" [attr.aria-label]="t.map()['TITLE']">
+    <div class="sr-only" aria-live="polite" aria-atomic="true">
+      {{ gameMessage() || error() || resumeSummary() }}
+    </div>
+
+    @if (screen() === 'menu') {
+      <section class="sudoku-menu" aria-labelledby="sudoku-menu-title">
+        <header class="sudoku-menu__header">
+          <div class="sudoku-menu__heading">
+            <h1 id="sudoku-menu-title">{{ t.map()['TITLE'] }}</h1>
+            <p>{{ t.map()['SUBTITLE'] }}</p>
+            <div class="sudoku-progress-line" role="status" aria-live="polite">
+              {{ menuProgressSummary() }}
+            </div>
+          </div>
+          <button
+            type="button"
+            class="sudoku-icon-button sudoku-icon-button--ghost"
+            (click)="openMenuSettings()"
+            [attr.aria-label]="t.map()['MENU_SETTINGS_TITLE']"
+            [title]="t.map()['MENU_SETTINGS_TITLE']"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+          </button>
+        </header>
+
+        <div class="sudoku-mode-pill" role="tablist" [attr.aria-label]="t.map()['LABEL_JOURNEY']">
+          <button
+            type="button"
+            role="tab"
+            [class.is-active]="!journeyMode()"
+            [attr.aria-selected]="!journeyMode()"
+            (click)="setMode('quick')"
+          >
+            {{ t.map()['MODE_QUICK'] }}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            [class.is-active]="journeyMode()"
+            [attr.aria-selected]="journeyMode()"
+            (click)="setMode('journey')"
+          >
+            {{ t.map()['MODE_JOURNEY'] }}
+          </button>
+        </div>
+
+        <label class="sudoku-field sudoku-field--centered">
+          <span>{{ t.map()['LABEL_LEVEL'] }}</span>
+          <select
+            [ngModel]="selectedLevel()"
+            (ngModelChange)="onSelectedLevelChange($event)"
+            [attr.aria-label]="t.map()['ARIA_LEVEL_SELECT']"
+          >
+            @for (group of levelGroups; track group.groupName) {
+              <optgroup [label]="levelGroupLabel(group.groupName)">
+                @for (level of group.levels; track level.level) {
+                  <option [ngValue]="level.level">{{ levelLabel(level) }}</option>
+                }
+              </optgroup>
+            }
+          </select>
+        </label>
+
+        @if (!canAccessSelectedLevel()) {
+          <div class="sudoku-alert sudoku-alert--warning" role="alert">
+            {{ t.map()['ERROR_LEVEL_LOCKED'] }}
+          </div>
+        }
+
+        @if (!journeyMode()) {
+          <div class="sudoku-quick-stage">
+            <button
+              type="button"
+              class="sudoku-button sudoku-button--primary sudoku-button--hero"
+              (click)="startNewGame()"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
+              <span>{{ t.map()['ACTION_START'] }}</span>
+            </button>
+            @if (hasSavedSession()) {
+              <button type="button" class="sudoku-link-button" (click)="resumeSavedGame()">
+                {{ t.map()['ACTION_RESUME'] }} - {{ resumeSummary() }}
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="sudoku-journey-stage">
+            <button
+              type="button"
+              class="sudoku-button sudoku-button--primary sudoku-button--hero"
+              (click)="startNewGame()"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
+              <span>{{ t.map()['ACTION_START'] }}</span>
+            </button>
+            @if (hasSavedSession()) {
+              <button type="button" class="sudoku-link-button" (click)="resumeSavedGame()">
+                {{ t.map()['ACTION_RESUME'] }} - {{ resumeSummary() }}
+              </button>
+            }
+            <section class="sudoku-journey-history" aria-labelledby="sudoku-journey-history-title">
+              <h2 id="sudoku-journey-history-title">{{ t.map()['JOURNEY_HISTORY_TITLE'] }}</h2>
+              @if (!gameHistory().length) {
+                <p class="sudoku-empty">{{ t.map()['JOURNEY_HISTORY_EMPTY'] }}</p>
+              } @else {
+                <ul class="sudoku-journey-history__list">
+                  @for (entry of gameHistory().slice(0, 7); track entry.id) {
+                    <li>
+                      <strong>{{ outcomeLabel(entry.outcome) }} - L{{ entry.levelNumber }}</strong>
+                      <span
+                        >{{ formatDuration(entry.durationSeconds) }} -
+                        {{ formatTimestamp(entry.endedAt) }}</span
+                      >
+                    </li>
+                  }
+                </ul>
+                <button type="button" class="sudoku-link-button" (click)="openFullHistory()">
+                  {{ t.map()['ACTION_OPEN_FULL_HISTORY'] }}
+                </button>
+              }
+            </section>
+          </div>
+        }
+
+        @if (generationInfo()) {
+          <div class="sudoku-alert sudoku-alert--info" role="status">{{ generationInfo() }}</div>
+        }
+        @if (gameMessage()) {
+          <div class="sudoku-alert sudoku-alert--success" role="status">{{ gameMessage() }}</div>
+        }
+        @if (error()) {
+          <div class="sudoku-alert sudoku-alert--error" role="alert">{{ error() }}</div>
+        }
+      </section>
+    }
+
+    @if (screen() === 'play') {
+      <section class="sudoku-play" aria-labelledby="sudoku-play-title">
+        <div class="sudoku-game-card">
+          <header class="sudoku-game-header">
+            <button
+              type="button"
+              class="sudoku-icon-button"
+              (click)="backToMenu()"
+              [attr.aria-label]="t.map()['ACTION_BACK_MENU']"
+              [title]="t.map()['ACTION_BACK_MENU']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            </button>
+            <div class="sudoku-game-title">
+              <h1 id="sudoku-play-title">{{ t.map()['TITLE'] }}</h1>
+              <p>{{ selectedLevelName() }}</p>
+            </div>
+            @if (timerEnabled()) {
+              <div class="sudoku-timer-group">
+                <div class="sudoku-timer" role="timer" [attr.aria-label]="t.map()['LABEL_TIME']">
+                  {{ elapsedLabel() }}
+                </div>
+                <button
+                  type="button"
+                  class="sudoku-icon-button"
+                  (click)="toggleTimerPaused()"
+                  [attr.aria-label]="
+                    timerPaused() ? t.map()['ACTION_RESUME_TIMER'] : t.map()['ACTION_PAUSE_TIMER']
+                  "
+                  [title]="
+                    timerPaused() ? t.map()['ACTION_RESUME_TIMER'] : t.map()['ACTION_PAUSE_TIMER']
+                  "
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">{{
+                    timerPaused() ? 'play_arrow' : 'pause'
+                  }}</span>
+                </button>
+                <button
+                  type="button"
+                  class="sudoku-icon-button"
+                  (click)="resetTimer()"
+                  [attr.aria-label]="t.map()['ACTION_RESET_TIMER']"
+                  [title]="t.map()['ACTION_RESET_TIMER']"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">restart_alt</span>
+                </button>
+              </div>
+            }
+            <button
+              type="button"
+              class="sudoku-button sudoku-button--primary sudoku-new-button"
+              (click)="generateLevelPuzzleAndRestartTimer()"
+              [title]="t.map()['ACTION_NEW']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">autorenew</span>
+              <span>{{ t.map()['ACTION_NEW'] }}</span>
+            </button>
+          </header>
+
+          <div class="sudoku-game-main">
+            <div class="sudoku-board" role="grid" [attr.aria-label]="t.map()['ARIA_BOARD']">
+              @for (idx of boardIndices; track idx) {
+                <button
+                  type="button"
+                  role="gridcell"
+                  (click)="selectCell(idx)"
+                  class="sudoku-cell"
+                  [class.is-selected]="isSelected(idx)"
+                  [class.is-related]="
+                    highlightUnits() && !isSelected(idx) && isRelatedToSelected(idx)
+                  "
+                  [class.is-same]="highlightSameNumbers() && isSameAsSelected(idx)"
+                  [class.is-given]="isGiven(idx)"
+                  [class.has-value]="!isGiven(idx) && cellValue(idx) !== 0"
+                  [class.has-conflict]="highlightConflicts() && isConflict(idx)"
+                  [class.box-edge-right]="isRightBoxEdge(idx)"
+                  [class.box-edge-bottom]="isBottomBoxEdge(idx)"
+                  [attr.aria-label]="boardCellLabel(idx)"
+                  [attr.aria-selected]="isSelected(idx)"
+                >
+                  @if (cellValue(idx) !== 0) {
+                    <span>{{ cellValue(idx) }}</span>
+                  } @else if (showCandidates()) {
+                    <span class="sudoku-notes" aria-hidden="true">
+                      @for (digit of digits; track digit) {
+                        <span>{{ hasNote(idx, digit) ? digit : '' }}</span>
+                      }
+                    </span>
+                  }
+                </button>
+              }
+            </div>
+
+            <aside class="sudoku-play-controls" [attr.aria-label]="t.map()['ARIA_CONTROLS']">
+              <div class="sudoku-toolbar">
+                <button
+                  type="button"
+                  class="sudoku-icon-button"
+                  [class.is-active]="notesMode()"
+                  (click)="toggleNotesMode()"
+                  [attr.aria-label]="t.map()['LABEL_NOTES']"
+                  [attr.aria-pressed]="notesMode()"
+                  [title]="t.map()['LABEL_NOTES']"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">edit_note</span>
+                </button>
+                <button
+                  type="button"
+                  class="sudoku-icon-button"
+                  (click)="undoMove()"
+                  [disabled]="!undoStack().length"
+                  [attr.aria-label]="t.map()['ACTION_UNDO']"
+                  [title]="t.map()['ACTION_UNDO']"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">undo</span>
+                </button>
+                <button
+                  type="button"
+                  class="sudoku-icon-button"
+                  (click)="clearSelectedCell()"
+                  [attr.aria-label]="t.map()['ACTION_ERASE']"
+                  [title]="t.map()['ACTION_ERASE']"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">backspace</span>
+                </button>
+                <button
+                  type="button"
+                  class="sudoku-icon-button"
+                  (click)="useHint()"
+                  [attr.aria-label]="t.map()['ACTION_HINT']"
+                  [title]="t.map()['ACTION_HINT']"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">lightbulb</span>
+                </button>
+              </div>
+
+              <div class="sudoku-keypad" [attr.aria-label]="t.map()['ARIA_KEYPAD']">
+                @for (digit of digits; track digit) {
+                  <button
+                    type="button"
+                    (click)="chooseDigit(digit)"
+                    [class.is-active]="selectedDigit() === digit"
+                    [attr.aria-label]="digitLabel(digit)"
+                  >
+                    {{ digit }}
+                  </button>
+                }
+              </div>
+
+              <div class="sudoku-toolbar sudoku-toolbar--bottom">
+                <button
+                  type="button"
+                  class="sudoku-button"
+                  (click)="checkBoard()"
+                  [disabled]="!allowCheckBoard()"
+                >
+                  {{ t.map()['ACTION_CHECK'] }}
+                </button>
+                <button
+                  type="button"
+                  class="sudoku-icon-button"
+                  (click)="settingsOpen.set(true)"
+                  [attr.aria-label]="t.map()['ACTION_GAME_SETTINGS']"
+                  [title]="t.map()['ACTION_GAME_SETTINGS']"
+                >
+                  <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+                </button>
+              </div>
+
+              @if (showRemainingDigits()) {
+                <div class="sudoku-remaining" [attr.aria-label]="t.map()['LABEL_REMAINING']">
+                  @for (digit of digits; track digit) {
+                    <span>{{ digit }}: {{ remainingCount(digit) }}</span>
+                  }
+                </div>
+              }
+            </aside>
+          </div>
+
+          <footer class="sudoku-game-footer">
+            @if (showProgress()) {
+              <span>{{ progressSummary() }}</span>
+            }
+            <span>{{ mistakeSummary() }}</span>
+            <span>{{ t.map()['LABEL_SEED'] }}: {{ seedLabel() }}</span>
+          </footer>
+
+          @if (generationInfo()) {
+            <div class="sudoku-alert sudoku-alert--info" role="status">{{ generationInfo() }}</div>
+          }
+          @if (gameMessage()) {
+            <div class="sudoku-alert sudoku-alert--success" role="status">{{ gameMessage() }}</div>
+          }
+          @if (error()) {
+            <div class="sudoku-alert sudoku-alert--error" role="alert">{{ error() }}</div>
+          }
+
+          @if (settingsOpen()) {
+            <div
+              class="sudoku-settings"
+              role="dialog"
+              aria-modal="true"
+              [attr.aria-label]="t.map()['ACTION_GAME_SETTINGS']"
+              (click)="settingsOpen.set(false)"
+            >
+              <div class="sudoku-settings__panel" (click)="$event.stopPropagation()">
+                <header class="sudoku-settings__header">
+                  <h2>{{ t.map()['ACTION_GAME_SETTINGS'] }}</h2>
+                  <button
+                    type="button"
+                    class="sudoku-icon-button"
+                    (click)="settingsOpen.set(false)"
+                    [attr.aria-label]="t.map()['ACTION_CLOSE']"
+                  >
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                  </button>
+                </header>
+
+                <section class="sudoku-settings__section">
+                  <h3>{{ t.map()['SETTINGS_GAMEPLAY'] }}</h3>
+                  <label class="sudoku-field">
+                    <span>{{ t.map()['LABEL_LEVEL'] }}</span>
+                    <select
+                      [ngModel]="selectedLevel()"
+                      (ngModelChange)="onSelectedLevelChange($event)"
+                    >
+                      @for (level of levels; track level.level) {
+                        <option [ngValue]="level.level">{{ levelLabel(level) }}</option>
+                      }
+                    </select>
+                  </label>
+                  <div class="sudoku-settings__actions">
+                    <button
+                      type="button"
+                      class="sudoku-button"
+                      (click)="generateLevelPuzzleAndRestartTimer()"
+                    >
+                      {{ t.map()['ACTION_NEW'] }}
+                    </button>
+                    <button type="button" class="sudoku-button" (click)="resetBoard()">
+                      {{ t.map()['ACTION_RESET'] }}
+                    </button>
+                  </div>
+                  <label class="sudoku-field">
+                    <span>{{ t.map()['LABEL_MISTAKE_CHECKING'] }}</span>
+                    <select
+                      [ngModel]="mistakeChecking()"
+                      (ngModelChange)="mistakeChecking.set($event)"
+                    >
+                      <option value="off">{{ t.map()['OPTION_OFF'] }}</option>
+                      <option value="immediate">{{ t.map()['OPTION_IMMEDIATE'] }}</option>
+                      <option value="manual">{{ t.map()['OPTION_MANUAL'] }}</option>
+                    </select>
+                  </label>
+                  <label class="sudoku-field">
+                    <span>{{ t.map()['LABEL_MISTAKE_LIMIT'] }}</span>
+                    <select [ngModel]="mistakeLimit()" (ngModelChange)="mistakeLimit.set($event)">
+                      <option value="off">{{ t.map()['OPTION_OFF'] }}</option>
+                      <option value="3">{{ t.map()['OPTION_THREE_STRIKES'] }}</option>
+                    </select>
+                  </label>
+                  <label class="sudoku-field">
+                    <span>{{ t.map()['LABEL_HINT_BEHAVIOR'] }}</span>
+                    <select [ngModel]="hintBehavior()" (ngModelChange)="hintBehavior.set($event)">
+                      <option value="reveal">{{ t.map()['OPTION_REVEAL_CELL'] }}</option>
+                      <option value="explain">{{ t.map()['OPTION_EXPLAIN_STEP'] }}</option>
+                    </select>
+                  </label>
+                  <label class="sudoku-field">
+                    <span>{{ t.map()['LABEL_AUTO_NOTES'] }}</span>
+                    <select [ngModel]="autoNotes()" (ngModelChange)="onAutoNotesChange($event)">
+                      <option value="off">{{ t.map()['OPTION_OFF'] }}</option>
+                      <option value="fill">{{ t.map()['OPTION_FILL'] }}</option>
+                      <option value="update">{{ t.map()['OPTION_UPDATE'] }}</option>
+                    </select>
+                  </label>
+                </section>
+
+                <section class="sudoku-settings__section">
+                  <h3>{{ t.map()['SETTINGS_INPUT'] }}</h3>
+                  <div class="sudoku-segmented">
+                    <button
+                      type="button"
+                      [class.is-active]="inputMode() === 'number'"
+                      (click)="inputMode.set('number')"
+                    >
+                      {{ t.map()['OPTION_NUMBER_FIRST'] }}
+                    </button>
+                    <button
+                      type="button"
+                      [class.is-active]="inputMode() === 'cell'"
+                      (click)="inputMode.set('cell')"
+                    >
+                      {{ t.map()['OPTION_CELL_FIRST'] }}
+                    </button>
+                  </div>
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="notesMode()"
+                      (ngModelChange)="notesMode.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_NOTES'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="autoAdvance()"
+                      (ngModelChange)="autoAdvance.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_AUTO_ADVANCE'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="clearNotesOnEntry()"
+                      (ngModelChange)="clearNotesOnEntry.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_CLEAR_NOTES'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="keyboardShortcuts()"
+                      (ngModelChange)="keyboardShortcuts.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_KEYBOARD'] }}</span></label
+                  >
+                </section>
+
+                <section class="sudoku-settings__section">
+                  <h3>{{ t.map()['SETTINGS_ASSISTANCE'] }}</h3>
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="highlightUnits()"
+                      (ngModelChange)="highlightUnits.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_HIGHLIGHT_UNITS'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="highlightSameNumbers()"
+                      (ngModelChange)="highlightSameNumbers.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_HIGHLIGHT_SAME'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="highlightConflicts()"
+                      (ngModelChange)="highlightConflicts.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_HIGHLIGHT_CONFLICTS'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="showCandidates()"
+                      (ngModelChange)="showCandidates.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_SHOW_CANDIDATES'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="allowCheckBoard()"
+                      (ngModelChange)="allowCheckBoard.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_ALLOW_CHECK'] }}</span></label
+                  >
+                </section>
+
+                <section class="sudoku-settings__section">
+                  <h3>{{ t.map()['SETTINGS_SESSION'] }}</h3>
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="timerEnabled()"
+                      (ngModelChange)="onTimerEnabledChange(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_TIMER_ON'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="showProgress()"
+                      (ngModelChange)="showProgress.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_SHOW_PROGRESS'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="showRemainingDigits()"
+                      (ngModelChange)="showRemainingDigits.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_REMAINING'] }}</span></label
+                  >
+                  <label class="sudoku-switch"
+                    ><input
+                      type="checkbox"
+                      [ngModel]="undoRedoEnabled()"
+                      (ngModelChange)="undoRedoEnabled.set(!!$event)"
+                    />
+                    <span>{{ t.map()['LABEL_UNDO_REDO'] }}</span></label
+                  >
+                </section>
+
+                <section class="sudoku-settings__section">
+                  <h3>{{ t.map()['SETTINGS_ADVANCED'] }}</h3>
+                  <div class="sudoku-seed-row">
+                    <span>{{ t.map()['LABEL_SEED'] }}</span
+                    ><strong>{{ seedLabel() }}</strong>
+                  </div>
+                  <div class="sudoku-settings__actions">
+                    <button type="button" class="sudoku-button" (click)="exportPuzzle()">
+                      {{ t.map()['ACTION_EXPORT_PUZZLE'] }}
+                    </button>
+                    <button type="button" class="sudoku-button" (click)="solvePuzzle()">
+                      {{ t.map()['ACTION_SOLVE'] }}
+                    </button>
+                    <button type="button" class="sudoku-button" (click)="gradePuzzle()">
+                      {{ t.map()['ACTION_GRADE'] }}
+                    </button>
+                  </div>
+                </section>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    @if (screen() === 'data') {
+      <section class="sudoku-data" aria-labelledby="sudoku-data-title">
+        <header class="sudoku-surface-header">
+          <div>
+            <h1 id="sudoku-data-title">{{ t.map()['DATA_TITLE'] }}</h1>
+            <p>{{ t.map()['DATA_SUBTITLE'] }}</p>
+          </div>
+          <button type="button" class="sudoku-button" (click)="backToMenu()">
+            {{ t.map()['ACTION_BACK_MENU'] }}
+          </button>
+        </header>
+
+        <div class="sudoku-tabs" role="tablist" [attr.aria-label]="t.map()['ARIA_DATA_TABS']">
+          <button
+            type="button"
+            role="tab"
+            [attr.aria-selected]="dataPanel() === 'history'"
+            [class.is-active]="dataPanel() === 'history'"
+            (click)="dataPanel.set('history')"
+          >
+            {{ t.map()['TAB_HISTORY'] }}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            [attr.aria-selected]="dataPanel() === 'migration'"
+            [class.is-active]="dataPanel() === 'migration'"
+            (click)="dataPanel.set('migration')"
+          >
+            {{ t.map()['TAB_MIGRATION'] }}
+          </button>
+        </div>
+
+        @if (dataPanel() === 'history') {
+          <section class="sudoku-data-panel" aria-labelledby="sudoku-history-title">
+            <div class="sudoku-panel-heading">
+              <div>
+                <h2 id="sudoku-history-title">{{ t.map()['HISTORY_TITLE'] }}</h2>
+                <p>{{ t.map()['HISTORY_SUBTITLE'] }}</p>
+              </div>
+              <button
+                type="button"
+                class="sudoku-button sudoku-button--danger"
+                (click)="clearHistoryAndStats()"
+              >
+                {{ t.map()['ACTION_CLEAR_HISTORY'] }}
+              </button>
+            </div>
+
+            <div class="sudoku-stat-grid">
+              <div>
+                <span>{{ t.map()['STAT_STARTED'] }}</span>
+                <strong>{{ aggregateStats().totalStarted }}</strong>
+              </div>
+              <div>
+                <span>{{ t.map()['STAT_COMPLETED'] }}</span>
+                <strong>{{ aggregateStats().totalCompleted }}</strong>
+              </div>
+              <div>
+                <span>{{ t.map()['STAT_SOLVED'] }}</span>
+                <strong>{{ aggregateStats().totalSolved }}</strong>
+              </div>
+              <div>
+                <span>{{ t.map()['STAT_WIN_RATE'] }}</span>
+                <strong>{{ successRateLabel() }}</strong>
+              </div>
+              <div>
+                <span>{{ t.map()['STAT_BEST'] }}</span>
+                <strong>{{ bestSuccessDurationLabel() }}</strong>
+              </div>
+              <div>
+                <span>{{ t.map()['STAT_AVERAGE'] }}</span>
+                <strong>{{ averageSuccessDurationLabel() }}</strong>
+              </div>
+            </div>
+
+            @if (!recentHistory().length) {
+              <p class="sudoku-empty">{{ t.map()['HISTORY_EMPTY'] }}</p>
+            } @else {
+              <ul class="sudoku-history-list">
+                @for (entry of recentHistory(); track entry.id) {
+                  <li>
+                    <div>
+                      <strong
+                        >{{ outcomeLabel(entry.outcome) }} -
+                        {{
+                          levelLabel({
+                            level: entry.levelNumber,
+                            groupName: entry.levelName,
+                            rank: entry.levelRank,
+                          })
+                        }}</strong
+                      >
+                      <span>{{ formatTimestamp(entry.endedAt) }}</span>
+                    </div>
+                    <p>
+                      {{
+                        tr('HISTORY_ENTRY_META', {
+                          time: formatDuration(entry.durationSeconds),
+                          moves: entry.moveCount,
+                          score: entry.score,
+                          technique: entry.hardestTechnique,
+                        })
+                      }}
+                    </p>
+                  </li>
+                }
+              </ul>
+              @if (gameHistory().length > 4) {
+                <button
+                  type="button"
+                  class="sudoku-link-button"
+                  (click)="fullHistoryOpen.set(!fullHistoryOpen())"
+                >
+                  {{
+                    fullHistoryOpen()
+                      ? t.map()['ACTION_HISTORY_LESS']
+                      : t.map()['ACTION_HISTORY_MORE']
+                  }}
+                </button>
+              }
+            }
+          </section>
+        }
+
+        @if (dataPanel() === 'migration') {
+          <section class="sudoku-data-panel" aria-labelledby="sudoku-migration-title">
+            <div class="sudoku-panel-heading">
+              <div>
+                <h2 id="sudoku-migration-title">{{ t.map()['MIGRATION_TITLE'] }}</h2>
+                <p>{{ t.map()['MIGRATION_SUBTITLE'] }}</p>
+              </div>
+            </div>
+
+            <div class="sudoku-migration-actions">
+              <button type="button" class="sudoku-button" (click)="prepareExportJson()">
+                {{ t.map()['ACTION_GENERATE_EXPORT'] }}
+              </button>
+              <button type="button" class="sudoku-button" (click)="downloadExportFile()">
+                {{ t.map()['ACTION_DOWNLOAD_EXPORT'] }}
+              </button>
+              @if (exportJson()) {
+                <button type="button" class="sudoku-button" (click)="clearExportJson()">
+                  {{ t.map()['ACTION_CLEAR_EXPORT'] }}
+                </button>
+              }
+              <button type="button" class="sudoku-button" (click)="importFromJsonText()">
+                {{ t.map()['ACTION_IMPORT_TEXT'] }}
+              </button>
+              <label class="sudoku-file-button">
+                {{ t.map()['ACTION_IMPORT_FILE'] }}
+                <input
+                  class="sr-only"
+                  type="file"
+                  accept=".json,application/json"
+                  (change)="onImportFileChange($event)"
+                />
+              </label>
+              @if (importJson()) {
+                <button type="button" class="sudoku-button" (click)="clearImportJson()">
+                  {{ t.map()['ACTION_CLEAR_IMPORT'] }}
+                </button>
+              }
+            </div>
+
+            <label class="sudoku-textarea-field">
+              <span>{{ t.map()['LABEL_IMPORT_JSON'] }}</span>
+              <textarea
+                [placeholder]="t.map()['PLACEHOLDER_IMPORT_JSON']"
+                [ngModel]="importJson()"
+                (ngModelChange)="importJson.set(String($event ?? ''))"
+              ></textarea>
+            </label>
+
+            @if (exportJson()) {
+              <label class="sudoku-textarea-field">
+                <span>{{ t.map()['LABEL_EXPORT_JSON'] }}</span>
+                <textarea readonly [value]="exportJson()"></textarea>
+              </label>
+            }
+
+            @if (gameMessage()) {
+              <div class="sudoku-alert sudoku-alert--success" role="status">
+                {{ gameMessage() }}
+              </div>
+            }
+            @if (error()) {
+              <div class="sudoku-alert sudoku-alert--error" role="alert">{{ error() }}</div>
+            }
+          </section>
+        }
+      </section>
+    }
+
+    @if (screen() === 'diagnostics') {
+      <section class="sudoku-data" aria-labelledby="sudoku-diagnostics-title">
+        <header class="sudoku-surface-header">
+          <div>
+            <h1 id="sudoku-diagnostics-title">{{ t.map()['DIAGNOSTICS_TITLE'] }}</h1>
+            <p>{{ t.map()['DIAGNOSTICS_SUBTITLE'] }}</p>
+          </div>
+          <button type="button" class="sudoku-button" (click)="backToMenu()">
+            {{ t.map()['ACTION_BACK_MENU'] }}
+          </button>
+        </header>
+
+        <section class="sudoku-data-panel">
+          <div class="sudoku-panel-heading">
+            <div>
+              <h2>{{ t.map()['TEST_TITLE'] }}</h2>
+              <p>{{ t.map()['TEST_SUBTITLE'] }}</p>
+            </div>
+            <button type="button" class="sudoku-button sudoku-button--primary" (click)="runTests()">
+              {{ t.map()['ACTION_RUN_TESTS'] }}
+            </button>
+          </div>
+
+          @if (!testReport()) {
+            <p class="sudoku-empty">{{ t.map()['TEST_EMPTY'] }}</p>
+          } @else {
+            <div class="sudoku-alert" role="status">
+              {{
+                tr('TEST_SUMMARY', {
+                  passed: testReport()!.passed,
+                  total: testReport()!.total,
+                  failed: testReport()!.failed,
+                  duration: testReport()!.durationMs.toFixed(1),
+                })
+              }}
+            </div>
+            <ul class="sudoku-diagnostic-list">
+              @for (caseResult of testReport()!.cases; track caseResult.name) {
+                <li [class.is-pass]="caseResult.pass" [class.is-fail]="!caseResult.pass">
+                  <div>
+                    <strong>{{ caseResult.name }}</strong>
+                    <span>{{
+                      tr('DURATION_MS', { duration: caseResult.durationMs.toFixed(1) })
+                    }}</span>
+                  </div>
+                  <p>{{ caseResult.details }}</p>
+                </li>
+              }
+            </ul>
+          }
+        </section>
+      </section>
+    }
+
+    @if (menuSettingsOpen()) {
+      <div
+        class="sudoku-modal"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="t.map()['MENU_SETTINGS_TITLE']"
+        (click)="closeMenuSettings()"
+      >
+        <div class="sudoku-modal__panel" (click)="$event.stopPropagation()">
+          <header class="sudoku-modal__header">
+            <h2>{{ t.map()['MENU_SETTINGS_TITLE'] }}</h2>
+            <button
+              type="button"
+              class="sudoku-icon-button"
+              (click)="closeMenuSettings()"
+              [attr.aria-label]="t.map()['ACTION_CLOSE']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+          </header>
+          <section class="sudoku-modal__section">
+            <h3>{{ t.map()['MENU_SETTINGS_DATA'] }}</h3>
+            <div class="sudoku-modal__actions">
+              <button type="button" class="sudoku-button" (click)="openExportChoice()">
+                <span class="material-symbols-outlined" aria-hidden="true">upload</span>
+                <span>{{ t.map()['ACTION_EXPORT'] }}</span>
+              </button>
+              <button type="button" class="sudoku-button" (click)="openImportChoice()">
+                <span class="material-symbols-outlined" aria-hidden="true">download</span>
+                <span>{{ t.map()['ACTION_IMPORT'] }}</span>
+              </button>
+              <button
+                type="button"
+                class="sudoku-button sudoku-button--danger"
+                (click)="closeMenuSettings(); clearHistoryAndStats()"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">delete_sweep</span>
+                <span>{{ t.map()['ACTION_CLEAR_HISTORY'] }}</span>
+              </button>
+            </div>
+          </section>
+          <section class="sudoku-modal__section">
+            <h3>{{ t.map()['MENU_SETTINGS_OTHER'] }}</h3>
+            <div class="sudoku-modal__actions">
+              <button
+                type="button"
+                class="sudoku-button"
+                (click)="closeMenuSettings(); startSampleGame()"
+              >
+                {{ t.map()['ACTION_QUICK_START'] }}
+              </button>
+              <button
+                type="button"
+                class="sudoku-button"
+                (click)="closeMenuSettings(); openDataPanel('history')"
+              >
+                {{ t.map()['ACTION_HISTORY'] }}
+              </button>
+              @if (isDev) {
+                <button
+                  type="button"
+                  class="sudoku-button"
+                  (click)="closeMenuSettings(); openTestMode()"
+                >
+                  {{ t.map()['ACTION_DEVELOPER'] }}
+                </button>
+              }
+            </div>
+          </section>
+        </div>
+      </div>
+    }
+
+    @if (exportChoiceOpen()) {
+      <div
+        class="sudoku-modal"
+        role="dialog"
+        aria-modal="true"
+        (click)="exportChoiceOpen.set(false)"
+      >
+        <div
+          class="sudoku-modal__panel sudoku-modal__panel--narrow"
+          (click)="$event.stopPropagation()"
+        >
+          <header class="sudoku-modal__header">
+            <h2>{{ t.map()['EXPORT_CHOICE_TITLE'] }}</h2>
+            <button
+              type="button"
+              class="sudoku-icon-button"
+              (click)="exportChoiceOpen.set(false)"
+              [attr.aria-label]="t.map()['ACTION_CLOSE']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+          </header>
+          <p class="sudoku-modal__desc">{{ t.map()['EXPORT_CHOICE_DESC'] }}</p>
+          <div class="sudoku-modal__choices">
+            <button type="button" class="sudoku-choice-card" (click)="exportAsText()">
+              <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+              <strong>{{ t.map()['ACTION_AS_TEXT'] }}</strong>
+            </button>
+            <button type="button" class="sudoku-choice-card" (click)="exportAsFile()">
+              <span class="material-symbols-outlined" aria-hidden="true">file_download</span>
+              <strong>{{ t.map()['ACTION_AS_FILE'] }}</strong>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (importChoiceOpen()) {
+      <div
+        class="sudoku-modal"
+        role="dialog"
+        aria-modal="true"
+        (click)="importChoiceOpen.set(false)"
+      >
+        <div
+          class="sudoku-modal__panel sudoku-modal__panel--narrow"
+          (click)="$event.stopPropagation()"
+        >
+          <header class="sudoku-modal__header">
+            <h2>{{ t.map()['IMPORT_CHOICE_TITLE'] }}</h2>
+            <button
+              type="button"
+              class="sudoku-icon-button"
+              (click)="importChoiceOpen.set(false)"
+              [attr.aria-label]="t.map()['ACTION_CLOSE']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+          </header>
+          <p class="sudoku-modal__desc">{{ t.map()['IMPORT_CHOICE_DESC'] }}</p>
+          <div class="sudoku-modal__choices">
+            <button type="button" class="sudoku-choice-card" (click)="importAsText()">
+              <span class="material-symbols-outlined" aria-hidden="true">content_paste</span>
+              <strong>{{ t.map()['ACTION_AS_TEXT'] }}</strong>
+            </button>
+            <button type="button" class="sudoku-choice-card" (click)="importAsFile()">
+              <span class="material-symbols-outlined" aria-hidden="true">upload_file</span>
+              <strong>{{ t.map()['ACTION_AS_FILE'] }}</strong>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (exportTextOpen()) {
+      <div class="sudoku-modal" role="dialog" aria-modal="true" (click)="exportTextOpen.set(false)">
+        <div class="sudoku-modal__panel" (click)="$event.stopPropagation()">
+          <header class="sudoku-modal__header">
+            <h2>{{ t.map()['EXPORT_TEXT_TITLE'] }}</h2>
+            <button
+              type="button"
+              class="sudoku-icon-button"
+              (click)="exportTextOpen.set(false)"
+              [attr.aria-label]="t.map()['ACTION_CLOSE']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+          </header>
+          <label class="sudoku-textarea-field">
+            <span>{{ t.map()['LABEL_EXPORT_JSON'] }}</span>
+            <textarea readonly [value]="exportJson()"></textarea>
+          </label>
+          <div class="sudoku-modal__actions">
+            <button
+              type="button"
+              class="sudoku-button sudoku-button--primary"
+              (click)="copyExportToClipboard()"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+              <span>{{ copyFeedback() ? t.map()['ACTION_COPIED'] : t.map()['ACTION_COPY'] }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (importTextOpen()) {
+      <div class="sudoku-modal" role="dialog" aria-modal="true" (click)="importTextOpen.set(false)">
+        <div class="sudoku-modal__panel" (click)="$event.stopPropagation()">
+          <header class="sudoku-modal__header">
+            <h2>{{ t.map()['IMPORT_TEXT_TITLE'] }}</h2>
+            <button
+              type="button"
+              class="sudoku-icon-button"
+              (click)="importTextOpen.set(false)"
+              [attr.aria-label]="t.map()['ACTION_CLOSE']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
+          </header>
+          <label class="sudoku-textarea-field">
+            <span>{{ t.map()['LABEL_IMPORT_JSON'] }}</span>
+            <textarea
+              [placeholder]="t.map()['PLACEHOLDER_IMPORT_JSON']"
+              [ngModel]="importJson()"
+              (ngModelChange)="importJson.set(String($event ?? ''))"
+            ></textarea>
+          </label>
+          @if (error()) {
+            <div class="sudoku-alert sudoku-alert--error" role="alert">{{ error() }}</div>
+          }
+          <div class="sudoku-modal__actions">
+            <button type="button" class="sudoku-button" (click)="importTextOpen.set(false)">
+              {{ t.map()['ACTION_CANCEL'] }}
+            </button>
+            <button
+              type="button"
+              class="sudoku-button sudoku-button--primary"
+              (click)="submitImportText()"
+            >
+              {{ t.map()['ACTION_DO_IMPORT'] }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (pendingConfirm(); as confirm) {
+      <div class="sudoku-modal" role="dialog" aria-modal="true" (click)="cancelConfirm()">
+        <div
+          class="sudoku-modal__panel sudoku-modal__panel--narrow"
+          (click)="$event.stopPropagation()"
+        >
+          <header class="sudoku-modal__header">
+            <h2>{{ confirm.title }}</h2>
+          </header>
+          <p class="sudoku-modal__desc">{{ confirm.message }}</p>
+          <div class="sudoku-modal__actions sudoku-modal__actions--end">
+            <button type="button" class="sudoku-button" (click)="cancelConfirm()">
+              {{ t.map()['ACTION_CANCEL'] }}
+            </button>
+            <button
+              type="button"
+              class="sudoku-button"
+              [class.sudoku-button--danger]="confirm.danger"
+              [class.sudoku-button--primary]="!confirm.danger"
+              (click)="acceptConfirm()"
+            >
+              {{ confirm.confirmLabel }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+  </section>
+}

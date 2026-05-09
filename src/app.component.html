@@ -277,48 +277,7 @@
       <div class="mx-auto flex min-h-full max-w-7xl flex-col px-4 sm:px-6 lg:px-8">
         <router-outlet></router-outlet>
 
-        <!-- Footer in flow -->
-        <footer class="mt-auto border-t border-slate-200 py-6 dark:border-slate-800">
-          <div
-            class="flex flex-col items-center justify-between gap-4 text-sm text-slate-500 md:flex-row"
-          >
-            <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
-            <div class="flex flex-wrap justify-center gap-4 md:justify-end">
-              <a
-                [routerLink]="'/categories' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_CATEGORIES'] }}</a
-              >
-              <a
-                [routerLink]="'/articles' | localLink"
-                appTourTarget="tour-blog"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_ARTICLES'] }}</a
-              >
-              <a
-                [routerLink]="'/legal' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_LEGAL'] }}</a
-              >
-              <a
-                [routerLink]="'/privacy' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_PRIVACY'] }}</a
-              >
-              <a
-                [routerLink]="'/terms' | localLink"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_TERMS'] }}</a
-              >
-              <a
-                href="https://github.com/utildex/utildex"
-                target="_blank"
-                class="transition-colors hover:text-slate-900 dark:hover:text-white"
-                >{{ t.map()['FOOTER_CONTRIBUTE'] }}</a
-              >
-            </div>
-          </div>
-        </footer>
+        <app-footer class="mt-auto w-full"></app-footer>
       </div>
     </main>
 

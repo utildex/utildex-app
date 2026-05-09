@@ -7,6 +7,7 @@
 import { Trait } from './types/traits';
 import { FormatId } from './types/formats';
 import { I18nText, WidgetCapability } from '../data/types';
+import type { AppId } from './app.config';
 import type { z } from 'zod';
 
 export interface ToolContract {
@@ -15,6 +16,12 @@ export interface ToolContract {
 
   /** Tool metadata sourced from each tool's contract. */
   metadata: {
+    /** App ownership tag used for app-scoped loading.
+     *  - `'utildex'` / `'synedex'`: only loaded for that app.
+     *  - `'shared'`: loaded for both apps.
+     *  - Omitted: inherits the registry file's default (`'utildex'` in core-registry.ts,
+     *    `'synedex'` in core-registry.synedex.ts). Always set explicitly to avoid surprises. */
+    appName?: AppId | 'shared';
     name: I18nText;
     description: I18nText;
     icon: string;

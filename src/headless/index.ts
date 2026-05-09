@@ -1,4 +1,4 @@
-import { CORE_REGISTRY } from '../core/core-registry';
+import { getCoreRegistryForApp } from '../core/core-registry';
 import type { ToolSpaceIssue } from '../core/tool-space';
 import {
   collectToolSpaceRuntimeIssues,
@@ -7,7 +7,7 @@ import {
 } from '../core/tool-space-resolver';
 import type { ToolContract } from '../core/tool-contract';
 import type { ResolvedToolSpace } from '../core/tool-space-resolver';
-import { TOOL_SPACES_REGISTRY } from '../data/tool-space-registry';
+import { getToolSpacesForApp } from '../data/tool-space-registry';
 import type { ToolMetadata } from '../data/types';
 
 type KernelRun = (input: unknown) => unknown | Promise<unknown>;
@@ -63,6 +63,10 @@ const headlessSpacesPromiseByKey = new Map<
   Promise<ResolvedHeadlessSpaces>
 >();
 
+const ACTIVE_APP_ID = 'utildex';
+const ACTIVE_CORE_REGISTRY = getCoreRegistryForApp(ACTIVE_APP_ID);
+const ACTIVE_TOOL_SPACES_REGISTRY = getToolSpacesForApp(ACTIVE_APP_ID);
+
 function resolveI18nText(value: unknown): string {
   if (typeof value === 'string') {
     return value;
@@ -87,8 +91,8 @@ function resolveI18nText(value: unknown): string {
 }
 
 function assertKnownToolId(toolId: string) {
-  if (!CORE_REGISTRY[toolId]) {
-    const known = Object.keys(CORE_REGISTRY)
+  if (!ACTIVE_CORE_REGISTRY[toolId]) {
+    const known = Object.keys(ACTIVE_CORE_REGISTRY)
       .sort((left, right) => left.localeCompare(right))
       .join(', ');
     throw new Error(`Unknown tool id "${toolId}". Known tool ids: ${known}`);
@@ -126,13 +130,15 @@ function toToolMetadata(toolId: string, contract: ToolContract): ToolMetadata {
 }
 
 async function buildHeadlessCatalog(): Promise<HeadlessCatalog> {
-  const toolIds = Object.keys(CORE_REGISTRY).sort((left, right) => left.localeCompare(right));
+  const toolIds = Object.keys(ACTIVE_CORE_REGISTRY).sort((left, right) =>
+    left.localeCompare(right),
+  );
 
   const summaries: HeadlessToolSummary[] = [];
   const metadataById = new Map<string, ToolMetadata>();
 
   for (const toolId of toolIds) {
-    const contract = await CORE_REGISTRY[toolId].contract();
+    const contract = await ACTIVE_CORE_REGISTRY[toolId].contract();
     summaries.push(toSummary(contract));
     metadataById.set(toolId, toToolMetadata(toolId, contract));
   }
@@ -188,12 +194,12 @@ async function resolveHeadlessSpacesUncached(
     filteredToolMap.set(toolId, metadata);
   }
 
-  const spaces = resolveToolSpaces(TOOL_SPACES_REGISTRY, filteredToolMap);
+  const spaces = resolveToolSpaces(ACTIVE_TOOL_SPACES_REGISTRY, filteredToolMap);
   const knownToolIds = new Set<string>(filteredToolMap.keys());
 
   return {
     spaces,
-    issues: collectToolSpaceRuntimeIssues(TOOL_SPACES_REGISTRY, spaces, knownToolIds),
+    issues: collectToolSpaceRuntimeIssues(ACTIVE_TOOL_SPACES_REGISTRY, spaces, knownToolIds),
     spaceMap: getResolvedToolSpaceMap(spaces),
   };
 }
@@ -218,7 +224,7 @@ async function resolveHeadlessSpaces(
 }
 
 async function loadKernelRun(toolId: string): Promise<(input: unknown) => Promise<unknown>> {
-  const kernelModule = await CORE_REGISTRY[toolId].kernel();
+  const kernelModule = await ACTIVE_CORE_REGISTRY[toolId].kernel();
   const run = (kernelModule as Record<string, unknown>).run;
 
   if (typeof run !== 'function') {
@@ -277,7 +283,7 @@ export async function listHeadlessToolsInSpace(
   ]);
 
   if (!space) {
-    const knownSpaceIds = TOOL_SPACES_REGISTRY.map((entry) => entry.id)
+    const knownSpaceIds = ACTIVE_TOOL_SPACES_REGISTRY.map((entry) => entry.id)
       .sort((left, right) => left.localeCompare(right))
       .join(', ');
     throw new Error(`Unknown tool space id "${spaceId}". Known tool spaces: ${knownSpaceIds}`);
@@ -304,7 +310,7 @@ export async function getHeadlessTool(toolId: string): Promise<HeadlessToolDefin
   assertKnownToolId(toolId);
 
   const [contract, run] = await Promise.all([
-    CORE_REGISTRY[toolId].contract(),
+    ACTIVE_CORE_REGISTRY[toolId].contract(),
     loadKernelRun(toolId),
   ]);
 

@@ -4,6 +4,7 @@ import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ToolService } from '../../services/tool.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { APP_CONFIG } from '../../core/app.config';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -145,7 +146,7 @@ export class ToolLayoutComponent {
 
   backPath = computed(() => {
     const spaceId = this.resolveSpaceIdFromUrl();
-    return spaceId ? `/spaces/${spaceId}` : '/tools';
+    return spaceId ? `/spaces/${spaceId}` : `/${APP_CONFIG.toolsRouteSegment}`;
   });
 
   backLabel = computed(() => {

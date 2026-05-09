@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { APP_CONFIG, resolvePublicBaseUrl, toAbsoluteUrl } from '../core/app.config';
+import { APP_CONFIG, getAppId, resolvePublicBaseUrl, toAbsoluteUrl } from '../core/app.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AppConfigService {
+  readonly appId = getAppId();
   readonly appName = APP_CONFIG.appName;
+  readonly toolsRouteSegment = APP_CONFIG.toolsRouteSegment;
+  readonly githubUrl = APP_CONFIG.githubUrl;
   readonly config = APP_CONFIG;
 
   getPublicBaseUrl(): string {

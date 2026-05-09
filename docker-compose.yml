@@ -3,6 +3,16 @@ services:
     build:
       context: .
       args:
+        APP_BUILD: utildex
         APP_BASE_URL: ${APP_BASE_URL:-http://localhost:${PORT:-9526}}
     ports:
       - "${PORT:-9526}:80"
+
+  synedex:
+    build:
+      context: .
+      args:
+        APP_BUILD: synedex
+        APP_BASE_URL: ${SYNEDEX_APP_BASE_URL:-http://localhost:${SYNEDEX_PORT:-9527}}
+    ports:
+      - "${SYNEDEX_PORT:-9527}:80"
