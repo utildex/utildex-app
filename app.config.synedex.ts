@@ -5,5 +5,5 @@ export const APP_CONFIG_DATA = {
   hosting: {
     defaultPublicBaseUrl: 'https://synedex.com',
   },
-  githubUrl: 'https://github.com/synedex',
+  githubUrl: 'https://github.com/utildex/utildex-app',
 } as const;
