@@ -47,13 +47,13 @@ async function loadAppConfig(appId: AppId) {
   return mod.APP_CONFIG_DATA;
 }
 
-// Load the correct article registry for the target app
+// Load the correct article registry for the target app.
+// Synedex intentionally has no articles feature, so it returns an empty list.
 async function loadArticleRegistry(appId: AppId): Promise<ArticleLike[]> {
-  const registryFileName =
-    appId === 'synedex'
-      ? 'src/data/article-registry.synedex.ts'
-      : 'src/data/article-registry.ts';
-  const registryPath = path.join(process.cwd(), registryFileName);
+  if (appId === 'synedex') {
+    return [];
+  }
+  const registryPath = path.join(process.cwd(), 'src/data/article-registry.ts');
   const mod = (await import(pathToFileURL(registryPath).href)) as {
     ARTICLE_REGISTRY: ArticleLike[];
   };

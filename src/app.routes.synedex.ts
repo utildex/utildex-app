@@ -81,20 +81,6 @@ export const routes: Routes = [
         title: 'Category - Synedex',
       },
       {
-        path: 'articles',
-        loadComponent: () =>
-          import('./pages/articles/articles.component').then((m) => m.ArticlesComponent),
-        title: 'Articles - Synedex',
-      },
-      {
-        path: 'articles/:id',
-        loadComponent: () =>
-          import('./pages/article-reader/article-reader.component').then(
-            (m) => m.ArticleReaderComponent,
-          ),
-        title: 'Reader - Synedex',
-      },
-      {
         path: 'preview-banner',
         loadComponent: () =>
           import('./pages/preview-banner/preview-banner.component').then(
