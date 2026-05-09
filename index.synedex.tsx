@@ -6,7 +6,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { SynedexAppComponent } from './src/app.component.synedex';
 import { routes } from './src/app.routes.synedex';
 import { GlobalErrorHandler } from './src/core/global-error-handler';
-import { TOUR_STEPS, DEFAULT_TOUR_STEPS } from './src/core/tour.config';
+import { TOUR_STEPS } from './src/core/tour.config';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -43,6 +43,9 @@ bootstrapApplication(SynedexAppComponent, {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler,
     },
-    { provide: TOUR_STEPS, useValue: DEFAULT_TOUR_STEPS },
+    // Synedex does not expose the guided tour UI (see settings-modal guard);
+    // provide an empty step list so TourService DI resolves without dragging in
+    // Utildex-only routes (/tools, /my-dashboard, /articles).
+    { provide: TOUR_STEPS, useValue: [] },
   ],
 }).catch((err) => console.error(err));
