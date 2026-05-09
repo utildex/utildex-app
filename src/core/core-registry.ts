@@ -32,6 +32,11 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       import('../utildex-tools/hash-generator/hash-generator.contract').then((m) => m.contract),
     kernel: () => import('../utildex-tools/hash-generator/hash-generator.kernel'),
   },
+  'homa-calculator': {
+    contract: () =>
+      import('../utildex-tools/homa-calculator/homa-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/homa-calculator/homa-calculator.kernel'),
+  },
   'image-converter': {
     contract: () =>
       import('../utildex-tools/image-converter/image-converter.contract').then((m) => m.contract),
