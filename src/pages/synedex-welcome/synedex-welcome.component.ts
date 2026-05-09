@@ -1,4 +1,6 @@
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import {
   Component,
   inject,
@@ -162,7 +164,7 @@ function buildAdjacency(nodeCount: number, edges: [number, number][]): Map<numbe
 @Component({
   selector: 'app-synedex-welcome',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink, LocalLinkPipe],
   providers: [
     provideTranslation({
       en: () => en,
@@ -256,7 +258,7 @@ function buildAdjacency(nodeCount: number, edges: [number, number][]): Map<numbe
         -webkit-background-clip: text;
         background-clip: text;
         opacity: 0;
-        animation: syn-cta-enter 600ms ease 0.6s forwards;
+        animation: syn-cta-enter 600ms ease 0.15s forwards;
       }
 
       :host-context(.dark) .syn-logotype {
@@ -286,7 +288,7 @@ function buildAdjacency(nodeCount: number, edges: [number, number][]): Map<numbe
         align-items: center;
         z-index: 10;
         opacity: 0;
-        animation: syn-cta-enter-absolute 700ms cubic-bezier(0.22, 1, 0.36, 1) 1s forwards;
+        animation: syn-cta-enter-absolute 700ms cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
       }
 
       @keyframes syn-cta-enter {
@@ -484,10 +486,10 @@ function buildAdjacency(nodeCount: number, edges: [number, number][]): Map<numbe
       <!-- CTA -->
       <div class="syn-cta-area">
         <p class="syn-tagline font-utx-sans">{{ t.map()['WELCOME_TAGLINE'] }}</p>
-        <button class="syn-cta font-utx-sans" type="button">
+        <a class="syn-cta font-utx-sans" [routerLink]="'/games' | localLink">
           {{ t.map()['CTA'] }}
           <span class="material-symbols-outlined">arrow_forward</span>
-        </button>
+        </a>
       </div>
     </div>
   `,

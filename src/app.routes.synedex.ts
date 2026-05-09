@@ -61,6 +61,12 @@ export const routes: Routes = [
         title: 'Terms of Use - Synedex',
       },
       {
+        path: 'privacy',
+        loadComponent: () =>
+          import('./pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
+        title: 'Privacy Policy - Synedex',
+      },
+      {
         path: 'categories',
         loadComponent: () =>
           import('./pages/categories/categories.component').then((m) => m.CategoriesComponent),

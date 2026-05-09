@@ -15,11 +15,13 @@ import { AppConfigService } from '../../services/app-config.service';
       >
         <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
         <div class="flex flex-wrap justify-center gap-4 md:justify-end">
+          @if (appConfig.appId !== 'synedex') {
           <a
             [routerLink]="'/articles' | localLink"
             class="transition-colors hover:text-slate-900 dark:hover:text-white"
             >{{ t.map()['FOOTER_ARTICLES'] }}</a
           >
+          }
           <a
             [routerLink]="'/legal' | localLink"
             class="transition-colors hover:text-slate-900 dark:hover:text-white"
