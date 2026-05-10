@@ -123,6 +123,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/timestamp-converter/timestamp-converter.component').then(
       (m) => m.TimestampConverterComponent,
     ),
+  'time-format-converter': () =>
+    import('../utildex-tools/time-format-converter/time-format-converter.component').then(
+      (m) => m.TimeFormatConverterComponent,
+    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {
