@@ -185,6 +185,13 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       import('../utildex-tools/cron-explainer/cron-explainer.contract').then((m) => m.contract),
     kernel: () => import('../utildex-tools/cron-explainer/cron-explainer.kernel'),
   },
+  'ics-event-generator': {
+    contract: () =>
+      import('../utildex-tools/ics-event-generator/ics-event-generator.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/ics-event-generator/ics-event-generator.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {

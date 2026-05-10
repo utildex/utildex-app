@@ -131,6 +131,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/cron-explainer/cron-explainer.component').then(
       (m) => m.CronExplainerComponent,
     ),
+  'ics-event-generator': () =>
+    import('../utildex-tools/ics-event-generator/ics-event-generator.component').then(
+      (m) => m.IcsEventGeneratorComponent,
+    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {
