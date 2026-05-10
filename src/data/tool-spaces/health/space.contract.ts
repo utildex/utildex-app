@@ -12,7 +12,7 @@ export const healthToolSpaceContract: ToolSpaceDefinition = {
     {
       id: 'body-composition',
       label: mapLocalizedNestedField(contractI18n, 'groups', 'bodyComposition'),
-      toolIds: ['bmi-calculator'],
+      toolIds: ['bmi-calculator', 'whr-calculator'],
     },
     {
       id: 'metabolic-indices',

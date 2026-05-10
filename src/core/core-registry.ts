@@ -37,6 +37,11 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       import('../utildex-tools/bmi-calculator/bmi-calculator.contract').then((m) => m.contract),
     kernel: () => import('../utildex-tools/bmi-calculator/bmi-calculator.kernel'),
   },
+  'whr-calculator': {
+    contract: () =>
+      import('../utildex-tools/whr-calculator/whr-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/whr-calculator/whr-calculator.kernel'),
+  },
   'homa-calculator': {
     contract: () =>
       import('../utildex-tools/homa-calculator/homa-calculator.contract').then((m) => m.contract),

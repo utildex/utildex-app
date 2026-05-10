@@ -39,6 +39,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/bmi-calculator/bmi-calculator.component').then(
       (m) => m.BmiCalculatorComponent,
     ),
+  'whr-calculator': () =>
+    import('../utildex-tools/whr-calculator/whr-calculator.component').then(
+      (m) => m.WhrCalculatorComponent,
+    ),
   'homa-calculator': () =>
     import('../utildex-tools/homa-calculator/homa-calculator.component').then(
       (m) => m.HomaCalculatorComponent,
