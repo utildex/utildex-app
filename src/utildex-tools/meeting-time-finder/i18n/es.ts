@@ -30,7 +30,8 @@ export default {
   RESULT_HEADING: 'Mejores ventanas de reunión',
   RESULT_NONE:
     'No hay franja en la que todos estén en horario laboral. Ajusta los horarios o activa los fines de semana.',
-  RESULT_NONE_WEEKEND: 'La fecha elegida cae en fin de semana para {names}, que actualmente excluye los fines de semana. Activa el icono de fin de semana para esos participantes o elige un día laborable.',
+  RESULT_NONE_WEEKEND:
+    'La fecha elegida cae en fin de semana para {names}, que actualmente excluye los fines de semana. Activa el icono de fin de semana para esos participantes o elige un día laborable.',
   HEATMAP_WEEKEND_BADGE: 'fin de semana',
   RESULT_INVALID: 'Añade al menos un participante con una zona válida.',
   RESULT_DURATION: 'Ventana de {minutes} min',

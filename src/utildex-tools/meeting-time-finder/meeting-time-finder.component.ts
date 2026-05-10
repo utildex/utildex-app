@@ -145,7 +145,7 @@ function makeId(): string {
               <div
                 class="grid grid-cols-12 items-end gap-2 rounded-lg border border-slate-200 bg-slate-50/40 p-2 dark:border-slate-700 dark:bg-slate-900/40"
               >
-                <label class="col-span-12 sm:col-span-3 flex flex-col gap-1">
+                <label class="col-span-12 flex flex-col gap-1 sm:col-span-3">
                   <span class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">{{
                     t.map()['LABEL_NAME']
                   }}</span>
@@ -157,7 +157,7 @@ function makeId(): string {
                     class="focus:ring-primary focus:border-primary w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
                   />
                 </label>
-                <label class="col-span-12 sm:col-span-4 flex flex-col gap-1">
+                <label class="col-span-12 flex flex-col gap-1 sm:col-span-4">
                   <span class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">{{
                     t.map()['LABEL_ZONE']
                   }}</span>
@@ -169,7 +169,7 @@ function makeId(): string {
                     (valueChange)="updateParticipant(p.id, { zone: $event })"
                   />
                 </label>
-                <div class="col-span-8 sm:col-span-3 flex flex-col gap-1">
+                <div class="col-span-8 flex flex-col gap-1 sm:col-span-3">
                   <span class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">{{
                     t.map()['LABEL_HOURS']
                   }}</span>
@@ -177,26 +177,26 @@ function makeId(): string {
                     <input
                       type="time"
                       [value]="p.startTime"
-                      (change)="
-                        updateParticipant(p.id, { startTime: $any($event.target).value })
-                      "
-                      class="focus:ring-primary focus:border-primary w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                      (change)="updateParticipant(p.id, { startTime: $any($event.target).value })"
+                      class="focus:ring-primary focus:border-primary w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
                     />
                     <span class="text-xs text-slate-400">→</span>
                     <input
                       type="time"
                       [value]="p.endTime"
                       (change)="updateParticipant(p.id, { endTime: $any($event.target).value })"
-                      class="focus:ring-primary focus:border-primary w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                      class="focus:ring-primary focus:border-primary w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
                     />
                   </div>
                 </div>
                 <label
-                  class="col-span-3 sm:col-span-1 flex flex-col items-center gap-1"
+                  class="col-span-3 flex flex-col items-center gap-1 sm:col-span-1"
                   [title]="t.map()['LABEL_INCLUDE_WEEKENDS']"
                 >
                   <span class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-                    <span class="material-symbols-outlined text-base" aria-hidden="true">weekend</span>
+                    <span class="material-symbols-outlined text-base" aria-hidden="true"
+                      >weekend</span
+                    >
                   </span>
                   <input
                     type="checkbox"
@@ -231,7 +231,9 @@ function makeId(): string {
               <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
                 {{ t.map()['HEATMAP_HEADING'] }}
               </h2>
-              <div class="flex flex-wrap items-center gap-3 text-[10px] text-slate-500 dark:text-slate-400">
+              <div
+                class="flex flex-wrap items-center gap-3 text-[10px] text-slate-500 dark:text-slate-400"
+              >
                 <span class="inline-flex items-center gap-1">
                   <span class="inline-block h-3 w-3 rounded-sm bg-emerald-500"></span>
                   {{ t.map()['HEATMAP_LEGEND_FULL'] }}
@@ -241,7 +243,9 @@ function makeId(): string {
                   {{ t.map()['HEATMAP_LEGEND_PARTIAL'] }}
                 </span>
                 <span class="inline-flex items-center gap-1">
-                  <span class="inline-block h-3 w-3 rounded-sm bg-slate-200 dark:bg-slate-700"></span>
+                  <span
+                    class="inline-block h-3 w-3 rounded-sm bg-slate-200 dark:bg-slate-700"
+                  ></span>
                   {{ t.map()['HEATMAP_LEGEND_NONE'] }}
                 </span>
               </div>
@@ -251,12 +255,14 @@ function makeId(): string {
               <table class="min-w-full border-separate border-spacing-y-1 text-xs">
                 <thead>
                   <tr>
-                    <th class="sticky left-0 z-10 bg-white px-2 py-1 text-left text-[10px] font-bold tracking-wider text-slate-500 uppercase dark:bg-slate-800">
+                    <th
+                      class="sticky left-0 z-10 bg-white px-2 py-1 text-left text-[10px] font-bold tracking-wider text-slate-500 uppercase dark:bg-slate-800"
+                    >
                       {{ t.map()['LABEL_ANCHOR_ZONE'] }}
                     </th>
                     @for (col of heatmapColumns(); track col.utcIso) {
                       <th
-                        class="px-1 py-1 text-center text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400"
+                        class="px-1 py-1 text-center font-mono text-[10px] font-semibold text-slate-500 dark:text-slate-400"
                         [class.text-emerald-600]="col.isFullOverlap"
                         [class.dark:text-emerald-400]="col.isFullOverlap"
                       >
@@ -281,14 +287,14 @@ function makeId(): string {
                             >
                           }
                         </div>
-                        <div class="text-[10px] font-normal text-slate-400">{{ row.zoneShort }}</div>
+                        <div class="text-[10px] font-normal text-slate-400">
+                          {{ row.zoneShort }}
+                        </div>
                       </th>
                       @for (cell of row.cells; track cell.utcIso) {
                         <td
                           [class]="cellClass(cell.isWorking)"
-                          [title]="
-                            cell.time + ' (' + cell.weekday + ') · UTC ' + cell.offsetLabel
-                          "
+                          [title]="cell.time + ' (' + cell.weekday + ') · UTC ' + cell.offsetLabel"
                         ></td>
                       }
                     </tr>
@@ -305,15 +311,21 @@ function makeId(): string {
             {{ t.map()['RESULT_HEADING'] }}
           </h2>
           @if (validParticipants().length === 0) {
-            <p class="rounded-lg bg-slate-50 px-3 py-3 text-sm text-slate-500 dark:bg-slate-900/50 dark:text-slate-400">
+            <p
+              class="rounded-lg bg-slate-50 px-3 py-3 text-sm text-slate-500 dark:bg-slate-900/50 dark:text-slate-400"
+            >
               {{ t.map()['RESULT_INVALID'] }}
             </p>
           } @else if (result().fullOverlapWindows.length === 0) {
-            <p class="rounded-lg bg-amber-50 px-3 py-3 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
+            <p
+              class="rounded-lg bg-amber-50 px-3 py-3 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
+            >
               {{ t.map()['RESULT_NONE'] }}
             </p>
             @if (weekendBlocked().length > 0) {
-              <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
+              <p
+                class="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-900/20 dark:text-amber-300"
+              >
                 {{ weekendHint() }}
               </p>
             }
@@ -323,7 +335,9 @@ function makeId(): string {
                 <li
                   class="rounded-xl border border-emerald-200 bg-emerald-50/60 p-3 dark:border-emerald-700/40 dark:bg-emerald-900/10"
                 >
-                  <p class="text-[11px] font-bold tracking-wider text-emerald-700 uppercase dark:text-emerald-300">
+                  <p
+                    class="text-[11px] font-bold tracking-wider text-emerald-700 uppercase dark:text-emerald-300"
+                  >
                     {{ formatDuration(w.durationMinutes) }}
                   </p>
                   <div class="mt-1 grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -332,7 +346,7 @@ function makeId(): string {
                         <p class="text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                           {{ zoneLabel(slot.zone) }}
                         </p>
-                        <p class="font-semibold tabular-nums text-slate-800 dark:text-slate-100">
+                        <p class="font-semibold text-slate-800 tabular-nums dark:text-slate-100">
                           {{ formatTimeDisplay(slot.startTime) }} →
                           {{ formatTimeDisplay(slot.endTime) }}
                           @if (slot.startDate !== slot.endDate) {
@@ -493,9 +507,7 @@ export class MeetingTimeFinderComponent {
   }
 
   updateParticipant(id: string, patch: Partial<ParticipantState>) {
-    this.participants.update((list) =>
-      list.map((p) => (p.id === id ? { ...p, ...patch } : p)),
-    );
+    this.participants.update((list) => list.map((p) => (p.id === id ? { ...p, ...patch } : p)));
   }
 
   // -------------------- Computed --------------------

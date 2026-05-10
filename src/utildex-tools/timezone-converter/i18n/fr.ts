@@ -25,7 +25,8 @@ export default {
 
   PLACEHOLDER_PICK_ZONE: 'Choisir un fuseau…',
   ZONE_SEARCH_PLACEHOLDER: 'Rechercher une ville ou un fuseau…',
-  ZONE_SEARCH_EMPTY: 'Aucun fuseau correspondant',  PLACEHOLDER_FILTER: 'Filtrer les fuseaux…',
+  ZONE_SEARCH_EMPTY: 'Aucun fuseau correspondant',
+  PLACEHOLDER_FILTER: 'Filtrer les fuseaux…',
 
   RESULT_HEADING: 'Heures converties',
   RESULT_EMPTY: 'Ajoutez au moins un fuseau cible pour voir les conversions.',

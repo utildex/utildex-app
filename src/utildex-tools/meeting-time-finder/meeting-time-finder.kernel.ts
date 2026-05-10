@@ -284,7 +284,10 @@ export function listSupportedZones(): string[] {
   const intlAny = Intl as unknown as { supportedValuesOf?: (key: string) => string[] };
   if (typeof intlAny.supportedValuesOf === 'function') {
     try {
-      return intlAny.supportedValuesOf('timeZone').slice().sort((a, b) => a.localeCompare(b));
+      return intlAny
+        .supportedValuesOf('timeZone')
+        .slice()
+        .sort((a, b) => a.localeCompare(b));
     } catch {
       /* ignore */
     }

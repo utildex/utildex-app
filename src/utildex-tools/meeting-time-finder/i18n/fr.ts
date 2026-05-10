@@ -30,7 +30,8 @@ export default {
   RESULT_HEADING: 'Meilleurs créneaux de réunion',
   RESULT_NONE:
     'Aucun créneau où tout le monde est en heures de travail. Ajustez les horaires ou activez les week-ends.',
-  RESULT_NONE_WEEKEND: 'La date choisie tombe un week-end pour {names}, qui exclut actuellement les week-ends. Activez l’icône week-end pour ces participants ou choisissez un jour de semaine.',
+  RESULT_NONE_WEEKEND:
+    'La date choisie tombe un week-end pour {names}, qui exclut actuellement les week-ends. Activez l’icône week-end pour ces participants ou choisissez un jour de semaine.',
   HEATMAP_WEEKEND_BADGE: 'week-end',
   RESULT_INVALID: 'Ajoutez au moins un participant avec un fuseau valide.',
   RESULT_DURATION: 'Créneau de {minutes} min',
