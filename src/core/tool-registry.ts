@@ -35,6 +35,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/hash-generator/hash-generator.component').then(
       (m) => m.HashGeneratorComponent,
     ),
+  'homa-calculator': () =>
+    import('../utildex-tools/homa-calculator/homa-calculator.component').then(
+      (m) => m.HomaCalculatorComponent,
+    ),
   'image-converter': () =>
     import('../utildex-tools/image-converter/image-converter.component').then(
       (m) => m.ImageConverterComponent,
