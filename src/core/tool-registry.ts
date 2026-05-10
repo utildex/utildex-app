@@ -127,6 +127,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/time-format-converter/time-format-converter.component').then(
       (m) => m.TimeFormatConverterComponent,
     ),
+  'cron-explainer': () =>
+    import('../utildex-tools/cron-explainer/cron-explainer.component').then(
+      (m) => m.CronExplainerComponent,
+    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {

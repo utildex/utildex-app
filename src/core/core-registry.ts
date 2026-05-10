@@ -180,6 +180,11 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       ),
     kernel: () => import('../utildex-tools/time-format-converter/time-format-converter.kernel'),
   },
+  'cron-explainer': {
+    contract: () =>
+      import('../utildex-tools/cron-explainer/cron-explainer.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/cron-explainer/cron-explainer.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {
