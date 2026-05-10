@@ -10,6 +10,11 @@ export const healthToolSpaceContract: ToolSpaceDefinition = {
   icon: 'health_and_safety',
   groups: [
     {
+      id: 'body-composition',
+      label: mapLocalizedNestedField(contractI18n, 'groups', 'bodyComposition'),
+      toolIds: ['bmi-calculator'],
+    },
+    {
       id: 'metabolic-indices',
       label: mapLocalizedNestedField(contractI18n, 'groups', 'metabolic'),
       toolIds: ['homa-calculator'],

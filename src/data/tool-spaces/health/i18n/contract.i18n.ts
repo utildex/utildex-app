@@ -4,6 +4,7 @@ export const contractI18n = {
     description:
       'Local-first health calculators and metabolic indices. All computations stay on your device.',
     groups: {
+      bodyComposition: 'Body composition',
       metabolic: 'Metabolic indices',
     },
   },
@@ -12,6 +13,7 @@ export const contractI18n = {
     description:
       'Calculateurs de santé et indices métaboliques en local. Tous les calculs restent sur votre appareil.',
     groups: {
+      bodyComposition: 'Composition corporelle',
       metabolic: 'Indices métaboliques',
     },
   },
@@ -20,6 +22,7 @@ export const contractI18n = {
     description:
       'Calculadoras de salud e indices metabolicos en local. Todos los calculos permanecen en tu dispositivo.',
     groups: {
+      bodyComposition: 'Composicion corporal',
       metabolic: 'Indices metabolicos',
     },
   },
@@ -27,6 +30,7 @@ export const contractI18n = {
     name: '健康空间',
     description: '本地优先的健康计算器与代谢指数；所有计算在您的设备上完成。',
     groups: {
+      bodyComposition: '身体成分',
       metabolic: '代谢指数',
     },
   },

@@ -35,6 +35,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/hash-generator/hash-generator.component').then(
       (m) => m.HashGeneratorComponent,
     ),
+  'bmi-calculator': () =>
+    import('../utildex-tools/bmi-calculator/bmi-calculator.component').then(
+      (m) => m.BmiCalculatorComponent,
+    ),
   'homa-calculator': () =>
     import('../utildex-tools/homa-calculator/homa-calculator.component').then(
       (m) => m.HomaCalculatorComponent,
