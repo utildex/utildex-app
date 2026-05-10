@@ -271,7 +271,16 @@ function makeId(): string {
                       <th
                         class="sticky left-0 z-10 bg-white px-2 py-1 text-left text-[11px] font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-200"
                       >
-                        <div class="truncate">{{ row.name }}</div>
+                        <div class="flex items-center gap-1">
+                          <span class="truncate">{{ row.name }}</span>
+                          @if (row.isWeekendBlocked) {
+                            <span
+                              class="inline-flex items-center rounded-full bg-amber-100 px-1.5 text-[9px] font-bold text-amber-700 uppercase dark:bg-amber-900/30 dark:text-amber-300"
+                              [title]="t.map()['LABEL_INCLUDE_WEEKENDS']"
+                              >{{ t.map()['HEATMAP_WEEKEND_BADGE'] }}</span
+                            >
+                          }
+                        </div>
                         <div class="text-[10px] font-normal text-slate-400">{{ row.zoneShort }}</div>
                       </th>
                       @for (cell of row.cells; track cell.utcIso) {
@@ -303,6 +312,11 @@ function makeId(): string {
             <p class="rounded-lg bg-amber-50 px-3 py-3 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
               {{ t.map()['RESULT_NONE'] }}
             </p>
+            @if (weekendBlocked().length > 0) {
+              <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
+                {{ weekendHint() }}
+              </p>
+            }
           } @else {
             <ol class="flex flex-col gap-2">
               @for (w of result().fullOverlapWindows; track w.startUtcIso) {
@@ -540,12 +554,15 @@ export class MeetingTimeFinderComponent {
   heatmapRows = computed(() => {
     const cols = this.heatmapColumns();
     const slotsByIso = new Map(this.result().slots.map((s) => [s.utcIso, s]));
+    const blocked = this.weekendBlocked();
+    const blockedIds = new Set(blocked.map((b) => b.id));
     return this.validParticipants().map((p, idx) => {
       const fallback = this.t.map()['PARTICIPANT_DEFAULT_NAME'].replace('{n}', String(idx + 1));
       return {
         id: p.id,
         name: p.label?.trim() || fallback,
         zoneShort: zoneLabel(p.zone),
+        isWeekendBlocked: blockedIds.has(p.id),
         cells: cols.map((col) => {
           const slot = slotsByIso.get(col.utcIso);
           const view = slot?.perParticipant.find((v) => v.zone === p.zone);
@@ -561,7 +578,37 @@ export class MeetingTimeFinderComponent {
     });
   });
 
-  // -------------------- Display helpers --------------------
+  // Detect participants whose chosen meeting day is a weekend in their zone
+  // AND who have weekends excluded — they cannot match by definition.
+  weekendBlocked = computed(() => {
+    const slots = this.result().slots;
+    if (slots.length === 0) return [] as { id: string; name: string }[];
+    return this.validParticipants()
+      .map((p, idx) => {
+        if (p.includeWeekends) return null;
+        // Look at the participant's local weekday at noon of the anchor date
+        // (avoids midnight-edge ambiguity).
+        const fmt = new Intl.DateTimeFormat('en-US', {
+          timeZone: p.zone,
+          weekday: 'short',
+        });
+        const noonUtc = new Date(`${this.date()}T12:00:00Z`);
+        const wd = fmt.format(noonUtc);
+        const isWeekend = wd === 'Sat' || wd === 'Sun';
+        if (!isWeekend) return null;
+        const fallback = this.t.map()['PARTICIPANT_DEFAULT_NAME'].replace('{n}', String(idx + 1));
+        return { id: p.id, name: p.label?.trim() || fallback };
+      })
+      .filter((x): x is { id: string; name: string } => x !== null);
+  });
+
+  weekendHint(): string {
+    const names = this.weekendBlocked()
+      .map((b) => b.name)
+      .join(', ');
+    return this.t.map()['RESULT_NONE_WEEKEND'].replace('{names}', names);
+  }
+
   formatTimeDisplay(time: string): string {
     return formatTime(time, this.timeFormat());
   }

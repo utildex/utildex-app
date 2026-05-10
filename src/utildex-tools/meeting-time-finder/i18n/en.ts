@@ -29,6 +29,8 @@ export default {
 
   RESULT_HEADING: 'Best meeting windows',
   RESULT_NONE: 'No window where everyone is in working hours. Try adjusting hours or enabling weekends.',
+  RESULT_NONE_WEEKEND: 'The meeting date is a weekend for {names}, who currently exclude weekends. Toggle the weekend icon on those participants or pick a weekday.',
+  HEATMAP_WEEKEND_BADGE: 'weekend',
   RESULT_INVALID: 'Add at least one participant with a valid zone.',
   RESULT_DURATION: '{minutes} min window',
   RESULT_DURATION_HOURS: '{hours} h window',

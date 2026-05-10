@@ -29,6 +29,8 @@ export default {
 
   RESULT_HEADING: '最佳会议时段',
   RESULT_NONE: '没有所有人都在工作时间的时段。请调整时间或启用周末。',
+  RESULT_NONE_WEEKEND: '所选日期对 {names} 是周末，而其当前不包含周末。请为该参会人启用周末图标，或选择工作日。',
+  HEATMAP_WEEKEND_BADGE: '周末',
   RESULT_INVALID: '请添加至少一位带有效时区的参会人。',
   RESULT_DURATION: '{minutes} 分钟时段',
   RESULT_DURATION_HOURS: '{hours} 小时时段',
