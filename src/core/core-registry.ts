@@ -166,6 +166,13 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       ),
     kernel: () => import('../utildex-tools/meeting-time-finder/meeting-time-finder.kernel'),
   },
+  'timestamp-converter': {
+    contract: () =>
+      import('../utildex-tools/timestamp-converter/timestamp-converter.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/timestamp-converter/timestamp-converter.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {

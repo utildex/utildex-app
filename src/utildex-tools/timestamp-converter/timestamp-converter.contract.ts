@@ -1,0 +1,27 @@
+import { ToolContract } from '../../core/tool-contract';
+import { TRAITS } from '../../core/types/traits';
+import { mapLocalizedField } from '../../core/i18n-mapper';
+import { contractI18n } from './i18n/contract.i18n';
+import { schema } from './timestamp-converter.schema';
+
+export const contract: ToolContract = {
+  id: 'timestamp-converter',
+  metadata: {
+    name: mapLocalizedField(contractI18n, 'name'),
+    description: mapLocalizedField(contractI18n, 'description'),
+    icon: 'schedule',
+    version: '1.0.0',
+    categories: ['Utility'],
+    tags: ['time', 'epoch', 'unix', 'timestamp', 'utc', 'iso8601', 'converter'],
+    color: '#0ea5e9',
+  },
+  types: {
+    input: { traits: [TRAITS.structured] },
+    output: { format: 'text' },
+  },
+  schema,
+  widget: {
+    supported: false,
+  },
+  cost: 'low',
+};
