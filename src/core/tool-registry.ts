@@ -107,6 +107,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/url-encoder-decoder/url-encoder-decoder.component').then(
       (m) => m.UrlEncoderDecoderComponent,
     ),
+  'date-time-calculator': () =>
+    import('../utildex-tools/date-time-calculator/date-time-calculator.component').then(
+      (m) => m.DateTimeCalculatorComponent,
+    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {

@@ -145,6 +145,13 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       ),
     kernel: () => import('../utildex-tools/url-encoder-decoder/url-encoder-decoder.kernel'),
   },
+  'date-time-calculator': {
+    contract: () =>
+      import('../utildex-tools/date-time-calculator/date-time-calculator.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/date-time-calculator/date-time-calculator.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {
