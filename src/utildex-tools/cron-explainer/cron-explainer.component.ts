@@ -48,7 +48,7 @@ interface FieldRow {
       >
         <!-- Input row -->
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-3">
-          <label class="lg:col-span-2 flex flex-col gap-1">
+          <label class="flex flex-col gap-1 lg:col-span-2">
             <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">{{
               t.map()['LABEL_EXPRESSION']
             }}</span>
@@ -112,7 +112,8 @@ interface FieldRow {
                 {{ t.map()['RESULT_VALID'] }}
               </span>
               <span class="font-mono text-[11px] text-slate-500">
-                {{ t.map()['RESULT_NORMALIZED'] }}: <span class="text-slate-700 dark:text-slate-300">{{ result().normalized }}</span>
+                {{ t.map()['RESULT_NORMALIZED'] }}:
+                <span class="text-slate-700 dark:text-slate-300">{{ result().normalized }}</span>
               </span>
               <button
                 type="button"
@@ -121,7 +122,9 @@ interface FieldRow {
                 [title]="t.map()['COPY_VALUE']"
                 class="glass-control focus:ring-primary inline-flex h-7 w-7 items-center justify-center rounded-md text-slate-500 transition-colors hover:text-slate-900 focus:ring-2 focus:outline-none dark:text-slate-300 dark:hover:text-white"
               >
-                <span class="material-symbols-outlined text-base" aria-hidden="true">content_copy</span>
+                <span class="material-symbols-outlined text-base" aria-hidden="true"
+                  >content_copy</span
+                >
               </button>
             </div>
 
@@ -147,13 +150,21 @@ interface FieldRow {
                 @for (row of fieldRows(); track row.labelKey) {
                   @if (row.field) {
                     <li class="flex items-center justify-between gap-2 py-1.5">
-                      <p class="text-[10px] font-semibold text-slate-500 dark:text-slate-400 min-w-[7rem]">
+                      <p
+                        class="min-w-[7rem] text-[10px] font-semibold text-slate-500 dark:text-slate-400"
+                      >
                         {{ t.map()[row.labelKey] }}
                       </p>
-                      <p class="flex-1 truncate font-mono text-sm tabular-nums text-slate-800 dark:text-slate-200">
+                      <p
+                        class="flex-1 truncate font-mono text-sm text-slate-800 tabular-nums dark:text-slate-200"
+                      >
                         {{ row.field.raw }}
                         <span class="ml-2 text-[10px] font-normal text-slate-400">
-                          {{ row.field.isWildcard ? t.map()['ANY'] : (row.field.values.length + ' \u2022 ' + previewValues(row.field)) }}
+                          {{
+                            row.field.isWildcard
+                              ? t.map()['ANY']
+                              : row.field.values.length + ' • ' + previewValues(row.field)
+                          }}
                         </span>
                       </p>
                     </li>
@@ -180,17 +191,17 @@ interface FieldRow {
                     max="25"
                     [value]="count()"
                     (input)="setCount(+$any($event.target).value)"
-                    class="focus:ring-primary focus:border-primary w-16 rounded-md border border-slate-300 bg-slate-50 px-2 py-1 text-sm tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                    class="focus:ring-primary focus:border-primary w-16 rounded-md border border-slate-300 bg-slate-50 px-2 py-1 text-sm text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
                   />
                 </label>
               </div>
               <ol class="flex flex-col divide-y divide-slate-200 dark:divide-slate-700">
                 @for (run of result().nextRuns; track run.instantMs) {
                   <li class="flex items-center justify-between gap-2 py-1.5">
-                    <p class="font-mono text-sm tabular-nums text-slate-800 dark:text-slate-200">
+                    <p class="font-mono text-sm text-slate-800 tabular-nums dark:text-slate-200">
                       {{ run.localLabel }}
                     </p>
-                    <p class="text-xs italic text-slate-500 dark:text-slate-400">
+                    <p class="text-xs text-slate-500 italic dark:text-slate-400">
                       {{ run.relative }}
                     </p>
                   </li>

@@ -1,17 +1,20 @@
 export default {
   TITLE: 'Convertisseur de formats de date',
   PRIVACY_NOTE: 'Aucune donn\u00e9e ne quitte votre appareil. Toute la conversion est locale.',
-  DST_NOTE: 'Heure d\u2019\u00e9t\u00e9 et d\u00e9calages historiques r\u00e9solus par votre navigateur.',
+  DST_NOTE:
+    'Heure d\u2019\u00e9t\u00e9 et d\u00e9calages historiques r\u00e9solus par votre navigateur.',
 
   LABEL_INPUT: 'Date ou heure',
-  LABEL_INPUT_PLACEHOLDER: 'ex. 2026-05-10T12:34:56Z, 1746878400, Sun, 10 May 2026 12:34:56 +0200\u2026',
+  LABEL_INPUT_PLACEHOLDER:
+    'ex. 2026-05-10T12:34:56Z, 1746878400, Sun, 10 May 2026 12:34:56 +0200\u2026',
   LABEL_ZONE: 'Fuseau local',
   ZONE_SEARCH_PLACEHOLDER: 'Rechercher une ville ou un fuseau\u2026',
   ZONE_SEARCH_EMPTY: 'Aucun fuseau correspondant',
   LABEL_NOW: 'Maintenant',
 
   RESULT_DETECTED: 'Format d\u00e9tect\u00e9',
-  RESULT_INVALID: 'Impossible d\u2019analyser cette valeur. Essayez ISO 8601, RFC 2822, SQL ou un horodatage Unix.',
+  RESULT_INVALID:
+    'Impossible d\u2019analyser cette valeur. Essayez ISO 8601, RFC 2822, SQL ou un horodatage Unix.',
 
   FORMAT_ISO8601: 'ISO 8601',
   FORMAT_RFC3339: 'RFC 3339',

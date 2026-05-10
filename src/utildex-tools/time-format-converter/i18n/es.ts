@@ -4,14 +4,16 @@ export default {
   DST_NOTE: 'Horario de verano y desfases hist\u00f3ricos resueltos por tu navegador.',
 
   LABEL_INPUT: 'Fecha u hora',
-  LABEL_INPUT_PLACEHOLDER: 'p. ej. 2026-05-10T12:34:56Z, 1746878400, Sun, 10 May 2026 12:34:56 +0200\u2026',
+  LABEL_INPUT_PLACEHOLDER:
+    'p. ej. 2026-05-10T12:34:56Z, 1746878400, Sun, 10 May 2026 12:34:56 +0200\u2026',
   LABEL_ZONE: 'Zona horaria local',
   ZONE_SEARCH_PLACEHOLDER: 'Buscar ciudad o zona\u2026',
   ZONE_SEARCH_EMPTY: 'Sin zonas coincidentes',
   LABEL_NOW: 'Ahora',
 
   RESULT_DETECTED: 'Formato detectado',
-  RESULT_INVALID: 'No se pudo analizar este valor. Prueba ISO 8601, RFC 2822, SQL o una marca Unix.',
+  RESULT_INVALID:
+    'No se pudo analizar este valor. Prueba ISO 8601, RFC 2822, SQL o una marca Unix.',
 
   FORMAT_ISO8601: 'ISO 8601',
   FORMAT_RFC3339: 'RFC 3339',

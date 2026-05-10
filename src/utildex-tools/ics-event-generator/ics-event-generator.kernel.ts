@@ -45,17 +45,31 @@ export function detectLocalZone(): string {
 }
 
 const CURATED_ZONES = [
-  'UTC', 'America/New_York', 'America/Chicago', 'America/Denver',
-  'America/Los_Angeles', 'America/Sao_Paulo', 'Europe/London', 'Europe/Paris',
-  'Europe/Berlin', 'Europe/Moscow', 'Africa/Cairo', 'Africa/Johannesburg',
-  'Asia/Dubai', 'Asia/Kolkata', 'Asia/Shanghai', 'Asia/Tokyo',
-  'Australia/Sydney', 'Pacific/Auckland',
+  'UTC',
+  'America/New_York',
+  'America/Chicago',
+  'America/Denver',
+  'America/Los_Angeles',
+  'America/Sao_Paulo',
+  'Europe/London',
+  'Europe/Paris',
+  'Europe/Berlin',
+  'Europe/Moscow',
+  'Africa/Cairo',
+  'Africa/Johannesburg',
+  'Asia/Dubai',
+  'Asia/Kolkata',
+  'Asia/Shanghai',
+  'Asia/Tokyo',
+  'Australia/Sydney',
+  'Pacific/Auckland',
 ];
 
 export function listSupportedZones(): string[] {
   try {
-    const supported = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] })
-      .supportedValuesOf?.('timeZone');
+    const supported = (
+      Intl as unknown as { supportedValuesOf?: (k: string) => string[] }
+    ).supportedValuesOf?.('timeZone');
     if (Array.isArray(supported) && supported.length > 0) return supported;
   } catch {
     /* ignore */
@@ -75,21 +89,27 @@ function zoneOffsetAt(zone: string, instantMs: number): number {
   const dtf = new Intl.DateTimeFormat('en-US', {
     timeZone: zone,
     hourCycle: 'h23',
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
   });
   const parts = dtf.formatToParts(new Date(instantMs));
   const get = (t: string) => Number(parts.find((p) => p.type === t)?.value ?? '0');
   const asUtc = Date.UTC(
-    get('year'), get('month') - 1, get('day'),
-    get('hour'), get('minute'), get('second'),
+    get('year'),
+    get('month') - 1,
+    get('day'),
+    get('hour'),
+    get('minute'),
+    get('second'),
   );
   return Math.round((asUtc - instantMs) / 60000);
 }
 
-function wallToUtc(
-  y: number, mo: number, d: number, h: number, mi: number, zone: string,
-): number {
+function wallToUtc(y: number, mo: number, d: number, h: number, mi: number, zone: string): number {
   const naive = Date.UTC(y, mo - 1, d, h, mi, 0, 0);
   const off1 = zoneOffsetAt(zone, naive);
   const adjusted = naive - off1 * 60000;
@@ -98,7 +118,11 @@ function wallToUtc(
 }
 
 interface Wall {
-  y: number; mo: number; d: number; h: number; mi: number;
+  y: number;
+  mo: number;
+  d: number;
+  h: number;
+  mi: number;
 }
 
 function parseDate(s: string): { y: number; mo: number; d: number } | null {
@@ -219,7 +243,11 @@ function uuid(): string {
 }
 
 function safeFilename(title: string): string {
-  const base = title.trim().replace(/[\\/:*?"<>|]/g, '-').slice(0, 60).trim();
+  const base = title
+    .trim()
+    .replace(/[\\/:*?"<>|]/g, '-')
+    .slice(0, 60)
+    .trim();
   return (base || 'event') + '.ics';
 }
 

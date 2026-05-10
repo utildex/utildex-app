@@ -58,7 +58,7 @@ const EXAMPLES = [
       >
         <!-- Input row -->
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-3">
-          <label class="lg:col-span-2 flex flex-col gap-1">
+          <label class="flex flex-col gap-1 lg:col-span-2">
             <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">{{
               t.map()['LABEL_INPUT']
             }}</span>
@@ -122,18 +122,22 @@ const EXAMPLES = [
             <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
               {{ t.map()['RESULT_DETECTED'] }}:
               <span
-                class="ml-1 inline-flex items-center rounded-md bg-primary/10 px-2 py-0.5 font-mono text-[11px] normal-case text-primary"
+                class="bg-primary/10 text-primary ml-1 inline-flex items-center rounded-md px-2 py-0.5 font-mono text-[11px] normal-case"
               >
                 {{ detectedLabel() }}
               </span>
-              <span class="ml-2 font-mono normal-case text-slate-400">{{ f.zone }} · UTC {{ f.offsetLabel }}</span>
+              <span class="ml-2 font-mono text-slate-400 normal-case"
+                >{{ f.zone }} · UTC {{ f.offsetLabel }}</span
+              >
             </p>
             <button
               type="button"
               (click)="copyAll(f)"
               class="bg-primary inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-all hover:opacity-90 focus:ring-2 focus:ring-offset-1 focus:outline-none active:scale-95"
             >
-              <span class="material-symbols-outlined text-base" aria-hidden="true">content_copy</span>
+              <span class="material-symbols-outlined text-base" aria-hidden="true"
+                >content_copy</span
+              >
               {{ t.map()['COPY_ALL'] }}
             </button>
           </div>
@@ -154,7 +158,7 @@ const EXAMPLES = [
                         {{ row.label }}
                       </p>
                       <p
-                        class="truncate font-mono text-sm tabular-nums text-slate-800 dark:text-slate-200"
+                        class="truncate font-mono text-sm text-slate-800 tabular-nums dark:text-slate-200"
                       >
                         {{ row.value }}
                       </p>

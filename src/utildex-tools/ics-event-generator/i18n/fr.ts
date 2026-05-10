@@ -1,7 +1,9 @@
 export default {
   TITLE: 'G\u00e9n\u00e9rateur d\u2019\u00e9v\u00e9nement ICS',
-  PRIVACY_NOTE: 'Aucune donn\u00e9e ne quitte votre appareil. Le fichier .ics est cr\u00e9\u00e9 localement.',
-  DST_NOTE: 'Les heures sont \u00e9mises avec leur fuseau IANA pour une importation tenant compte de l\u2019heure d\u2019\u00e9t\u00e9.',
+  PRIVACY_NOTE:
+    'Aucune donn\u00e9e ne quitte votre appareil. Le fichier .ics est cr\u00e9\u00e9 localement.',
+  DST_NOTE:
+    'Les heures sont \u00e9mises avec leur fuseau IANA pour une importation tenant compte de l\u2019heure d\u2019\u00e9t\u00e9.',
 
   SECTION_BASICS: 'Informations',
   SECTION_WHEN: 'Quand',

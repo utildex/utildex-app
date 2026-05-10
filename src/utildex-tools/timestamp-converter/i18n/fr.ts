@@ -1,7 +1,8 @@
 export default {
   TITLE: 'Convertisseur d\u2019horodatage Unix',
   PRIVACY_NOTE: 'Aucune donn\u00e9e ne quitte votre appareil. Toute la conversion est locale.',
-  DST_NOTE: 'Heure d\u2019\u00e9t\u00e9 et d\u00e9calages historiques r\u00e9solus par votre navigateur.',
+  DST_NOTE:
+    'Heure d\u2019\u00e9t\u00e9 et d\u00e9calages historiques r\u00e9solus par votre navigateur.',
 
   MODE_PARSE: 'Horodatage \u2192 date',
   MODE_COMPOSE: 'Date \u2192 horodatage',

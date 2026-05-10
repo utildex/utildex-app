@@ -134,7 +134,10 @@ function bigFromMillis(ms: number, unit: 'us' | 'ns'): string {
   return (BigInt(Math.trunc(ms)) * factor).toString();
 }
 
-function describeInstantInZone(zone: string, instantMs: number): {
+function describeInstantInZone(
+  zone: string,
+  instantMs: number,
+): {
   date: string;
   time: string;
   weekday: string;
@@ -273,8 +276,9 @@ const CURATED_ZONES = [
 
 export function listSupportedZones(): string[] {
   try {
-    const supported = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] })
-      .supportedValuesOf?.('timeZone');
+    const supported = (
+      Intl as unknown as { supportedValuesOf?: (k: string) => string[] }
+    ).supportedValuesOf?.('timeZone');
     if (Array.isArray(supported) && supported.length > 0) return supported;
   } catch {
     /* ignore */

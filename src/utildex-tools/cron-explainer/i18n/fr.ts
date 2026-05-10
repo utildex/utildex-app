@@ -1,7 +1,8 @@
 export default {
   TITLE: 'Explicateur d\u2019expressions cron',
   PRIVACY_NOTE: 'Aucune donn\u00e9e ne quitte votre appareil. Toute l\u2019analyse est locale.',
-  DST_NOTE: 'L\u2019aper\u00e7u tient compte de l\u2019heure d\u2019\u00e9t\u00e9 dans votre fuseau.',
+  DST_NOTE:
+    'L\u2019aper\u00e7u tient compte de l\u2019heure d\u2019\u00e9t\u00e9 dans votre fuseau.',
 
   LABEL_EXPRESSION: 'Expression cron',
   LABEL_EXPRESSION_PLACEHOLDER: 'ex. 0 9 * * 1-5',

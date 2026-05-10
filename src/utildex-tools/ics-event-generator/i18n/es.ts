@@ -1,7 +1,8 @@
 export default {
   TITLE: 'Generador de eventos ICS',
   PRIVACY_NOTE: 'Ning\u00fan dato sale de tu dispositivo. El archivo .ics se genera localmente.',
-  DST_NOTE: 'Las horas se emiten con su zona IANA para una importaci\u00f3n consciente del horario de verano.',
+  DST_NOTE:
+    'Las horas se emiten con su zona IANA para una importaci\u00f3n consciente del horario de verano.',
 
   SECTION_BASICS: 'Datos del evento',
   SECTION_WHEN: 'Cu\u00e1ndo',

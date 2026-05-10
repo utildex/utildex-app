@@ -6,11 +6,7 @@ import { ZonePickerComponent } from '../../components/zone-picker/zone-picker.co
 import { PersistenceService } from '../../services/persistence.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import {
-  convert,
-  detectLocalZone,
-  listSupportedZones,
-} from './ics-event-generator.kernel';
+import { convert, detectLocalZone, listSupportedZones } from './ics-event-generator.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -69,277 +65,279 @@ function addHourToTime(t: string): string {
         class="mx-auto grid w-full max-w-6xl grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-4 lg:p-5 dark:border-slate-700 dark:bg-slate-800"
       >
         <div class="flex min-w-0 flex-col gap-3">
-        <!-- Basics -->
-        <section class="flex flex-col gap-2">
-          <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-            {{ t.map()['SECTION_BASICS'] }}
-          </h2>
-          <label class="flex flex-col gap-1">
-            <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-              t.map()['LABEL_TITLE']
-            }}</span>
-            <input
-              type="text"
-              [value]="title()"
-              [placeholder]="t.map()['LABEL_TITLE_PLACEHOLDER']"
-              (input)="title.set($any($event.target).value)"
-              class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-            />
-          </label>
-          <label class="flex flex-col gap-1">
-            <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-              t.map()['LABEL_DESCRIPTION']
-            }}</span>
-            <textarea
-              rows="2"
-              [value]="description()"
-              (input)="description.set($any($event.target).value)"
-              class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-            ></textarea>
-          </label>
-          <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <!-- Basics -->
+          <section class="flex flex-col gap-2">
+            <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+              {{ t.map()['SECTION_BASICS'] }}
+            </h2>
             <label class="flex flex-col gap-1">
               <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_LOCATION']
+                t.map()['LABEL_TITLE']
               }}</span>
               <input
                 type="text"
-                [value]="location()"
-                (input)="location.set($any($event.target).value)"
+                [value]="title()"
+                [placeholder]="t.map()['LABEL_TITLE_PLACEHOLDER']"
+                (input)="title.set($any($event.target).value)"
                 class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
               />
             </label>
             <label class="flex flex-col gap-1">
               <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_URL']
+                t.map()['LABEL_DESCRIPTION']
               }}</span>
-              <input
-                type="url"
-                [value]="url()"
-                (input)="url.set($any($event.target).value)"
+              <textarea
+                rows="2"
+                [value]="description()"
+                (input)="description.set($any($event.target).value)"
                 class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-              />
+              ></textarea>
             </label>
-          </div>
-        </section>
-
-        <!-- When -->
-        <section class="flex flex-col gap-2">
-          <div class="flex items-center justify-between">
-            <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-              {{ t.map()['SECTION_WHEN'] }}
-            </h2>
-            <label class="inline-flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-              <input
-                type="checkbox"
-                [checked]="allDay()"
-                (change)="allDay.set($any($event.target).checked)"
-                class="h-4 w-4 accent-primary"
-              />
-              {{ t.map()['LABEL_ALL_DAY'] }}
-            </label>
-          </div>
-          <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            <label class="flex flex-col gap-1">
-              <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_START_DATE']
-              }}</span>
-              <input
-                type="date"
-                [value]="startDate()"
-                (change)="startDate.set($any($event.target).value)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-              />
-            </label>
-            @if (!allDay()) {
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
               <label class="flex flex-col gap-1">
                 <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                  t.map()['LABEL_START_TIME']
+                  t.map()['LABEL_LOCATION']
                 }}</span>
                 <input
-                  type="time"
-                  [value]="startTime()"
-                  (change)="startTime.set($any($event.target).value)"
-                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-                />
-              </label>
-            }
-            <label class="flex flex-col gap-1">
-              <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_END_DATE']
-              }}</span>
-              <input
-                type="date"
-                [value]="endDate()"
-                (change)="endDate.set($any($event.target).value)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-              />
-            </label>
-            @if (!allDay()) {
-              <label class="flex flex-col gap-1">
-                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                  t.map()['LABEL_END_TIME']
-                }}</span>
-                <input
-                  type="time"
-                  [value]="endTime()"
-                  (change)="endTime.set($any($event.target).value)"
-                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-                />
-              </label>
-            }
-          </div>
-          @if (!allDay()) {
-            <label class="flex flex-col gap-1">
-              <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_ZONE']
-              }}</span>
-              <app-zone-picker
-                [zones]="zones"
-                [value]="zone()"
-                [placeholder]="t.map()['ZONE_SEARCH_PLACEHOLDER']"
-                [noResultsLabel]="t.map()['ZONE_SEARCH_EMPTY']"
-                (valueChange)="zone.set($event)"
-              />
-            </label>
-          }
-        </section>
-
-        <!-- Recurrence -->
-        <section class="flex flex-col gap-2">
-          <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-            {{ t.map()['SECTION_RECURRENCE'] }}
-          </h2>
-          <div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
-            <label class="flex flex-col gap-1">
-              <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_RECURRENCE']
-              }}</span>
-              <select
-                [ngModel]="recurrence()"
-                (ngModelChange)="recurrence.set($event)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
-              >
-                @for (opt of recurrenceOptions; track opt.id) {
-                  <option [value]="opt.id">{{ t.map()[opt.key] }}</option>
-                }
-              </select>
-            </label>
-            @if (recurrence() !== 'none') {
-              <label class="flex flex-col gap-1">
-                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                  t.map()['LABEL_INTERVAL']
-                }}</span>
-                <input
-                  type="number"
-                  min="1"
-                  max="99"
-                  [value]="recurrenceInterval()"
-                  (input)="recurrenceInterval.set(+$any($event.target).value)"
-                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-                />
-              </label>
-              <label class="flex flex-col gap-1">
-                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                  t.map()['LABEL_COUNT']
-                }}</span>
-                <input
-                  type="number"
-                  min="0"
-                  max="999"
-                  [value]="recurrenceCount()"
-                  (input)="recurrenceCount.set(+$any($event.target).value)"
-                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-                />
-              </label>
-              <label class="flex flex-col gap-1">
-                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                  t.map()['LABEL_UNTIL']
-                }}</span>
-                <input
-                  type="date"
-                  [value]="recurrenceUntil()"
-                  (change)="recurrenceUntil.set($any($event.target).value)"
+                  type="text"
+                  [value]="location()"
+                  (input)="location.set($any($event.target).value)"
                   class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
                 />
               </label>
-            }
-          </div>
-        </section>
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_URL']
+                }}</span>
+                <input
+                  type="url"
+                  [value]="url()"
+                  (input)="url.set($any($event.target).value)"
+                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                />
+              </label>
+            </div>
+          </section>
 
-        <!-- Reminders -->
-        <section class="flex flex-col gap-2">
-          <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-            {{ t.map()['SECTION_REMINDERS'] }}
-          </h2>
-          <div class="flex flex-wrap gap-2">
-            @for (opt of reminderOptions; track opt.minutes) {
-              <button
-                type="button"
-                (click)="toggleReminder(opt.minutes)"
-                [class]="reminderButtonClass(opt.minutes)"
+          <!-- When -->
+          <section class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+                {{ t.map()['SECTION_WHEN'] }}
+              </h2>
+              <label
+                class="inline-flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300"
               >
-                {{ t.map()[opt.key] }}
-              </button>
+                <input
+                  type="checkbox"
+                  [checked]="allDay()"
+                  (change)="allDay.set($any($event.target).checked)"
+                  class="accent-primary h-4 w-4"
+                />
+                {{ t.map()['LABEL_ALL_DAY'] }}
+              </label>
+            </div>
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_START_DATE']
+                }}</span>
+                <input
+                  type="date"
+                  [value]="startDate()"
+                  (change)="startDate.set($any($event.target).value)"
+                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                />
+              </label>
+              @if (!allDay()) {
+                <label class="flex flex-col gap-1">
+                  <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                    t.map()['LABEL_START_TIME']
+                  }}</span>
+                  <input
+                    type="time"
+                    [value]="startTime()"
+                    (change)="startTime.set($any($event.target).value)"
+                    class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                  />
+                </label>
+              }
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_END_DATE']
+                }}</span>
+                <input
+                  type="date"
+                  [value]="endDate()"
+                  (change)="endDate.set($any($event.target).value)"
+                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                />
+              </label>
+              @if (!allDay()) {
+                <label class="flex flex-col gap-1">
+                  <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                    t.map()['LABEL_END_TIME']
+                  }}</span>
+                  <input
+                    type="time"
+                    [value]="endTime()"
+                    (change)="endTime.set($any($event.target).value)"
+                    class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                  />
+                </label>
+              }
+            </div>
+            @if (!allDay()) {
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_ZONE']
+                }}</span>
+                <app-zone-picker
+                  [zones]="zones"
+                  [value]="zone()"
+                  [placeholder]="t.map()['ZONE_SEARCH_PLACEHOLDER']"
+                  [noResultsLabel]="t.map()['ZONE_SEARCH_EMPTY']"
+                  (valueChange)="zone.set($event)"
+                />
+              </label>
             }
-          </div>
-        </section>
+          </section>
 
-        <!-- Optional details -->
-        <section class="flex flex-col gap-2">
-          <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-            {{ t.map()['SECTION_OPTIONAL'] }}
-          </h2>
-          <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <label class="flex flex-col gap-1">
-              <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_ORGANIZER_NAME']
-              }}</span>
-              <input
-                type="text"
-                [value]="organizerName()"
-                (input)="organizerName.set($any($event.target).value)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-              />
-            </label>
-            <label class="flex flex-col gap-1">
-              <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_ORGANIZER_EMAIL']
-              }}</span>
-              <input
-                type="email"
-                [value]="organizerEmail()"
-                (input)="organizerEmail.set($any($event.target).value)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
-              />
-            </label>
-            <label class="flex flex-col gap-1">
-              <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
-                t.map()['LABEL_STATUS']
-              }}</span>
-              <select
-                [ngModel]="status()"
-                (ngModelChange)="status.set($event)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
-              >
-                @for (opt of statusOptions; track opt.id) {
-                  <option [value]="opt.id">{{ t.map()[opt.key] }}</option>
-                }
-              </select>
-            </label>
-          </div>
-        </section>
+          <!-- Recurrence -->
+          <section class="flex flex-col gap-2">
+            <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+              {{ t.map()['SECTION_RECURRENCE'] }}
+            </h2>
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-4">
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_RECURRENCE']
+                }}</span>
+                <select
+                  [ngModel]="recurrence()"
+                  (ngModelChange)="recurrence.set($event)"
+                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
+                >
+                  @for (opt of recurrenceOptions; track opt.id) {
+                    <option [value]="opt.id">{{ t.map()[opt.key] }}</option>
+                  }
+                </select>
+              </label>
+              @if (recurrence() !== 'none') {
+                <label class="flex flex-col gap-1">
+                  <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                    t.map()['LABEL_INTERVAL']
+                  }}</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="99"
+                    [value]="recurrenceInterval()"
+                    (input)="recurrenceInterval.set(+$any($event.target).value)"
+                    class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                  />
+                </label>
+                <label class="flex flex-col gap-1">
+                  <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                    t.map()['LABEL_COUNT']
+                  }}</span>
+                  <input
+                    type="number"
+                    min="0"
+                    max="999"
+                    [value]="recurrenceCount()"
+                    (input)="recurrenceCount.set(+$any($event.target).value)"
+                    class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                  />
+                </label>
+                <label class="flex flex-col gap-1">
+                  <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                    t.map()['LABEL_UNTIL']
+                  }}</span>
+                  <input
+                    type="date"
+                    [value]="recurrenceUntil()"
+                    (change)="recurrenceUntil.set($any($event.target).value)"
+                    class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                  />
+                </label>
+              }
+            </div>
+          </section>
 
-        <p
-          class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-400 dark:text-slate-500"
-        >
-          <span class="inline-flex items-center gap-1">
-            <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
-            {{ t.map()['PRIVACY_NOTE'] }}
-          </span>
-          <span>·</span>
-          <span>{{ t.map()['DST_NOTE'] }}</span>
-        </p>
+          <!-- Reminders -->
+          <section class="flex flex-col gap-2">
+            <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+              {{ t.map()['SECTION_REMINDERS'] }}
+            </h2>
+            <div class="flex flex-wrap gap-2">
+              @for (opt of reminderOptions; track opt.minutes) {
+                <button
+                  type="button"
+                  (click)="toggleReminder(opt.minutes)"
+                  [class]="reminderButtonClass(opt.minutes)"
+                >
+                  {{ t.map()[opt.key] }}
+                </button>
+              }
+            </div>
+          </section>
+
+          <!-- Optional details -->
+          <section class="flex flex-col gap-2">
+            <h2 class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">
+              {{ t.map()['SECTION_OPTIONAL'] }}
+            </h2>
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_ORGANIZER_NAME']
+                }}</span>
+                <input
+                  type="text"
+                  [value]="organizerName()"
+                  (input)="organizerName.set($any($event.target).value)"
+                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                />
+              </label>
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_ORGANIZER_EMAIL']
+                }}</span>
+                <input
+                  type="email"
+                  [value]="organizerEmail()"
+                  (input)="organizerEmail.set($any($event.target).value)"
+                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                />
+              </label>
+              <label class="flex flex-col gap-1">
+                <span class="text-[10px] font-semibold tracking-wider text-slate-500 uppercase">{{
+                  t.map()['LABEL_STATUS']
+                }}</span>
+                <select
+                  [ngModel]="status()"
+                  (ngModelChange)="status.set($event)"
+                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
+                >
+                  @for (opt of statusOptions; track opt.id) {
+                    <option [value]="opt.id">{{ t.map()[opt.key] }}</option>
+                  }
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <p
+            class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-400 dark:text-slate-500"
+          >
+            <span class="inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
+              {{ t.map()['PRIVACY_NOTE'] }}
+            </span>
+            <span>·</span>
+            <span>{{ t.map()['DST_NOTE'] }}</span>
+          </p>
         </div>
 
         <!-- Output / preview column -->
@@ -362,7 +360,9 @@ function addHourToTime(t: string): string {
                   (click)="copyIcs()"
                   class="glass-control focus:ring-primary inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] font-semibold text-slate-700 hover:text-slate-900 focus:ring-2 focus:outline-none active:scale-95 dark:text-slate-200 dark:hover:text-white"
                 >
-                  <span class="material-symbols-outlined text-sm" aria-hidden="true">content_copy</span>
+                  <span class="material-symbols-outlined text-sm" aria-hidden="true"
+                    >content_copy</span
+                  >
                   {{ t.map()['COPY_ICS'] }}
                 </button>
                 <button
@@ -376,13 +376,19 @@ function addHourToTime(t: string): string {
               </div>
             </header>
             <p class="text-xs text-slate-500 dark:text-slate-400">
-              {{ t.map()['RESULT_DURATION'] }}: <span class="font-semibold text-slate-700 dark:text-slate-200">{{ formatDuration(s.durationMinutes) }}</span>
+              {{ t.map()['RESULT_DURATION'] }}:
+              <span class="font-semibold text-slate-700 dark:text-slate-200">{{
+                formatDuration(s.durationMinutes)
+              }}</span>
               · {{ t.map()['RESULT_RRULE'] }}:
-              <span class="font-semibold text-slate-700 dark:text-slate-200">{{ s.rruleHuman ?? t.map()['RESULT_NO_RRULE'] }}</span>
+              <span class="font-semibold text-slate-700 dark:text-slate-200">{{
+                s.rruleHuman ?? t.map()['RESULT_NO_RRULE']
+              }}</span>
             </p>
             <pre
               class="max-h-[60vh] min-h-[12rem] overflow-auto rounded-lg border border-slate-200 bg-slate-50 p-3 font-mono text-[11px] leading-snug whitespace-pre text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
-            >{{ result().ics }}</pre>
+              >{{ result().ics }}</pre
+            >
           }
         </aside>
       </div>
@@ -457,9 +463,18 @@ export class IcsEventGeneratorComponent {
   constructor() {
     this.persistence.storage(this.title, 'ics-title', { type: 'string', strategy: 'hybrid' });
     this.persistence.storage(this.zone, 'ics-zone', { type: 'string', strategy: 'hybrid' });
-    this.persistence.storage(this.organizerName, 'ics-org-name', { type: 'string', strategy: 'hybrid' });
-    this.persistence.storage(this.organizerEmail, 'ics-org-email', { type: 'string', strategy: 'hybrid' });
-    this.persistence.storage(this.reminders, 'ics-reminders', { type: 'object', strategy: 'hybrid' });
+    this.persistence.storage(this.organizerName, 'ics-org-name', {
+      type: 'string',
+      strategy: 'hybrid',
+    });
+    this.persistence.storage(this.organizerEmail, 'ics-org-email', {
+      type: 'string',
+      strategy: 'hybrid',
+    });
+    this.persistence.storage(this.reminders, 'ics-reminders', {
+      type: 'object',
+      strategy: 'hybrid',
+    });
   }
 
   toggleReminder(minutes: number): void {

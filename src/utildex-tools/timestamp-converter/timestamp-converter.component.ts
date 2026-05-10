@@ -80,7 +80,7 @@ interface CopyRow {
         <!-- INPUT -->
         @if (mode() === 'parse') {
           <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            <label class="sm:col-span-2 flex flex-col gap-1">
+            <label class="flex flex-col gap-1 sm:col-span-2">
               <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">{{
                 t.map()['LABEL_TIMESTAMP']
               }}</span>
@@ -92,7 +92,7 @@ interface CopyRow {
                 [value]="raw()"
                 [placeholder]="t.map()['LABEL_TIMESTAMP_PLACEHOLDER']"
                 (input)="setRaw($any($event.target).value)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 font-mono text-sm tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 font-mono text-sm text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
               />
             </label>
             <label class="flex flex-col gap-1">
@@ -137,7 +137,7 @@ interface CopyRow {
                 step="1"
                 [value]="composeTime()"
                 (change)="setComposeTime($any($event.target).value)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 font-semibold text-sm tabular-nums text-slate-900 dark:border-slate-600 dark:bg-slate-900 dark:text-white"
+                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
               />
             </label>
             <label class="flex flex-col gap-1">
@@ -166,7 +166,7 @@ interface CopyRow {
             {{ t.map()['LABEL_NOW'] }}
           </button>
           @if (mode() === 'parse') {
-            <label class="flex flex-col gap-1 sm:min-w-[16rem] flex-1">
+            <label class="flex flex-1 flex-col gap-1 sm:min-w-[16rem]">
               <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">{{
                 t.map()['LABEL_ZONE']
               }}</span>
@@ -182,7 +182,7 @@ interface CopyRow {
           <button
             type="button"
             (click)="useLocalZone()"
-            class="glass-control focus:ring-primary inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 focus:ring-2 focus:outline-none active:scale-95 dark:text-slate-200 dark:hover:text-white self-end"
+            class="glass-control focus:ring-primary inline-flex items-center gap-1.5 self-end rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 focus:ring-2 focus:outline-none active:scale-95 dark:text-slate-200 dark:hover:text-white"
           >
             <span class="material-symbols-outlined text-base" aria-hidden="true">my_location</span>
             {{ t.map()['LABEL_USE_LOCAL'] }}
@@ -232,9 +232,9 @@ interface CopyRow {
               >
                 <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                   {{ t.map()['RESULT_ZONE'] }}
-                  <span class="ml-1 font-mono normal-case text-slate-400">{{ f.zone }}</span>
+                  <span class="ml-1 font-mono text-slate-400 normal-case">{{ f.zone }}</span>
                 </p>
-                <p class="text-xl font-extrabold tabular-nums text-slate-800 dark:text-slate-100">
+                <p class="text-xl font-extrabold text-slate-800 tabular-nums dark:text-slate-100">
                   {{ f.zoneTime }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -247,7 +247,7 @@ interface CopyRow {
                 <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                   {{ t.map()['RESULT_LOCAL'] }}
                 </p>
-                <p class="text-xl font-extrabold tabular-nums text-slate-800 dark:text-slate-100">
+                <p class="text-xl font-extrabold text-slate-800 tabular-nums dark:text-slate-100">
                   {{ f.localTime }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -258,7 +258,9 @@ interface CopyRow {
             </div>
 
             <!-- ISO + epoch values -->
-            <div class="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-900/40">
+            <div
+              class="flex flex-col gap-2 rounded-lg border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-900/40"
+            >
               <div
                 class="flex items-center justify-between gap-2 border-b border-slate-200 pb-2 dark:border-slate-700"
               >
@@ -294,7 +296,7 @@ interface CopyRow {
                         {{ row.label }}
                       </p>
                       <p
-                        class="truncate font-mono text-sm tabular-nums text-slate-800 dark:text-slate-200"
+                        class="truncate font-mono text-sm text-slate-800 tabular-nums dark:text-slate-200"
                       >
                         {{ row.value }}
                       </p>

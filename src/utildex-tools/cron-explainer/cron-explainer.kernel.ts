@@ -55,7 +55,7 @@ export interface DescribeLabels {
   onDaysOfWeek: (days: string) => string;
   inYears: (years: string) => string;
   monthsShort: string[]; // length 12, Jan..Dec
-  daysShort: string[];   // length 7,  Sun..Sat
+  daysShort: string[]; // length 7,  Sun..Sat
   and: string;
   through: string;
 }
@@ -68,11 +68,27 @@ interface FieldSpec {
 }
 
 const MONTH_NAMES: Record<string, number> = {
-  jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6,
-  jul: 7, aug: 8, sep: 9, oct: 10, nov: 11, dec: 12,
+  jan: 1,
+  feb: 2,
+  mar: 3,
+  apr: 4,
+  may: 5,
+  jun: 6,
+  jul: 7,
+  aug: 8,
+  sep: 9,
+  oct: 10,
+  nov: 11,
+  dec: 12,
 };
 const DOW_NAMES: Record<string, number> = {
-  sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6,
+  sun: 0,
+  mon: 1,
+  tue: 2,
+  wed: 3,
+  thu: 4,
+  fri: 5,
+  sat: 6,
 };
 
 const SECONDS_SPEC: FieldSpec = { min: 0, max: 59 };
@@ -188,9 +204,7 @@ export function parseCron(input: string): ParseResult {
   const expanded = resolveMacro(input);
   const tokens = tokenize(expanded);
   if (tokens.length < 5 || tokens.length > 7) {
-    throw new Error(
-      `Expected 5, 6, or 7 fields; got ${tokens.length} in "${input}"`,
-    );
+    throw new Error(`Expected 5, 6, or 7 fields; got ${tokens.length} in "${input}"`);
   }
   let secondsRaw: string | null = null;
   let yearRaw: string | null = null;
@@ -311,10 +325,7 @@ export function describe(parts: CronParts, labels: DescribeLabels): string {
   } else if (!m.isWildcard && h.isWildcard) {
     const stepM = detectStep(m.values, 0, 59);
     if (stepM != null) phrases.push(labels.everyXMinutes(stepM));
-    else
-      phrases.push(
-        labels.pastEveryHour + ' (' + describeNumericList(m.values, pad2) + ')',
-      );
+    else phrases.push(labels.pastEveryHour + ' (' + describeNumericList(m.values, pad2) + ')');
   } else {
     // Both fixed → list of HH:MM times.
     const times: string[] = [];
@@ -521,9 +532,7 @@ function findNextMatch(
     let foundDay = false;
     for (let d = state.day; d <= dim; d += 1) {
       const domMatches = parts.dayOfMonth.values.includes(d);
-      const dowMatches = parts.dayOfWeek.values.includes(
-        dayOfWeekUtc(state.year, state.month, d),
-      );
+      const dowMatches = parts.dayOfWeek.values.includes(dayOfWeekUtc(state.year, state.month, d));
       const ok = domBoth ? domMatches || dowMatches : domMatches && dowMatches;
       if (ok) {
         if (d !== state.day) {
@@ -696,8 +705,9 @@ const CURATED_ZONES = [
 
 export function listSupportedZones(): string[] {
   try {
-    const supported = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] })
-      .supportedValuesOf?.('timeZone');
+    const supported = (
+      Intl as unknown as { supportedValuesOf?: (k: string) => string[] }
+    ).supportedValuesOf?.('timeZone');
     if (Array.isArray(supported) && supported.length > 0) return supported;
   } catch {
     /* ignore */

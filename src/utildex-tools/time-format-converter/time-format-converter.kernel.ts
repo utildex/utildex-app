@@ -46,17 +46,34 @@ const RFC2822_RE =
 const UNIX_RE = /^-?\d+(?:\.\d+)?$/;
 
 const MONTHS: Record<string, number> = {
-  jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5,
-  jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
+  jan: 0,
+  feb: 1,
+  mar: 2,
+  apr: 3,
+  may: 4,
+  jun: 5,
+  jul: 6,
+  aug: 7,
+  sep: 8,
+  oct: 9,
+  nov: 10,
+  dec: 11,
 };
 
 // Named offsets used by RFC 2822. `GMT`/`UT`/`UTC` and zero-offset Z are 0.
 const NAMED_OFFSETS: Record<string, number> = {
-  ut: 0, utc: 0, gmt: 0, z: 0,
-  est: -5 * 60, edt: -4 * 60,
-  cst: -6 * 60, cdt: -5 * 60,
-  mst: -7 * 60, mdt: -6 * 60,
-  pst: -8 * 60, pdt: -7 * 60,
+  ut: 0,
+  utc: 0,
+  gmt: 0,
+  z: 0,
+  est: -5 * 60,
+  edt: -4 * 60,
+  cst: -6 * 60,
+  cdt: -5 * 60,
+  mst: -7 * 60,
+  mdt: -6 * 60,
+  pst: -8 * 60,
+  pdt: -7 * 60,
 };
 
 function pad2(n: number): string {
@@ -279,8 +296,18 @@ function describeInstantInZone(zone: string, instantMs: number) {
 
 const RFC2822_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 const RFC2822_MONTHS = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
 ] as const;
 
 function formatRfc2822(instantMs: number, zone: string): string {
@@ -406,8 +433,9 @@ const CURATED_ZONES = [
 
 export function listSupportedZones(): string[] {
   try {
-    const supported = (Intl as unknown as { supportedValuesOf?: (k: string) => string[] })
-      .supportedValuesOf?.('timeZone');
+    const supported = (
+      Intl as unknown as { supportedValuesOf?: (k: string) => string[] }
+    ).supportedValuesOf?.('timeZone');
     if (Array.isArray(supported) && supported.length > 0) return supported;
   } catch {
     /* ignore */
