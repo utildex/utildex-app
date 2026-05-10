@@ -218,7 +218,9 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
                   <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                     {{ t.map()['RESULT_TOTAL_WEEKS'] }}
                   </p>
-                  <p class="text-3xl font-bold tabular-nums text-slate-700 lg:text-4xl dark:text-slate-200">
+                  <p
+                    class="text-3xl font-bold text-slate-700 tabular-nums lg:text-4xl dark:text-slate-200"
+                  >
                     {{ diff()?.totalWeeks }}
                   </p>
                 </div>
@@ -226,7 +228,7 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
                   <p class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
                     {{ t.map()['RESULT_BUSINESS_LABEL'] }}
                   </p>
-                  <p class="text-2xl font-bold tabular-nums text-slate-700 dark:text-slate-200">
+                  <p class="text-2xl font-bold text-slate-700 tabular-nums dark:text-slate-200">
                     {{ businessDiff() }}
                   </p>
                 </div>
@@ -267,7 +269,9 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
                 [disabled]="!ready()"
                 class="glass-control focus:ring-primary inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-700 transition-all hover:text-slate-900 focus:ring-2 focus:outline-none active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 dark:text-slate-200 dark:hover:text-white"
               >
-                <span class="material-symbols-outlined text-base" aria-hidden="true">content_copy</span>
+                <span class="material-symbols-outlined text-base" aria-hidden="true"
+                  >content_copy</span
+                >
                 {{ t.map()['COPY_PLAIN'] }}
               </button>
               <button

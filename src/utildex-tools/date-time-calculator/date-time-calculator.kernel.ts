@@ -52,11 +52,7 @@ export function parseIsoDate(value: string): Date | null {
   const [y, m, d] = value.split('-').map((n) => Number(n));
   // Construct in UTC to keep arithmetic time-zone-independent.
   const date = new Date(Date.UTC(y, m - 1, d));
-  if (
-    date.getUTCFullYear() !== y ||
-    date.getUTCMonth() !== m - 1 ||
-    date.getUTCDate() !== d
-  ) {
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) {
     return null;
   }
   return date;
@@ -72,9 +68,7 @@ export function formatIsoDate(date: Date): string {
 /** Today as a UTC ISO date string. */
 export function todayIso(): string {
   const now = new Date();
-  return formatIsoDate(
-    new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())),
-  );
+  return formatIsoDate(new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -92,11 +86,7 @@ function pad2(n: number): string {
 function makeIsoFromParts(y: number, m: number, d: number): string | null {
   if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null;
   const date = new Date(Date.UTC(y, m - 1, d));
-  if (
-    date.getUTCFullYear() !== y ||
-    date.getUTCMonth() !== m - 1 ||
-    date.getUTCDate() !== d
-  ) {
+  if (date.getUTCFullYear() !== y || date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) {
     return null;
   }
   return formatIsoDate(date);
@@ -133,11 +123,7 @@ export function formatDateForDisplay(iso: string, fmt: DateFormat, locale: strin
  * a fallback so machine-readable values still work. Returns an ISO date or
  * null when the value cannot be made into a valid calendar date.
  */
-export function parseDisplayDate(
-  text: string,
-  fmt: DateFormat,
-  locale?: string,
-): string | null {
+export function parseDisplayDate(text: string, fmt: DateFormat, locale?: string): string | null {
   const trimmed = text.trim();
   if (!trimmed) return null;
 
@@ -147,8 +133,7 @@ export function parseDisplayDate(
   }
 
   const parts = trimmed.split(DATE_SEPARATORS).map((p) => Number(p));
-  const numericTriple =
-    parts.length === 3 && parts.every((n) => Number.isFinite(n)) ? parts : null;
+  const numericTriple = parts.length === 3 && parts.every((n) => Number.isFinite(n)) ? parts : null;
 
   if (numericTriple) {
     let y: number;
@@ -175,9 +160,7 @@ export function parseDisplayDate(
     const ms = Date.parse(trimmed);
     if (Number.isFinite(ms)) {
       const d = new Date(ms);
-      return formatIsoDate(
-        new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())),
-      );
+      return formatIsoDate(new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())));
     }
   }
   return null;
@@ -355,9 +338,7 @@ export function computeDeadline(input: DeadlineInput): ComputedResult {
   return { date, iso: formatIsoDate(date) };
 }
 
-export function run(
-  input: z.infer<typeof schema.input>,
-): z.infer<typeof schema.output> {
+export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   switch (input.mode) {
     case 'add': {
       const r = computeAdd(input);

@@ -111,6 +111,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/date-time-calculator/date-time-calculator.component').then(
       (m) => m.DateTimeCalculatorComponent,
     ),
+  'timezone-converter': () =>
+    import('../utildex-tools/timezone-converter/timezone-converter.component').then(
+      (m) => m.TimezoneConverterComponent,
+    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {

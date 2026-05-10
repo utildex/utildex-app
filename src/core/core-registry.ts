@@ -152,6 +152,13 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       ),
     kernel: () => import('../utildex-tools/date-time-calculator/date-time-calculator.kernel'),
   },
+  'timezone-converter': {
+    contract: () =>
+      import('../utildex-tools/timezone-converter/timezone-converter.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/timezone-converter/timezone-converter.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {
