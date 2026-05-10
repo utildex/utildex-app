@@ -159,6 +159,13 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       ),
     kernel: () => import('../utildex-tools/timezone-converter/timezone-converter.kernel'),
   },
+  'meeting-time-finder': {
+    contract: () =>
+      import('../utildex-tools/meeting-time-finder/meeting-time-finder.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/meeting-time-finder/meeting-time-finder.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {

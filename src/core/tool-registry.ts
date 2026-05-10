@@ -115,6 +115,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/timezone-converter/timezone-converter.component').then(
       (m) => m.TimezoneConverterComponent,
     ),
+  'meeting-time-finder': () =>
+    import('../utildex-tools/meeting-time-finder/meeting-time-finder.component').then(
+      (m) => m.MeetingTimeFinderComponent,
+    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {

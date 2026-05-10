@@ -1,0 +1,55 @@
+export default {
+  TITLE: 'Buscador de horarios de reunión',
+  PRIVACY_NOTE: 'Ningún dato sale de tu dispositivo. Todo el cálculo es local.',
+  DST_NOTE: 'Horario de verano y desfases históricos resueltos por tu navegador.',
+
+  LABEL_DATE: 'Fecha de la reunión',
+  LABEL_ANCHOR_ZONE: 'Zona de referencia',
+  LABEL_ANCHOR_HINT: 'La fecha se interpreta en esta zona.',
+  LABEL_PARTICIPANTS: 'Participantes',
+  LABEL_ADD_PARTICIPANT: 'Añadir participante',
+  LABEL_REMOVE: 'Quitar',
+  LABEL_NAME: 'Nombre',
+  LABEL_NAME_PLACEHOLDER: 'Nombre (opcional)',
+  LABEL_ZONE: 'Zona horaria',
+  LABEL_HOURS: 'Horario laboral',
+  LABEL_INCLUDE_WEEKENDS: 'Incluir fines de semana',
+  LABEL_GRANULARITY: 'Granularidad',
+  LABEL_USE_MY_ZONE: 'Mi zona',
+
+  GRANULARITY_15: '15 min',
+  GRANULARITY_30: '30 min',
+  GRANULARITY_60: '1 hora',
+
+  TIME_FORMAT_LABEL: 'Formato de hora',
+  TIME_FORMAT_24H: '24 h',
+  TIME_FORMAT_12H: '12 h',
+
+  RESULT_HEADING: 'Mejores ventanas de reunión',
+  RESULT_NONE:
+    'No hay franja en la que todos estén en horario laboral. Ajusta los horarios o activa los fines de semana.',
+  RESULT_INVALID: 'Añade al menos un participante con una zona válida.',
+  RESULT_DURATION: 'Ventana de {minutes} min',
+  RESULT_DURATION_HOURS: 'Ventana de {hours} h',
+  RESULT_DURATION_MIXED: 'Ventana de {hours} h {minutes} min',
+
+  HEATMAP_HEADING: 'Disponibilidad hora por hora',
+  HEATMAP_LEGEND_FULL: 'Todos disponibles',
+  HEATMAP_LEGEND_PARTIAL: 'Parcialmente disponible',
+  HEATMAP_LEGEND_NONE: 'Nadie disponible',
+  HEATMAP_PARTICIPANTS: '{count} de {total}',
+
+  COPY_FORMAT: 'Copiar como',
+  COPY_BEST: 'Mejor ventana',
+  COPY_ALL: 'Todas las ventanas',
+  COPY_ICS: 'Calendario (.ics)',
+
+  PARTICIPANT_DEFAULT_NAME: 'Participante {n}',
+  WEEKDAY_SUN: 'Dom',
+  WEEKDAY_MON: 'Lun',
+  WEEKDAY_TUE: 'Mar',
+  WEEKDAY_WED: 'Mié',
+  WEEKDAY_THU: 'Jue',
+  WEEKDAY_FRI: 'Vie',
+  WEEKDAY_SAT: 'Sáb',
+};
