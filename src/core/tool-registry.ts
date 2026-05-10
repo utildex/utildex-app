@@ -107,6 +107,34 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/url-encoder-decoder/url-encoder-decoder.component').then(
       (m) => m.UrlEncoderDecoderComponent,
     ),
+  'date-time-calculator': () =>
+    import('../utildex-tools/date-time-calculator/date-time-calculator.component').then(
+      (m) => m.DateTimeCalculatorComponent,
+    ),
+  'timezone-converter': () =>
+    import('../utildex-tools/timezone-converter/timezone-converter.component').then(
+      (m) => m.TimezoneConverterComponent,
+    ),
+  'meeting-time-finder': () =>
+    import('../utildex-tools/meeting-time-finder/meeting-time-finder.component').then(
+      (m) => m.MeetingTimeFinderComponent,
+    ),
+  'timestamp-converter': () =>
+    import('../utildex-tools/timestamp-converter/timestamp-converter.component').then(
+      (m) => m.TimestampConverterComponent,
+    ),
+  'time-format-converter': () =>
+    import('../utildex-tools/time-format-converter/time-format-converter.component').then(
+      (m) => m.TimeFormatConverterComponent,
+    ),
+  'cron-explainer': () =>
+    import('../utildex-tools/cron-explainer/cron-explainer.component').then(
+      (m) => m.CronExplainerComponent,
+    ),
+  'ics-event-generator': () =>
+    import('../utildex-tools/ics-event-generator/ics-event-generator.component').then(
+      (m) => m.IcsEventGeneratorComponent,
+    ),
 };
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {

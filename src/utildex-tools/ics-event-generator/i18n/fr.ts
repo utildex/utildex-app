@@ -1,0 +1,63 @@
+export default {
+  TITLE: 'G\u00e9n\u00e9rateur d\u2019\u00e9v\u00e9nement ICS',
+  PRIVACY_NOTE:
+    'Aucune donn\u00e9e ne quitte votre appareil. Le fichier .ics est cr\u00e9\u00e9 localement.',
+  DST_NOTE:
+    'Les heures sont \u00e9mises avec leur fuseau IANA pour une importation tenant compte de l\u2019heure d\u2019\u00e9t\u00e9.',
+
+  SECTION_BASICS: 'Informations',
+  SECTION_WHEN: 'Quand',
+  SECTION_RECURRENCE: 'R\u00e9currence',
+  SECTION_REMINDERS: 'Rappels',
+  SECTION_OPTIONAL: 'D\u00e9tails optionnels',
+  SECTION_OUTPUT: '.ics g\u00e9n\u00e9r\u00e9',
+
+  LABEL_TITLE: 'Titre',
+  LABEL_TITLE_PLACEHOLDER: 'Daily de l\u2019\u00e9quipe',
+  LABEL_DESCRIPTION: 'Description',
+  LABEL_LOCATION: 'Lieu',
+  LABEL_URL: 'URL',
+  LABEL_ORGANIZER_NAME: 'Nom de l\u2019organisateur',
+  LABEL_ORGANIZER_EMAIL: 'Courriel de l\u2019organisateur',
+  LABEL_STATUS: 'Statut',
+  STATUS_CONFIRMED: 'Confirm\u00e9',
+  STATUS_TENTATIVE: 'Provisoire',
+  STATUS_CANCELLED: 'Annul\u00e9',
+
+  LABEL_ALL_DAY: '\u00c9v\u00e9nement journ\u00e9e enti\u00e8re',
+  LABEL_START_DATE: 'Date de d\u00e9but',
+  LABEL_START_TIME: 'Heure de d\u00e9but',
+  LABEL_END_DATE: 'Date de fin',
+  LABEL_END_TIME: 'Heure de fin',
+  LABEL_ZONE: 'Fuseau horaire',
+  ZONE_SEARCH_PLACEHOLDER: 'Rechercher une ville ou un fuseau\u2026',
+  ZONE_SEARCH_EMPTY: 'Aucun fuseau correspondant',
+
+  LABEL_RECURRENCE: 'R\u00e9p\u00e9tition',
+  RECUR_NONE: 'Ne se r\u00e9p\u00e8te pas',
+  RECUR_DAILY: 'Quotidien',
+  RECUR_WEEKLY: 'Hebdomadaire',
+  RECUR_MONTHLY: 'Mensuel',
+  RECUR_YEARLY: 'Annuel',
+  LABEL_INTERVAL: 'Tous les',
+  LABEL_COUNT: 'Occurrences',
+  LABEL_UNTIL: 'Jusqu\u2019au',
+
+  LABEL_REMINDERS: 'Rappels (minutes avant)',
+  REMINDER_5: '5 min',
+  REMINDER_15: '15 min',
+  REMINDER_30: '30 min',
+  REMINDER_60: '1 h',
+  REMINDER_1440: '1 jour',
+
+  RESULT_INVALID: '\u00c9v\u00e9nement invalide',
+  RESULT_PREVIEW: 'Aper\u00e7u',
+  RESULT_DURATION: 'Dur\u00e9e',
+  RESULT_RRULE: 'R\u00e9currence',
+  RESULT_NO_RRULE: 'unique',
+  MINUTES_LABEL: 'min',
+  HOURS_LABEL: 'h',
+
+  COPY_ICS: 'Copier le .ics',
+  DOWNLOAD_ICS: 'T\u00e9l\u00e9charger le .ics',
+} as const;

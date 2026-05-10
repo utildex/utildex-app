@@ -1,0 +1,40 @@
+export default {
+  TITLE: 'Cron \u8868\u8fbe\u5f0f\u89e3\u91ca\u5668',
+  PRIVACY_NOTE:
+    '\u6570\u636e\u4e0d\u4f1a\u79bb\u5f00\u60a8\u7684\u8bbe\u5907\u3002\u6240\u6709\u89e3\u6790\u5747\u5728\u672c\u5730\u8fd0\u884c\u3002',
+  DST_NOTE:
+    '\u9884\u89c8\u5df2\u8003\u8651\u60a8\u6240\u9009\u65f6\u533a\u7684\u590f\u4ee4\u65f6\u3002',
+
+  LABEL_EXPRESSION: 'Cron \u8868\u8fbe\u5f0f',
+  LABEL_EXPRESSION_PLACEHOLDER: '\u4f8b\u5982 0 9 * * 1-5',
+  LABEL_ZONE: '\u65f6\u533a',
+  ZONE_SEARCH_PLACEHOLDER: '\u641c\u7d22\u57ce\u5e02\u6216\u65f6\u533a\u2026',
+  ZONE_SEARCH_EMPTY: '\u672a\u627e\u5230\u5339\u914d\u7684\u65f6\u533a',
+  LABEL_COUNT: '\u4e0b\u6b21\u8fd0\u884c\u6b21\u6570',
+
+  RESULT_VALID: '\u6709\u6548',
+  RESULT_INVALID: '\u8868\u8fbe\u5f0f\u65e0\u6548',
+  RESULT_DESCRIPTION: '\u542b\u4e49',
+  RESULT_NORMALIZED: '\u89c4\u8303\u5316',
+  RESULT_FIELDS: '\u5b57\u6bb5',
+  RESULT_NEXT_RUNS: '\u4e0b\u6b21\u8fd0\u884c',
+
+  FIELD_SECONDS: '\u79d2',
+  FIELD_MINUTES: '\u5206',
+  FIELD_HOURS: '\u65f6',
+  FIELD_DOM: '\u6708\u5185\u65e5',
+  FIELD_MONTH: '\u6708',
+  FIELD_DOW: '\u661f\u671f',
+  FIELD_YEAR: '\u5e74',
+
+  EXAMPLES_LABEL: '\u8bd5\u8bd5\u793a\u4f8b',
+  EXAMPLE_HOURLY: '\u6bcf\u5c0f\u65f6',
+  EXAMPLE_BUSINESS: '\u5de5\u4f5c\u65e5 9 \u70b9',
+  EXAMPLE_MIDNIGHT: '\u6bcf\u5929\u5348\u591c',
+  EXAMPLE_QUARTER: '\u6bcf 15 \u5206\u949f',
+  EXAMPLE_FIRST_OF_MONTH: '\u6bcf\u6708 1 \u53f7',
+  EXAMPLE_QUARTZ_SECONDS: '\u6bcf 30 \u79d2\uff08Quartz\uff09',
+
+  COPY_VALUE: '\u590d\u5236',
+  ANY: '\u4efb\u610f',
+} as const;

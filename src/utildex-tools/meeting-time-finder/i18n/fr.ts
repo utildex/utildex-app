@@ -1,0 +1,60 @@
+export default {
+  TITLE: 'Recherche d\u2019horaire de réunion',
+  PRIVACY_NOTE: 'Aucune donnée ne quitte votre appareil. Tout le calcul est local.',
+  DST_NOTE: 'Heure d\u2019été et décalages historiques résolus par votre navigateur.',
+
+  LABEL_DATE: 'Date de réunion',
+  LABEL_ANCHOR_ZONE: 'Fuseau de référence',
+  LABEL_ANCHOR_HINT: 'La date est interprétée dans ce fuseau.',
+  ZONE_SEARCH_PLACEHOLDER: 'Rechercher une ville ou un fuseau…',
+  ZONE_SEARCH_EMPTY: 'Aucun fuseau correspondant',
+  LABEL_PARTICIPANTS: 'Participants',
+  LABEL_ADD_PARTICIPANT: 'Ajouter un participant',
+  LABEL_REMOVE: 'Supprimer',
+  LABEL_NAME: 'Nom',
+  LABEL_NAME_PLACEHOLDER: 'Nom (optionnel)',
+  LABEL_ZONE: 'Fuseau horaire',
+  LABEL_HOURS: 'Horaires de travail',
+  LABEL_INCLUDE_WEEKENDS: 'Inclure les week-ends',
+  LABEL_GRANULARITY: 'Granularité',
+  LABEL_USE_MY_ZONE: 'Mon fuseau',
+
+  GRANULARITY_15: '15 min',
+  GRANULARITY_30: '30 min',
+  GRANULARITY_60: '1 heure',
+
+  TIME_FORMAT_LABEL: 'Format d\u2019heure',
+  TIME_FORMAT_24H: '24 h',
+  TIME_FORMAT_12H: '12 h',
+
+  RESULT_HEADING: 'Meilleurs créneaux de réunion',
+  RESULT_NONE:
+    'Aucun créneau où tout le monde est en heures de travail. Ajustez les horaires ou activez les week-ends.',
+  RESULT_NONE_WEEKEND:
+    'La date choisie tombe un week-end pour {names}, qui exclut actuellement les week-ends. Activez l’icône week-end pour ces participants ou choisissez un jour de semaine.',
+  HEATMAP_WEEKEND_BADGE: 'week-end',
+  RESULT_INVALID: 'Ajoutez au moins un participant avec un fuseau valide.',
+  RESULT_DURATION: 'Créneau de {minutes} min',
+  RESULT_DURATION_HOURS: 'Créneau de {hours} h',
+  RESULT_DURATION_MIXED: 'Créneau de {hours} h {minutes} min',
+
+  HEATMAP_HEADING: 'Disponibilités heure par heure',
+  HEATMAP_LEGEND_FULL: 'Tous disponibles',
+  HEATMAP_LEGEND_PARTIAL: 'Partiellement disponible',
+  HEATMAP_LEGEND_NONE: 'Personne disponible',
+  HEATMAP_PARTICIPANTS: '{count} sur {total}',
+
+  COPY_FORMAT: 'Copier en',
+  COPY_BEST: 'Meilleur créneau',
+  COPY_ALL: 'Tous les créneaux',
+  COPY_ICS: 'Calendrier (.ics)',
+
+  PARTICIPANT_DEFAULT_NAME: 'Participant {n}',
+  WEEKDAY_SUN: 'Dim',
+  WEEKDAY_MON: 'Lun',
+  WEEKDAY_TUE: 'Mar',
+  WEEKDAY_WED: 'Mer',
+  WEEKDAY_THU: 'Jeu',
+  WEEKDAY_FRI: 'Ven',
+  WEEKDAY_SAT: 'Sam',
+};

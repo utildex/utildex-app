@@ -145,6 +145,53 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       ),
     kernel: () => import('../utildex-tools/url-encoder-decoder/url-encoder-decoder.kernel'),
   },
+  'date-time-calculator': {
+    contract: () =>
+      import('../utildex-tools/date-time-calculator/date-time-calculator.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/date-time-calculator/date-time-calculator.kernel'),
+  },
+  'timezone-converter': {
+    contract: () =>
+      import('../utildex-tools/timezone-converter/timezone-converter.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/timezone-converter/timezone-converter.kernel'),
+  },
+  'meeting-time-finder': {
+    contract: () =>
+      import('../utildex-tools/meeting-time-finder/meeting-time-finder.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/meeting-time-finder/meeting-time-finder.kernel'),
+  },
+  'timestamp-converter': {
+    contract: () =>
+      import('../utildex-tools/timestamp-converter/timestamp-converter.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/timestamp-converter/timestamp-converter.kernel'),
+  },
+  'time-format-converter': {
+    contract: () =>
+      import('../utildex-tools/time-format-converter/time-format-converter.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/time-format-converter/time-format-converter.kernel'),
+  },
+  'cron-explainer': {
+    contract: () =>
+      import('../utildex-tools/cron-explainer/cron-explainer.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/cron-explainer/cron-explainer.kernel'),
+  },
+  'ics-event-generator': {
+    contract: () =>
+      import('../utildex-tools/ics-event-generator/ics-event-generator.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/ics-event-generator/ics-event-generator.kernel'),
+  },
 };
 
 function belongsToApp(entry: CoreRegistryEntry, appId: AppId): boolean {

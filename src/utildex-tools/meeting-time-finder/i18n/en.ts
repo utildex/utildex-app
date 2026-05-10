@@ -1,0 +1,60 @@
+export default {
+  TITLE: 'Meeting Time Finder',
+  PRIVACY_NOTE: 'No data leaves your device. All matching runs locally.',
+  DST_NOTE: 'DST and historical offsets resolved by your browser.',
+
+  LABEL_DATE: 'Meeting date',
+  LABEL_ANCHOR_ZONE: 'Anchor zone',
+  LABEL_ANCHOR_HINT: 'The date is interpreted in this zone.',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
+  ZONE_SEARCH_EMPTY: 'No matching zones',
+  LABEL_PARTICIPANTS: 'Participants',
+  LABEL_ADD_PARTICIPANT: 'Add participant',
+  LABEL_REMOVE: 'Remove',
+  LABEL_NAME: 'Name',
+  LABEL_NAME_PLACEHOLDER: 'Optional name',
+  LABEL_ZONE: 'Time zone',
+  LABEL_HOURS: 'Working hours',
+  LABEL_INCLUDE_WEEKENDS: 'Include weekends',
+  LABEL_GRANULARITY: 'Granularity',
+  LABEL_USE_MY_ZONE: 'Use my zone',
+
+  GRANULARITY_15: '15 min',
+  GRANULARITY_30: '30 min',
+  GRANULARITY_60: '1 hour',
+
+  TIME_FORMAT_LABEL: 'Time format',
+  TIME_FORMAT_24H: '24-hour',
+  TIME_FORMAT_12H: '12-hour',
+
+  RESULT_HEADING: 'Best meeting windows',
+  RESULT_NONE:
+    'No window where everyone is in working hours. Try adjusting hours or enabling weekends.',
+  RESULT_NONE_WEEKEND:
+    'The meeting date is a weekend for {names}, who currently exclude weekends. Toggle the weekend icon on those participants or pick a weekday.',
+  HEATMAP_WEEKEND_BADGE: 'weekend',
+  RESULT_INVALID: 'Add at least one participant with a valid zone.',
+  RESULT_DURATION: '{minutes} min window',
+  RESULT_DURATION_HOURS: '{hours} h window',
+  RESULT_DURATION_MIXED: '{hours} h {minutes} min window',
+
+  HEATMAP_HEADING: 'Hour-by-hour overlap',
+  HEATMAP_LEGEND_FULL: 'Everyone available',
+  HEATMAP_LEGEND_PARTIAL: 'Some available',
+  HEATMAP_LEGEND_NONE: 'No-one available',
+  HEATMAP_PARTICIPANTS: '{count} of {total}',
+
+  COPY_FORMAT: 'Copy as',
+  COPY_BEST: 'Best window',
+  COPY_ALL: 'All windows',
+  COPY_ICS: 'Calendar (.ics)',
+
+  PARTICIPANT_DEFAULT_NAME: 'Participant {n}',
+  WEEKDAY_SUN: 'Sun',
+  WEEKDAY_MON: 'Mon',
+  WEEKDAY_TUE: 'Tue',
+  WEEKDAY_WED: 'Wed',
+  WEEKDAY_THU: 'Thu',
+  WEEKDAY_FRI: 'Fri',
+  WEEKDAY_SAT: 'Sat',
+};
