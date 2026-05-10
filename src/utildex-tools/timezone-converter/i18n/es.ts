@@ -24,7 +24,8 @@ export default {
   DATE_FORMAT_LONG: 'Largo (localizado)',
 
   PLACEHOLDER_PICK_ZONE: 'Elige una zona…',
-  PLACEHOLDER_FILTER: 'Filtrar zonas…',
+  ZONE_SEARCH_PLACEHOLDER: 'Buscar ciudad o zona…',
+  ZONE_SEARCH_EMPTY: 'Sin zonas coincidentes',  PLACEHOLDER_FILTER: 'Filtrar zonas…',
 
   RESULT_HEADING: 'Horas convertidas',
   RESULT_EMPTY: 'Añade al menos una zona destino para ver las conversiones.',

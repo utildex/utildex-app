@@ -24,7 +24,8 @@ export default {
   DATE_FORMAT_LONG: '长格式（本地化）',
 
   PLACEHOLDER_PICK_ZONE: '选择时区…',
-  PLACEHOLDER_FILTER: '筛选时区…',
+  ZONE_SEARCH_PLACEHOLDER: '搜索城市或时区…',
+  ZONE_SEARCH_EMPTY: '无匹配的时区',  PLACEHOLDER_FILTER: '筛选时区…',
 
   RESULT_HEADING: '转换后的时间',
   RESULT_EMPTY: '至少添加一个目标时区以查看转换结果。',

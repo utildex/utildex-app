@@ -6,6 +6,8 @@ export default {
   LABEL_DATE: 'Date de réunion',
   LABEL_ANCHOR_ZONE: 'Fuseau de référence',
   LABEL_ANCHOR_HINT: 'La date est interprétée dans ce fuseau.',
+  ZONE_SEARCH_PLACEHOLDER: 'Rechercher une ville ou un fuseau…',
+  ZONE_SEARCH_EMPTY: 'Aucun fuseau correspondant',
   LABEL_PARTICIPANTS: 'Participants',
   LABEL_ADD_PARTICIPANT: 'Ajouter un participant',
   LABEL_REMOVE: 'Supprimer',

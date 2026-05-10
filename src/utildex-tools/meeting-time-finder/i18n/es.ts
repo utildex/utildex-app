@@ -6,6 +6,8 @@ export default {
   LABEL_DATE: 'Fecha de la reunión',
   LABEL_ANCHOR_ZONE: 'Zona de referencia',
   LABEL_ANCHOR_HINT: 'La fecha se interpreta en esta zona.',
+  ZONE_SEARCH_PLACEHOLDER: 'Buscar ciudad o zona…',
+  ZONE_SEARCH_EMPTY: 'Sin zonas coincidentes',
   LABEL_PARTICIPANTS: 'Participantes',
   LABEL_ADD_PARTICIPANT: 'Añadir participante',
   LABEL_REMOVE: 'Quitar',

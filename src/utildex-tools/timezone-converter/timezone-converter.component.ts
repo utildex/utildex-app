@@ -2,6 +2,7 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
+import { ZonePickerComponent } from '../../components/zone-picker/zone-picker.component';
 import { PersistenceService } from '../../services/persistence.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -79,7 +80,7 @@ function zoneLabel(zone: string): string {
 @Component({
   selector: 'app-timezone-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolLayoutComponent],
+  imports: [CommonModule, FormsModule, ToolLayoutComponent, ZonePickerComponent],
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     <app-tool-layout toolId="timezone-converter">
@@ -177,15 +178,13 @@ function zoneLabel(zone: string): string {
               <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">{{
                 t.map()['LABEL_SOURCE_ZONE']
               }}</span>
-              <select
-                [ngModel]="sourceZone()"
-                (ngModelChange)="setSourceZone($event)"
-                class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
-              >
-                @for (zone of zones; track zone) {
-                  <option [value]="zone">{{ zoneLabel(zone) }}</option>
-                }
-              </select>
+              <app-zone-picker
+                [zones]="zones"
+                [value]="sourceZone()"
+                [placeholder]="t.map()['ZONE_SEARCH_PLACEHOLDER']"
+                [noResultsLabel]="t.map()['ZONE_SEARCH_EMPTY']"
+                (valueChange)="setSourceZone($event)"
+              />
             </label>
 
             <div class="flex flex-wrap gap-2">
@@ -242,16 +241,13 @@ function zoneLabel(zone: string): string {
                   class="mb-1 block text-[11px] font-bold tracking-wider text-slate-500 uppercase"
                   >{{ t.map()['LABEL_ADD_ZONE'] }}</span
                 >
-                <select
-                  [ngModel]="pendingAdd()"
-                  (ngModelChange)="setPendingAdd($event)"
-                  class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
-                >
-                  <option value="">{{ t.map()['PLACEHOLDER_PICK_ZONE'] }}</option>
-                  @for (zone of addableZones(); track zone) {
-                    <option [value]="zone">{{ zoneLabel(zone) }}</option>
-                  }
-                </select>
+                <app-zone-picker
+                  [zones]="addableZones()"
+                  [value]="pendingAdd()"
+                  [placeholder]="t.map()['PLACEHOLDER_PICK_ZONE']"
+                  [noResultsLabel]="t.map()['ZONE_SEARCH_EMPTY']"
+                  (valueChange)="setPendingAdd($event)"
+                />
               </label>
               <button
                 type="button"

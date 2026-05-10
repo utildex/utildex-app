@@ -2,6 +2,7 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
+import { ZonePickerComponent } from '../../components/zone-picker/zone-picker.component';
 import { PersistenceService } from '../../services/persistence.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -57,7 +58,7 @@ function makeId(): string {
 @Component({
   selector: 'app-meeting-time-finder',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolLayoutComponent],
+  imports: [CommonModule, FormsModule, ToolLayoutComponent, ZonePickerComponent],
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     <app-tool-layout toolId="meeting-time-finder">
@@ -81,15 +82,13 @@ function makeId(): string {
             <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">{{
               t.map()['LABEL_ANCHOR_ZONE']
             }}</span>
-            <select
-              [ngModel]="anchorZone()"
-              (ngModelChange)="setAnchorZone($event)"
-              class="focus:ring-primary focus:border-primary w-full rounded-lg border border-slate-300 bg-slate-50 px-2 py-2 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
-            >
-              @for (zone of zones; track zone) {
-                <option [value]="zone">{{ zoneLabel(zone) }}</option>
-              }
-            </select>
+            <app-zone-picker
+              [zones]="zones"
+              [value]="anchorZone()"
+              [placeholder]="t.map()['ZONE_SEARCH_PLACEHOLDER']"
+              [noResultsLabel]="t.map()['ZONE_SEARCH_EMPTY']"
+              (valueChange)="setAnchorZone($event)"
+            />
           </label>
           <label class="flex flex-col gap-1">
             <span class="text-[11px] font-bold tracking-wider text-slate-500 uppercase">{{
@@ -162,15 +161,13 @@ function makeId(): string {
                   <span class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">{{
                     t.map()['LABEL_ZONE']
                   }}</span>
-                  <select
-                    [ngModel]="p.zone"
-                    (ngModelChange)="updateParticipant(p.id, { zone: $event })"
-                    class="focus:ring-primary focus:border-primary w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
-                  >
-                    @for (zone of zones; track zone) {
-                      <option [value]="zone">{{ zoneLabel(zone) }}</option>
-                    }
-                  </select>
+                  <app-zone-picker
+                    [zones]="zones"
+                    [value]="p.zone"
+                    [placeholder]="t.map()['ZONE_SEARCH_PLACEHOLDER']"
+                    [noResultsLabel]="t.map()['ZONE_SEARCH_EMPTY']"
+                    (valueChange)="updateParticipant(p.id, { zone: $event })"
+                  />
                 </label>
                 <div class="col-span-8 sm:col-span-3 flex flex-col gap-1">
                   <span class="text-[10px] font-bold tracking-wider text-slate-500 uppercase">{{
@@ -505,27 +502,39 @@ export class MeetingTimeFinderComponent {
 
   /**
    * Heatmap columns sampled every full hour from the anchor day's slots.
-   * For 60-minute granularity that's every slot; for finer steps we still
-   * show one column per hour to keep the table readable.
+   * Each column's display time is read directly from the UTC instant in the
+   * anchor zone, so the anchor zone does not need to be one of the
+   * participants for the header row to render correctly.
    */
   heatmapColumns = computed(() => {
     const slots = this.result().slots;
     const anchor = this.anchorZone();
     const anchorDate = this.date();
+    const fmt = new Intl.DateTimeFormat('en-CA', {
+      timeZone: anchor,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
     return slots
-      .filter((slot) => {
-        const view = slot.perParticipant.find((v) => v.zone === anchor);
-        if (!view) return slot.startMinutes % 60 === 0;
-        return view.date === anchorDate && view.time.endsWith(':00');
-      })
       .map((slot) => {
-        const view = slot.perParticipant.find((v) => v.zone === anchor);
+        const parts = fmt.formatToParts(new Date(slot.utcIso));
+        const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+        const date = `${get('year')}-${get('month')}-${get('day')}`;
+        let hour = get('hour');
+        if (hour === '24') hour = '00';
+        const time = `${hour}:${get('minute')}`;
         return {
           utcIso: slot.utcIso,
-          anchorTime: view?.time ?? '00:00',
+          anchorTime: time,
+          anchorDate: date,
           isFullOverlap: slot.isFullOverlap,
         };
-      });
+      })
+      .filter((col) => col.anchorDate === anchorDate && col.anchorTime.endsWith(':00'));
   });
 
   heatmapRows = computed(() => {

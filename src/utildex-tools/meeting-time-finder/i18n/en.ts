@@ -6,6 +6,8 @@ export default {
   LABEL_DATE: 'Meeting date',
   LABEL_ANCHOR_ZONE: 'Anchor zone',
   LABEL_ANCHOR_HINT: 'The date is interpreted in this zone.',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
+  ZONE_SEARCH_EMPTY: 'No matching zones',
   LABEL_PARTICIPANTS: 'Participants',
   LABEL_ADD_PARTICIPANT: 'Add participant',
   LABEL_REMOVE: 'Remove',

@@ -6,6 +6,8 @@ export default {
   LABEL_DATE: '会议日期',
   LABEL_ANCHOR_ZONE: '参考时区',
   LABEL_ANCHOR_HINT: '日期按此时区解读。',
+  ZONE_SEARCH_PLACEHOLDER: '搜索城市或时区…',
+  ZONE_SEARCH_EMPTY: '无匹配的时区',
   LABEL_PARTICIPANTS: '参会人',
   LABEL_ADD_PARTICIPANT: '添加参会人',
   LABEL_REMOVE: '移除',

@@ -25,6 +25,8 @@ export default {
 
   PLACEHOLDER_PICK_ZONE: 'Pick a time zone…',
   PLACEHOLDER_FILTER: 'Filter zones…',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
+  ZONE_SEARCH_EMPTY: 'No matching zones',
 
   RESULT_HEADING: 'Converted times',
   RESULT_EMPTY: 'Add at least one target zone to see conversions.',
