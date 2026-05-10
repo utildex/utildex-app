@@ -35,6 +35,30 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/hash-generator/hash-generator.component').then(
       (m) => m.HashGeneratorComponent,
     ),
+  'bmi-calculator': () =>
+    import('../utildex-tools/bmi-calculator/bmi-calculator.component').then(
+      (m) => m.BmiCalculatorComponent,
+    ),
+  'whr-calculator': () =>
+    import('../utildex-tools/whr-calculator/whr-calculator.component').then(
+      (m) => m.WhrCalculatorComponent,
+    ),
+  'bai-calculator': () =>
+    import('../utildex-tools/bai-calculator/bai-calculator.component').then(
+      (m) => m.BaiCalculatorComponent,
+    ),
+  'body-fat-deurenberg': () =>
+    import('../utildex-tools/body-fat-deurenberg/body-fat-deurenberg.component').then(
+      (m) => m.BodyFatDeurenbergComponent,
+    ),
+  'absi-calculator': () =>
+    import('../utildex-tools/absi-calculator/absi-calculator.component').then(
+      (m) => m.AbsiCalculatorComponent,
+    ),
+  'homa-calculator': () =>
+    import('../utildex-tools/homa-calculator/homa-calculator.component').then(
+      (m) => m.HomaCalculatorComponent,
+    ),
   'image-converter': () =>
     import('../utildex-tools/image-converter/image-converter.component').then(
       (m) => m.ImageConverterComponent,

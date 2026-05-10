@@ -32,6 +32,38 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       import('../utildex-tools/hash-generator/hash-generator.contract').then((m) => m.contract),
     kernel: () => import('../utildex-tools/hash-generator/hash-generator.kernel'),
   },
+  'bmi-calculator': {
+    contract: () =>
+      import('../utildex-tools/bmi-calculator/bmi-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/bmi-calculator/bmi-calculator.kernel'),
+  },
+  'whr-calculator': {
+    contract: () =>
+      import('../utildex-tools/whr-calculator/whr-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/whr-calculator/whr-calculator.kernel'),
+  },
+  'bai-calculator': {
+    contract: () =>
+      import('../utildex-tools/bai-calculator/bai-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/bai-calculator/bai-calculator.kernel'),
+  },
+  'body-fat-deurenberg': {
+    contract: () =>
+      import('../utildex-tools/body-fat-deurenberg/body-fat-deurenberg.contract').then(
+        (m) => m.contract,
+      ),
+    kernel: () => import('../utildex-tools/body-fat-deurenberg/body-fat-deurenberg.kernel'),
+  },
+  'absi-calculator': {
+    contract: () =>
+      import('../utildex-tools/absi-calculator/absi-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/absi-calculator/absi-calculator.kernel'),
+  },
+  'homa-calculator': {
+    contract: () =>
+      import('../utildex-tools/homa-calculator/homa-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/homa-calculator/homa-calculator.kernel'),
+  },
   'image-converter': {
     contract: () =>
       import('../utildex-tools/image-converter/image-converter.contract').then((m) => m.contract),

@@ -46,6 +46,7 @@ const CATEGORY_TRANSLATIONS: Record<string, I18nText> = {
   Office: { en: 'Office', fr: 'Bureautique', es: 'Oficina', zh: '办公' },
   Media: { en: 'Media', fr: 'Média', es: 'Multimedia', zh: '媒体' },
   Design: { en: 'Design', fr: 'Design', es: 'Diseño', zh: '设计' },
+  Health: { en: 'Health', fr: 'Santé', es: 'Salud', zh: '健康' },
 };
 
 @Injectable({
