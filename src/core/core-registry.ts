@@ -54,6 +54,11 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       ),
     kernel: () => import('../utildex-tools/body-fat-deurenberg/body-fat-deurenberg.kernel'),
   },
+  'absi-calculator': {
+    contract: () =>
+      import('../utildex-tools/absi-calculator/absi-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/absi-calculator/absi-calculator.kernel'),
+  },
   'homa-calculator': {
     contract: () =>
       import('../utildex-tools/homa-calculator/homa-calculator.contract').then((m) => m.contract),

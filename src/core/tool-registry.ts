@@ -51,6 +51,10 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('../utildex-tools/body-fat-deurenberg/body-fat-deurenberg.component').then(
       (m) => m.BodyFatDeurenbergComponent,
     ),
+  'absi-calculator': () =>
+    import('../utildex-tools/absi-calculator/absi-calculator.component').then(
+      (m) => m.AbsiCalculatorComponent,
+    ),
   'homa-calculator': () =>
     import('../utildex-tools/homa-calculator/homa-calculator.component').then(
       (m) => m.HomaCalculatorComponent,
