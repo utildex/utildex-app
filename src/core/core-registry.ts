@@ -42,6 +42,11 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       import('../utildex-tools/whr-calculator/whr-calculator.contract').then((m) => m.contract),
     kernel: () => import('../utildex-tools/whr-calculator/whr-calculator.kernel'),
   },
+  'bai-calculator': {
+    contract: () =>
+      import('../utildex-tools/bai-calculator/bai-calculator.contract').then((m) => m.contract),
+    kernel: () => import('../utildex-tools/bai-calculator/bai-calculator.kernel'),
+  },
   'homa-calculator': {
     contract: () =>
       import('../utildex-tools/homa-calculator/homa-calculator.contract').then((m) => m.contract),
