@@ -61,9 +61,9 @@ function extractObjectKeys(filePath: string, objectName: string): Set<string> {
     if (trimmed.startsWith('//')) continue;
 
     if (bodyDepth === 0) {
-      const keyMatch = /^['"]([^'"]+)['"]\s*:/.exec(trimmed);
+      const keyMatch = /^(?:['"]([^'"]+)['"]|([A-Za-z_$][\w$]*))\s*:/.exec(trimmed);
       if (keyMatch) {
-        keys.add(keyMatch[1]);
+        keys.add(keyMatch[1] ?? keyMatch[2]);
       }
     }
 
