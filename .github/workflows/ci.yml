@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build & Check
@@ -24,14 +28,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check Formatting
+        run: npm run format:check
+
+      - name: Check Tool IDs
+        run: npm run check:tool-ids
+
+      - name: Check App Parity
+        run: npm run check:app-parity
+
       - name: Check Integrity
         run: npm run check:integrity
 
       - name: Lint
         run: npm run lint
 
-      - name: Build
-        run: npm run build
+      - name: Verify Generated Artifacts
+        run: |
+          npm run sitemap:utildex
+          npm run sitemap:synedex
+          npm run generate:mcp-manifest
+          git diff --exit-code src/seo src/assets/mcp
+
+      - name: Audit Production Dependencies
+        run: npm audit --audit-level=high --omit=dev
+
+      - name: Build Utildex
+        run: npm run build:utildex
+
+      - name: Build Synedex
+        run: npm run build:synedex
 
       - name: Build Headless
         run: npm run build:headless
