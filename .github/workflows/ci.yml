@@ -43,6 +43,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Test Web
+        run: npm run test:web
+
+      - name: Test Headless
+        run: npm run test:headless
+
       - name: Verify Generated Artifacts
         run: |
           npm run sitemap:utildex
@@ -67,4 +73,3 @@ jobs:
         with:
           name: dist
           path: dist/
-
