@@ -68,6 +68,12 @@ jobs:
       - name: Build Headless
         run: npm run build:headless
 
+      - name: Test Headless Dist
+        run: npm run test:headless:dist
+
+      - name: Test Headless Types
+        run: npm run test:headless:types
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:

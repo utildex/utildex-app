@@ -9,7 +9,7 @@
     "rootDir": ".",
     "outDir": "dist-headless/types"
   },
-  "files": [
-    "src/headless/index.ts"
-  ]
+  "files": ["src/headless/index.ts"],
+  "include": [],
+  "exclude": ["src/**/*.spec.ts"]
 }

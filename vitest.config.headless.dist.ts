@@ -3,12 +3,8 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'node',
-    include: ['src/headless/**/*.spec.ts', 'tests/headless/**/*.spec.ts'],
+    include: ['tests/headless-dist/**/*.spec.ts'],
     isolate: true,
     pool: 'forks',
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html'],
-    },
   },
 });
