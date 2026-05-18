@@ -1,0 +1,506 @@
+@if (isWidget()) {
+  <div class="mental-widget">
+    <strong>{{ t.map()['TITLE'] }}</strong>
+    <span>{{ t.map()['WIDGET_COPY'] }}</span>
+  </div>
+} @else {
+  <section class="mental-shell" [class.has-sheet]="settingsOpen()">
+    <header class="mental-topbar">
+      <div class="mental-topbar-actions">
+        <button
+          type="button"
+          class="mental-icon-button"
+          (click)="openSettings()"
+          [attr.aria-label]="t.map()['SETTINGS']"
+          [title]="t.map()['SETTINGS']"
+        >
+          <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+        </button>
+        @if (screen() === 'playing') {
+          <button
+            type="button"
+            class="mental-icon-button"
+            (click)="backToStart()"
+            [attr.aria-label]="t.map()['BACK_TO_MENU']"
+            [title]="t.map()['BACK_TO_MENU']"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">stop_circle</span>
+          </button>
+        }
+      </div>
+      @if (screen() !== 'start') {
+        <div class="mental-score">{{ t.map()['SCORE'] }}: {{ score() }}</div>
+      }
+    </header>
+
+    @if (screen() === 'start') {
+      <main class="mental-start">
+        <div class="mental-start-copy">
+          <h1>{{ t.map()['TITLE'] }}</h1>
+          <p>{{ t.map()['START_INTRO'] }}</p>
+        </div>
+
+        <div class="mental-start-modes" [attr.aria-label]="t.map()['MODE']">
+          <button
+            type="button"
+            class="mental-mode-card"
+            [class.is-active]="settings().mode === 'rush'"
+            (click)="setMode('rush')"
+          >
+            <strong>{{ t.map()['MODE_RUSH'] }}</strong>
+            <span>{{ modeDescription('rush') }}</span>
+          </button>
+          <button
+            type="button"
+            class="mental-mode-card"
+            [class.is-active]="settings().mode === 'challenge'"
+            (click)="setMode('challenge')"
+          >
+            <strong>{{ t.map()['MODE_CHALLENGE'] }}</strong>
+            <span>{{ modeDescription('challenge') }}</span>
+          </button>
+        </div>
+
+        <div class="mental-difficulty-panel">
+          <span>{{ t.map()['DIFFICULTY'] }}</span>
+          <div class="mental-difficulty-grid">
+            @for (preset of difficultyPresets; track preset.id) {
+              <button
+                type="button"
+                [class.is-active]="settings().difficultyLevel === preset.id"
+                [attr.aria-pressed]="settings().difficultyLevel === preset.id"
+                (click)="applyDifficultyPreset(preset)"
+              >
+                {{ t.map()[preset.labelKey] }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <p class="mental-start-summary">{{ gameSummary() }}</p>
+
+        <button type="button" class="mental-primary mental-start-cta" (click)="startGame()">
+          <span class="material-symbols-outlined" aria-hidden="true">play_arrow</span>
+          {{ t.map()['START_BUTTON'] }}
+        </button>
+      </main>
+    }
+
+    @if (screen() === 'playing') {
+      <main
+        class="mental-play"
+        [class.feedback-correct]="feedback() === 'correct'"
+        [class.feedback-wrong]="feedback() === 'wrong'"
+        [class.feedback-retry]="retryFeedback()"
+      >
+        <div class="mental-timer" [attr.aria-label]="t.map()['TIMER']">{{ timerLabel() }}</div>
+        @if (questionCounterLabel()) {
+          <div class="mental-counter">{{ t.map()['QUESTION'] }} {{ questionCounterLabel() }}</div>
+        }
+
+        <div class="mental-operation" [ngClass]="operationSizeClass()">
+          {{ operationDisplay() }} = ?
+        </div>
+
+        <div class="mental-answer-row">
+          <input
+            #answerInput
+            class="mental-answer-input"
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            enterkeyhint="done"
+            [readonly]="feedback() !== null"
+            [value]="answer()"
+            (input)="setTypedAnswer($any($event.target))"
+            (keydown.enter)="submitAnswer(); $event.preventDefault()"
+            [placeholder]="t.map()['ANSWER_PLACEHOLDER']"
+          />
+          <button
+            type="button"
+            class="mental-answer-submit"
+            (click)="submitAnswer()"
+            [attr.aria-label]="t.map()['CHECK']"
+            [title]="t.map()['CHECK']"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">check</span>
+          </button>
+        </div>
+        <div class="mental-play-actions">
+          <p class="mental-enter-hint">{{ t.map()['ENTER_HINT'] }}</p>
+          <button type="button" class="mental-skip-button" (click)="skipQuestion()">
+            <span class="material-symbols-outlined" aria-hidden="true">skip_next</span>
+            {{ t.map()['SKIP'] }}
+          </button>
+        </div>
+
+        @if (showVisualKeypad()) {
+          <div class="mental-keypad" [attr.aria-label]="t.map()['KEYPAD_LABEL']">
+            @for (row of keypadRows; track $index) {
+              @for (key of row; track key) {
+                <button type="button" (click)="pressKey(key)">{{ key }}</button>
+              }
+            }
+            <button type="button" (click)="pressKey('-')">-</button>
+            <button type="button" (click)="pressKey('0')">0</button>
+            <button type="button" (click)="pressKey('.')" [disabled]="!settings().allowDecimals">
+              .
+            </button>
+            <button type="button" (click)="clearAnswer()">
+              {{ t.map()['CLEAR'] }}
+            </button>
+            <button
+              type="button"
+              (click)="backspace()"
+              [attr.aria-label]="t.map()['BACKSPACE']"
+              [title]="t.map()['BACKSPACE']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">backspace</span>
+            </button>
+            <button
+              type="button"
+              class="mental-check"
+              (click)="submitAnswer()"
+              [attr.aria-label]="t.map()['CHECK']"
+              [title]="t.map()['CHECK']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">check</span>
+            </button>
+            <button
+              type="button"
+              class="mental-skip-key"
+              (click)="skipQuestion()"
+              [attr.aria-label]="t.map()['SKIP']"
+              [title]="t.map()['SKIP']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">skip_next</span>
+            </button>
+          </div>
+        }
+      </main>
+    }
+
+    @if (screen() === 'end' && roundResult(); as result) {
+      <main class="mental-end">
+        <div>
+          <h1>{{ t.map()['END_TITLE'] }}</h1>
+          <p>{{ gameSummary() }}</p>
+        </div>
+        <div class="mental-final-score">{{ result.score }}</div>
+        <div class="mental-breakdown">
+          <div>
+            <span>{{ t.map()['CORRECT'] }}</span>
+            <strong>{{ result.correct }}</strong>
+          </div>
+          <div>
+            <span>{{ t.map()['WRONG'] }}</span>
+            <strong>{{ result.wrong }}</strong>
+          </div>
+          <div>
+            <span>{{ t.map()['AVG_SPEED'] }}</span>
+            <strong>{{ averageSpeedLabel() }}</strong>
+          </div>
+          <div>
+            <span>{{ t.map()['STRIKES'] }}</span>
+            <strong>{{ result.strikes }}</strong>
+          </div>
+        </div>
+        <div class="mental-actions">
+          <button type="button" class="mental-secondary" (click)="backToStart()">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            {{ t.map()['BACK_TO_MENU'] }}
+          </button>
+          <button type="button" class="mental-secondary" (click)="copyResult()">
+            <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+            {{ shareCopied() ? t.map()['COPIED'] : t.map()['COPY_RESULT'] }}
+          </button>
+          <button type="button" class="mental-secondary" (click)="shareResult()">
+            <span class="material-symbols-outlined" aria-hidden="true">ios_share</span>
+            {{ t.map()['SHARE'] }}
+          </button>
+          <button type="button" class="mental-primary" (click)="restartGame()">
+            <span class="material-symbols-outlined" aria-hidden="true">replay</span>
+            {{ t.map()['PLAY_AGAIN'] }}
+          </button>
+        </div>
+      </main>
+    }
+
+    @if (settingsOpen()) {
+      <button
+        type="button"
+        class="mental-sheet-backdrop"
+        (click)="closeSettings()"
+        [attr.aria-label]="t.map()['CLOSE']"
+      ></button>
+      <aside
+        class="mental-sheet"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="t.map()['SETTINGS_TITLE']"
+      >
+        <div class="mental-sheet-handle" aria-hidden="true"></div>
+        <div class="mental-sheet-header">
+          <h2>{{ t.map()['SETTINGS_TITLE'] }}</h2>
+          <button
+            type="button"
+            class="mental-icon-button mental-sheet-close"
+            (click)="closeSettings()"
+            [attr.aria-label]="t.map()['CLOSE']"
+            [title]="t.map()['CLOSE']"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">close</span>
+          </button>
+        </div>
+
+        <section class="mental-accordion" [class.is-open]="isSectionOpen('mode')">
+          <button
+            type="button"
+            class="mental-accordion-title"
+            (click)="toggleSection('mode')"
+            [attr.aria-expanded]="isSectionOpen('mode')"
+          >
+            <span>{{ t.map()['SECTION_MODE'] }}</span>
+            <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="mental-accordion-body">
+            <div class="mental-settings-modes" [attr.aria-label]="t.map()['MODE']">
+              <button
+                type="button"
+                class="mental-mode-card"
+                [class.is-active]="settings().mode === 'rush'"
+                (click)="setMode('rush')"
+              >
+                <strong>{{ t.map()['MODE_RUSH'] }}</strong>
+                <span>{{ modeDescription('rush') }}</span>
+              </button>
+              <button
+                type="button"
+                class="mental-mode-card"
+                [class.is-active]="settings().mode === 'challenge'"
+                (click)="setMode('challenge')"
+              >
+                <strong>{{ t.map()['MODE_CHALLENGE'] }}</strong>
+                <span>{{ modeDescription('challenge') }}</span>
+              </button>
+            </div>
+
+            @if (settings().mode === 'rush') {
+              <label class="mental-field-label">{{ t.map()['TOTAL_TIME'] }}</label>
+              <div class="mental-choice-row">
+                @for (seconds of rushOptions; track seconds) {
+                  <button
+                    type="button"
+                    [class.is-active]="settings().rushTotalSeconds === seconds"
+                    (click)="setRushTotalSeconds(seconds)"
+                  >
+                    {{ t.map()['SECONDS_SHORT'].replace('{value}', seconds.toString()) }}
+                  </button>
+                }
+              </div>
+              <label class="mental-number-field">
+                <span>{{ t.map()['CUSTOM_SECONDS'] }}</span>
+                <input
+                  type="number"
+                  min="10"
+                  max="600"
+                  [value]="settings().rushTotalSeconds"
+                  (input)="setCustomRushSeconds($any($event.target).value)"
+                />
+              </label>
+            } @else {
+              <label class="mental-field-label">{{ t.map()['QUESTIONS'] }}</label>
+              <div class="mental-choice-row">
+                @for (count of challengeQuestionOptions; track count) {
+                  <button
+                    type="button"
+                    [class.is-active]="settings().challengeQuestionCount === count"
+                    (click)="setChallengeQuestionCount(count)"
+                  >
+                    {{ count }}
+                  </button>
+                }
+              </div>
+              <label class="mental-field-label">{{ t.map()['TIME_PER_QUESTION'] }}</label>
+              <div class="mental-choice-row">
+                @for (seconds of challengeTimeOptions; track $index) {
+                  <button
+                    type="button"
+                    [class.is-active]="settings().challengeSecondsPerQuestion === seconds"
+                    (click)="setChallengeSecondsPerQuestion(seconds)"
+                  >
+                    {{ timeOptionLabel(seconds) }}
+                  </button>
+                }
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="mental-accordion" [class.is-open]="isSectionOpen('operations')">
+          <button
+            type="button"
+            class="mental-accordion-title"
+            (click)="toggleSection('operations')"
+            [attr.aria-expanded]="isSectionOpen('operations')"
+          >
+            <span>{{ t.map()['SECTION_OPERATIONS'] }}</span>
+            <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="mental-accordion-body">
+            @for (operation of operations; track operation.id) {
+              <div
+                class="mental-operation-row"
+                [class.is-disabled]="!settings().operations[operation.id].enabled"
+              >
+                <label class="mental-operation-toggle" [attr.title]="operationName(operation)">
+                  <input
+                    type="checkbox"
+                    [checked]="settings().operations[operation.id].enabled"
+                    (change)="toggleOperation(operation.id)"
+                  />
+                  <span>{{ operation.symbol.replace('x', '×').replace('/', '÷') }}</span>
+                </label>
+                <span class="mental-bracket" aria-hidden="true">[</span>
+                <input
+                  type="number"
+                  [attr.aria-label]="operationName(operation) + ' ' + t.map()['MIN']"
+                  [placeholder]="t.map()['MIN_PLACEHOLDER']"
+                  [disabled]="!settings().operations[operation.id].enabled"
+                  [value]="settings().operations[operation.id].range.min"
+                  (input)="updateOperationRange(operation.id, 'min', $any($event.target).value)"
+                />
+                <span class="mental-comma" aria-hidden="true">,</span>
+                <input
+                  type="number"
+                  [attr.aria-label]="operationName(operation) + ' ' + t.map()['MAX']"
+                  [placeholder]="t.map()['MAX_PLACEHOLDER']"
+                  [disabled]="!settings().operations[operation.id].enabled"
+                  [value]="settings().operations[operation.id].range.max"
+                  (input)="updateOperationRange(operation.id, 'max', $any($event.target).value)"
+                />
+                <span class="mental-bracket" aria-hidden="true">]</span>
+              </div>
+            }
+
+            <label class="mental-switch compact">
+              <input
+                type="checkbox"
+                [checked]="settings().allowDecimals"
+                (change)="setAllowDecimals($any($event.target).checked)"
+              />
+              <strong>{{ t.map()['ALLOW_DECIMALS'] }}</strong>
+            </label>
+            @if (settings().allowDecimals) {
+              <label class="mental-field-label">{{ t.map()['DECIMAL_PRECISION'] }}</label>
+              <div class="mental-precision-row">
+                @for (precision of precisionQuickOptions; track precision) {
+                  <button
+                    type="button"
+                    [class.is-active]="settings().decimalPrecision === precision"
+                    (click)="setDecimalPrecision(precision)"
+                  >
+                    {{ precision }}
+                  </button>
+                }
+                <input
+                  type="number"
+                  min="1"
+                  max="12"
+                  [value]="settings().decimalPrecision"
+                  (input)="setDecimalPrecision($any($event.target).value)"
+                  [attr.aria-label]="t.map()['DECIMAL_PRECISION']"
+                />
+              </div>
+            }
+          </div>
+        </section>
+
+        <section class="mental-accordion" [class.is-open]="isSectionOpen('scoring')">
+          <button
+            type="button"
+            class="mental-accordion-title"
+            (click)="toggleSection('scoring')"
+            [attr.aria-expanded]="isSectionOpen('scoring')"
+          >
+            <span>{{ t.map()['SECTION_SCORING'] }}</span>
+            <span class="material-symbols-outlined" aria-hidden="true">expand_more</span>
+          </button>
+          <div class="mental-accordion-body">
+            <label class="mental-field-label">{{ t.map()['MISTAKE_HANDLING'] }}</label>
+            <div class="mental-stack-options">
+              <button
+                type="button"
+                [class.is-active]="settings().mistakeHandling === 'none'"
+                (click)="setMistakeHandling('none')"
+              >
+                {{ t.map()['NO_PENALTY'] }}
+              </button>
+              <button
+                type="button"
+                [class.is-active]="settings().mistakeHandling === 'minusOne'"
+                (click)="setMistakeHandling('minusOne')"
+              >
+                {{ t.map()['MINUS_ONE'] }}
+              </button>
+              <button
+                type="button"
+                [class.is-active]="settings().mistakeHandling === 'threeStrikes'"
+                (click)="setMistakeHandling('threeStrikes')"
+              >
+                {{ t.map()['THREE_STRIKES'] }}
+              </button>
+            </div>
+
+            <label class="mental-switch compact">
+              <input
+                type="checkbox"
+                [checked]="settings().speedBonus"
+                (change)="setSpeedBonus($any($event.target).checked)"
+              />
+              <strong>{{ t.map()['SPEED_BONUS'] }}</strong>
+            </label>
+
+            <label class="mental-switch compact">
+              <input
+                type="checkbox"
+                [checked]="settings().showVisualKeypad"
+                (change)="setShowVisualKeypad($any($event.target).checked)"
+              />
+              <strong>{{ t.map()['VISUAL_KEYPAD'] }}</strong>
+            </label>
+
+            <label class="mental-field-label">{{ t.map()['FONT_SIZE'] }}</label>
+            <div class="mental-segmented three">
+              <button
+                type="button"
+                [class.is-active]="settings().operationFontSize === 's'"
+                (click)="setFontSize('s')"
+              >
+                {{ t.map()['FONT_S'] }}
+              </button>
+              <button
+                type="button"
+                [class.is-active]="settings().operationFontSize === 'm'"
+                (click)="setFontSize('m')"
+              >
+                {{ t.map()['FONT_M'] }}
+              </button>
+              <button
+                type="button"
+                [class.is-active]="settings().operationFontSize === 'l'"
+                (click)="setFontSize('l')"
+              >
+                {{ t.map()['FONT_L'] }}
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <button type="button" class="mental-primary full" (click)="closeSettings()">
+          {{ t.map()['DONE'] }}
+        </button>
+      </aside>
+    }
+  </section>
+}

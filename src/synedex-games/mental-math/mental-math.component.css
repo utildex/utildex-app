@@ -1,0 +1,831 @@
+:host {
+  display: block;
+}
+
+.mental-shell,
+.mental-widget {
+  --mental-bg: #f8fafc;
+  --mental-panel: #ffffff;
+  --mental-panel-soft: #f1f5f9;
+  --mental-text: #172033;
+  --mental-muted: #64748b;
+  --mental-line: #d8e0ea;
+  --mental-primary: #2563eb;
+  --mental-primary-strong: #1d4ed8;
+  --mental-ok: #14805d;
+  --mental-ok-bg: #dff7eb;
+  --mental-bad: #b42318;
+  --mental-bad-bg: #fee4df;
+  color: var(--mental-text);
+}
+
+:host-context(.dark) .mental-shell,
+:host-context(.dark) .mental-widget {
+  --mental-bg: #111318;
+  --mental-panel: #1f242c;
+  --mental-panel-soft: #282f3a;
+  --mental-text: #f5f7fb;
+  --mental-muted: #aeb8c6;
+  --mental-line: #3b4656;
+  --mental-primary: #7aa2ff;
+  --mental-primary-strong: #a7c0ff;
+  --mental-ok: #8bd9b5;
+  --mental-ok-bg: #16382d;
+  --mental-bad: #ffb1a8;
+  --mental-bad-bg: #4a2523;
+}
+
+.mental-widget {
+  display: grid;
+  gap: 0.35rem;
+  height: 100%;
+  border: 1px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel);
+  padding: 1rem;
+}
+
+.mental-widget span {
+  color: var(--mental-muted);
+  font-size: 0.9rem;
+}
+
+.mental-shell {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(100%, 42rem);
+  min-height: min(46rem, calc(100dvh - 5.5rem));
+  margin: 0 auto;
+  overflow: hidden;
+  border: 1px solid var(--mental-line);
+  border-radius: 14px;
+  background: var(--mental-bg);
+  box-shadow: 0 18px 50px -30px rgba(15, 23, 42, 0.38);
+}
+
+.mental-topbar {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+}
+
+.mental-score {
+  color: var(--mental-text);
+  font-weight: 750;
+}
+
+.mental-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.mental-icon-button,
+.mental-keypad button,
+.mental-answer-submit,
+.mental-skip-button,
+.mental-primary,
+.mental-secondary,
+.mental-mode-card,
+.mental-difficulty-grid button,
+.mental-choice-row button,
+.mental-segmented button,
+.mental-precision-row button,
+.mental-stack-options button,
+.mental-accordion-title {
+  border: 1px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel);
+  color: var(--mental-text);
+  font: inherit;
+  font-weight: 750;
+}
+
+.mental-icon-button {
+  display: inline-grid;
+  width: 2.6rem;
+  height: 2.6rem;
+  place-items: center;
+}
+
+.mental-icon-button span,
+.mental-primary span,
+.mental-secondary span,
+.mental-keypad span {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.mental-start,
+.mental-play,
+.mental-end {
+  display: grid;
+  min-height: 0;
+  padding: 0.25rem 1rem 1rem;
+}
+
+.mental-end {
+  align-content: center;
+  gap: 1rem;
+}
+
+.mental-start {
+  align-content: center;
+  gap: 1.05rem;
+}
+
+.mental-mode-card,
+.mental-breakdown > div {
+  border: 1px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel);
+}
+
+.mental-start-copy {
+  display: grid;
+  gap: 0.45rem;
+  text-align: center;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.55rem, 7vw, 2.4rem);
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: 1.1rem;
+}
+
+p,
+.mental-mode-card span,
+.mental-start-summary,
+.mental-breakdown span,
+.mental-counter {
+  color: var(--mental-muted);
+}
+
+.mental-start-modes,
+.mental-settings-modes {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.mental-mode-card {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem;
+  text-align: left;
+}
+
+.mental-mode-card.is-active {
+  border-color: var(--mental-primary-strong);
+  box-shadow: inset 0 0 0 1px var(--mental-primary-strong);
+}
+
+.mental-start-summary {
+  justify-self: center;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.mental-difficulty-panel {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.mental-difficulty-panel > span {
+  color: var(--mental-muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+  text-align: center;
+}
+
+.mental-difficulty-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.mental-difficulty-grid button {
+  min-width: 0;
+  min-height: 2.6rem;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  transition:
+    transform 140ms ease,
+    border-color 140ms ease,
+    background 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.mental-difficulty-grid button:hover {
+  transform: translateY(-1px);
+  border-color: var(--mental-primary-strong);
+  box-shadow: 0 8px 18px -14px var(--mental-primary-strong);
+}
+
+.mental-difficulty-grid button.is-active {
+  border-color: var(--mental-primary-strong);
+  background: var(--mental-primary);
+  color: #fff;
+  box-shadow:
+    inset 0 0 0 1px var(--mental-primary-strong),
+    0 10px 22px -16px var(--mental-primary-strong);
+}
+
+.mental-start-cta {
+  width: min(100%, 20rem);
+  justify-self: center;
+}
+
+.mental-primary,
+.mental-secondary {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.75rem 1rem;
+}
+
+.mental-primary {
+  border-color: var(--mental-primary-strong);
+  background: var(--mental-primary);
+  color: #fff;
+}
+
+.mental-primary.full {
+  width: 100%;
+}
+
+.mental-secondary {
+  background: var(--mental-panel-soft);
+}
+
+.mental-play {
+  grid-template-rows: auto auto minmax(5rem, 1fr) auto auto auto;
+  align-items: center;
+  gap: 0.45rem;
+  transition: background 160ms ease;
+}
+
+.mental-play.feedback-correct {
+  background: var(--mental-ok-bg);
+}
+
+.mental-play.feedback-wrong {
+  background: var(--mental-bad-bg);
+}
+
+.mental-play.feedback-retry .mental-answer-input {
+  border-color: var(--mental-bad);
+  animation: retryPulse 320ms ease-out;
+}
+
+.mental-timer {
+  justify-self: center;
+  color: var(--mental-muted);
+  font-size: clamp(2.1rem, 12vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.mental-counter {
+  justify-self: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.mental-operation {
+  justify-self: center;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
+  font-weight: 850;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.mental-operation--s {
+  font-size: clamp(2rem, 10vw, 4rem);
+}
+
+.mental-operation--m {
+  font-size: clamp(2.55rem, 13vw, 5.2rem);
+}
+
+.mental-operation--l {
+  font-size: clamp(3rem, 16vw, 6.2rem);
+}
+
+.mental-answer-row {
+  display: grid;
+  width: min(100%, 24rem);
+  grid-template-columns: minmax(0, 1fr) 4rem;
+  gap: 0.5rem;
+  justify-self: center;
+}
+
+.mental-answer-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 4rem;
+  overflow: hidden;
+  border: 2px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel);
+  padding: 0 0.75rem;
+  font-size: clamp(1.7rem, 9vw, 2.7rem);
+  font-weight: 800;
+  line-height: normal;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  word-break: break-all;
+}
+
+.mental-answer-input::placeholder {
+  color: var(--mental-muted);
+  font-size: inherit;
+  font-weight: 800;
+  line-height: normal;
+  opacity: 0.55;
+}
+
+.mental-answer-submit {
+  display: grid;
+  min-height: 4rem;
+  place-items: center;
+  border-color: var(--mental-primary-strong);
+  background: var(--mental-primary);
+  color: #fff;
+}
+
+.mental-enter-hint {
+  display: none;
+  justify-self: center;
+  color: var(--mental-muted);
+  font-size: 0.82rem;
+  font-weight: 650;
+  text-align: center;
+}
+
+.mental-play-actions {
+  display: flex;
+  width: min(100%, 24rem);
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  justify-self: center;
+}
+
+.mental-skip-button {
+  display: inline-flex;
+  min-height: 2.45rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: var(--mental-panel-soft);
+  padding: 0.5rem 0.75rem;
+}
+
+.mental-skip-button .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+.mental-keypad {
+  display: grid;
+  width: min(100%, 26rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  justify-self: center;
+}
+
+.mental-keypad button {
+  display: grid;
+  min-height: 3.05rem;
+  place-items: center;
+  font-size: 1.2rem;
+}
+
+.mental-keypad button:disabled {
+  opacity: 0.38;
+}
+
+.mental-check {
+  border-color: var(--mental-primary-strong) !important;
+  background: var(--mental-primary) !important;
+  color: #fff !important;
+}
+
+.mental-skip-key {
+  background: var(--mental-panel-soft) !important;
+}
+
+.mental-final-score {
+  justify-self: center;
+  color: var(--mental-primary-strong);
+  font-size: clamp(4rem, 22vw, 7rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.mental-breakdown {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.mental-breakdown > div {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.8rem;
+}
+
+.mental-breakdown strong {
+  font-size: 1.3rem;
+}
+
+.mental-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.mental-actions button {
+  min-width: 0;
+}
+
+.mental-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  border: 0;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.mental-sheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 11;
+  display: grid;
+  max-height: min(88%, 42rem);
+  grid-template-rows: auto auto auto;
+  gap: 0.75rem;
+  overscroll-behavior: contain;
+  overflow-y: auto;
+  border: 1px solid var(--mental-line);
+  border-radius: 16px 16px 0 0;
+  background: var(--mental-panel);
+  padding: 0.55rem 1rem 1rem;
+  box-shadow: 0 -18px 50px -28px rgba(15, 23, 42, 0.55);
+  animation: sheetIn 180ms ease-out;
+}
+
+.mental-sheet-handle {
+  width: 3rem;
+  height: 0.28rem;
+  justify-self: center;
+  border-radius: 999px;
+  background: var(--mental-line);
+}
+
+.mental-sheet-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: -0.15rem -1rem -0.1rem;
+  border-bottom: 1px solid var(--mental-line);
+  background: var(--mental-panel);
+  padding: 0.5rem 1rem;
+}
+
+.mental-sheet-close {
+  flex: 0 0 auto;
+}
+
+.mental-accordion {
+  overflow: hidden;
+  border: 1px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel);
+}
+
+.mental-accordion-title {
+  display: flex;
+  width: 100%;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 0;
+  padding: 0 0.85rem;
+  text-align: left;
+}
+
+.mental-accordion-title .material-symbols-outlined {
+  transition: transform 180ms ease;
+}
+
+.mental-accordion.is-open .mental-accordion-title .material-symbols-outlined {
+  transform: rotate(180deg);
+}
+
+.mental-accordion-body {
+  display: grid;
+  max-height: 0;
+  gap: 0.7rem;
+  overflow: hidden;
+  padding: 0 0.85rem;
+  transition:
+    max-height 220ms ease,
+    padding 220ms ease;
+}
+
+.mental-accordion.is-open .mental-accordion-body {
+  max-height: 90rem;
+  padding: 0 0.85rem 0.85rem;
+}
+
+.mental-field-label,
+.mental-number-field > span,
+.mental-range-grid span,
+.mental-bracket,
+.mental-comma {
+  color: var(--mental-muted);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.mental-choice-row,
+.mental-segmented,
+.mental-precision-row,
+.mental-stack-options {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.mental-choice-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mental-segmented.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mental-segmented.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mental-choice-row button,
+.mental-segmented button,
+.mental-precision-row button,
+.mental-stack-options button {
+  min-height: 2.7rem;
+  padding: 0.55rem;
+}
+
+.mental-choice-row button.is-active,
+.mental-segmented button.is-active,
+.mental-precision-row button.is-active,
+.mental-stack-options button.is-active {
+  border-color: var(--mental-primary-strong);
+  background: var(--mental-primary);
+  color: #fff;
+}
+
+.mental-number-field,
+.mental-range-grid label {
+  display: grid;
+  gap: 0.32rem;
+}
+
+input[type='number'] {
+  width: 100%;
+  min-height: 2.65rem;
+  border: 1px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel-soft);
+  color: var(--mental-text);
+  padding: 0.5rem 0.65rem;
+  font: inherit;
+}
+
+.mental-operation-settings {
+  display: grid;
+  gap: 0.6rem;
+  border: 1px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel-soft);
+  padding: 0.7rem;
+}
+
+.mental-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+
+.mental-switch.compact {
+  min-height: 2.6rem;
+}
+
+.mental-switch input {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  accent-color: var(--mental-primary);
+}
+
+.mental-switch span {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--mental-panel);
+  font-weight: 850;
+}
+
+.mental-switch strong {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.mental-range-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.mental-range-grid.is-disabled {
+  opacity: 0.58;
+}
+
+.mental-settings-modes .mental-mode-card {
+  padding: 0.75rem;
+}
+
+.mental-operation-row {
+  display: grid;
+  grid-template-columns: auto 1.2rem auto minmax(0, 1fr) auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  border: 1px solid var(--mental-line);
+  border-radius: 8px;
+  background: var(--mental-panel-soft);
+  padding: 0.45rem;
+}
+
+.mental-operation-row.is-disabled {
+  opacity: 0.6;
+}
+
+.mental-operation-toggle {
+  display: contents;
+}
+
+.mental-operation-toggle input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--mental-primary);
+}
+
+.mental-operation-toggle span {
+  color: var(--mental-text);
+  font-size: 1.1rem;
+  font-weight: 850;
+  text-align: center;
+}
+
+.mental-operation-row input[type='number'] {
+  min-height: 2.2rem;
+  min-width: 0;
+  padding: 0.35rem 0.45rem;
+}
+
+.mental-precision-row {
+  grid-template-columns: repeat(3, minmax(2.5rem, 0.5fr)) minmax(5rem, 1.25fr);
+}
+
+.mental-precision-row input[type='number'] {
+  min-height: 2.7rem;
+}
+
+@keyframes sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes retryPulse {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-0.2rem);
+  }
+  50% {
+    transform: translateX(0.2rem);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (min-width: 42rem) {
+  .mental-shell {
+    min-height: min(50rem, calc(100dvh - 7rem));
+  }
+
+  .mental-start,
+  .mental-play,
+  .mental-end {
+    padding-right: 1.25rem;
+    padding-left: 1.25rem;
+  }
+
+  .mental-answer-row {
+    width: min(100%, 22rem);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mental-play-actions {
+    width: min(100%, 22rem);
+    justify-content: space-between;
+  }
+
+  .mental-answer-submit {
+    display: none;
+  }
+
+  .mental-enter-hint {
+    display: block;
+  }
+
+  .mental-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mental-start-modes,
+  .mental-settings-modes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mental-difficulty-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mental-choice-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .mental-sheet {
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    left: 50%;
+    width: min(calc(100% - 2rem), 34rem);
+    max-height: min(calc(100% - 2rem), 40rem);
+    border-radius: 12px;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 24px 70px -32px rgba(15, 23, 42, 0.65);
+  }
+
+  @keyframes sheetIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -47%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+}

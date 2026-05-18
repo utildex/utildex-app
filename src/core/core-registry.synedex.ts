@@ -8,6 +8,12 @@ export interface CoreRegistryEntry {
 }
 
 export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
+  'mental-math': {
+    appName: 'synedex',
+    contract: () =>
+      import('../synedex-games/mental-math/mental-math.contract').then((m) => m.contract),
+    kernel: () => import('../synedex-games/mental-math/mental-math.kernel'),
+  },
   sudoku: {
     appName: 'synedex',
     contract: () => import('../synedex-games/sudoku/sudoku.contract').then((m) => m.contract),

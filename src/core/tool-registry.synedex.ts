@@ -16,6 +16,8 @@ export interface ToolRegistryEntry {
 type ComponentLoader = () => Promise<Type<unknown>>;
 
 const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
+  'mental-math': () =>
+    import('../synedex-games/mental-math/mental-math.component').then((m) => m.MentalMathComponent),
   sudoku: () => import('../synedex-games/sudoku/sudoku.component').then((m) => m.SudokuComponent),
 };
 
