@@ -21,6 +21,7 @@ export default {
   START_BUTTON: 'Start',
   PLAY_AGAIN: 'Play again',
   SHARE: 'Share',
+  COPY_RESULT: 'Copy result',
   END_TITLE: 'Round complete',
   CORRECT: 'Correct',
   WRONG: 'Wrong',
@@ -31,6 +32,7 @@ export default {
   CLEAR: 'Clear',
   CHECK: 'Check',
   BACKSPACE: 'Delete',
+  SKIP: 'Skip',
   BACK_TO_MENU: 'Back to menu',
   CLOSE: 'Close',
   DONE: 'Done',
@@ -74,6 +76,7 @@ export default {
   SUMMARY_CHALLENGE: '{questions} questions | {time}',
   SUMMARY_TIME_LIMIT: '{value}s each',
   SUMMARY_NO_LIMIT: 'no limit',
-  SHARE_TEXT: 'I scored {score} in Mental Math: {correct} correct, {wrong} wrong.',
+  SHARE_TEXT:
+    'Synedex.org - Mental Math\nScore: {score}\nCorrect: {correct} | Missed: {wrong}\nAvg speed: {speed}\nPlay: {url}',
   COPIED: 'Copied',
 };

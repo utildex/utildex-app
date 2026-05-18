@@ -91,6 +91,7 @@
         class="mental-play"
         [class.feedback-correct]="feedback() === 'correct'"
         [class.feedback-wrong]="feedback() === 'wrong'"
+        [class.feedback-retry]="retryFeedback()"
       >
         <div class="mental-timer" [attr.aria-label]="t.map()['TIMER']">{{ timerLabel() }}</div>
         @if (questionCounterLabel()) {
@@ -112,7 +113,7 @@
             [readonly]="feedback() !== null"
             [value]="answer()"
             (input)="setTypedAnswer($any($event.target))"
-            (keydown.enter)="submitAnswer()"
+            (keydown.enter)="submitAnswer(); $event.preventDefault()"
             [placeholder]="t.map()['ANSWER_PLACEHOLDER']"
           />
           <button
@@ -125,9 +126,15 @@
             <span class="material-symbols-outlined" aria-hidden="true">check</span>
           </button>
         </div>
-        <p class="mental-enter-hint">{{ t.map()['ENTER_HINT'] }}</p>
+        <div class="mental-play-actions">
+          <p class="mental-enter-hint">{{ t.map()['ENTER_HINT'] }}</p>
+          <button type="button" class="mental-skip-button" (click)="skipQuestion()">
+            <span class="material-symbols-outlined" aria-hidden="true">skip_next</span>
+            {{ t.map()['SKIP'] }}
+          </button>
+        </div>
 
-        @if (settings().showVisualKeypad) {
+        @if (showVisualKeypad()) {
           <div class="mental-keypad" aria-label="Numeric keypad">
             @for (row of keypadRows; track $index) {
               @for (key of row; track key) {
@@ -138,6 +145,9 @@
             <button type="button" (click)="pressKey('0')">0</button>
             <button type="button" (click)="pressKey('.')" [disabled]="!settings().allowDecimals">
               .
+            </button>
+            <button type="button" (click)="clearAnswer()">
+              {{ t.map()['CLEAR'] }}
             </button>
             <button
               type="button"
@@ -155,6 +165,15 @@
               [title]="t.map()['CHECK']"
             >
               <span class="material-symbols-outlined" aria-hidden="true">check</span>
+            </button>
+            <button
+              type="button"
+              class="mental-skip-key"
+              (click)="skipQuestion()"
+              [attr.aria-label]="t.map()['SKIP']"
+              [title]="t.map()['SKIP']"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">skip_next</span>
             </button>
           </div>
         }
@@ -187,9 +206,17 @@
           </div>
         </div>
         <div class="mental-actions">
+          <button type="button" class="mental-secondary" (click)="backToStart()">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            {{ t.map()['BACK_TO_MENU'] }}
+          </button>
+          <button type="button" class="mental-secondary" (click)="copyResult()">
+            <span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+            {{ shareCopied() ? t.map()['COPIED'] : t.map()['COPY_RESULT'] }}
+          </button>
           <button type="button" class="mental-secondary" (click)="shareResult()">
             <span class="material-symbols-outlined" aria-hidden="true">ios_share</span>
-            {{ shareCopied() ? t.map()['COPIED'] : t.map()['SHARE'] }}
+            {{ t.map()['SHARE'] }}
           </button>
           <button type="button" class="mental-primary" (click)="restartGame()">
             <span class="material-symbols-outlined" aria-hidden="true">replay</span>

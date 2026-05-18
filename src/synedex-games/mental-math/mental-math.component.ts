@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { I18nService } from '../../services/i18n.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
@@ -59,6 +60,7 @@ interface DifficultyPreset {
 }
 
 const STORAGE_KEY = 'synedex-mental-math-settings-v1';
+const SYNEDEX_ORIGIN = 'https://synedex.org';
 
 function clampNumber(value: number, min: number, max: number): number {
   if (!Number.isFinite(value)) {
@@ -174,6 +176,7 @@ function normalizeSettings(raw: unknown): MentalMathSettings | null {
 })
 export class MentalMathComponent implements OnDestroy {
   readonly t = inject(ScopedTranslationService);
+  private readonly i18n = inject(I18nService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -303,9 +306,16 @@ export class MentalMathComponent implements OnDestroy {
   remainingMs = signal(0);
   roundResult = signal<RoundResult | null>(null);
   shareCopied = signal(false);
+  retryFeedback = signal(false);
+  forceVisualKeypad = signal(false);
 
   private timerId: number | null = null;
   private feedbackTimerId: number | null = null;
+  private retryTimerId: number | null = null;
+  private keypadMediaQuery: MediaQueryList | null = null;
+  private readonly keypadMediaListener = (event: MediaQueryListEvent) => {
+    this.forceVisualKeypad.set(event.matches);
+  };
   private gameEndsAt = 0;
   private questionStartedAt = 0;
   private questionEndsAt: number | null = null;
@@ -336,8 +346,15 @@ export class MentalMathComponent implements OnDestroy {
   });
   operationSizeClass = computed(() => `mental-operation--${this.settings().operationFontSize}`);
   gameSummary = computed(() => this.buildSummary());
+  showVisualKeypad = computed(() => this.settings().showVisualKeypad || this.forceVisualKeypad());
 
   constructor() {
+    if (this.isBrowser) {
+      this.keypadMediaQuery = window.matchMedia('(pointer: coarse), (max-width: 64rem)');
+      this.forceVisualKeypad.set(this.keypadMediaQuery.matches);
+      this.keypadMediaQuery.addEventListener('change', this.keypadMediaListener);
+    }
+
     effect(() => {
       const settings = this.settings();
       if (this.isBrowser) {
@@ -349,6 +366,8 @@ export class MentalMathComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.stopTimer();
     this.clearFeedbackTimer();
+    this.clearRetryTimer();
+    this.keypadMediaQuery?.removeEventListener('change', this.keypadMediaListener);
   }
 
   tr(key: string, params: Record<string, string | number> = {}): string {
@@ -488,6 +507,7 @@ export class MentalMathComponent implements OnDestroy {
     this.totalResponseMs.set(0);
     this.roundResult.set(null);
     this.feedback.set(null);
+    this.retryFeedback.set(false);
     this.answer.set('');
     this.screen.set('playing');
 
@@ -507,7 +527,9 @@ export class MentalMathComponent implements OnDestroy {
   backToStart(): void {
     this.stopTimer();
     this.clearFeedbackTimer();
+    this.clearRetryTimer();
     this.feedback.set(null);
+    this.retryFeedback.set(false);
     this.currentQuestion.set(null);
     this.answer.set('');
     this.remainingMs.set(0);
@@ -536,15 +558,8 @@ export class MentalMathComponent implements OnDestroy {
       return;
     }
 
-    const previous = this.answer();
     const next = sanitizeNumericAnswer(input.value);
     input.value = next;
-
-    if (previous.length > 0 && next.length < previous.length) {
-      this.answer.set(next);
-      this.resolveQuestion(false);
-      return;
-    }
 
     this.setAnswerValue(next);
   }
@@ -555,7 +570,6 @@ export class MentalMathComponent implements OnDestroy {
     }
     if (this.answer()) {
       this.answer.update((current) => current.slice(0, -1));
-      this.resolveQuestion(false);
     }
   }
 
@@ -565,8 +579,15 @@ export class MentalMathComponent implements OnDestroy {
     }
     if (this.answer()) {
       this.answer.set('');
-      this.resolveQuestion(false);
     }
+  }
+
+  skipQuestion(): void {
+    if (this.feedback() || this.screen() !== 'playing') {
+      return;
+    }
+
+    this.resolveQuestion(false);
   }
 
   submitAnswer(): void {
@@ -582,7 +603,10 @@ export class MentalMathComponent implements OnDestroy {
     const isCorrect = isCorrectMentalMathAnswer(this.answer(), question);
     if (isCorrect) {
       this.resolveQuestion(true);
+      return;
     }
+
+    this.markRetryAttempt();
   }
 
   shareResult(): void {
@@ -591,18 +615,25 @@ export class MentalMathComponent implements OnDestroy {
       return;
     }
 
-    const text = this.tr('SHARE_TEXT', {
-      score: result.score,
-      correct: result.correct,
-      wrong: result.wrong,
-    });
+    void this.shareText(this.buildShareResultText(result));
+  }
 
-    void this.shareText(text);
+  copyResult(): void {
+    const result = this.roundResult();
+    if (!result) {
+      return;
+    }
+
+    void this.copyText(this.buildShareResultText(result));
   }
 
   averageSpeedLabel(): string {
     const result = this.roundResult();
     const sourceMs = result ? result.avgSpeedMs : this.averageResponseMs();
+    return this.formatSpeed(sourceMs);
+  }
+
+  private formatSpeed(sourceMs: number): string {
     if (sourceMs <= 0) {
       return '-';
     }
@@ -626,6 +657,7 @@ export class MentalMathComponent implements OnDestroy {
 
   private setAnswerValue(value: string): void {
     const sanitized = sanitizeNumericAnswer(value);
+    this.retryFeedback.set(false);
     this.answer.set(sanitized);
 
     const question = this.currentQuestion();
@@ -665,6 +697,7 @@ export class MentalMathComponent implements OnDestroy {
     this.currentQuestion.set(question);
     this.answer.set('');
     this.feedback.set(null);
+    this.retryFeedback.set(false);
     this.questionStartedAt = now;
     this.questionEndsAt =
       settings.mode === 'challenge' && settings.challengeSecondsPerQuestion !== null
@@ -749,6 +782,25 @@ export class MentalMathComponent implements OnDestroy {
     this.feedbackTimerId = null;
   }
 
+  private clearRetryTimer(): void {
+    if (this.retryTimerId !== null && this.isBrowser) {
+      window.clearTimeout(this.retryTimerId);
+    }
+    this.retryTimerId = null;
+  }
+
+  private markRetryAttempt(): void {
+    this.clearRetryTimer();
+    this.retryFeedback.set(true);
+    if (!this.isBrowser) {
+      return;
+    }
+    this.retryTimerId = window.setTimeout(() => {
+      this.retryFeedback.set(false);
+      this.retryTimerId = null;
+    }, 320);
+  }
+
   private tick(): void {
     if (this.screen() !== 'playing') {
       return;
@@ -792,7 +844,9 @@ export class MentalMathComponent implements OnDestroy {
   private endGame(): void {
     this.stopTimer();
     this.clearFeedbackTimer();
+    this.clearRetryTimer();
     this.feedback.set(null);
+    this.retryFeedback.set(false);
     this.roundResult.set({
       score: this.score(),
       correct: this.correct(),
@@ -836,6 +890,20 @@ export class MentalMathComponent implements OnDestroy {
     });
   }
 
+  private buildShareResultText(result: RoundResult): string {
+    return this.tr('SHARE_TEXT', {
+      score: result.score,
+      correct: result.correct,
+      wrong: result.wrong,
+      speed: this.formatSpeed(result.avgSpeedMs),
+      url: this.buildShareUrl(),
+    });
+  }
+
+  private buildShareUrl(): string {
+    return `${SYNEDEX_ORIGIN}/${this.i18n.currentLang()}/games/mental-math`;
+  }
+
   private async shareText(text: string): Promise<void> {
     if (!this.isBrowser) {
       return;
@@ -846,12 +914,28 @@ export class MentalMathComponent implements OnDestroy {
       if (typeof browserNavigator.share === 'function') {
         await browserNavigator.share({ text });
       } else if (browserNavigator.clipboard) {
-        await browserNavigator.clipboard.writeText(text);
-        this.shareCopied.set(true);
-        window.setTimeout(() => this.shareCopied.set(false), 1200);
+        await this.copyText(text);
       }
     } catch (error) {
       console.warn('Unable to share mental math result', error);
+    }
+  }
+
+  private async copyText(text: string): Promise<void> {
+    if (!this.isBrowser) {
+      return;
+    }
+
+    try {
+      const browserNavigator = window.navigator;
+      if (!browserNavigator.clipboard) {
+        return;
+      }
+      await browserNavigator.clipboard.writeText(text);
+      this.shareCopied.set(true);
+      window.setTimeout(() => this.shareCopied.set(false), 1200);
+    } catch (error) {
+      console.warn('Unable to copy mental math result', error);
     }
   }
 

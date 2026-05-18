@@ -22,6 +22,7 @@ export default {
   START_BUTTON: 'Empezar',
   PLAY_AGAIN: 'Jugar otra vez',
   SHARE: 'Compartir',
+  COPY_RESULT: 'Copiar',
   END_TITLE: 'Ronda terminada',
   CORRECT: 'Correctas',
   WRONG: 'Incorrectas',
@@ -32,6 +33,7 @@ export default {
   CLEAR: 'Borrar',
   CHECK: 'Comprobar',
   BACKSPACE: 'Eliminar',
+  SKIP: 'Saltar',
   BACK_TO_MENU: 'Volver al menú',
   CLOSE: 'Cerrar',
   DONE: 'Listo',
@@ -75,6 +77,7 @@ export default {
   SUMMARY_CHALLENGE: '{questions} preguntas | {time}',
   SUMMARY_TIME_LIMIT: '{value} s cada una',
   SUMMARY_NO_LIMIT: 'sin límite',
-  SHARE_TEXT: 'He conseguido {score} en Cálculo mental: {correct} correctas, {wrong} incorrectas.',
+  SHARE_TEXT:
+    'Synedex.org - Cálculo mental\nPuntuación: {score}\nCorrectas: {correct} | Falladas: {wrong}\nVelocidad media: {speed}\nJugar: {url}',
   COPIED: 'Copiado',
 };

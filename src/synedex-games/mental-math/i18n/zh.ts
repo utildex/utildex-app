@@ -20,6 +20,7 @@ export default {
   START_BUTTON: '开始',
   PLAY_AGAIN: '再玩一次',
   SHARE: '分享',
+  COPY_RESULT: '复制结果',
   END_TITLE: '本轮结束',
   CORRECT: '正确',
   WRONG: '错误',
@@ -30,6 +31,7 @@ export default {
   CLEAR: '清除',
   CHECK: '确认',
   BACKSPACE: '删除',
+  SKIP: '跳过',
   BACK_TO_MENU: '返回菜单',
   CLOSE: '关闭',
   DONE: '完成',
@@ -73,6 +75,7 @@ export default {
   SUMMARY_CHALLENGE: '{questions} 题 | {time}',
   SUMMARY_TIME_LIMIT: '每题 {value} 秒',
   SUMMARY_NO_LIMIT: '不限时',
-  SHARE_TEXT: '我在心算练习中得到 {score} 分：正确 {correct}，错误 {wrong}。',
+  SHARE_TEXT:
+    'Synedex.org - 心算练习\n分数：{score}\n正确：{correct} | 错误：{wrong}\n平均速度：{speed}\n开始：{url}',
   COPIED: '已复制',
 };

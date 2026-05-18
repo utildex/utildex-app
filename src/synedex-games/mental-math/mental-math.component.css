@@ -87,6 +87,7 @@
 .mental-icon-button,
 .mental-keypad button,
 .mental-answer-submit,
+.mental-skip-button,
 .mental-primary,
 .mental-secondary,
 .mental-mode-card,
@@ -290,6 +291,11 @@ p,
   background: var(--mental-bad-bg);
 }
 
+.mental-play.feedback-retry .mental-answer-input {
+  border-color: var(--mental-bad);
+  animation: retryPulse 320ms ease-out;
+}
+
 .mental-timer {
   justify-self: center;
   color: var(--mental-muted);
@@ -378,6 +384,29 @@ p,
   text-align: center;
 }
 
+.mental-play-actions {
+  display: flex;
+  width: min(100%, 24rem);
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  justify-self: center;
+}
+
+.mental-skip-button {
+  display: inline-flex;
+  min-height: 2.45rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: var(--mental-panel-soft);
+  padding: 0.5rem 0.75rem;
+}
+
+.mental-skip-button .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
 .mental-keypad {
   display: grid;
   width: min(100%, 26rem);
@@ -401,6 +430,10 @@ p,
   border-color: var(--mental-primary-strong) !important;
   background: var(--mental-primary) !important;
   color: #fff !important;
+}
+
+.mental-skip-key {
+  background: var(--mental-panel-soft) !important;
 }
 
 .mental-final-score {
@@ -429,8 +462,12 @@ p,
 
 .mental-actions {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.65rem;
+}
+
+.mental-actions button {
+  min-width: 0;
 }
 
 .mental-sheet-backdrop {
@@ -707,6 +744,21 @@ input[type='number'] {
   }
 }
 
+@keyframes retryPulse {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-0.2rem);
+  }
+  50% {
+    transform: translateX(0.2rem);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 @media (min-width: 42rem) {
   .mental-shell {
     min-height: min(50rem, calc(100dvh - 7rem));
@@ -722,6 +774,11 @@ input[type='number'] {
   .mental-answer-row {
     width: min(100%, 22rem);
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mental-play-actions {
+    width: min(100%, 22rem);
+    justify-content: space-between;
   }
 
   .mental-answer-submit {
