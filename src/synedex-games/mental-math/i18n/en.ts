@@ -31,6 +31,7 @@ export default {
   ANSWER_PLACEHOLDER: 'Answer',
   CLEAR: 'Clear',
   CHECK: 'Check',
+  KEYPAD_LABEL: 'Numeric keypad',
   BACKSPACE: 'Delete',
   SKIP: 'Skip',
   BACK_TO_MENU: 'Back to menu',

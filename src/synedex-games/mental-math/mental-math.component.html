@@ -135,7 +135,7 @@
         </div>
 
         @if (showVisualKeypad()) {
-          <div class="mental-keypad" aria-label="Numeric keypad">
+          <div class="mental-keypad" [attr.aria-label]="t.map()['KEYPAD_LABEL']">
             @for (row of keypadRows; track $index) {
               @for (key of row; track key) {
                 <button type="button" (click)="pressKey(key)">{{ key }}</button>

@@ -30,6 +30,7 @@ export default {
   ANSWER_PLACEHOLDER: '答案',
   CLEAR: '清除',
   CHECK: '确认',
+  KEYPAD_LABEL: '数字键盘',
   BACKSPACE: '删除',
   SKIP: '跳过',
   BACK_TO_MENU: '返回菜单',

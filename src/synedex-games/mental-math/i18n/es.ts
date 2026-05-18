@@ -32,6 +32,7 @@ export default {
   ANSWER_PLACEHOLDER: 'Respuesta',
   CLEAR: 'Borrar',
   CHECK: 'Comprobar',
+  KEYPAD_LABEL: 'Teclado numérico',
   BACKSPACE: 'Eliminar',
   SKIP: 'Saltar',
   BACK_TO_MENU: 'Volver al menú',

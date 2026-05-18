@@ -140,6 +140,28 @@ function randomInteger(min: number, max: number, random: () => number): number {
   return Math.floor(random() * (max - min + 1)) + min;
 }
 
+function hasRepresentableValue(range: OperandRange, precision: number): boolean {
+  const factor = 10 ** precision;
+  return Math.ceil(range.min * factor) <= Math.floor(range.max * factor);
+}
+
+function effectiveOperandPrecision(
+  range: OperandRange,
+  allowDecimals: boolean,
+  precision: number,
+): number {
+  const ordered = orderedRange(range);
+  const requestedPrecision = allowDecimals ? clampPrecision(precision) : 0;
+
+  for (let candidate = requestedPrecision; candidate <= 12; candidate += 1) {
+    if (hasRepresentableValue(ordered, candidate)) {
+      return candidate;
+    }
+  }
+
+  return requestedPrecision;
+}
+
 function roundToPrecision(value: number, precision: number): number {
   const factor = 10 ** precision;
   return Math.round((value + Number.EPSILON) * factor) / factor;
@@ -152,10 +174,7 @@ function randomOperand(
   random: () => number,
 ): number {
   const ordered = orderedRange(range);
-  const safePrecision = clampPrecision(precision);
-  if (!allowDecimals) {
-    return randomInteger(Math.ceil(ordered.min), Math.floor(ordered.max), random);
-  }
+  const safePrecision = effectiveOperandPrecision(ordered, allowDecimals, precision);
 
   const factor = 10 ** safePrecision;
   const min = Math.ceil(ordered.min * factor);
@@ -207,10 +226,14 @@ function createDivisionQuestion(
   settings: MentalMathSettings,
   random: () => number,
 ): { left: number; right: number; answer: number; precision: number } {
-  const precision = settings.allowDecimals ? clampPrecision(settings.decimalPrecision) : 0;
   const range = operationSettings.range;
+  const precision = effectiveOperandPrecision(
+    range,
+    settings.allowDecimals,
+    settings.decimalPrecision,
+  );
 
-  if (!settings.allowDecimals) {
+  if (precision === 0) {
     for (let attempt = 0; attempt < 100; attempt += 1) {
       const left = randomOperand(range, false, 1, random);
       const right = randomNonZeroOperand(range, false, 1, random);
@@ -242,7 +265,11 @@ export function createMentalMathQuestion(
   const enabledOperations = getEnabledOperations(settings);
   const operation = enabledOperations[randomInteger(0, enabledOperations.length - 1, random)];
   const operationSettings = settings.operations[operation];
-  const precision = settings.allowDecimals ? clampPrecision(settings.decimalPrecision) : 0;
+  const precision = effectiveOperandPrecision(
+    operationSettings.range,
+    settings.allowDecimals,
+    settings.decimalPrecision,
+  );
 
   let left = randomOperand(
     operationSettings.range,
@@ -271,7 +298,7 @@ export function createMentalMathQuestion(
     answer = division.answer;
   }
 
-  const questionPrecision = settings.allowDecimals ? clampPrecision(settings.decimalPrecision) : 0;
+  const questionPrecision = precision;
   const leftText = formatNumber(left, questionPrecision);
   const rightText = formatNumber(right, questionPrecision);
   const answerText = formatNumber(answer, questionPrecision);
@@ -346,7 +373,9 @@ function mergeSettings(input?: Partial<MentalMathSettings>): MentalMathSettings 
 export function run(input: MentalMathRunInput = {}): MentalMathRunOutput {
   const settings = mergeSettings(input.settings);
   const random = createSeededRandom(input.seed ?? Date.now());
-  const count = Math.max(1, Math.min(100, Math.floor(input.count ?? 10)));
+  const rawCount = input.count ?? 10;
+  const normalizedCount = Number.isFinite(rawCount) ? rawCount : 10;
+  const count = Math.max(1, Math.min(100, Math.floor(normalizedCount)));
   const questions = Array.from({ length: count }, () => createMentalMathQuestion(settings, random));
   return { ok: true, questions };
 }
