@@ -171,8 +171,14 @@ type ParsedData =
                       class="flex items-center gap-3 rounded-xl border p-3 text-left transition-all"
                       [ngClass]="languageButtonClasses(lang.code)"
                     >
-                      <img [src]="languageFlagAsset(lang.flagAsset)" alt="" class="h-4 w-6 rounded object-cover shadow-sm" />
-                      <span class="font-medium text-slate-900 dark:text-white">{{ lang.label }}</span>
+                      <img
+                        [src]="languageFlagAsset(lang.flagAsset)"
+                        alt=""
+                        class="h-4 w-6 rounded object-cover shadow-sm"
+                      />
+                      <span class="font-medium text-slate-900 dark:text-white">{{
+                        lang.label
+                      }}</span>
                     </button>
                   }
                 </div>

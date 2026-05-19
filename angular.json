@@ -197,6 +197,83 @@
                 }
               ]
             },
+            "simudex": {
+              "serviceWorker": "ngsw-config.simudex.json",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
+              "index": {
+                "input": "index.simudex.html",
+                "output": "index.html"
+              },
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "outputHashing": "all",
+              "outputPath": {
+                "base": "./dist/simudex",
+                "browser": "."
+              },
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/assets",
+                  "output": "assets",
+                  "ignore": ["mcp/**"]
+                },
+                {
+                  "glob": "_redirects",
+                  "input": "src",
+                  "output": "."
+                },
+                {
+                  "glob": "_headers",
+                  "input": "src",
+                  "output": "."
+                },
+                {
+                  "glob": "*",
+                  "input": "src/seo/simudex",
+                  "output": "."
+                },
+                {
+                  "glob": "manifest.simudex.webmanifest",
+                  "input": ".",
+                  "output": "."
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "index.tsx",
+                  "with": "index.simudex.tsx"
+                },
+                {
+                  "replace": "app.config.ts",
+                  "with": "app.config.simudex.ts"
+                },
+                {
+                  "replace": "src/core/core-registry.ts",
+                  "with": "src/core/core-registry.simudex.ts"
+                },
+                {
+                  "replace": "src/core/tool-registry.ts",
+                  "with": "src/core/tool-registry.simudex.ts"
+                },
+                {
+                  "replace": "src/data/tool-space-registry.ts",
+                  "with": "src/data/tool-space-registry.simudex.ts"
+                },
+                {
+                  "replace": "src/services/offline-route-loaders.ts",
+                  "with": "src/services/offline-route-loaders.simudex.ts"
+                }
+              ]
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -219,6 +296,9 @@
             },
             "synedex": {
               "buildTarget": "app:build:synedex"
+            },
+            "simudex": {
+              "buildTarget": "app:build:simudex"
             },
             "development": {
               "buildTarget": "app:build:development"

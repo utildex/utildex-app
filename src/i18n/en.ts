@@ -22,6 +22,11 @@ export default {
 
   NAV_ALL_TOOLS: 'All Tools',
   NAV_GAMES: 'Games',
+  SIMU_NAV_SIMULATIONS: 'Simulations',
+  SIMU_NAV_SEARCH: 'Search simulations...',
+  SIMU_CMD_PALETTE_TITLE: 'Command Palette (Ctrl+K)',
+  SIMU_ARIA_OPEN_SETTINGS: 'Open settings',
+  SIMU_ARIA_GITHUB: 'Open Simudex GitHub repository',
   NAV_TOOL_SPACES: 'Tool Spaces',
   FOOTER_CATEGORIES: 'Categories',
   NAV_HISTORY: 'History',

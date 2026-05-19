@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Simudex",
+  "short_name": "Simudex",
+  "theme_color": "#2563eb",
+  "background_color": "#eff6ff",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/?source=pwa",
+  "icons": [
+    {
+      "src": "assets/images/simudex_icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "orientation": "portrait",
+  "description": "A local-first library for interactive simulations."
+}
