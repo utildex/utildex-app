@@ -363,7 +363,6 @@ export class ToolService {
   private async loadContractMetadata() {
     const entries = Object.entries(TOOL_REGISTRY_MAP);
     if (entries.length === 0) {
-      console.error('[ToolService] Tool registry is empty. No tool metadata can be loaded.');
       return;
     }
 

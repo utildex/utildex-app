@@ -2,7 +2,7 @@ import { Component, inject, output, signal, effect, ElementRef, viewChild } from
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ThemeService, PrimaryColor } from '../../services/theme.service';
-import { I18nService } from '../../services/i18n.service';
+import { I18nService, type LanguageInfo } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
 import { ToolService } from '../../services/tool.service';
 import { ClipboardService } from '../../services/clipboard.service';
@@ -169,16 +169,10 @@ type ParsedData =
                     <button
                       (click)="switchLanguage(lang.code)"
                       class="flex items-center gap-3 rounded-xl border p-3 text-left transition-all"
-                      [class]="
-                        i18n.currentLang() === lang.code
-                          ? 'border-primary bg-primary/5 ring-primary ring-1'
-                          : 'border-slate-200 hover:border-slate-300 dark:border-slate-700 dark:hover:border-slate-600'
-                      "
+                      [ngClass]="languageButtonClasses(lang.code)"
                     >
-                      <img [src]="lang.flagAsset" class="h-4 w-6 rounded object-cover shadow-sm" />
-                      <span class="font-medium text-slate-900 dark:text-white">{{
-                        lang.label
-                      }}</span>
+                      <img [src]="languageFlagAsset(lang.flagAsset)" alt="" class="h-4 w-6 rounded object-cover shadow-sm" />
+                      <span class="font-medium text-slate-900 dark:text-white">{{ lang.label }}</span>
                     </button>
                   }
                 </div>
@@ -287,7 +281,7 @@ type ParsedData =
                   </button>
                 </div>
 
-                @if (APP_CONFIG.capabilities.virtualPets) {
+                @if (appConfig.capabilities.virtualPets) {
                   <!-- Virtual Pets -->
                   <div class="flex items-center justify-between">
                     <div>
@@ -317,7 +311,7 @@ type ParsedData =
 
               <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
-              @if (APP_CONFIG.capabilities.tour) {
+              @if (appConfig.capabilities.tour) {
                 <!-- Tour -->
                 <section class="space-y-6">
                   <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">
@@ -678,7 +672,7 @@ export class SettingsModalComponent {
   stats = signal<StorageStats | null>(null);
   inspectionData = signal<StorageItem[]>([]);
 
-  languages = this.i18n.supportedLanguages;
+  readonly languages = this.i18n.supportedLanguages;
 
   colors: PrimaryColor[] = ['blue', 'emerald', 'violet', 'amber', 'rose'];
 
@@ -790,7 +784,7 @@ export class SettingsModalComponent {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${APP_CONFIG.appId}-backup-${new Date().toISOString().split('T')[0]}.json`;
+      a.download = `${this.appConfig.appId}-backup-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -828,7 +822,7 @@ export class SettingsModalComponent {
 
   // --- Data Parsing Helpers ---
 
-  switchLanguage(langCode: string) {
+  switchLanguage(langCode: LanguageInfo['code']) {
     const urlTree = this.router.parseUrl(this.router.url);
     const segments = urlTree.root.children['primary']?.segments;
 
@@ -843,6 +837,27 @@ export class SettingsModalComponent {
     } else {
       this.router.navigate(['/', langCode]);
     }
+  }
+
+  languageFlagAsset(flagAsset: string): string {
+    const value = flagAsset;
+
+    return value.startsWith('/') ? value : `/${value}`;
+  }
+
+  languageButtonClasses(langCode: LanguageInfo['code']): Record<string, boolean> {
+    const selected = this.i18n.currentLang() === langCode;
+
+    return {
+      'border-primary': selected,
+      'bg-primary/5': selected,
+      'ring-primary': selected,
+      'ring-1': selected,
+      'border-slate-200': !selected,
+      'hover:border-slate-300': !selected,
+      'dark:border-slate-700': !selected,
+      'dark:hover:border-slate-600': !selected,
+    };
   }
 
   cleanKey(key: string): string {
