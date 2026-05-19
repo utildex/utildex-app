@@ -5,9 +5,8 @@
  *   - Every key in CORE_REGISTRY must have a matching entry in TOOL_COMPONENT_LOADERS.
  *   - Every key in TOOL_COMPONENT_LOADERS must have a matching entry in CORE_REGISTRY.
  *
- * Also verifies that every Utildex "base" file in the dual-app split has its
- * app-specific files declared in the app catalog so contributors cannot
- * accidentally remove one app's bundle boundary.
+ * Also verifies that every catalog-declared source file exists so contributors
+ * cannot accidentally remove one app's bundle boundary.
  *
  * Checked for every app declared in APP_CATALOG.
  * Run via: tsx scripts/check-app-parity.ts
@@ -181,6 +180,22 @@ function compareConfigValue(
   return false;
 }
 
+function compareConfigJson(
+  appId: string,
+  label: string,
+  expected: unknown,
+  actual: unknown,
+): boolean {
+  const expectedJson = JSON.stringify(expected);
+  const actualJson = JSON.stringify(actual);
+  if (expectedJson === actualJson) return true;
+
+  console.error(
+    `[ERROR] [${appId}] APP_CATALOG ${label}=${expectedJson} does not match APP_CONFIG_DATA ${label}=${actualJson}`,
+  );
+  return false;
+}
+
 async function checkAppConfigMatchesCatalog(): Promise<boolean> {
   let ok = true;
 
@@ -195,6 +210,7 @@ async function checkAppConfigMatchesCatalog(): Promise<boolean> {
     ok = compareConfigValue(appId, 'catalog key', appId, app.appId) && ok;
     ok = compareConfigValue(appId, 'appId', app.appId, config.appId) && ok;
     ok = compareConfigValue(appId, 'appName', app.appName, config.appName) && ok;
+    ok = compareConfigJson(appId, 'capabilities', app.capabilities, config.capabilities) && ok;
     ok =
       compareConfigValue(
         appId,

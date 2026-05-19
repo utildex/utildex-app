@@ -1,6 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { ToastService } from './toast.service';
 import { DbService } from './db.service';
+import { STORAGE_KEYS } from '../core/storage-keys';
 
 export interface ClipboardItem {
   id: string;
@@ -53,12 +54,12 @@ export class ClipboardService {
 
   async clearHistory() {
     this.history.set([]);
-    await this.db.delete('utildex-clipboard-history');
+    await this.db.delete(STORAGE_KEYS.CLIPBOARD_HISTORY);
   }
 
   private async loadHistory() {
     try {
-      const saved = await this.db.get<ClipboardItem[]>('utildex-clipboard-history');
+      const saved = await this.db.get<ClipboardItem[]>(STORAGE_KEYS.CLIPBOARD_HISTORY);
       if (saved) this.history.set(saved);
     } catch (e) {
       console.error('Failed to parse clipboard history', e);
@@ -66,6 +67,6 @@ export class ClipboardService {
   }
 
   private persistHistory(items: ClipboardItem[]) {
-    this.db.set('utildex-clipboard-history', items);
+    this.db.set(STORAGE_KEYS.CLIPBOARD_HISTORY, items);
   }
 }

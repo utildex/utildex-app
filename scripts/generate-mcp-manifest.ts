@@ -5,16 +5,20 @@ import { pathToFileURL } from 'url';
 import type { ToolContract } from '../src/core/tool-contract';
 import { validateToolSpaceDefinitions } from '../src/core/tool-space';
 import type { ToolSpaceDefinition } from '../src/core/tool-space';
-import { getToolSpacesForApp } from '../src/data/tool-space-registry';
 import type { I18nText } from '../src/data/types';
-import type { AppId } from '../src/core/app-catalog';
+import {
+  APP_IDS,
+  getAppCatalogEntry,
+  isAppId,
+  type AppCatalogEntry,
+  type AppId,
+} from '../src/core/app-catalog';
 
 const SPACE_PAGE_SIZE = 50;
 const GROUP_TOOL_PAGE_SIZE = 25;
 
 const OUT_ROOT = path.join(process.cwd(), 'src', 'assets', 'mcp');
 const WEB_ROOT = '/assets/mcp';
-const ACTIVE_APP_ID = 'utildex';
 
 const FALLBACK_SPACE_ID = 'all-other-tools';
 const FALLBACK_GROUP_ID = 'other-tools';
@@ -84,6 +88,52 @@ function writeJson(relativePath: string, data: unknown) {
   fs.writeFileSync(absolutePath, `${JSON.stringify(data, null, 2)}\n`);
 }
 
+function parseArgValue(name: string): string | undefined {
+  const prefix = `--${name}=`;
+  const inline = process.argv.find((arg) => arg.startsWith(prefix));
+  if (inline) return inline.slice(prefix.length);
+
+  const index = process.argv.indexOf(`--${name}`);
+  if (index !== -1) return process.argv[index + 1];
+
+  return undefined;
+}
+
+function getMcpCapableAppIds(): AppId[] {
+  return APP_IDS.filter((appId) => getAppCatalogEntry(appId).capabilities.mcp);
+}
+
+function resolveTargetAppId(): AppId {
+  const requested = parseArgValue('app');
+  if (requested) {
+    if (!isAppId(requested)) {
+      throw new Error(`[mcp-manifest] Unknown app id "${requested}".`);
+    }
+
+    const app = getAppCatalogEntry(requested);
+    if (!app.capabilities.mcp) {
+      throw new Error(`[mcp-manifest] App "${requested}" does not declare MCP capability.`);
+    }
+
+    return requested;
+  }
+
+  const mcpAppIds = getMcpCapableAppIds();
+  if (mcpAppIds.length === 0) {
+    throw new Error('[mcp-manifest] No app declares MCP capability in APP_CATALOG.');
+  }
+
+  if (mcpAppIds.length > 1) {
+    throw new Error(
+      `[mcp-manifest] Multiple MCP-capable apps found (${mcpAppIds.join(
+        ', ',
+      )}). Pass --app=<appId>.`,
+    );
+  }
+
+  return mcpAppIds[0];
+}
+
 function paginate<T>(items: readonly T[], pageSize: number): T[][] {
   if (pageSize <= 0) {
     throw new Error(`Page size must be > 0. Received: ${pageSize}`);
@@ -145,54 +195,60 @@ function countTopCategories(tools: CompiledTool[]): string[] {
     .map(([category]) => category);
 }
 
-async function loadToolContracts(): Promise<CompiledTool[]> {
-  const toolsDir = path.join(process.cwd(), 'src', 'utildex-tools');
-  const toolFolders = fs
-    .readdirSync(toolsDir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort((left, right) => left.localeCompare(right));
+async function loadToolContracts(app: AppCatalogEntry): Promise<CompiledTool[]> {
+  const loadedTools: CompiledTool[] = [];
 
-  const loadedTools = await Promise.all(
-    toolFolders.map(async (folder) => {
-      const indexFile = path.join(toolsDir, folder, 'index.ts');
-      if (!fs.existsSync(indexFile)) {
-        throw new Error(`[mcp-manifest] Missing tool index: ${indexFile}`);
-      }
+  for (const root of app.source.contentRoots) {
+    const toolsDir = path.join(process.cwd(), root.path);
+    const toolFolders = fs
+      .readdirSync(toolsDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort((left, right) => left.localeCompare(right));
 
-      const mod = (await import(pathToFileURL(indexFile).href)) as ToolIndexModule;
-      const contract = mod.contract;
+    const rootTools = await Promise.all(
+      toolFolders.map(async (folder) => {
+        const indexFile = path.join(toolsDir, folder, 'index.ts');
+        if (!fs.existsSync(indexFile)) {
+          throw new Error(`[mcp-manifest] Missing tool index: ${indexFile}`);
+        }
 
-      if (!contract?.id) {
-        throw new Error(`[mcp-manifest] Missing contract export in ${indexFile}`);
-      }
+        const mod = (await import(pathToFileURL(indexFile).href)) as ToolIndexModule;
+        const contract = mod.contract;
 
-      if (contract.id !== folder) {
-        throw new Error(
-          `[mcp-manifest] Folder and contract id mismatch: folder="${folder}", contract.id="${contract.id}"`,
-        );
-      }
+        if (!contract?.id) {
+          throw new Error(`[mcp-manifest] Missing contract export in ${indexFile}`);
+        }
 
-      return {
-        appName: contract.metadata.appName ?? 'utildex',
-        id: contract.id,
-        title: resolveI18n(contract.metadata.name, 'en'),
-        oneLine: toOneLine(resolveI18n(contract.metadata.description, 'en')),
-        description: resolveI18n(contract.metadata.description, 'en'),
-        icon: contract.metadata.icon,
-        version: contract.metadata.version,
-        categories: [...contract.metadata.categories],
-        tags: [...contract.metadata.tags],
-        featured: Boolean(contract.metadata.featured),
-        color: contract.metadata.color ?? null,
-        inputTraits: [...contract.types.input.traits],
-        outputFormat: contract.types.output.format,
-        cost: contract.cost,
-        hasSchema: Boolean(contract.schema),
-        mcpCompatible: contract.mcp?.compatible ?? true,
-      } satisfies CompiledTool;
-    }),
-  );
+        if (contract.id !== folder) {
+          throw new Error(
+            `[mcp-manifest] Folder and contract id mismatch: folder="${folder}", contract.id="${contract.id}"`,
+          );
+        }
+
+        return {
+          appName: contract.metadata.appName ?? (app.appId as AppId),
+          id: contract.id,
+          title: resolveI18n(contract.metadata.name, 'en'),
+          oneLine: toOneLine(resolveI18n(contract.metadata.description, 'en')),
+          description: resolveI18n(contract.metadata.description, 'en'),
+          icon: contract.metadata.icon,
+          version: contract.metadata.version,
+          categories: [...contract.metadata.categories],
+          tags: [...contract.metadata.tags],
+          featured: Boolean(contract.metadata.featured),
+          color: contract.metadata.color ?? null,
+          inputTraits: [...contract.types.input.traits],
+          outputFormat: contract.types.output.format,
+          cost: contract.cost,
+          hasSchema: Boolean(contract.schema),
+          mcpCompatible: contract.mcp?.compatible ?? true,
+        } satisfies CompiledTool;
+      }),
+    );
+
+    loadedTools.push(...rootTools);
+  }
 
   const seen = new Set<string>();
   for (const tool of loadedTools) {
@@ -202,7 +258,16 @@ async function loadToolContracts(): Promise<CompiledTool[]> {
     seen.add(tool.id);
   }
 
-  return loadedTools.filter((tool) => tool.appName === 'shared' || tool.appName === ACTIVE_APP_ID);
+  return loadedTools.filter((tool) => tool.appName === 'shared' || tool.appName === app.appId);
+}
+
+async function loadToolSpaces(app: AppCatalogEntry): Promise<ToolSpaceDefinition[]> {
+  const registryPath = path.join(process.cwd(), app.source.toolSpaceRegistryFile);
+  const mod = (await import(pathToFileURL(registryPath).href)) as {
+    getToolSpacesForApp: (appId: AppId) => ToolSpaceDefinition[];
+  };
+
+  return mod.getToolSpacesForApp(app.appId as AppId);
 }
 
 function addFallbackSpaceIfNeeded(
@@ -252,13 +317,15 @@ function addFallbackSpaceIfNeeded(
 }
 
 async function main() {
-  console.log('[mcp-manifest] Generating MCP discovery artifacts...');
+  const appId = resolveTargetAppId();
+  const app = getAppCatalogEntry(appId);
+  console.log(`[mcp-manifest] Generating MCP discovery artifacts for "${appId}"...`);
 
-  const tools = await loadToolContracts();
+  const tools = await loadToolContracts(app);
   const toolMap = new Map<string, CompiledTool>(tools.map((tool) => [tool.id, tool]));
 
   const spaces = addFallbackSpaceIfNeeded(
-    cloneToolSpaces(getToolSpacesForApp(ACTIVE_APP_ID)),
+    cloneToolSpaces(await loadToolSpaces(app)),
     tools.map((tool) => tool.id),
   );
 
@@ -469,7 +536,7 @@ async function main() {
       mcp: {
         compatible: tool.mcpCompatible,
       },
-      routePath: `/tools/${tool.id}`,
+      routePath: `/${app.toolsRouteSegment}/${tool.id}`,
       memberships,
     });
   }

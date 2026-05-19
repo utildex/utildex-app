@@ -287,7 +287,7 @@ type ParsedData =
                   </button>
                 </div>
 
-                @if (appConfig.appId !== 'synedex') {
+                @if (APP_CONFIG.capabilities.virtualPets) {
                   <!-- Virtual Pets -->
                   <div class="flex items-center justify-between">
                     <div>
@@ -317,7 +317,7 @@ type ParsedData =
 
               <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
 
-              @if (appConfig.appId !== 'synedex') {
+              @if (APP_CONFIG.capabilities.tour) {
                 <!-- Tour -->
                 <section class="space-y-6">
                   <h3 class="text-sm font-bold tracking-wider text-slate-500 uppercase">

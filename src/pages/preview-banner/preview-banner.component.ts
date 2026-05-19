@@ -1,8 +1,71 @@
 import { Component, ViewChild, ElementRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toJpeg, toPng } from 'html-to-image';
+import {
+  APP_IDS,
+  DEFAULT_APP_ID,
+  getAppCatalogEntry,
+  isAppId,
+  type AppId,
+} from '../../core/app-catalog';
 
-type Mode = 'utildex' | 'synedex' | 'synedex-logo';
+type LogoMode = 'synedex-logo';
+type Mode = AppId | LogoMode;
+
+interface BannerTheme {
+  buttonClass: string;
+  surfaceClass: string;
+  primaryBlobClass: string;
+  secondaryBlobClass: string;
+  logoImage?: string;
+  iconPaths: string[][];
+}
+
+const UTILITY_ICON_PATHS = [
+  [
+    'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z',
+  ],
+  [
+    'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
+  ],
+  ['M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
+  ['M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 3h6m-3-3v6'],
+];
+
+const GAME_ICON_PATHS = [
+  [
+    'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z',
+  ],
+  [
+    'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
+  ],
+  ['M13 10V3L4 14h7v7l9-11h-7z'],
+  [
+    'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z',
+    'M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+  ],
+];
+
+const DEFAULT_BANNER_THEME: BannerTheme = {
+  buttonClass: 'bg-blue-600 text-white',
+  surfaceClass: 'bg-slate-900',
+  primaryBlobClass: 'bg-blue-600',
+  secondaryBlobClass: 'bg-violet-600',
+  iconPaths: UTILITY_ICON_PATHS,
+};
+
+const BANNER_THEMES: Partial<Record<AppId, Partial<BannerTheme>>> = {
+  utildex: {
+    logoImage: '/assets/images/logo_utildex_128.jpeg',
+  },
+  synedex: {
+    buttonClass: 'bg-teal-600 text-white',
+    surfaceClass: 'bg-slate-950',
+    primaryBlobClass: 'bg-teal-600',
+    secondaryBlobClass: 'bg-emerald-600',
+    iconPaths: GAME_ICON_PATHS,
+  },
+};
 
 @Component({
   selector: 'app-preview-banner',
@@ -24,36 +87,24 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
       >
         <h2 class="font-bold">Generator Modes</h2>
         <div class="flex gap-2">
-          <button
-            (click)="mode.set('utildex')"
-            class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            [class.bg-blue-600]="mode() === 'utildex'"
-            [class.bg-white]="mode() !== 'utildex'"
-            [class.text-white]="mode() === 'utildex'"
-            [class.text-slate-900]="mode() !== 'utildex'"
-          >
-            Utildex Banner
-          </button>
-          <button
-            (click)="mode.set('synedex')"
-            class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            [class.bg-teal-600]="mode() === 'synedex'"
-            [class.bg-white]="mode() !== 'synedex'"
-            [class.text-white]="mode() === 'synedex'"
-            [class.text-slate-900]="mode() !== 'synedex'"
-          >
-            Synedex Banner
-          </button>
-          <button
-            (click)="mode.set('synedex-logo')"
-            class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
-            [class.bg-emerald-600]="mode() === 'synedex-logo'"
-            [class.bg-white]="mode() !== 'synedex-logo'"
-            [class.text-white]="mode() === 'synedex-logo'"
-            [class.text-slate-900]="mode() !== 'synedex-logo'"
-          >
-            Synedex Logo
-          </button>
+          @for (appId of previewAppIds; track appId) {
+            <button
+              (click)="mode.set(appId)"
+              class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+              [ngClass]="buttonClasses(appId)"
+            >
+              {{ appName(appId) }} Banner
+            </button>
+          }
+          @for (logoMode of logoModes; track logoMode.id) {
+            <button
+              (click)="mode.set(logoMode.id)"
+              class="rounded-lg px-3 py-1.5 text-sm font-medium transition-colors"
+              [ngClass]="buttonClasses(logoMode.id)"
+            >
+              {{ logoMode.label }}
+            </button>
+          }
         </div>
 
         <button
@@ -61,29 +112,26 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
           class="mt-2 flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2 font-medium text-white transition-colors hover:bg-green-500"
         >
           <span class="material-symbols-outlined">download</span>
-          Save as {{ mode() === 'synedex-logo' ? 'PNG' : 'JPG' }}
+          Save as {{ isLogoMode() ? 'PNG' : 'JPG' }}
         </button>
       </div>
 
       <!-- BANNER CANVAS (1200x630) -->
-      @if (mode() === 'utildex' || mode() === 'synedex') {
+      @if (isBannerMode()) {
         <div
           #bannerContainer
           class="relative flex h-[630px] w-[1200px] shrink-0 flex-col items-center justify-center overflow-hidden text-white shadow-2xl"
-          [class.bg-slate-900]="mode() === 'utildex'"
-          [class.bg-slate-950]="mode() === 'synedex'"
+          [ngClass]="bannerTheme().surfaceClass"
         >
           <!-- Decoration: Background Gradient Mesh -->
           <div class="absolute top-0 left-0 h-full w-full opacity-30">
             <div
               class="absolute top-[-100px] left-[-100px] h-[600px] w-[600px] rounded-full blur-[150px]"
-              [class.bg-blue-600]="mode() === 'utildex'"
-              [class.bg-teal-600]="mode() === 'synedex'"
+              [ngClass]="bannerTheme().primaryBlobClass"
             ></div>
             <div
               class="absolute right-[-100px] bottom-[-100px] h-[600px] w-[600px] rounded-full blur-[150px]"
-              [class.bg-violet-600]="mode() === 'utildex'"
-              [class.bg-emerald-600]="mode() === 'synedex'"
+              [ngClass]="bannerTheme().secondaryBlobClass"
             ></div>
           </div>
 
@@ -93,9 +141,9 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
             <div
               class="mb-6 flex h-32 w-32 items-center justify-center overflow-hidden rounded-3xl bg-white shadow-2xl"
             >
-              @if (mode() === 'utildex') {
+              @if (bannerTheme().logoImage) {
                 <img
-                  src="/assets/images/logo_utildex_128.jpeg"
+                  [src]="bannerTheme().logoImage"
                   class="h-full w-full object-cover"
                   crossorigin="anonymous"
                 />
@@ -125,7 +173,7 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
             <h1
               class="font-utx-sans relative z-10 mb-4 text-9xl font-black tracking-tighter text-white drop-shadow-xl"
             >
-              {{ mode() === 'utildex' ? 'Utildex' : 'Synedex' }}
+              {{ bannerAppName() }}
             </h1>
 
             <!-- Visual Decoration: Floating Elements -->
@@ -134,141 +182,64 @@ type Mode = 'utildex' | 'synedex' | 'synedex-logo';
               <div
                 class="absolute top-1/2 -left-32 flex h-24 w-24 -translate-y-1/2 -rotate-12 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
-                @if (mode() === 'utildex') {
-                  <svg
-                    class="h-12 w-12 text-blue-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                } @else {
-                  <svg
-                    class="h-12 w-12 text-blue-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
-                    ></path>
-                  </svg>
-                }
+                <svg
+                  class="h-12 w-12 text-blue-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  @for (path of floatingIconPaths(0); track path) {
+                    <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="path"></path>
+                  }
+                </svg>
               </div>
               <div
                 class="absolute bottom-0 -left-16 flex h-20 w-20 rotate-6 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
-                @if (mode() === 'utildex') {
-                  <svg
-                    class="h-10 w-10 text-emerald-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                } @else {
-                  <svg
-                    class="h-10 w-10 text-emerald-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                    ></path>
-                  </svg>
-                }
+                <svg
+                  class="h-10 w-10 text-emerald-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  @for (path of floatingIconPaths(1); track path) {
+                    <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="path"></path>
+                  }
+                </svg>
               </div>
 
               <!-- Right Side -->
               <div
                 class="absolute top-1/2 -right-32 flex h-24 w-24 -translate-y-1/2 rotate-12 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
-                @if (mode() === 'utildex') {
-                  <svg
-                    class="h-12 w-12 text-violet-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    ></path>
-                  </svg>
-                } @else {
-                  <svg
-                    class="h-12 w-12 text-violet-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    ></path>
-                  </svg>
-                }
+                <svg
+                  class="h-12 w-12 text-violet-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  @for (path of floatingIconPaths(2); track path) {
+                    <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="path"></path>
+                  }
+                </svg>
               </div>
               <div
                 class="absolute -right-16 bottom-0 flex h-20 w-20 -rotate-6 transform items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-2xl backdrop-blur"
               >
-                @if (mode() === 'utildex') {
-                  <svg
-                    class="h-10 w-10 text-amber-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 3h6m-3-3v6"
-                    ></path>
-                  </svg>
-                } @else {
-                  <svg
-                    class="h-10 w-10 text-amber-300"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                    ></path>
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    ></path>
-                  </svg>
-                }
+                <svg
+                  class="h-10 w-10 text-amber-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                >
+                  @for (path of floatingIconPaths(3); track path) {
+                    <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="path"></path>
+                  }
+                </svg>
               </div>
             </div>
           </div>
@@ -322,13 +293,57 @@ export class PreviewBannerComponent {
   @ViewChild('bannerContainer') banner!: ElementRef;
   @ViewChild('logoContainer') logo!: ElementRef;
 
-  mode = signal<Mode>('utildex');
+  previewAppIds = APP_IDS;
+  logoModes: Array<{ id: LogoMode; label: string }> = [
+    { id: 'synedex-logo', label: 'Synedex Logo' },
+  ];
+  mode = signal<Mode>(DEFAULT_APP_ID);
+
+  appName(appId: AppId): string {
+    return getAppCatalogEntry(appId).appName;
+  }
+
+  isLogoMode(): boolean {
+    return this.mode() === 'synedex-logo';
+  }
+
+  isBannerMode(): boolean {
+    return isAppId(this.mode());
+  }
+
+  buttonClasses(mode: Mode): string {
+    if (this.mode() !== mode) return 'bg-white text-slate-900';
+    if (mode === 'synedex-logo') return 'bg-emerald-600 text-white';
+    return this.themeForApp(mode).buttonClass;
+  }
+
+  bannerTheme(): BannerTheme {
+    return this.themeForApp(this.bannerAppId());
+  }
+
+  bannerAppName(): string {
+    return this.appName(this.bannerAppId());
+  }
+
+  floatingIconPaths(index: number): string[] {
+    return this.bannerTheme().iconPaths[index] ?? [];
+  }
+
+  private bannerAppId(): AppId {
+    const mode = this.mode();
+    return isAppId(mode) ? mode : DEFAULT_APP_ID;
+  }
+
+  private themeForApp(appId: AppId): BannerTheme {
+    return {
+      ...DEFAULT_BANNER_THEME,
+      ...BANNER_THEMES[appId],
+    };
+  }
 
   async downloadBanner() {
     try {
-      const currentMode = this.mode();
-
-      if (currentMode === 'synedex-logo') {
+      if (this.isLogoMode()) {
         if (!this.logo) return;
         const dataUrl = await toPng(this.logo.nativeElement, {
           quality: 1,
@@ -342,6 +357,7 @@ export class PreviewBannerComponent {
         link.click();
       } else {
         if (!this.banner) return;
+        const appId = this.bannerAppId();
         const dataUrl = await toJpeg(this.banner.nativeElement, {
           quality: 0.95,
           width: 1200,
@@ -349,8 +365,7 @@ export class PreviewBannerComponent {
           pixelRatio: 1,
         });
         const link = document.createElement('a');
-        link.download =
-          currentMode === 'utildex' ? 'preview-banner-utildex.jpg' : 'preview-banner-synedex.jpg';
+        link.download = `preview-banner-${appId}.jpg`;
         link.href = dataUrl;
         link.click();
       }

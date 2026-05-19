@@ -5,7 +5,7 @@ import { pathToFileURL } from 'url';
 // 1. Import Shared Data
 import { LANGUAGES } from '../src/data/languages';
 import { type AppId, resolvePublicBaseUrl } from '../src/core/app.config';
-import { DEFAULT_APP_ID, getAppCatalogEntry, isAppId } from '../src/core/app-catalog';
+import { APP_IDS, DEFAULT_APP_ID, getAppCatalogEntry, isAppId } from '../src/core/app-catalog';
 
 interface ToolContractLike {
   id: string;
@@ -26,7 +26,10 @@ interface ToolSpaceLike {
   appName?: AppId | 'shared';
 }
 
-// 2. Parse --app=<appId> from CLI arguments (defaults to 'utildex')
+function shouldGenerateAllApps(): boolean {
+  return process.argv.includes('--all');
+}
+
 function parseAppIdFromArgs(): AppId {
   const appArg = process.argv.find((arg) => arg.startsWith('--app='));
   if (appArg) {
@@ -90,20 +93,18 @@ const getUrlEntry = (
     <priority>${priority.toFixed(1)}</priority>
   </url>`;
 
-// 4. Generator
-async function generateSitemap() {
-  const ACTIVE_APP_ID = parseAppIdFromArgs();
-  console.log(`[sitemap] Generating sitemap for "${ACTIVE_APP_ID}"...`);
+async function generateSitemap(appId: AppId) {
+  console.log(`[sitemap] Generating sitemap for "${appId}"...`);
 
-  const appConfig = await loadAppConfig(ACTIVE_APP_ID);
+  const appConfig = await loadAppConfig(appId);
   const BASE_URL = resolvePublicBaseUrl({
     envBaseUrl: process.env.SITEMAP_BASE_URL || process.env.APP_BASE_URL,
     runtimeOrigin: appConfig.hosting.defaultPublicBaseUrl,
   });
 
-  const toolContracts = await loadToolContracts(ACTIVE_APP_ID);
-  const articles = await loadArticleRegistry(ACTIVE_APP_ID);
-  const spaces = await loadToolSpaceRegistry(ACTIVE_APP_ID);
+  const toolContracts = await loadToolContracts(appId);
+  const articles = await loadArticleRegistry(appId);
+  const spaces = await loadToolSpaceRegistry(appId);
 
   const hasTools = toolContracts.length > 0;
   const hasArticles = articles.length > 0;
@@ -112,7 +113,8 @@ async function generateSitemap() {
 
   const urls: string[] = [];
   const today = new Date().toISOString().split('T')[0];
-  const toolIndexPath = getAppCatalogEntry(ACTIVE_APP_ID).toolsRouteSegment;
+  const app = getAppCatalogEntry(appId);
+  const toolIndexPath = app.toolsRouteSegment;
 
   // A. Static Pages — conditionally include sections based on whether the app has content
   LANGUAGES.forEach((lang) => {
@@ -193,7 +195,7 @@ async function generateSitemap() {
   });
 
   // 5. Write File
-  const OUT_DIR = path.join(process.cwd(), 'src', 'seo', ACTIVE_APP_ID);
+  const OUT_DIR = path.join(process.cwd(), app.source.seoDir);
   const OUT_FILE = path.join(OUT_DIR, 'sitemap.xml');
 
   const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
@@ -259,4 +261,14 @@ async function loadToolContracts(appId: AppId): Promise<ToolContractLike[]> {
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
-generateSitemap().catch(console.error);
+async function main() {
+  const appIds = shouldGenerateAllApps() ? APP_IDS : [parseAppIdFromArgs()];
+  for (const appId of appIds) {
+    await generateSitemap(appId);
+  }
+}
+
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exit(1);
+});

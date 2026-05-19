@@ -19,6 +19,7 @@ import { I18nService, Language } from '../../services/i18n.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { FontLoaderService } from '../../services/font-loader.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
+import { STORAGE_KEYS } from '../../core/storage-keys';
 import { marked } from 'marked';
 import Prism from 'prismjs';
 import en from './i18n/en';
@@ -355,6 +356,8 @@ export class ArticleReaderComponent implements OnInit {
   currentAppLang = this.i18n.currentLang;
 
   private readonly VALID_LANGUAGES: Language[] = ['en', 'fr', 'es', 'zh'];
+  private readonly READER_SIZE_KEY = `${STORAGE_KEYS.PREFIX_APP}reader-size`;
+  private readonly READER_FONT_KEY = `${STORAGE_KEYS.PREFIX_APP}reader-font`;
   private static prismThemeLoaded = false;
 
   availableLangs = computed(() => {
@@ -376,15 +379,15 @@ export class ArticleReaderComponent implements OnInit {
   });
 
   constructor() {
-    const size = localStorage.getItem('utildex-reader-size');
+    const size = localStorage.getItem(this.READER_SIZE_KEY);
     if (size) this.fontSize.set(parseInt(size));
 
-    const font = localStorage.getItem('utildex-reader-font');
+    const font = localStorage.getItem(this.READER_FONT_KEY);
     if (font) this.fontFamily.set(font as 'sans' | 'serif' | 'mono');
 
     effect(() => {
-      localStorage.setItem('utildex-reader-size', this.fontSize().toString());
-      localStorage.setItem('utildex-reader-font', this.fontFamily());
+      localStorage.setItem(this.READER_SIZE_KEY, this.fontSize().toString());
+      localStorage.setItem(this.READER_FONT_KEY, this.fontFamily());
     });
 
     effect(() => {

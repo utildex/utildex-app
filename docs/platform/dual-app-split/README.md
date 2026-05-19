@@ -1,5 +1,7 @@
 # Dual-App Build Split
 
+> Historical note: this document describes the original Utildex/Synedex split. The current architecture is catalog-driven and documented in [Multi-App Repository](../multi-app/README.md). Prefer the multi-app document for new app work.
+
 This document describes how a single codebase produces two completely independent applications: **Utildex** (tools platform) and **Synedex** (cognitive wellness games platform). Understanding this mechanism is required before modifying any file that is shared between the two apps.
 
 ## Table of Contents
@@ -8,7 +10,7 @@ This document describes how a single codebase produces two completely independen
 - [How the Split Works](#how-the-split-works)
   - [Entry Points](#entry-points)
   - [The Six File Replacements](#the-six-file-replacements)
-- [APP\_CONFIG: the Identity Layer](#app_config-the-identity-layer)
+- [APP_CONFIG: the Identity Layer](#app_config-the-identity-layer)
 - [Storage Namespacing](#storage-namespacing)
   - [LocalStorage / SessionStorage keys](#localstorage--sessionstorage-keys)
   - [IndexedDB database name](#indexeddb-database-name)
@@ -72,14 +74,14 @@ Because the entry points are entirely separate, `app.routes.ts` is **never inclu
 
 During the `synedex` build, Angular replaces these files before compilation:
 
-| Replaced file | Replacement | Purpose |
-|---|---|---|
-| `index.tsx` | `index.synedex.tsx` | Bootstraps `SynedexAppComponent` and Synedex routes |
-| `app.config.ts` | `app.config.synedex.ts` | Sets `appId`, `appName`, `toolsRouteSegment`, and hosting URL |
-| `src/core/core-registry.ts` | `src/core/core-registry.synedex.ts` | Declares game contract and kernel loaders |
-| `src/core/tool-registry.ts` | `src/core/tool-registry.synedex.ts` | Declares Angular component loaders for games |
-| `src/data/tool-space-registry.ts` | `src/data/tool-space-registry.synedex.ts` | Declares Synedex-specific tool spaces |
-| `src/services/offline-route-loaders.ts` | `src/services/offline-route-loaders.synedex.ts` | Offline precache scope for Synedex |
+| Replaced file                           | Replacement                                     | Purpose                                                       |
+| --------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------- |
+| `index.tsx`                             | `index.synedex.tsx`                             | Bootstraps `SynedexAppComponent` and Synedex routes           |
+| `app.config.ts`                         | `app.config.synedex.ts`                         | Sets `appId`, `appName`, `toolsRouteSegment`, and hosting URL |
+| `src/core/core-registry.ts`             | `src/core/core-registry.synedex.ts`             | Declares game contract and kernel loaders                     |
+| `src/core/tool-registry.ts`             | `src/core/tool-registry.synedex.ts`             | Declares Angular component loaders for games                  |
+| `src/data/tool-space-registry.ts`       | `src/data/tool-space-registry.synedex.ts`       | Declares Synedex-specific tool spaces                         |
+| `src/services/offline-route-loaders.ts` | `src/services/offline-route-loaders.synedex.ts` | Offline precache scope for Synedex                            |
 
 Everything else — services, components, directives, i18n core, pipes, theme, storage layer — is compiled from the **same** source for both apps. APP_CONFIG (see below) is the mechanism that makes shared code behave differently at runtime.
 
@@ -122,6 +124,7 @@ export function resolvePublicBaseUrl(...): string { ... }
 Because the root `app.config.ts` is resolved at build time, `APP_CONFIG` is a compile-time constant for tree-shaking purposes — the unused app's values are not present in the bundle.
 
 **Rules for using APP_CONFIG:**
+
 - Import `APP_CONFIG` from `'../../core/app.config'` (or the appropriate relative path to `src/core/app.config.ts`), never from the root config file directly.
 - Never hardcode `'utildex'` or `'synedex'` as string literals in shared code. Always branch on `APP_CONFIG.appId`.
 - Do not add new top-level keys to `APP_CONFIG_DATA` unless both `app.config.ts` and `app.config.synedex.ts` are updated simultaneously.
@@ -142,14 +145,22 @@ import { APP_CONFIG } from './app.config';
 const appId = APP_CONFIG.appId as string;
 
 export const STORAGE_KEYS = {
-  DASHBOARD_V2:      `${appId}-dashboard-v2`,
-  FAVORITES:         `${appId}-favorites`,
+  DASHBOARD_V2: `${appId}-dashboard-v2`,
+  FAVORITES: `${appId}-favorites`,
   CLIPBOARD_HISTORY: `${appId}-clipboard-history`,
-  USAGE_STATS:       `${appId}-usage`,
-  PREFIX_STATE:      `${appId}-state-`,
-  PREFIX_TOOLS:      'tools.',
-  PREFIX_APP:        `${appId}-`,
-  PREFERENCES: ['theme', 'lang', 'color', 'font', 'density', 'tool-space', 'tool-space-last-tools'] as const,
+  USAGE_STATS: `${appId}-usage`,
+  PREFIX_STATE: `${appId}-state-`,
+  PREFIX_TOOLS: 'tools.',
+  PREFIX_APP: `${appId}-`,
+  PREFERENCES: [
+    'theme',
+    'lang',
+    'color',
+    'font',
+    'density',
+    'tool-space',
+    'tool-space-last-tools',
+  ] as const,
 };
 
 export function getPrefKey(pref: string): string {
@@ -208,14 +219,14 @@ var saved = localStorage.getItem(appId + '-state-theme');
 
 ### Split per app (different file, same import path)
 
-| Import path | Utildex file | Synedex file |
-|---|---|---|
-| `../../app.config` | `app.config.ts` | `app.config.synedex.ts` |
-| Entry point | `index.tsx` | `index.synedex.tsx` |
-| `./core-registry` | `core-registry.ts` | `core-registry.synedex.ts` |
-| `./tool-registry` | `tool-registry.ts` | `tool-registry.synedex.ts` |
-| `../data/tool-space-registry` | `tool-space-registry.ts` | `tool-space-registry.synedex.ts` |
-| `./offline-route-loaders` | `offline-route-loaders.ts` | `offline-route-loaders.synedex.ts` |
+| Import path                   | Utildex file               | Synedex file                       |
+| ----------------------------- | -------------------------- | ---------------------------------- |
+| `../../app.config`            | `app.config.ts`            | `app.config.synedex.ts`            |
+| Entry point                   | `index.tsx`                | `index.synedex.tsx`                |
+| `./core-registry`             | `core-registry.ts`         | `core-registry.synedex.ts`         |
+| `./tool-registry`             | `tool-registry.ts`         | `tool-registry.synedex.ts`         |
+| `../data/tool-space-registry` | `tool-space-registry.ts`   | `tool-space-registry.synedex.ts`   |
+| `./offline-route-loaders`     | `offline-route-loaders.ts` | `offline-route-loaders.synedex.ts` |
 
 ### Utildex-only (not bundled into Synedex)
 
@@ -249,6 +260,7 @@ ng serve --configuration=synedex
 ```
 
 Output paths:
+
 - Utildex → `dist/utildex/`
 - Synedex → `dist/synedex/`
 

@@ -1,5 +1,5 @@
 import { APP_CONFIG_DATA } from '../../app.config';
-import { isAppId as isKnownAppId, type AppId } from './app-catalog';
+import { isAppId as isKnownAppId, type AppConfigData, type AppId } from './app-catalog';
 
 export type { AppId } from './app-catalog';
 
@@ -8,7 +8,7 @@ export interface ResolvePublicBaseUrlOptions {
   runtimeOrigin?: string | undefined;
 }
 
-export const APP_CONFIG = APP_CONFIG_DATA;
+export const APP_CONFIG: AppConfigData = APP_CONFIG_DATA;
 
 export function getAppId(): AppId {
   return APP_CONFIG.appId as AppId;

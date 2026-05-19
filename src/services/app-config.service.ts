@@ -8,6 +8,7 @@ export class AppConfigService {
   readonly appId = getAppId();
   readonly appName = APP_CONFIG.appName;
   readonly toolsRouteSegment = APP_CONFIG.toolsRouteSegment;
+  readonly capabilities = APP_CONFIG.capabilities;
   readonly githubUrl = APP_CONFIG.githubUrl;
   readonly config = APP_CONFIG;
 

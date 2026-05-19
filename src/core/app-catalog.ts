@@ -2,6 +2,7 @@ export interface AppConfigData {
   appId: string;
   appName: string;
   toolsRouteSegment: string;
+  capabilities: AppCapabilities;
   hosting: {
     defaultPublicBaseUrl: string;
   };
@@ -34,16 +35,20 @@ export interface AppSourceDefinition {
 export interface AppCapabilities {
   articles: boolean;
   dashboard: boolean;
+  fileBlobs: boolean;
   headless: boolean;
   mcp: boolean;
   spaces: boolean;
+  storageHistory: boolean;
+  tour: boolean;
+  virtualPets: boolean;
 }
 
 export interface AppCatalogEntry extends AppConfigData {
   buildConfiguration: string;
   outputPath: string;
+  devServerPort: number;
   source: AppSourceDefinition;
-  capabilities: AppCapabilities;
 }
 
 export const APP_CATALOG = {
@@ -51,12 +56,24 @@ export const APP_CATALOG = {
     appId: 'utildex',
     appName: 'Utildex',
     toolsRouteSegment: 'tools',
+    capabilities: {
+      articles: true,
+      dashboard: true,
+      fileBlobs: true,
+      headless: true,
+      mcp: true,
+      spaces: true,
+      storageHistory: true,
+      tour: true,
+      virtualPets: true,
+    },
     hosting: {
       defaultPublicBaseUrl: 'https://utildex.com',
     },
     githubUrl: 'https://github.com/utildex/utildex',
     buildConfiguration: 'utildex',
     outputPath: 'dist/utildex',
+    devServerPort: 3000,
     source: {
       appConfigFile: 'app.config.ts',
       entryPointFile: 'index.tsx',
@@ -74,24 +91,29 @@ export const APP_CATALOG = {
       articleRegistryFile: 'src/data/article-registry.ts',
       seoDir: 'src/seo/utildex',
     },
-    capabilities: {
-      articles: true,
-      dashboard: true,
-      headless: true,
-      mcp: true,
-      spaces: true,
-    },
   },
   synedex: {
     appId: 'synedex',
     appName: 'Synedex',
     toolsRouteSegment: 'games',
+    capabilities: {
+      articles: false,
+      dashboard: false,
+      fileBlobs: false,
+      headless: false,
+      mcp: false,
+      spaces: false,
+      storageHistory: false,
+      tour: false,
+      virtualPets: false,
+    },
     hosting: {
       defaultPublicBaseUrl: 'https://synedex.com',
     },
     githubUrl: 'https://github.com/utildex/utildex-app',
     buildConfiguration: 'synedex',
     outputPath: 'dist/synedex',
+    devServerPort: 3001,
     source: {
       appConfigFile: 'app.config.synedex.ts',
       entryPointFile: 'index.synedex.tsx',
@@ -108,13 +130,6 @@ export const APP_CATALOG = {
       contentRoots: [{ label: 'synedex-games', path: 'src/synedex-games' }],
       seoDir: 'src/seo/synedex',
     },
-    capabilities: {
-      articles: false,
-      dashboard: false,
-      headless: false,
-      mcp: false,
-      spaces: false,
-    },
   },
 } as const satisfies Record<string, AppCatalogEntry>;
 
@@ -128,6 +143,6 @@ export function isAppId(value: string): value is AppId {
   return APP_IDS.includes(value as AppId);
 }
 
-export function getAppCatalogEntry(appId: AppId): (typeof APP_CATALOG)[AppId] {
+export function getAppCatalogEntry(appId: AppId): AppCatalogEntry {
   return APP_CATALOG[appId];
 }

@@ -112,6 +112,11 @@
                   "glob": "*",
                   "input": "src/seo/utildex",
                   "output": "."
+                },
+                {
+                  "glob": "manifest.webmanifest",
+                  "input": ".",
+                  "output": "."
                 }
               ]
             },
@@ -142,9 +147,7 @@
                   "glob": "**/*",
                   "input": "src/assets",
                   "output": "assets",
-                  "ignore": [
-                    "mcp/**"
-                  ]
+                  "ignore": ["mcp/**"]
                 },
                 {
                   "glob": "_redirects",
