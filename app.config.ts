@@ -1,3 +1,5 @@
+import type { AppConfigData } from './src/core/app-catalog';
+
 export const APP_CONFIG_DATA = {
   appId: 'utildex',
   appName: 'Utildex',
@@ -6,4 +8,4 @@ export const APP_CONFIG_DATA = {
     defaultPublicBaseUrl: 'https://utildex.com',
   },
   githubUrl: 'https://github.com/utildex/utildex',
-} as const;
+} as const satisfies AppConfigData;

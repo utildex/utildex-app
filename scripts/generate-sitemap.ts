@@ -1,4 +1,3 @@
-
 import * as fs from 'fs';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
@@ -6,11 +5,12 @@ import { pathToFileURL } from 'url';
 // 1. Import Shared Data
 import { LANGUAGES } from '../src/data/languages';
 import { type AppId, resolvePublicBaseUrl } from '../src/core/app.config';
+import { DEFAULT_APP_ID, getAppCatalogEntry, isAppId } from '../src/core/app-catalog';
 
 interface ToolContractLike {
   id: string;
   metadata: {
-    appName?: 'utildex' | 'synedex' | 'shared';
+    appName?: AppId | 'shared';
     categories: string[];
   };
 }
@@ -18,12 +18,12 @@ interface ToolContractLike {
 interface ArticleLike {
   id: string;
   date: string;
-  appName?: 'utildex' | 'synedex' | 'shared';
+  appName?: AppId | 'shared';
 }
 
 interface ToolSpaceLike {
   id: string;
-  appName?: 'utildex' | 'synedex' | 'shared';
+  appName?: AppId | 'shared';
 }
 
 // 2. Parse --app=<appId> from CLI arguments (defaults to 'utildex')
@@ -31,29 +31,30 @@ function parseAppIdFromArgs(): AppId {
   const appArg = process.argv.find((arg) => arg.startsWith('--app='));
   if (appArg) {
     const value = appArg.split('=')[1];
-    if (value === 'utildex' || value === 'synedex') return value;
-    console.warn(`[sitemap] Unknown app id "${value}", defaulting to "utildex".`);
+    if (isAppId(value)) return value;
+    console.warn(`[sitemap] Unknown app id "${value}", defaulting to "${DEFAULT_APP_ID}".`);
   }
-  return 'utildex';
+  return DEFAULT_APP_ID;
 }
 
 // Load the correct APP_CONFIG_DATA for the target app
 async function loadAppConfig(appId: AppId) {
-  const configFileName = appId === 'synedex' ? 'app.config.synedex.ts' : 'app.config.ts';
-  const configPath = path.join(process.cwd(), configFileName);
+  const configPath = path.join(process.cwd(), getAppCatalogEntry(appId).source.appConfigFile);
   const mod = (await import(pathToFileURL(configPath).href)) as {
     APP_CONFIG_DATA: { hosting: { defaultPublicBaseUrl: string } };
   };
   return mod.APP_CONFIG_DATA;
 }
 
-// Load the correct article registry for the target app.
-// Synedex intentionally has no articles feature, so it returns an empty list.
 async function loadArticleRegistry(appId: AppId): Promise<ArticleLike[]> {
-  if (appId === 'synedex') {
+  const app = getAppCatalogEntry(appId);
+  const articleRegistryFile = app.source.articleRegistryFile;
+
+  if (!app.capabilities.articles || !articleRegistryFile) {
     return [];
   }
-  const registryPath = path.join(process.cwd(), 'src/data/article-registry.ts');
+
+  const registryPath = path.join(process.cwd(), articleRegistryFile);
   const mod = (await import(pathToFileURL(registryPath).href)) as {
     ARTICLE_REGISTRY: ArticleLike[];
   };
@@ -62,11 +63,10 @@ async function loadArticleRegistry(appId: AppId): Promise<ArticleLike[]> {
 
 // Load the correct tool space registry for the target app
 async function loadToolSpaceRegistry(appId: AppId): Promise<ToolSpaceLike[]> {
-  const registryFileName =
-    appId === 'synedex'
-      ? 'src/data/tool-space-registry.synedex.ts'
-      : 'src/data/tool-space-registry.ts';
-  const registryPath = path.join(process.cwd(), registryFileName);
+  const registryPath = path.join(
+    process.cwd(),
+    getAppCatalogEntry(appId).source.toolSpaceRegistryFile,
+  );
   const mod = (await import(pathToFileURL(registryPath).href)) as {
     TOOL_SPACES_REGISTRY: ToolSpaceLike[];
   };
@@ -112,9 +112,7 @@ async function generateSitemap() {
 
   const urls: string[] = [];
   const today = new Date().toISOString().split('T')[0];
-
-  // The path segment for the tools/games index page differs per app
-  const gamesIndexPath = ACTIVE_APP_ID === 'synedex' ? 'games' : 'tools';
+  const toolIndexPath = getAppCatalogEntry(ACTIVE_APP_ID).toolsRouteSegment;
 
   // A. Static Pages — conditionally include sections based on whether the app has content
   LANGUAGES.forEach((lang) => {
@@ -125,7 +123,7 @@ async function generateSitemap() {
 
     // Tools/Games index — only if there are registered tools/games
     if (hasTools) {
-      urls.push(getUrlEntry(`${BASE_URL}/${code}/${gamesIndexPath}`, today, 'daily', 0.9));
+      urls.push(getUrlEntry(`${BASE_URL}/${code}/${toolIndexPath}`, today, 'daily', 0.9));
     }
 
     // Spaces index — only if there are registered spaces
@@ -149,11 +147,12 @@ async function generateSitemap() {
     urls.push(getUrlEntry(`${BASE_URL}/${code}/terms`, today, 'monthly', 0.5));
   });
 
-  // B. Individual Tool/Game pages — path segment differs per app ('tools' for Utildex, 'games' for Synedex)
-  const gamePath = ACTIVE_APP_ID === 'synedex' ? 'games' : 'tools';
+  // B. Individual Tool/Game pages — path segment differs per app.
   toolContracts.forEach((tool) => {
     LANGUAGES.forEach((lang) => {
-      urls.push(getUrlEntry(`${BASE_URL}/${lang.code}/${gamePath}/${tool.id}`, today, 'weekly', 0.8));
+      urls.push(
+        getUrlEntry(`${BASE_URL}/${lang.code}/${toolIndexPath}/${tool.id}`, today, 'weekly', 0.8),
+      );
     });
   });
 
@@ -189,9 +188,7 @@ async function generateSitemap() {
   spaces.forEach((space) => {
     const spaceSlug = encodeURIComponent(space.id);
     LANGUAGES.forEach((lang) => {
-      urls.push(
-        getUrlEntry(`${BASE_URL}/${lang.code}/spaces/${spaceSlug}`, today, 'weekly', 0.7),
-      );
+      urls.push(getUrlEntry(`${BASE_URL}/${lang.code}/spaces/${spaceSlug}`, today, 'weekly', 0.7));
     });
   });
 
@@ -213,13 +210,9 @@ ${urls.join('')}
 }
 
 async function loadToolContracts(appId: AppId): Promise<ToolContractLike[]> {
-  const toolDirs: string[] = [];
-
-  if (appId === 'utildex') {
-    toolDirs.push(path.join(process.cwd(), 'src', 'utildex-tools'));
-  } else if (appId === 'synedex') {
-    toolDirs.push(path.join(process.cwd(), 'src', 'synedex-games'));
-  }
+  const toolDirs = getAppCatalogEntry(appId).source.contentRoots.map((root) =>
+    path.join(process.cwd(), root.path),
+  );
 
   const contracts: ToolContractLike[] = [];
 

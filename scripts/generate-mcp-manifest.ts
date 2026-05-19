@@ -7,6 +7,7 @@ import { validateToolSpaceDefinitions } from '../src/core/tool-space';
 import type { ToolSpaceDefinition } from '../src/core/tool-space';
 import { getToolSpacesForApp } from '../src/data/tool-space-registry';
 import type { I18nText } from '../src/data/types';
+import type { AppId } from '../src/core/app-catalog';
 
 const SPACE_PAGE_SIZE = 50;
 const GROUP_TOOL_PAGE_SIZE = 25;
@@ -23,7 +24,7 @@ interface ToolIndexModule {
 }
 
 interface CompiledTool {
-  appName: 'utildex' | 'synedex' | 'shared';
+  appName: AppId | 'shared';
   id: string;
   title: string;
   oneLine: string;
@@ -352,24 +353,21 @@ async function main() {
         const pageNumber = pageIndex + 1;
         const currentPageToolIds = toolPages[pageIndex];
 
-        writeJson(
-          path.join('groups', encodedSpaceId, encodedGroupId, `page-${pageNumber}.json`),
-          {
-            schemaVersion: '1.0',
-            kind: 'group-tools-page',
-            spaceId: space.id,
-            groupId: group.id,
-            page: pageNumber,
-            pageSize: GROUP_TOOL_PAGE_SIZE,
-            totalTools: uniqueToolIds.length,
-            hasMore: pageNumber < toolPages.length,
-            nextPageHref:
-              pageNumber < toolPages.length
-                ? toWebPath('groups', space.id, group.id, `page-${pageNumber + 1}.json`)
-                : null,
-            items: currentPageToolIds.map((toolId) => buildToolRef(toolMap.get(toolId)!)),
-          },
-        );
+        writeJson(path.join('groups', encodedSpaceId, encodedGroupId, `page-${pageNumber}.json`), {
+          schemaVersion: '1.0',
+          kind: 'group-tools-page',
+          spaceId: space.id,
+          groupId: group.id,
+          page: pageNumber,
+          pageSize: GROUP_TOOL_PAGE_SIZE,
+          totalTools: uniqueToolIds.length,
+          hasMore: pageNumber < toolPages.length,
+          nextPageHref:
+            pageNumber < toolPages.length
+              ? toWebPath('groups', space.id, group.id, `page-${pageNumber + 1}.json`)
+              : null,
+          items: currentPageToolIds.map((toolId) => buildToolRef(toolMap.get(toolId)!)),
+        });
       }
 
       groupSummaries.push({
@@ -431,9 +429,7 @@ async function main() {
       totalSpaces: orderedSpaceSummaries.length,
       hasMore: pageNumber < spacePages.length,
       nextPageHref:
-        pageNumber < spacePages.length
-          ? toWebPath('spaces', `page-${pageNumber + 1}.json`)
-          : null,
+        pageNumber < spacePages.length ? toWebPath('spaces', `page-${pageNumber + 1}.json`) : null,
       items: spacePages[pageIndex],
     });
   }

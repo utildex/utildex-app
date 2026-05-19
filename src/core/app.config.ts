@@ -1,6 +1,7 @@
 import { APP_CONFIG_DATA } from '../../app.config';
+import { isAppId as isKnownAppId, type AppId } from './app-catalog';
 
-export type AppId = 'utildex' | 'synedex';
+export type { AppId } from './app-catalog';
 
 export interface ResolvePublicBaseUrlOptions {
   envBaseUrl?: string | undefined;
@@ -14,7 +15,7 @@ export function getAppId(): AppId {
 }
 
 export function isAppId(value: string): value is AppId {
-  return value === 'utildex' || value === 'synedex';
+  return isKnownAppId(value);
 }
 
 export function normalizeBaseUrl(url: string): string {
