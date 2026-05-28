@@ -11,7 +11,12 @@ export interface ToolRegistryEntry {
 
 type ComponentLoader = () => Promise<Type<unknown>>;
 
-const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {};
+const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
+  'minimal-debian-terminal': () =>
+    import('../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.component').then(
+      (m) => m.MinimalDebianTerminalComponent,
+    ),
+};
 
 function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {
   if (contract.id !== toolId) {

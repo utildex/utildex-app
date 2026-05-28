@@ -48,6 +48,7 @@ const CATEGORY_TRANSLATIONS: Record<string, I18nText> = {
   Design: { en: 'Design', fr: 'Design', es: 'Diseño', zh: '设计' },
   Health: { en: 'Health', fr: 'Santé', es: 'Salud', zh: '健康' },
   Cognition: { en: 'Cognition', fr: 'Cognition', es: 'Cognición', zh: '认知' },
+  Simulation: { en: 'Simulation', fr: 'Simulation', es: 'Simulación', zh: '仿真' },
 };
 
 @Injectable({
