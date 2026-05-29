@@ -42,8 +42,13 @@ jobs:
   publish:
     name: Build and publish runtime artifact
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/simudex'
+    if: github.ref == 'refs/heads/main'
     environment: r2-artifacts-production
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_EC2_METADATA_DISABLED: true
 
     steps:
       - name: Checkout
@@ -70,13 +75,6 @@ jobs:
             --artifact "${{ inputs.artifact }}" \
             --version "${{ inputs.version }}" \
             --public-base-url "${{ inputs.public_base_url }}"
-
-      - name: Configure R2 credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          aws-region: auto
 
       - name: Ensure immutable version keys do not already exist
         env:
