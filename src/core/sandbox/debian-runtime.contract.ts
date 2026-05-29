@@ -34,7 +34,6 @@ export interface DebianRuntimeManifest {
   cheerpxModuleUrl?: string;
   rootfsRevision?: string;
   rootfsManifestUrl?: string;
-  fallbackCloudRootfsUrl?: string;
   assets: readonly DebianRuntimeAsset[];
 }
 

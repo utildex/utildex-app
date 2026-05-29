@@ -138,7 +138,7 @@ The Debian backend now defaults to a real CheerpX/WebVM runtime path for command
 
 ### Important Runtime Notes
 
-- CheerpX requires cross-origin isolation (`COOP` + `COEP`).
+- CheerpX requires cross-origin isolation (`COOP` + `COEP`); keep `src/_headers` and `docker/nginx/default.conf` aligned.
 - Simudex now loads a self-hosted CheerpX runtime module from `/assets/simudex/debian/cheerpx/cx.esm.js`.
 - Root filesystem mounting resolves from `https://runtime.simudex.org/sandboxes/simudex/debian/rootfs/latest.json`.
 - Rootfs and manifest URLs are restricted to a strict allowlist (same-origin or trusted R2 runtime origin).

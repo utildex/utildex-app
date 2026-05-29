@@ -409,12 +409,6 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
   }
 
   private getPrimaryRootfsUrl(manifest: DebianRuntimeManifest): string {
-    if (manifest.fallbackCloudRootfsUrl) {
-      throw new Error(
-        'fallbackCloudRootfsUrl is disabled for strict rootfs origin allowlist mode.',
-      );
-    }
-
     const root = manifest.assets.find((asset) => asset.kind === 'rootfs');
     if (root?.url?.trim()) {
       return this.requireAllowedRootfsUrl(root.url.trim(), 'Debian rootfs asset URL');
