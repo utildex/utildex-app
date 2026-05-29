@@ -1,6 +1,10 @@
 export interface AppConfigData {
   appId: string;
   appName: string;
+  /**
+   * Legacy field name retained during the module architecture migration.
+   * Treat this as the app's public module route segment.
+   */
   toolsRouteSegment: string;
   capabilities: AppCapabilities;
   hosting: {
@@ -9,8 +13,11 @@ export interface AppConfigData {
   githubUrl: string;
 }
 
+export type ModuleKind = 'tool' | 'game' | 'simulation';
+
 export interface AppContentRootDefinition {
   label: string;
+  kind: ModuleKind;
   path: string;
 }
 
@@ -87,7 +94,7 @@ export const APP_CATALOG = {
       toolRegistryFile: 'src/core/tool-registry.ts',
       toolSpaceRegistryFile: 'src/data/tool-space-registry.ts',
       offlineRouteLoadersFile: 'src/services/offline-route-loaders.ts',
-      contentRoots: [{ label: 'utildex-tools', path: 'src/utildex-tools' }],
+      contentRoots: [{ label: 'utildex-tools', kind: 'tool', path: 'src/utildex-tools' }],
       articleRegistryFile: 'src/data/article-registry.ts',
       seoDir: 'src/seo/utildex',
     },
@@ -127,7 +134,7 @@ export const APP_CATALOG = {
       toolRegistryFile: 'src/core/tool-registry.synedex.ts',
       toolSpaceRegistryFile: 'src/data/tool-space-registry.synedex.ts',
       offlineRouteLoadersFile: 'src/services/offline-route-loaders.synedex.ts',
-      contentRoots: [{ label: 'synedex-games', path: 'src/synedex-games' }],
+      contentRoots: [{ label: 'synedex-games', kind: 'game', path: 'src/synedex-games' }],
       seoDir: 'src/seo/synedex',
     },
   },
@@ -166,7 +173,9 @@ export const APP_CATALOG = {
       toolRegistryFile: 'src/core/tool-registry.simudex.ts',
       toolSpaceRegistryFile: 'src/data/tool-space-registry.simudex.ts',
       offlineRouteLoadersFile: 'src/services/offline-route-loaders.simudex.ts',
-      contentRoots: [{ label: 'simudex-simulations', path: 'src/simudex-simulations' }],
+      contentRoots: [
+        { label: 'simudex-simulations', kind: 'simulation', path: 'src/simudex-simulations' },
+      ],
       seoDir: 'src/seo/simudex',
     },
   },

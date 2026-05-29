@@ -1,6 +1,8 @@
 # Multi-App Repository
 
-This repository is organized as one shared Angular platform that can produce multiple independent applications. Utildex and Synedex are the current applications, but the structure is intended to scale to additional apps without turning every script and shared component into a new app-name branch.
+This repository is organized as one shared Angular platform that can produce multiple independent applications. Utildex, Synedex, and Simudex are the current applications, but the structure is intended to scale to additional apps without turning every script and shared component into a new app-name branch.
+
+For the current restructuring direction, see [Multi-App Restructuring Plan](restructuring-plan.md).
 
 ## Architecture
 
@@ -21,6 +23,9 @@ Each app entry declares:
 - `capabilities`, which shared runtime UI uses to decide whether features such as articles, dashboard, storage history, tour, virtual pets, file blobs, spaces, headless, or MCP are available.
 - `buildConfiguration`, `outputPath`, and `devServerPort`.
 - `source`, including root config, entry point, HTML, manifest, service worker config, route file, shell component, registries, content roots, and SEO output directory.
+- `source.contentRoots`, where each root declares a `label`, a `kind` (`tool`, `game`, or `simulation`), and a `path`.
+
+`toolsRouteSegment` is a legacy field name during the module migration. Treat it as the app's public module route segment until the module-centric rename lands.
 
 ## Runtime Rules
 
@@ -45,6 +50,7 @@ npm run sitemap:all
 Validation guardrails:
 
 - `npm run check:app-parity` checks registry parity, catalog file presence, and runtime config identity/capability parity.
+- `npm run check:app-architecture` checks app catalog uniqueness, portable paths, content root module kinds, and capability/source consistency.
 - `npm run check:app-build-config` checks that `angular.json` and package scripts match the catalog.
 - `npm run check:tool-ids` and `npm run check:integrity` discover app content roots from the catalog.
 - `npm run sitemap:all` generates SEO output for every catalog app.
@@ -60,7 +66,7 @@ To add a new app, use this flow:
 4. Create the app entry point and HTML file, for example `index.simudex.tsx` and `index.simudex.html`.
 5. Create the app shell and routes, for example `src/app.component.simudex.ts`, `src/app.component.simudex.html`, and `src/app.routes.simudex.ts`.
 6. Create app-specific registry files for core loaders, component loaders, spaces, and offline route loaders.
-7. Create the app content root, for example `src/simudex-simulations/`.
+7. Create the app content root, for example `src/simudex-simulations/`, and declare its module kind in the catalog.
 8. Add the Angular build and serve configuration in `angular.json`, including file replacements and SEO assets.
 9. Add manifest and service worker config files.
 10. Run the validation commands listed above.
