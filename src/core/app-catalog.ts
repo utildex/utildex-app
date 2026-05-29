@@ -147,7 +147,7 @@ export const APP_CATALOG = {
       virtualPets: false,
     },
     hosting: {
-      defaultPublicBaseUrl: 'https://simudex.com',
+      defaultPublicBaseUrl: 'https://simudex.org',
     },
     githubUrl: 'https://github.com/utildex/utildex-app',
     buildConfiguration: 'simudex',
