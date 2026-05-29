@@ -1,5 +1,6 @@
 import { I18nText } from './types';
 import { articleRegistryI18n } from './articles/i18n/article-registry.i18n';
+import type { AppId } from '../core/app.config';
 
 export type ArticleType = 'internal' | 'external';
 
@@ -15,7 +16,7 @@ export interface ArticleMetadata {
   readingTime: number; // minutes
   type: ArticleType;
   url?: string; // Required if type === 'external'
-  appName?: 'utildex' | 'synedex'; // Which app owns this article (defaults to 'utildex')
+  appName?: AppId | 'shared'; // Which app owns this article (defaults to 'utildex')
 }
 
 type ArticleId = keyof (typeof articleRegistryI18n)['en'];

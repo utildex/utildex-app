@@ -10,7 +10,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build:${APP_BUILD}
+RUN npm run build:app -- --app=${APP_BUILD}
 
 FROM nginx:1.27-alpine
 ARG APP_BUILD=utildex

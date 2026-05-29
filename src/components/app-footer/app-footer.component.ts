@@ -15,7 +15,7 @@ import { AppConfigService } from '../../services/app-config.service';
       >
         <span>{{ t.map()['FOOTER_COPYRIGHT'] }}</span>
         <div class="flex flex-wrap justify-center gap-4 md:justify-end">
-          @if (appConfig.appId !== 'synedex') {
+          @if (appConfig.capabilities.articles) {
             <a
               [routerLink]="'/articles' | localLink"
               class="transition-colors hover:text-slate-900 dark:hover:text-white"

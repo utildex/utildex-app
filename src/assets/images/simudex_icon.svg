@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Simudex icon">
+  <rect x="0" y="0" width="36" height="36" rx="10" fill="#3cc6ee" />
+  <rect x="46" y="0" width="36" height="36" rx="10" fill="#39d4cb" />
+  <rect x="92" y="0" width="36" height="36" rx="10" fill="#6dda9f" />
+
+  <rect x="0" y="46" width="36" height="36" rx="10" fill="#5ca7ef" />
+  <rect x="46" y="46" width="36" height="36" rx="10" fill="#8090f8" />
+  <rect x="92" y="46" width="36" height="36" rx="10" fill="#f3bd55" />
+
+  <rect x="0" y="92" width="36" height="36" rx="10" fill="#77a0f5" />
+  <rect x="46" y="92" width="36" height="36" rx="10" fill="#a087e9" />
+  <rect x="92" y="92" width="36" height="36" rx="10" fill="#b4dd43" />
+
+  <path d="M110 55V73" stroke="#fff7e6" stroke-width="4" stroke-linecap="round" />
+  <path d="M101 64H119" stroke="#fff7e6" stroke-width="4" stroke-linecap="round" />
+</svg>

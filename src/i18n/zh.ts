@@ -18,6 +18,11 @@ export default {
 
   NAV_ALL_TOOLS: '所有工具',
   NAV_GAMES: '游戏',
+  SIMU_NAV_SIMULATIONS: '模拟',
+  SIMU_NAV_SEARCH: '搜索模拟...',
+  SIMU_CMD_PALETTE_TITLE: '命令面板 (Ctrl+K)',
+  SIMU_ARIA_OPEN_SETTINGS: '打开设置',
+  SIMU_ARIA_GITHUB: '打开 Simudex 的 GitHub 仓库',
   NAV_TOOL_SPACES: '工具空间',
   FOOTER_CATEGORIES: '分类',
   NAV_HISTORY: '历史',

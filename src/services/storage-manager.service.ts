@@ -17,6 +17,14 @@ export interface StorageStats {
   categories: StorageCategory[];
 }
 
+type StorageDefinition = {
+  id: string;
+  labelKey: string;
+  icon: string;
+  patterns: RegExp[];
+  enabled: boolean;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,22 +32,22 @@ export class StorageManagerService {
   private db = inject(DbService);
 
   private getDefinitions() {
-    const appId = APP_CONFIG.appId as string;
+    const capabilities = APP_CONFIG.capabilities;
 
-    return [
+    const definitions: StorageDefinition[] = [
       {
         id: 'dashboard',
         labelKey: 'CAT_DASHBOARD',
         icon: 'dashboard',
         patterns: [new RegExp(`^${STORAGE_KEYS.DASHBOARD_V2}$`)],
-        apps: ['utildex'],
+        enabled: capabilities.dashboard,
       },
       {
         id: 'favorites',
         labelKey: 'CAT_FAVORITES',
         icon: 'star',
         patterns: [new RegExp(`^${STORAGE_KEYS.FAVORITES}$`)],
-        apps: ['utildex', 'synedex'],
+        enabled: true,
       },
       {
         id: 'history',
@@ -49,40 +57,42 @@ export class StorageManagerService {
           new RegExp(`^${STORAGE_KEYS.CLIPBOARD_HISTORY}$`),
           new RegExp(`^${STORAGE_KEYS.USAGE_STATS}$`),
         ],
-        apps: ['utildex'],
+        enabled: capabilities.storageHistory,
       },
       {
         id: 'prefs',
         labelKey: 'CAT_PREFS',
         icon: 'tune',
         patterns: STORAGE_KEYS.PREFERENCES.map((p) => new RegExp(`^${getPrefKey(p)}$`)),
-        apps: ['utildex', 'synedex'],
+        enabled: true,
       },
       {
         id: 'pets',
         labelKey: 'CAT_PETS',
         icon: 'pets',
         patterns: [new RegExp(`^${getPrefKey('active-pets')}$`)],
-        apps: ['utildex'],
+        enabled: capabilities.virtualPets,
       },
       {
         id: 'tools',
-        labelKey: appId === 'synedex' ? 'CAT_GAMES' : 'CAT_TOOLS',
-        icon: appId === 'synedex' ? 'videogame_asset' : 'construction',
+        labelKey: APP_CONFIG.toolsRouteSegment === 'games' ? 'CAT_GAMES' : 'CAT_TOOLS',
+        icon: APP_CONFIG.toolsRouteSegment === 'games' ? 'videogame_asset' : 'construction',
         patterns: [
           new RegExp(`^${STORAGE_KEYS.PREFIX_STATE}(?!${STORAGE_KEYS.PREFERENCES.join('|')})`),
           new RegExp(`^${STORAGE_KEYS.PREFIX_TOOLS.replace('.', '\\.')}`),
         ],
-        apps: ['utildex', 'synedex'],
+        enabled: true,
       },
       {
         id: 'files',
         labelKey: 'CAT_FILES',
         icon: 'folder',
         patterns: [/^app_blobs/],
-        apps: ['utildex'],
+        enabled: capabilities.fileBlobs,
       },
-    ].filter((def) => def.apps.includes(APP_CONFIG.appId as string));
+    ];
+
+    return definitions.filter((def) => def.enabled);
   }
 
   async getStats(): Promise<StorageStats> {

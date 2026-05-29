@@ -17,10 +17,9 @@ export interface ToolContract {
   /** Tool metadata sourced from each tool's contract. */
   metadata: {
     /** App ownership tag used for app-scoped loading.
-     *  - `'utildex'` / `'synedex'`: only loaded for that app.
-     *  - `'shared'`: loaded for both apps.
-     *  - Omitted: inherits the registry file's default (`'utildex'` in core-registry.ts,
-     *    `'synedex'` in core-registry.synedex.ts). Always set explicitly to avoid surprises. */
+     *  - Any AppId: only loaded for that app.
+     *  - `'shared'`: loaded for all apps.
+     *  - Omitted: inherits the active registry file's default owner. Always set explicitly to avoid surprises. */
     appName?: AppId | 'shared';
     name: I18nText;
     description: I18nText;

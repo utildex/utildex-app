@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
+import { APP_IDS, getAppCatalogEntry } from '../src/core/app-catalog';
 
 interface ContractLike {
   id: string;
@@ -12,16 +13,12 @@ interface ModuleRoot {
 }
 
 async function main() {
-  const roots: ModuleRoot[] = [
-    {
-      label: 'utildex-tools',
-      dir: path.join(process.cwd(), 'src', 'utildex-tools'),
-    },
-    {
-      label: 'synedex-games',
-      dir: path.join(process.cwd(), 'src', 'synedex-games'),
-    },
-  ];
+  const roots: ModuleRoot[] = APP_IDS.flatMap((appId) =>
+    getAppCatalogEntry(appId).source.contentRoots.map((root) => ({
+      label: root.label,
+      dir: path.join(process.cwd(), root.path),
+    })),
+  );
 
   const ids: string[] = [];
   const folderIdMismatches: string[] = [];

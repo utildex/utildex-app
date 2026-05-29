@@ -461,7 +461,7 @@ All storage keys for Synedex are prefixed with `synedex-` because `STORAGE_KEYS`
 - **Headless / MCP build.** There is no `npm run build:headless` for Synedex. Game kernels should still be pure (no Angular/DOM at the top level), but they are not exposed via any Node API today.
 - **Dashboard widget system.** The Utildex dashboard (drag-and-drop widget grid) is wired into `app.routes.ts` which Synedex does not use. Do not implement widget-related features in `app.routes.synedex.ts` or `app.component.synedex.ts` without deliberate intent to ship them.
 - **Tour overlay.** The guided onboarding tour (`TourService`) is disabled in the Synedex settings modal via an `@if (appConfig.appId !== 'synedex')` guard.
-- **MCP manifest generation.** The pre-build `generate-mcp-manifest.ts` script targets Utildex tools only.
+- **MCP manifest generation.** The pre-build `generate-mcp-manifest.ts` script targets the catalog app that declares `capabilities.mcp: true`. Synedex currently leaves MCP disabled, so it is skipped.
 
 ---
 

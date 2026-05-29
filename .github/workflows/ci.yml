@@ -53,6 +53,7 @@ jobs:
         run: |
           npm run sitemap:utildex
           npm run sitemap:synedex
+          npm run sitemap:simudex
           npm run generate:mcp-manifest
           git diff --exit-code src/seo src/assets/mcp
 
@@ -64,6 +65,9 @@ jobs:
 
       - name: Build Synedex
         run: npm run build:synedex
+
+      - name: Build Simudex
+        run: npm run build:simudex
 
       - name: Build Headless
         run: npm run build:headless
