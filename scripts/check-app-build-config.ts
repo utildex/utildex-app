@@ -224,6 +224,11 @@ function checkPackageScripts(): boolean {
     ok = false;
   }
 
+  if (!scripts['prebuild:checks']?.includes('check:app-architecture')) {
+    console.error('[ERROR] prebuild:checks must include check:app-architecture.');
+    ok = false;
+  }
+
   if (!scripts['prebuild:checks']?.includes('sitemap:all')) {
     console.error('[ERROR] prebuild:checks must include sitemap:all.');
     ok = false;
