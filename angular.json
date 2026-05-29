@@ -227,6 +227,16 @@
                   "ignore": ["mcp/**"]
                 },
                 {
+                  "glob": "*",
+                  "input": "src/assets/simudex/debian/cheerpx/root",
+                  "output": "."
+                },
+                {
+                  "glob": "**/*",
+                  "input": "src/assets/simudex/debian/cheerpx/root/tun",
+                  "output": "tun"
+                },
+                {
                   "glob": "_redirects",
                   "input": "src",
                   "output": "."

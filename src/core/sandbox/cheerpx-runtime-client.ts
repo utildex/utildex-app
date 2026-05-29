@@ -27,9 +27,6 @@ interface CheerpXModule {
   HttpBytesDevice: {
     create(url: string): Promise<unknown>;
   };
-  CloudDevice: {
-    create(url: string): Promise<unknown>;
-  };
   IDBDevice: {
     create(devName: string): Promise<CheerpXIdbDeviceInstance>;
   };
@@ -79,6 +76,8 @@ interface ResolvedRootfsArtifact {
 }
 
 const OVERLAY_SCHEMA_VERSION = 'v2';
+const TRUSTED_ROOTFS_ORIGINS = new Set(['https://runtime.simudex.org']);
+const LOCAL_CHEERPX_MODULE_PATH = '/assets/simudex/debian/cheerpx/cx.esm.js';
 
 export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
   private readonly decoder = new TextDecoder();
@@ -103,7 +102,7 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
 
     await this.dispose();
 
-    const cheerpx = (await import('@leaningtech/cheerpx')) as unknown as CheerpXModule;
+    const cheerpx = await this.loadCheerpXModule(manifest);
     const resolvedManifest = await this.resolveRootfsArtifactManifest(manifest);
     const rootfsRevision = await this.resolveRootfsRevision(resolvedManifest);
     const rootDevice = await this.createRootDevice(cheerpx, resolvedManifest, rootfsRevision);
@@ -411,12 +410,8 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
 
   private getPrimaryRootfsUrl(manifest: DebianRuntimeManifest): string {
     const root = manifest.assets.find((asset) => asset.kind === 'rootfs');
-    if (root?.url) {
-      return root.url;
-    }
-
-    if (manifest.fallbackCloudRootfsUrl) {
-      return manifest.fallbackCloudRootfsUrl;
+    if (root?.url?.trim()) {
+      return this.requireAllowedRootfsUrl(root.url.trim(), 'Debian rootfs asset URL');
     }
 
     throw new Error('Debian runtime rootfs asset is missing from the runtime manifest.');
@@ -429,8 +424,13 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
     if (!manifestUrl) return manifest;
     if (typeof fetch === 'undefined') return manifest;
 
+    const resolvedManifestUrl = this.requireAllowedRootfsUrl(
+      manifestUrl,
+      'Debian rootfs manifest URL',
+    );
+
     try {
-      const response = await fetch(manifestUrl, { cache: 'no-store' });
+      const response = await fetch(resolvedManifestUrl, { cache: 'no-store' });
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
@@ -441,7 +441,7 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       throw new Error(
-        `Unable to load Debian rootfs artifact manifest from ${manifestUrl}: ${message}`,
+        `Unable to load Debian rootfs artifact manifest from ${resolvedManifestUrl}: ${message}`,
       );
     }
   }
@@ -472,6 +472,11 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
     manifest: DebianRuntimeManifest,
     artifact: ResolvedRootfsArtifact,
   ): DebianRuntimeManifest {
+    const resolvedRootfsUrl = this.requireAllowedRootfsUrl(
+      artifact.url,
+      'Debian rootfs URL from latest manifest',
+    );
+
     return {
       ...manifest,
       rootfsRevision: artifact.revision ?? manifest.rootfsRevision,
@@ -479,7 +484,7 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
         asset.kind === 'rootfs'
           ? {
               ...asset,
-              url: artifact.url,
+              url: resolvedRootfsUrl,
               bytes: artifact.sizeBytes ?? asset.bytes,
               integrity: artifact.sha256 ? `sha256-${artifact.sha256}` : asset.integrity,
             }
@@ -494,16 +499,7 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
     rootfsRevision: string,
   ): Promise<unknown> {
     const primaryUrl = this.getPrimaryRootfsUrl(manifest);
-    try {
-      return await this.createDeviceFromUrl(cheerpx, primaryUrl, rootfsRevision);
-    } catch (error) {
-      const fallbackUrl = manifest.fallbackCloudRootfsUrl;
-      if (!fallbackUrl || fallbackUrl === primaryUrl) {
-        throw error;
-      }
-
-      return this.createDeviceFromUrl(cheerpx, fallbackUrl, rootfsRevision);
-    }
+    return this.createDeviceFromUrl(cheerpx, primaryUrl, rootfsRevision);
   }
 
   private createDeviceFromUrl(
@@ -511,22 +507,97 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
     url: string,
     rootfsRevision: string,
   ): Promise<unknown> {
-    if (url.startsWith('ws://') || url.startsWith('wss://')) {
-      return cheerpx.CloudDevice.create(url);
-    }
-
-    return cheerpx.HttpBytesDevice.create(this.withRootfsRevision(url, rootfsRevision));
+    const resolvedUrl = this.requireAllowedRootfsUrl(url, 'Debian rootfs URL');
+    return cheerpx.HttpBytesDevice.create(this.withRootfsRevision(resolvedUrl, rootfsRevision));
   }
 
   private async resolveRootfsRevision(manifest: DebianRuntimeManifest): Promise<string> {
     const primaryUrl = this.getPrimaryRootfsUrl(manifest);
     const fallback = manifest.rootfsRevision ?? manifest.version;
-    if (primaryUrl.startsWith('ws://') || primaryUrl.startsWith('wss://')) {
-      return fallback;
-    }
 
     const fromMetadata = await this.readRootfsMetadataRevision(primaryUrl);
     return fromMetadata ?? fallback;
+  }
+
+  private async loadCheerpXModule(manifest: DebianRuntimeManifest): Promise<CheerpXModule> {
+    const moduleUrl = this.resolveCheerpXModuleUrl(manifest);
+    const expectedModuleUrl = this.requireSameOriginHttpUrl(
+      LOCAL_CHEERPX_MODULE_PATH,
+      'CheerpX runtime module URL',
+    );
+
+    if (moduleUrl !== expectedModuleUrl) {
+      throw new Error(
+        `CheerpX runtime module URL must be ${LOCAL_CHEERPX_MODULE_PATH} (resolved to ${expectedModuleUrl}). Received ${moduleUrl}`,
+      );
+    }
+
+    try {
+      return (await import(/* @vite-ignore */ moduleUrl)) as unknown as CheerpXModule;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(
+        `Unable to load CheerpX runtime module from ${expectedModuleUrl}. Run \"npm run prepare:simudex-cheerpx\" to download cx.esm.js. ${message}`,
+      );
+    }
+  }
+
+  private resolveCheerpXModuleUrl(manifest: DebianRuntimeManifest): string {
+    const configured = manifest.cheerpxModuleUrl?.trim();
+    if (!configured) {
+      throw new Error('Debian runtime manifest is missing cheerpxModuleUrl.');
+    }
+    return this.requireSameOriginHttpUrl(configured, 'CheerpX runtime module URL');
+  }
+
+  private requireAllowedRootfsUrl(url: string, label: string): string {
+    const base = typeof window !== 'undefined' ? window.location.href : 'http://localhost/';
+
+    let parsed: URL;
+    try {
+      parsed = new URL(url, base);
+    } catch {
+      throw new Error(`${label} is invalid: ${url}`);
+    }
+
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      throw new Error(`${label} must use http(s): ${parsed.toString()}`);
+    }
+
+    if (typeof window !== 'undefined' && parsed.origin === window.location.origin) {
+      return parsed.toString();
+    }
+
+    if (parsed.protocol === 'https:' && TRUSTED_ROOTFS_ORIGINS.has(parsed.origin)) {
+      return parsed.toString();
+    }
+
+    throw new Error(
+      `${label} must be same-origin or use a trusted R2 origin (${Array.from(TRUSTED_ROOTFS_ORIGINS).join(', ')}). Received ${parsed.origin}`,
+    );
+  }
+
+  private requireSameOriginHttpUrl(url: string, label: string): string {
+    const base = typeof window !== 'undefined' ? window.location.href : 'http://localhost/';
+
+    let parsed: URL;
+    try {
+      parsed = new URL(url, base);
+    } catch {
+      throw new Error(`${label} is invalid: ${url}`);
+    }
+
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      throw new Error(`${label} must use http(s): ${parsed.toString()}`);
+    }
+
+    if (typeof window !== 'undefined' && parsed.origin !== window.location.origin) {
+      throw new Error(
+        `${label} must be same-origin for local-only mode: ${parsed.origin} (expected ${window.location.origin})`,
+      );
+    }
+
+    return parsed.toString();
   }
 
   private async readRootfsMetadataRevision(rootfsUrl: string): Promise<string | null> {

@@ -138,10 +138,12 @@ The Debian backend now defaults to a real CheerpX/WebVM runtime path for command
 
 ### Important Runtime Notes
 
-- CheerpX requires cross-origin isolation (`COOP` + `COEP`). Headers were updated in `src/_headers` and `docker/nginx/default.conf`.
-- The npm `@leaningtech/cheerpx` package loads the CheerpX runtime module from `https://cxrtnc.leaningtech.com/...`.
-- Root filesystem mounting prefers the manifest rootfs asset and can fallback to WebVM cloud disk URLs when configured in the manifest.
-- For strict offline-first operation after first load, host your own rootfs and runtime assets and keep service-worker/resource policies aligned with those URLs.
+- CheerpX requires cross-origin isolation (`COOP` + `COEP`); keep `src/_headers` and `docker/nginx/default.conf` aligned.
+- Simudex now loads a self-hosted CheerpX runtime module from `/assets/simudex/debian/cheerpx/cx.esm.js`.
+- Root filesystem mounting resolves from `https://runtime.simudex.org/sandboxes/simudex/debian/rootfs/latest.json`.
+- Rootfs and manifest URLs are restricted to a strict allowlist (same-origin or trusted R2 runtime origin).
+- Cloud rootfs fallback is disabled.
+- Keep CSP `connect-src` aligned with the trusted runtime origin.
 
 ## V1 Non-goals (Locked)
 
@@ -181,7 +183,7 @@ The Debian backend now defaults to a real CheerpX/WebVM runtime path for command
 - Main-thread runtime adapters should talk to Debian execution through `DebianRuntimeClient`; they should not emulate VM commands directly.
 - Preview-shell behavior belongs inside the worker runtime layer and must remain replaceable by the future VM engine.
 - CheerpX/WebVM runtime clients must run only when cross-origin isolation is active, and must fail loudly with a clear setup error otherwise.
-- Runtime images are generated under `sandbox-images/` and published to Cloudflare R2 by the guarded GitHub Actions workflow. The app resolves the Debian rootfs through the public R2 `latest.json` manifest and still executes locally in the browser; do not add a remote executor.
+- Runtime images are generated under `sandbox-images/` and published to Cloudflare R2. The app resolves Debian rootfs from the trusted runtime domain and still executes locally in the browser; do not add a remote executor.
 - The root filesystem must use a dedicated future persistence layer such as OPFS or IndexedDB-backed block storage. Do not store VM filesystem contents in `ToolState`.
 - Multi-tab shells must remain one platform tab to one backend session. The Debian adapter can multiplex sessions inside the VM worker, but the platform owns tab UI state.
 

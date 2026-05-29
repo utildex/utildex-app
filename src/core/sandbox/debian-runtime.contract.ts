@@ -31,9 +31,9 @@ export interface DebianRuntimeManifest {
   offlineOnly: true;
   defaultShell: string;
   defaultCwd: string;
+  cheerpxModuleUrl?: string;
   rootfsRevision?: string;
   rootfsManifestUrl?: string;
-  fallbackCloudRootfsUrl?: string;
   assets: readonly DebianRuntimeAsset[];
 }
 
@@ -124,6 +124,7 @@ export const MINIMAL_DEBIAN_RUNTIME_MANIFEST: DebianRuntimeManifest = {
   offlineOnly: true,
   defaultShell: '/bin/bash',
   defaultCwd: '/home/student',
+  cheerpxModuleUrl: getSimudexDebianResource('cheerpxModule'),
   rootfsManifestUrl: getSimudexDebianResource('rootfsManifest'),
   assets: [
     {

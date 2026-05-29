@@ -5,6 +5,7 @@ export const RUNTIME_RESOURCES = {
   },
   simudex: {
     debian: {
+      cheerpxModule: '/assets/simudex/debian/cheerpx/cx.esm.js',
       bios: '/assets/simudex/debian/bios.bin',
       wasm: '/assets/simudex/debian/runtime.wasm',
       kernel: '/assets/simudex/debian/vmlinuz',

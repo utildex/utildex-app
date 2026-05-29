@@ -19,6 +19,10 @@ sandbox-images/
 .tmp-r2-artifacts/
 src/assets/simudex/**/rootfs.ext2
 src/assets/simudex/**/rootfs.meta.json
+src/assets/simudex/debian/cheerpx/*.js
+src/assets/simudex/debian/cheerpx/*.wasm
+src/assets/simudex/debian/cheerpx/tun/
+src/assets/simudex/debian/cheerpx/root/
 
 *.local
 

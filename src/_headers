@@ -7,4 +7,4 @@
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
   Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self' https://cxrtnc.leaningtech.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' data: blob: https://cxrtnc.leaningtech.com https://disks.webvm.io wss://disks.webvm.io; worker-src 'self' blob: https://cxrtnc.leaningtech.com; media-src 'self' data: blob:; manifest-src 'self'; frame-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' data: blob: https://runtime.simudex.org; worker-src 'self' blob:; media-src 'self' data: blob:; manifest-src 'self'; frame-src 'none'; upgrade-insecure-requests
