@@ -16,7 +16,7 @@ export const APP_CONFIG_DATA = {
     virtualPets: false,
   },
   hosting: {
-    defaultPublicBaseUrl: 'https://simudex.com',
+    defaultPublicBaseUrl: 'https://simudex.org',
   },
   githubUrl: 'https://github.com/utildex/utildex-app',
 } as const satisfies AppConfigData;
