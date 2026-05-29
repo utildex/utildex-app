@@ -181,7 +181,7 @@ The Debian backend now defaults to a real CheerpX/WebVM runtime path for command
 - Main-thread runtime adapters should talk to Debian execution through `DebianRuntimeClient`; they should not emulate VM commands directly.
 - Preview-shell behavior belongs inside the worker runtime layer and must remain replaceable by the future VM engine.
 - CheerpX/WebVM runtime clients must run only when cross-origin isolation is active, and must fail loudly with a clear setup error otherwise.
-- Runtime assets must be local static assets under `assets/simudex/debian/`; V1 must not fetch an internet bridge or contact a remote executor.
+- Runtime images are generated under `sandbox-images/` and published to Cloudflare R2 by the guarded GitHub Actions workflow. The app resolves the Debian rootfs through the public R2 `latest.json` manifest and still executes locally in the browser; do not add a remote executor.
 - The root filesystem must use a dedicated future persistence layer such as OPFS or IndexedDB-backed block storage. Do not store VM filesystem contents in `ToolState`.
 - Multi-tab shells must remain one platform tab to one backend session. The Debian adapter can multiplex sessions inside the VM worker, but the platform owns tab UI state.
 

@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { isAbsolute, resolve } from 'node:path';
 
 type Options = {
   project: string;
@@ -12,7 +12,7 @@ type Options = {
 
 const defaults: Options = {
   project: 'simudex-debian',
-  output: 'simudex/debian',
+  output: 'sandbox-images/simudex/debian',
   base: 'docker.io/i386/debian:bookworm',
   size: '600M',
   packages: [
@@ -92,16 +92,24 @@ function toDockerSafeName(value: string): string {
 }
 
 const opts = parseArgs();
-const outputParts = opts.output.split(/[\\/]+/).filter(Boolean);
+const outputValue = opts.output.trim();
+if (isAbsolute(outputValue)) {
+  throw new Error('--output must be relative to the repository root');
+}
+
+const outputParts = outputValue.split(/[\\/]+/).filter(Boolean);
 const outputRel = outputParts.join('/');
 if (outputParts.length === 0) {
-  throw new Error('--output must resolve to at least one folder under src/assets');
+  throw new Error('--output must resolve to at least one folder under the repository root');
+}
+if (outputParts.includes('..')) {
+  throw new Error('--output must not contain parent directory segments');
 }
 
 const root = process.cwd();
 const mountRoot = root.replace(/\\/g, '/');
 const tmpDir = resolve(root, '.tmp-cheerpx-rootfs');
-const outDir = resolve(root, 'src', 'assets', ...outputParts);
+const outDir = resolve(root, ...outputParts);
 const rootfsTar = resolve(tmpDir, 'rootfs.tar');
 const rootfsPath = resolve(outDir, 'rootfs.ext2');
 const metadataPath = resolve(outDir, 'rootfs.meta.json');
@@ -164,7 +172,7 @@ run('docker', [
     'rm -rf /tmp/cheerpx-rootfs',
     'mkdir -p /tmp/cheerpx-rootfs',
     'tar -xf /work/.tmp-cheerpx-rootfs/rootfs.tar -C /tmp/cheerpx-rootfs',
-    `mkfs.ext2 -b 4096 -d /tmp/cheerpx-rootfs /work/src/assets/${outputRel}/rootfs.ext2 ${opts.size}`,
+    `mkfs.ext2 -b 4096 -d /tmp/cheerpx-rootfs /work/${outputRel}/rootfs.ext2 ${opts.size}`,
   ].join(' && '),
 ]);
 
@@ -184,6 +192,6 @@ writeFileSync(metadataPath, `${JSON.stringify(metadata, null, 2)}\n`);
 rmSync(tmpDir, { recursive: true, force: true });
 
 console.log('');
-console.log(`Created: src/assets/${outputRel}/rootfs.ext2`);
-console.log(`Created: src/assets/${outputRel}/rootfs.meta.json`);
+console.log(`Created: ${outputRel}/rootfs.ext2`);
+console.log(`Created: ${outputRel}/rootfs.meta.json`);
 console.log(`Revision: ${metadata.revision}`);

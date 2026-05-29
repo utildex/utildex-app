@@ -61,6 +61,23 @@ interface CheerpXIdbDeviceInstance {
   reset(): Promise<void>;
 }
 
+interface RootfsArtifactPayload {
+  version?: unknown;
+  rootfs?: {
+    url?: unknown;
+    sizeBytes?: unknown;
+    sha256?: unknown;
+    revision?: unknown;
+  };
+}
+
+interface ResolvedRootfsArtifact {
+  url: string;
+  sizeBytes?: number;
+  sha256?: string;
+  revision?: string;
+}
+
 const OVERLAY_SCHEMA_VERSION = 'v2';
 
 export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
@@ -87,12 +104,13 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
     await this.dispose();
 
     const cheerpx = (await import('@leaningtech/cheerpx')) as unknown as CheerpXModule;
-    const rootfsRevision = await this.resolveRootfsRevision(manifest);
-    const rootDevice = await this.createRootDevice(cheerpx, manifest, rootfsRevision);
-    const overlayVersionKey = this.computeOverlayVersionKey(manifest, rootfsRevision);
+    const resolvedManifest = await this.resolveRootfsArtifactManifest(manifest);
+    const rootfsRevision = await this.resolveRootfsRevision(resolvedManifest);
+    const rootDevice = await this.createRootDevice(cheerpx, resolvedManifest, rootfsRevision);
+    const overlayVersionKey = this.computeOverlayVersionKey(resolvedManifest, rootfsRevision);
 
     this.idbDevice = await cheerpx.IDBDevice.create(
-      `simudex-${manifest.id}-overlay-${OVERLAY_SCHEMA_VERSION}-${overlayVersionKey}`,
+      `simudex-${resolvedManifest.id}-overlay-${OVERLAY_SCHEMA_VERSION}-${overlayVersionKey}`,
     );
     const overlayDevice = await cheerpx.OverlayDevice.create(rootDevice, this.idbDevice);
 
@@ -106,10 +124,10 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
 
     this.linux.setCustomConsole((buffer) => this.handleConsoleBuffer(buffer), 80, 24);
 
-    this.manifest = manifest;
+    this.manifest = resolvedManifest;
     this.bootContext = context;
     this.booted = true;
-    return manifest.version;
+    return resolvedManifest.version;
   }
 
   async createSession(
@@ -402,6 +420,72 @@ export class CheerpXDebianRuntimeClient implements DebianRuntimeClient {
     }
 
     throw new Error('Debian runtime rootfs asset is missing from the runtime manifest.');
+  }
+
+  private async resolveRootfsArtifactManifest(
+    manifest: DebianRuntimeManifest,
+  ): Promise<DebianRuntimeManifest> {
+    const manifestUrl = manifest.rootfsManifestUrl?.trim();
+    if (!manifestUrl) return manifest;
+    if (typeof fetch === 'undefined') return manifest;
+
+    try {
+      const response = await fetch(manifestUrl, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const payload = (await response.json()) as RootfsArtifactPayload;
+      const artifact = this.parseRootfsArtifactPayload(payload);
+      return this.withResolvedRootfsArtifact(manifest, artifact);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new Error(
+        `Unable to load Debian rootfs artifact manifest from ${manifestUrl}: ${message}`,
+      );
+    }
+  }
+
+  private parseRootfsArtifactPayload(payload: RootfsArtifactPayload): ResolvedRootfsArtifact {
+    const rootfs = payload.rootfs;
+    if (!rootfs || typeof rootfs.url !== 'string' || !rootfs.url.trim()) {
+      throw new Error('rootfs.url is missing');
+    }
+
+    return {
+      url: rootfs.url.trim(),
+      sizeBytes: typeof rootfs.sizeBytes === 'number' ? rootfs.sizeBytes : undefined,
+      sha256:
+        typeof rootfs.sha256 === 'string' && rootfs.sha256.trim()
+          ? rootfs.sha256.trim()
+          : undefined,
+      revision:
+        typeof rootfs.revision === 'string' && rootfs.revision.trim()
+          ? rootfs.revision.trim()
+          : typeof payload.version === 'string' && payload.version.trim()
+            ? payload.version.trim()
+            : undefined,
+    };
+  }
+
+  private withResolvedRootfsArtifact(
+    manifest: DebianRuntimeManifest,
+    artifact: ResolvedRootfsArtifact,
+  ): DebianRuntimeManifest {
+    return {
+      ...manifest,
+      rootfsRevision: artifact.revision ?? manifest.rootfsRevision,
+      assets: manifest.assets.map((asset) =>
+        asset.kind === 'rootfs'
+          ? {
+              ...asset,
+              url: artifact.url,
+              bytes: artifact.sizeBytes ?? asset.bytes,
+              integrity: artifact.sha256 ? `sha256-${artifact.sha256}` : asset.integrity,
+            }
+          : asset,
+      ),
+    };
   }
 
   private async createRootDevice(

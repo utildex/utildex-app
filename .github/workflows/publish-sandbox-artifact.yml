@@ -1,0 +1,151 @@
+name: Publish Sandbox Runtime Artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      sandbox:
+        description: Sandbox family to publish.
+        required: true
+        type: choice
+        options:
+          - simudex
+      runtime:
+        description: Runtime image to publish.
+        required: true
+        type: choice
+        options:
+          - debian
+      artifact:
+        description: Artifact type to publish.
+        required: true
+        type: choice
+        options:
+          - rootfs
+      version:
+        description: Immutable artifact version, for example 2026.05.28-1.
+        required: true
+        type: string
+      public_base_url:
+        description: Public HTTPS base URL for R2 assets.
+        required: true
+        type: string
+        default: https://runtime.simudex.org
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-sandbox-artifact-${{ inputs.sandbox }}-${{ inputs.runtime }}-${{ inputs.artifact }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish runtime artifact
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/simudex'
+    environment: r2-artifacts-production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Simudex Debian rootfs
+        run: npm run build:simudex-rootfs
+
+      - name: Prepare R2 manifest
+        id: artifact
+        run: |
+          npm run prepare:r2-artifact -- \
+            --sandbox "${{ inputs.sandbox }}" \
+            --runtime "${{ inputs.runtime }}" \
+            --artifact "${{ inputs.artifact }}" \
+            --version "${{ inputs.version }}" \
+            --public-base-url "${{ inputs.public_base_url }}"
+
+      - name: Configure R2 credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.R2_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          aws-region: auto
+
+      - name: Ensure immutable version keys do not already exist
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+        run: |
+          set -euo pipefail
+
+          for key in \
+            "${{ steps.artifact.outputs.artifact_key }}" \
+            "${{ steps.artifact.outputs.metadata_key }}" \
+            "${{ steps.artifact.outputs.manifest_key }}"; do
+            if aws s3api head-object \
+              --endpoint-url "${R2_ENDPOINT}" \
+              --bucket "${R2_BUCKET}" \
+              --key "${key}" >/dev/null 2>&1; then
+              echo "Immutable object already exists: s3://${R2_BUCKET}/${key}"
+              echo "Choose a new version to keep versioned artifacts immutable."
+              exit 1
+            fi
+          done
+
+      - name: Upload immutable R2 objects
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+        run: |
+          aws s3 cp "${{ steps.artifact.outputs.artifact_file }}" "s3://${R2_BUCKET}/${{ steps.artifact.outputs.artifact_key }}" \
+            --endpoint-url "${R2_ENDPOINT}" \
+            --content-type application/octet-stream \
+            --cache-control "public, max-age=31536000, immutable" \
+            --no-progress
+
+          aws s3 cp "${{ steps.artifact.outputs.metadata_file }}" "s3://${R2_BUCKET}/${{ steps.artifact.outputs.metadata_key }}" \
+            --endpoint-url "${R2_ENDPOINT}" \
+            --content-type application/json \
+            --cache-control "public, max-age=31536000, immutable" \
+            --no-progress
+
+          aws s3 cp "${{ steps.artifact.outputs.manifest_file }}" "s3://${R2_BUCKET}/${{ steps.artifact.outputs.manifest_key }}" \
+            --endpoint-url "${R2_ENDPOINT}" \
+            --content-type application/json \
+            --cache-control "public, max-age=31536000, immutable" \
+            --no-progress
+
+      - name: Publish latest manifest pointer
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+        run: |
+          aws s3 cp "${{ steps.artifact.outputs.manifest_file }}" "s3://${R2_BUCKET}/${{ steps.artifact.outputs.latest_key }}" \
+            --endpoint-url "${R2_ENDPOINT}" \
+            --content-type application/json \
+            --cache-control "public, max-age=60, must-revalidate" \
+            --no-progress
+
+      - name: Verify R2 object metadata
+        env:
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_ENDPOINT: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+        run: |
+          aws s3api head-object \
+            --endpoint-url "${R2_ENDPOINT}" \
+            --bucket "${R2_BUCKET}" \
+            --key "${{ steps.artifact.outputs.artifact_key }}" \
+            --query '{ContentLength: ContentLength, ContentType: ContentType, CacheControl: CacheControl}'
+
+      - name: Upload audit manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: sandbox-artifact-${{ inputs.sandbox }}-${{ inputs.runtime }}-${{ inputs.artifact }}-${{ inputs.version }}
+          path: ${{ steps.artifact.outputs.manifest_file }}

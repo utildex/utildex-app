@@ -12,6 +12,14 @@ dist
 dist-ssr
 dist-headless
 src/assets/mcp/
+
+# Generated sandbox runtime images are published to R2, not committed.
+sandbox-images/
+.tmp-cheerpx-rootfs/
+.tmp-r2-artifacts/
+src/assets/simudex/**/rootfs.ext2
+src/assets/simudex/**/rootfs.meta.json
+
 *.local
 
 # Editor directories and files

@@ -9,6 +9,7 @@ export const RUNTIME_RESOURCES = {
       wasm: '/assets/simudex/debian/runtime.wasm',
       kernel: '/assets/simudex/debian/vmlinuz',
       initrd: '/assets/simudex/debian/initrd.img',
+      rootfsManifest: 'https://runtime.simudex.org/sandboxes/simudex/debian/rootfs/latest.json',
       rootfs: '/assets/simudex/debian/rootfs.ext2',
     },
   },

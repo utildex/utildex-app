@@ -32,6 +32,7 @@ export interface DebianRuntimeManifest {
   defaultShell: string;
   defaultCwd: string;
   rootfsRevision?: string;
+  rootfsManifestUrl?: string;
   fallbackCloudRootfsUrl?: string;
   assets: readonly DebianRuntimeAsset[];
 }
@@ -123,7 +124,7 @@ export const MINIMAL_DEBIAN_RUNTIME_MANIFEST: DebianRuntimeManifest = {
   offlineOnly: true,
   defaultShell: '/bin/bash',
   defaultCwd: '/home/student',
-  fallbackCloudRootfsUrl: 'wss://disks.webvm.io/debian_large_20230522_5044875331.ext2',
+  rootfsManifestUrl: getSimudexDebianResource('rootfsManifest'),
   assets: [
     {
       id: 'debian-worker',
