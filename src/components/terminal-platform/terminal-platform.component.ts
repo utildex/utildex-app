@@ -64,7 +64,9 @@ import { SandboxTerminalSessionService } from '../../services/sandbox-terminal-s
           }
 
           @if (terminalError()) {
-            <div class="mt-2 break-words whitespace-pre-wrap text-red-300">{{ terminalError() }}</div>
+            <div class="mt-2 break-words whitespace-pre-wrap text-red-300">
+              {{ terminalError() }}
+            </div>
           }
         </div>
 
