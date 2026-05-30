@@ -209,7 +209,16 @@ function checkAngularConfig(): boolean {
 function checkPackageScripts(): boolean {
   const pkg = readJson<PackageJson>('package.json');
   const scripts = pkg.scripts ?? {};
-  const requiredScripts = ['dev:app', 'build:app', 'preview:app', 'sitemap:app', 'sitemap:all'];
+  const requiredScripts = [
+    'scaffold',
+    'create:app',
+    'create:module',
+    'dev:app',
+    'build:app',
+    'preview:app',
+    'sitemap:app',
+    'sitemap:all',
+  ];
   let ok = true;
 
   for (const script of requiredScripts) {

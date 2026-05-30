@@ -3,6 +3,7 @@
 This repository is organized as one shared Angular platform that can produce multiple independent applications. Utildex, Synedex, and Simudex are the current applications, but the structure is intended to scale to additional apps without turning every script and shared component into a new app-name branch.
 
 For the current restructuring direction, see [Multi-App Restructuring Plan](restructuring-plan.md).
+For maintainer tooling, see [Maintainer Scaffolding](scaffolding.md).
 
 ## Architecture
 
@@ -60,13 +61,19 @@ Validation guardrails:
 
 To add a new app, use this flow:
 
-1. Pick a stable app id, for example `simudex`.
+Prefer the scaffolder for the initial file plan:
+
+```bash
+npm run create:app -- --id=physidex --name=Physidex --kind=simulation --route=experiments --dry-run
+```
+
+1. Pick a stable app id, for example `physidex`.
 2. Add a new `APP_CATALOG` entry in `src/core/app-catalog.ts`.
-3. Create the runtime config file, for example `app.config.simudex.ts`, with the same identity and capabilities declared in the catalog.
-4. Create the app entry point and HTML file, for example `index.simudex.tsx` and `index.simudex.html`.
-5. Create the app shell and routes, for example `src/app.component.simudex.ts`, `src/app.component.simudex.html`, and `src/app.routes.simudex.ts`.
+3. Create the runtime config file, for example `app.config.physidex.ts`, with the same identity and capabilities declared in the catalog.
+4. Create the app entry point and HTML file, for example `index.physidex.tsx` and `index.physidex.html`.
+5. Create the app shell and routes, for example `src/app.component.physidex.ts`, `src/app.component.physidex.html`, and `src/app.routes.physidex.ts`.
 6. Create app-specific registry files for core loaders, component loaders, spaces, and offline route loaders.
-7. Create the app content root, for example `src/simudex-simulations/`, and declare its module kind in the catalog.
+7. Create the app content root, for example `src/physidex-simulations/`, and declare its module kind in the catalog.
 8. Add the Angular build and serve configuration in `angular.json`, including file replacements and SEO assets.
 9. Add manifest and service worker config files.
 10. Run the validation commands listed above.

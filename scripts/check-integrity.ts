@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { APP_IDS, getAppCatalogEntry } from '../src/core/app-catalog';
+import { LANGUAGES } from '../src/data/languages';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getKeys(obj: any, prefix = ''): string[] {
@@ -16,7 +17,7 @@ function getKeys(obj: any, prefix = ''): string[] {
 }
 
 async function validateI18nDir(dir: string, context: string): Promise<boolean> {
-  const languages = ['en', 'fr', 'es', 'zh'];
+  const languages = LANGUAGES.map((language) => language.code);
   const files = languages.map((lang) => path.join(dir, `${lang}.ts`));
   const missingFiles = files.filter((f) => !fs.existsSync(f));
 
