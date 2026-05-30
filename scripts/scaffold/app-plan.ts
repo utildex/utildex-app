@@ -1,9 +1,36 @@
 import { APP_CATALOG, APP_IDS, getAppCatalogEntry } from '../../src/core/app-catalog';
-import { assertKebabId, optionalString, parseModuleKind, parsePositiveInteger, requireString } from './cli';
+import {
+  assertKebabId,
+  optionalString,
+  parseModuleKind,
+  parsePositiveInteger,
+  requireString,
+} from './cli';
 import { pluralKind } from './common';
-import { appCatalogEntryTemplate, appComponentHtmlTemplate, appComponentTsTemplate, appConfigTemplate, emptyCoreRegistryTemplate, emptyToolRegistryTemplate, emptyToolSpaceRegistryTemplate, indexHtmlTemplate, indexTsxTemplate, manifestTemplate, ngswTemplate, offlineRouteLoadersTemplate, routesTemplate, welcomeComponentTemplate } from './app-templates';
+import {
+  appCatalogEntryTemplate,
+  appComponentHtmlTemplate,
+  appComponentTsTemplate,
+  appConfigTemplate,
+  emptyCoreRegistryTemplate,
+  emptyModuleRegistryTemplate,
+  emptyToolSpaceRegistryTemplate,
+  indexHtmlTemplate,
+  indexTsxTemplate,
+  manifestTemplate,
+  ngswTemplate,
+  offlineRouteLoadersTemplate,
+  routesTemplate,
+  welcomeComponentTemplate,
+} from './app-templates';
 import { createOperation, readJson, readText, stringifyJson, updateOperation } from './fs-plan';
-import type { AppScaffoldOptions, CliOptions, PackageJsonLike, ScaffoldPlan, TsConfigLike } from './types';
+import type {
+  AppScaffoldOptions,
+  CliOptions,
+  PackageJsonLike,
+  ScaffoldPlan,
+  TsConfigLike,
+} from './types';
 
 function nextDevPort(): number {
   return Math.max(...APP_IDS.map((appId) => getAppCatalogEntry(appId).devServerPort)) + 1;
@@ -232,7 +259,7 @@ export function planCreateApp(cli: CliOptions): ScaffoldPlan {
       createOperation(
         `src/core/tool-registry.${options.id}.ts`,
         'empty app component registry',
-        emptyToolRegistryTemplate(),
+        emptyModuleRegistryTemplate(),
       ),
       createOperation(
         `src/data/tool-space-registry.${options.id}.ts`,

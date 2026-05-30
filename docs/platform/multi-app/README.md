@@ -57,6 +57,8 @@ Validation guardrails:
 - `npm run sitemap:all` generates SEO output for every catalog app.
 - `npm run generate:mcp-manifest` generates MCP discovery artifacts for the single catalog app with `capabilities.mcp: true`. If more than one app enables MCP, pass `--app=<appId>`.
 
+MCP compatibility is currently intentionally narrow: only Utildex `tool` modules can be MCP-compatible. For Utildex tools, omitted `mcp.compatible` defaults to `true` and `mcp.compatible: false` opts the tool out. For every other module kind or app, including Synedex games and Simudex simulations, MCP compatibility defaults to `false` and is treated as `false` even if a contract accidentally sets `mcp.compatible: true`.
+
 ## Adding A New App
 
 To add a new app, use this flow:

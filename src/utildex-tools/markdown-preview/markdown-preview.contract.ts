@@ -1,10 +1,10 @@
-import { ToolContract } from '../../core/tool-contract';
+import { ModuleContract } from '../../core/module-contract';
 import { TRAITS } from '../../core/types/traits';
 import { contractI18n } from './i18n/contract.i18n';
 import { mapLocalizedField } from '../../core/i18n-mapper';
 import { schema } from './markdown-preview.schema';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: 'markdown-preview',
   metadata: {
     name: mapLocalizedField(contractI18n, 'name'),

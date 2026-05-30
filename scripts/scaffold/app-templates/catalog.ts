@@ -49,7 +49,7 @@ export function appCatalogEntryTemplate(options: AppScaffoldOptions): string {
       appComponentTemplateFile: 'src/app.component.${options.id}.html',
       routesFile: 'src/app.routes.${options.id}.ts',
       coreRegistryFile: 'src/core/core-registry.${options.id}.ts',
-      toolRegistryFile: 'src/core/tool-registry.${options.id}.ts',
+      moduleRegistryFile: 'src/core/tool-registry.${options.id}.ts',
       toolSpaceRegistryFile: 'src/data/tool-space-registry.${options.id}.ts',
       offlineRouteLoadersFile: 'src/services/offline-route-loaders.${options.id}.ts',
       contentRoots: [{ label: '${options.id}-${pluralKind(options.kind)}', kind: '${options.kind}', path: '${options.contentRoot}' }],

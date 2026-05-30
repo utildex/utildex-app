@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, effect, ElementRef, viewChild } from '@angular/core';
-import { ToolService } from '../../services/tool.service';
+import { ModuleService } from '../../services/module.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
 import { FormsModule } from '@angular/forms';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -182,7 +182,8 @@ import zh from './i18n/zh';
   ],
 })
 export class AllToolsComponent {
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
+  toolService = this.moduleService;
   t = inject(ScopedTranslationService);
 
   gridTop = viewChild<ElementRef>('gridTop');

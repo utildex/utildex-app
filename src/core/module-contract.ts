@@ -1,7 +1,7 @@
 /**
- * ToolContract — the type definition for tool contracts.
+ * ModuleContract — the platform contract for runnable modules.
  *
- * Each tool's contract file exports a `contract` constant of this type.
+ * Tools, games, and simulations share this shape.
  */
 
 import { Trait } from './types/traits';
@@ -10,11 +10,11 @@ import { I18nText, WidgetCapability } from '../data/types';
 import type { AppId } from './app.config';
 import type { z } from 'zod';
 
-export interface ToolContract {
-  /** Unique tool identifier (matches route and registry key). */
+export interface ModuleContract {
+  /** Unique module identifier (matches route and registry key). */
   id: string;
 
-  /** Tool metadata sourced from each tool's contract. */
+  /** Module metadata sourced from each module's contract. */
   metadata: {
     /** App ownership tag used for app-scoped loading.
      *  - Any AppId: only loaded for that app.
@@ -46,7 +46,9 @@ export interface ToolContract {
   /**
    * Optional MCP compatibility metadata.
    *
-   * `compatible` defaults to `true` when omitted.
+   * Omitted values are resolved from module ownership and kind. Only Utildex
+   * tool modules default to MCP-compatible; all other module kinds default to
+   * non-compatible and cannot opt in through this flag while MCP is tool-only.
    */
   mcp?: {
     compatible?: boolean;

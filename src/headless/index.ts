@@ -1,11 +1,15 @@
-import { getCoreRegistryForApp } from '../core/core-registry';
+import {
+  getCoreModuleRegistryForApp,
+  isMcpCompatibleModule,
+  type ModuleCoreRegistryEntry,
+} from '../core/module-core-registry';
 import type { ToolSpaceIssue } from '../core/tool-space';
 import {
   collectToolSpaceRuntimeIssues,
   getResolvedToolSpaceMap,
   resolveToolSpaces,
 } from '../core/tool-space-resolver';
-import type { ToolContract } from '../core/tool-contract';
+import type { ModuleContract } from '../core/module-contract';
 import type { ResolvedToolSpace } from '../core/tool-space-resolver';
 import { getToolSpacesForApp } from '../data/tool-space-registry';
 import type { ToolMetadata } from '../data/types';
@@ -40,7 +44,7 @@ export interface HeadlessToolSummary {
 }
 
 export interface HeadlessToolDefinition extends HeadlessToolSummary {
-  schema?: ToolContract['schema'];
+  schema?: ModuleContract['schema'];
   run: (input: unknown) => Promise<unknown>;
 }
 
@@ -64,7 +68,7 @@ const headlessSpacesPromiseByKey = new Map<
 >();
 
 const ACTIVE_APP_ID = 'utildex';
-const ACTIVE_CORE_REGISTRY = getCoreRegistryForApp(ACTIVE_APP_ID);
+const ACTIVE_MODULE_REGISTRY = getCoreModuleRegistryForApp(ACTIVE_APP_ID);
 const ACTIVE_TOOL_SPACES_REGISTRY = getToolSpacesForApp(ACTIVE_APP_ID);
 
 function resolveI18nText(value: unknown): string {
@@ -91,15 +95,18 @@ function resolveI18nText(value: unknown): string {
 }
 
 function assertKnownToolId(toolId: string) {
-  if (!ACTIVE_CORE_REGISTRY[toolId]) {
-    const known = Object.keys(ACTIVE_CORE_REGISTRY)
+  if (!ACTIVE_MODULE_REGISTRY[toolId]) {
+    const known = Object.keys(ACTIVE_MODULE_REGISTRY)
       .sort((left, right) => left.localeCompare(right))
       .join(', ');
     throw new Error(`Unknown tool id "${toolId}". Known tool ids: ${known}`);
   }
 }
 
-function toSummary(contract: ToolContract): HeadlessToolSummary {
+function toSummary(
+  contract: ModuleContract,
+  moduleEntry: ModuleCoreRegistryEntry,
+): HeadlessToolSummary {
   return {
     id: contract.id,
     name: resolveI18nText(contract.metadata.name),
@@ -109,12 +116,16 @@ function toSummary(contract: ToolContract): HeadlessToolSummary {
     tags: [...contract.metadata.tags],
     inputTraits: [...contract.types.input.traits],
     outputFormat: contract.types.output.format,
-    mcpCompatible: contract.mcp?.compatible ?? true,
+    mcpCompatible: isMcpCompatibleModule(contract, {
+      appId: moduleEntry.appId,
+      activeAppId: ACTIVE_APP_ID,
+      kind: moduleEntry.kind,
+    }),
     hasSchema: Boolean(contract.schema),
   };
 }
 
-function toToolMetadata(toolId: string, contract: ToolContract): ToolMetadata {
+function toToolMetadata(toolId: string, contract: ModuleContract): ToolMetadata {
   return {
     id: toolId,
     name: contract.metadata.name,
@@ -130,7 +141,7 @@ function toToolMetadata(toolId: string, contract: ToolContract): ToolMetadata {
 }
 
 async function buildHeadlessCatalog(): Promise<HeadlessCatalog> {
-  const toolIds = Object.keys(ACTIVE_CORE_REGISTRY).sort((left, right) =>
+  const toolIds = Object.keys(ACTIVE_MODULE_REGISTRY).sort((left, right) =>
     left.localeCompare(right),
   );
 
@@ -138,8 +149,9 @@ async function buildHeadlessCatalog(): Promise<HeadlessCatalog> {
   const metadataById = new Map<string, ToolMetadata>();
 
   for (const toolId of toolIds) {
-    const contract = await ACTIVE_CORE_REGISTRY[toolId].contract();
-    summaries.push(toSummary(contract));
+    const moduleEntry = ACTIVE_MODULE_REGISTRY[toolId];
+    const contract = await moduleEntry.contract();
+    summaries.push(toSummary(contract, moduleEntry));
     metadataById.set(toolId, toToolMetadata(toolId, contract));
   }
 
@@ -224,7 +236,7 @@ async function resolveHeadlessSpaces(
 }
 
 async function loadKernelRun(toolId: string): Promise<(input: unknown) => Promise<unknown>> {
-  const kernelModule = await ACTIVE_CORE_REGISTRY[toolId].kernel();
+  const kernelModule = await ACTIVE_MODULE_REGISTRY[toolId].kernel();
   const run = (kernelModule as Record<string, unknown>).run;
 
   if (typeof run !== 'function') {
@@ -309,13 +321,11 @@ export async function listHeadlessToolsInSpace(
 export async function getHeadlessTool(toolId: string): Promise<HeadlessToolDefinition> {
   assertKnownToolId(toolId);
 
-  const [contract, run] = await Promise.all([
-    ACTIVE_CORE_REGISTRY[toolId].contract(),
-    loadKernelRun(toolId),
-  ]);
+  const moduleEntry = ACTIVE_MODULE_REGISTRY[toolId];
+  const [contract, run] = await Promise.all([moduleEntry.contract(), loadKernelRun(toolId)]);
 
   return {
-    ...toSummary(contract),
+    ...toSummary(contract, moduleEntry),
     schema: contract.schema,
     run,
   };

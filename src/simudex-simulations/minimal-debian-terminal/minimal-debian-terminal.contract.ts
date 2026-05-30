@@ -1,7 +1,7 @@
-import { ToolContract } from '../../core/tool-contract';
+import { ModuleContract } from '../../core/module-contract';
 import { TRAITS } from '../../core/types/traits';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: 'minimal-debian-terminal',
   metadata: {
     appName: 'simudex',

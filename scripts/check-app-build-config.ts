@@ -183,7 +183,7 @@ function checkAngularConfig(): boolean {
         ['index.tsx', app.source.entryPointFile],
         ['app.config.ts', app.source.appConfigFile],
         ['src/core/core-registry.ts', app.source.coreRegistryFile],
-        ['src/core/tool-registry.ts', app.source.toolRegistryFile],
+        ['src/core/tool-registry.ts', app.source.moduleRegistryFile],
         ['src/data/tool-space-registry.ts', app.source.toolSpaceRegistryFile],
         ['src/services/offline-route-loaders.ts', app.source.offlineRouteLoadersFile],
       ];

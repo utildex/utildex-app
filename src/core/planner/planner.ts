@@ -1,5 +1,5 @@
 /**
- * Planner — reasons about tool contracts for pipeline compatibility.
+ * Planner — reasons about module contracts for pipeline compatibility.
  *
  * Responsibilities:
  * - Check compatibility between tool outputs and inputs
@@ -12,7 +12,7 @@
 
 import { Trait } from '../types/traits';
 import { FormatId } from '../types/formats';
-import type { ToolContract } from '../tool-contract';
+import type { ModuleContract } from '../module-contract';
 import {
   formatMask,
   traitMask,
@@ -81,7 +81,10 @@ export function checkFormatCompatibility(
 /**
  * Return all contracts whose input traits are compatible with the source tool output format.
  */
-export function getCompatibleTargets(toolId: string, allContracts: ToolContract[]): ToolContract[] {
+export function getCompatibleTargets(
+  toolId: string,
+  allContracts: ModuleContract[],
+): ModuleContract[] {
   const source = allContracts.find((contract) => contract.id === toolId);
   if (!source) {
     return [];

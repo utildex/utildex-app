@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
-import type { ToolContract } from '../core/tool-contract';
+import type { ModuleContract } from '../core/module-contract';
 import type { ToolSpaceDefinition } from '../core/tool-space';
 import type { CoreRegistryEntry } from '../core/core-registry';
 import type { ToolMetadata } from '../data/types';
@@ -28,9 +28,9 @@ function createDeferred<T>(): Deferred<T> {
 
 function makeContract(
   id: string,
-  overrides: Partial<Omit<ToolContract, 'id' | 'metadata' | 'types' | 'widget' | 'cost'>> = {},
-): ToolContract {
-  const contract: ToolContract = {
+  overrides: Partial<Omit<ModuleContract, 'id' | 'metadata' | 'types' | 'widget' | 'cost'>> = {},
+): ModuleContract {
+  const contract: ModuleContract = {
     id,
     metadata: {
       name: { fr: `${id} FR`, en: `${id} EN` },
@@ -51,7 +51,7 @@ function makeContract(
   return { ...contract, ...overrides };
 }
 
-function makeSchemaContract(id: string, mcpCompatible = true): ToolContract {
+function makeSchemaContract(id: string, mcpCompatible = true): ModuleContract {
   return makeContract(id, {
     schema: {
       input: z.object({ value: z.string() }),
@@ -62,7 +62,7 @@ function makeSchemaContract(id: string, mcpCompatible = true): ToolContract {
 }
 
 function makeRegistryEntry(
-  contract: ToolContract,
+  contract: ModuleContract,
   run: (input: unknown) => unknown | Promise<unknown> = (input) => input,
 ): CoreRegistryEntry {
   return {
@@ -162,6 +162,28 @@ describe('listHeadlessTools', () => {
     } else {
       expect(mcpTools.length).toBeLessThan(allTools.length);
     }
+  });
+
+  it('defaults MCP compatibility to false for non-tool modules even when explicitly true', async () => {
+    const { listHeadlessTools } = await loadHeadlessModuleWithMocks({
+      'memory-grid': {
+        ...makeRegistryEntry(makeSchemaContract('memory-grid', true)),
+        appName: 'synedex',
+        kind: 'game',
+      },
+      'terminal-lab': {
+        ...makeRegistryEntry(makeSchemaContract('terminal-lab', true)),
+        appName: 'simudex',
+        kind: 'simulation',
+      },
+    });
+
+    const tools = await listHeadlessTools();
+
+    expect(tools).toEqual([
+      expect.objectContaining({ id: 'memory-grid', mcpCompatible: false }),
+      expect.objectContaining({ id: 'terminal-lab', mcpCompatible: false }),
+    ]);
   });
 });
 
@@ -313,7 +335,7 @@ describe('headless catalog cache behavior', () => {
   it('clears a failed catalog load so a later call can retry', async () => {
     const contract = makeContract('retry-tool');
     const contractLoader = vi
-      .fn<() => Promise<ToolContract>>()
+      .fn<() => Promise<ModuleContract>>()
       .mockRejectedValueOnce(new Error('contract load failed'))
       .mockResolvedValueOnce(contract);
     const { listHeadlessTools } = await loadHeadlessModuleWithMocks({
@@ -332,7 +354,7 @@ describe('headless catalog cache behavior', () => {
 
   it('shares one in-flight catalog promise across concurrent callers', async () => {
     const contract = makeContract('slow-tool');
-    const deferred = createDeferred<ToolContract>();
+    const deferred = createDeferred<ModuleContract>();
     const contractLoader = vi.fn(() => deferred.promise);
     const { listHeadlessTools } = await loadHeadlessModuleWithMocks({
       'slow-tool': {

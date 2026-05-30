@@ -1,9 +1,10 @@
 /**
  * check-app-parity.ts
  *
- * Verifies that each app's CORE_REGISTRY and TOOL_COMPONENT_LOADERS are kept in sync:
- *   - Every key in CORE_REGISTRY must have a matching entry in TOOL_COMPONENT_LOADERS.
- *   - Every key in TOOL_COMPONENT_LOADERS must have a matching entry in CORE_REGISTRY.
+ * Verifies that each app's module registry layers are kept in sync.
+ * The compatibility object names are still CORE_REGISTRY and MODULE_COMPONENT_LOADERS:
+ *   - Every key in CORE_REGISTRY must have a matching entry in MODULE_COMPONENT_LOADERS.
+ *   - Every key in MODULE_COMPONENT_LOADERS must have a matching entry in CORE_REGISTRY.
  *
  * Also verifies that every catalog-declared source file exists so contributors
  * cannot accidentally remove one app's bundle boundary.
@@ -33,7 +34,7 @@ function extractObjectKeys(filePath: string, objectName: string): Set<string> {
   const source = fs.readFileSync(filePath, 'utf-8');
   const keys = new Set<string>();
 
-  // Find the variable declaration (e.g. "const CORE_REGISTRY" or "const TOOL_COMPONENT_LOADERS")
+  // Find the variable declaration (e.g. "const CORE_REGISTRY" or "const MODULE_COMPONENT_LOADERS")
   const declRegex = new RegExp(`(?:const|export const)\\s+${objectName}\\b`);
   const declMatch = declRegex.exec(source);
   if (!declMatch) return keys;
@@ -89,14 +90,14 @@ function checkRegistryParity(
   label: string,
 ): boolean {
   const coreKeys = extractObjectKeys(coreFilePath, 'CORE_REGISTRY');
-  const componentKeys = extractObjectKeys(componentFilePath, 'TOOL_COMPONENT_LOADERS');
+  const componentKeys = extractObjectKeys(componentFilePath, 'MODULE_COMPONENT_LOADERS');
 
   let ok = true;
 
   const missingComponents = [...coreKeys].filter((k) => !componentKeys.has(k));
   if (missingComponents.length > 0) {
     console.error(
-      `[ERROR] [${label}] CORE_REGISTRY keys without a TOOL_COMPONENT_LOADERS entry:\n` +
+      `[ERROR] [${label}] CORE_REGISTRY keys without a MODULE_COMPONENT_LOADERS entry:\n` +
         missingComponents.map((k) => `  - ${k}`).join('\n'),
     );
     ok = false;
@@ -105,14 +106,14 @@ function checkRegistryParity(
   const orphanComponents = [...componentKeys].filter((k) => !coreKeys.has(k));
   if (orphanComponents.length > 0) {
     console.error(
-      `[ERROR] [${label}] TOOL_COMPONENT_LOADERS keys without a CORE_REGISTRY entry:\n` +
+      `[ERROR] [${label}] MODULE_COMPONENT_LOADERS keys without a CORE_REGISTRY entry:\n` +
         orphanComponents.map((k) => `  - ${k}`).join('\n'),
     );
     ok = false;
   }
 
   if (ok) {
-    console.log(`[OK]    [${label}] Registry parity passed (${coreKeys.size} entries)`);
+    console.log(`[OK]    [${label}] Module registry parity passed (${coreKeys.size} entries)`);
   }
 
   return ok;
@@ -129,7 +130,7 @@ function getRequiredAppFiles(app: AppCatalogEntry): string[] {
     app.source.appComponentTemplateFile,
     app.source.routesFile,
     app.source.coreRegistryFile,
-    app.source.toolRegistryFile,
+    app.source.moduleRegistryFile,
     app.source.toolSpaceRegistryFile,
     app.source.offlineRouteLoadersFile,
   ];
@@ -236,7 +237,7 @@ async function checkAppConfigMatchesCatalog(): Promise<boolean> {
 }
 
 async function main() {
-  console.log('Starting App Registry Parity Check...\n');
+  console.log('Starting App Module Registry Parity Check...\n');
   let success = true;
 
   for (const appId of APP_IDS) {
@@ -244,7 +245,7 @@ async function main() {
     if (
       !checkRegistryParity(
         path.join(process.cwd(), app.source.coreRegistryFile),
-        path.join(process.cwd(), app.source.toolRegistryFile),
+        path.join(process.cwd(), app.source.moduleRegistryFile),
         appId,
       )
     ) {
@@ -261,11 +262,11 @@ async function main() {
   }
 
   if (!success) {
-    console.error('\nParity check failed. Fix registry mismatches before building.');
+    console.error('\nParity check failed. Fix module registry mismatches before building.');
     process.exit(1);
   }
 
-  console.log('\nAll app registry parity checks passed.');
+  console.log('\nAll app module registry parity checks passed.');
 }
 
 main().catch((err) => {

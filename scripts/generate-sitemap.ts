@@ -7,7 +7,7 @@ import { LANGUAGES } from '../src/data/languages';
 import { type AppId, resolvePublicBaseUrl } from '../src/core/app.config';
 import { APP_IDS, DEFAULT_APP_ID, getAppCatalogEntry, isAppId } from '../src/core/app-catalog';
 
-interface ToolContractLike {
+interface ModuleContractLike {
   id: string;
   metadata: {
     appName?: AppId | 'shared';
@@ -102,13 +102,13 @@ async function generateSitemap(appId: AppId) {
     runtimeOrigin: appConfig.hosting.defaultPublicBaseUrl,
   });
 
-  const toolContracts = await loadToolContracts(appId);
+  const moduleContracts = await loadModuleContracts(appId);
   const articles = await loadArticleRegistry(appId);
   const spaces = await loadToolSpaceRegistry(appId);
 
-  const hasTools = toolContracts.length > 0;
+  const hasTools = moduleContracts.length > 0;
   const hasArticles = articles.length > 0;
-  const hasCategories = toolContracts.some((t) => t.metadata.categories.length > 0);
+  const hasCategories = moduleContracts.some((t) => t.metadata.categories.length > 0);
   const hasSpaces = spaces.length > 0;
 
   const urls: string[] = [];
@@ -150,7 +150,7 @@ async function generateSitemap(appId: AppId) {
   });
 
   // B. Individual Tool/Game pages — path segment differs per app.
-  toolContracts.forEach((tool) => {
+  moduleContracts.forEach((tool) => {
     LANGUAGES.forEach((lang) => {
       urls.push(
         getUrlEntry(`${BASE_URL}/${lang.code}/${toolIndexPath}/${tool.id}`, today, 'weekly', 0.8),
@@ -175,7 +175,7 @@ async function generateSitemap(appId: AppId) {
   // D. Category pages — derived from this app's tools only
   if (hasCategories) {
     const categories = new Set<string>();
-    toolContracts.forEach((tool) => tool.metadata.categories.forEach((c) => categories.add(c)));
+    moduleContracts.forEach((tool) => tool.metadata.categories.forEach((c) => categories.add(c)));
     categories.forEach((cat) => {
       const catSlug = encodeURIComponent(cat);
       LANGUAGES.forEach((lang) => {
@@ -211,12 +211,12 @@ ${urls.join('')}
   console.log(`[sitemap] Generated ${OUT_FILE} (${urls.length} URLs)`);
 }
 
-async function loadToolContracts(appId: AppId): Promise<ToolContractLike[]> {
+async function loadModuleContracts(appId: AppId): Promise<ModuleContractLike[]> {
   const toolDirs = getAppCatalogEntry(appId).source.contentRoots.map((root) =>
     path.join(process.cwd(), root.path),
   );
 
-  const contracts: ToolContractLike[] = [];
+  const contracts: ModuleContractLike[] = [];
 
   for (const toolsDir of toolDirs) {
     if (!fs.existsSync(toolsDir)) {
@@ -238,7 +238,7 @@ async function loadToolContracts(appId: AppId): Promise<ToolContractLike[]> {
         }
 
         const mod = (await import(pathToFileURL(indexFile).href)) as {
-          contract?: ToolContractLike;
+          contract?: ModuleContractLike;
         };
 
         if (!mod.contract?.id) {
@@ -250,7 +250,7 @@ async function loadToolContracts(appId: AppId): Promise<ToolContractLike[]> {
       }),
     );
 
-    contracts.push(...loaded.filter((c): c is ToolContractLike => c !== null));
+    contracts.push(...loaded.filter((c): c is ModuleContractLike => c !== null));
   }
 
   return contracts

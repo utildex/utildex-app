@@ -1,14 +1,6 @@
 import * as path from 'path';
-import {
-  getAppCatalogEntry,
-  isAppId,
-} from '../../src/core/app-catalog';
-import {
-  assertKebabId,
-  optionalString,
-  parseModuleKind,
-  requireString,
-} from './cli';
+import { getAppCatalogEntry, isAppId } from '../../src/core/app-catalog';
+import { assertKebabId, optionalString, parseModuleKind, requireString } from './cli';
 import {
   defaultCategory,
   moduleNoun,
@@ -76,7 +68,7 @@ export function planCreateModule(cli: CliOptions): ScaffoldPlan {
   const app = getAppCatalogEntry(options.appId);
   const moduleDir = repoPath(options.contentRoot, options.id);
   const coreRegistryFile = app.source.coreRegistryFile;
-  const toolRegistryFile = app.source.toolRegistryFile;
+  const moduleRegistryFile = app.source.moduleRegistryFile;
   const className = `${pascalCase(options.id)}Component`;
   const runtimeI18nFiles = SCAFFOLD_LANGUAGE_CODES.map((languageCode) =>
     createOperation(
@@ -135,18 +127,21 @@ export function planCreateModule(cli: CliOptions): ScaffoldPlan {
   const kernelImport = relativeImport(registryDir, repoPath(moduleDir, `${options.id}.kernel`));
   const coreEntry = `  '${options.id}': {
     appName: '${options.appId}',
+    kind: '${options.kind}',
     contract: () => import('${contractImport}').then((m) => m.contract),
     kernel: () => import('${kernelImport}'),
   }`;
 
-  const toolSource = readText(toolRegistryFile);
-  if (toolSource.includes(`'${options.id}':`) || toolSource.includes(`${options.id}:`)) {
-    throw new Error(`[scaffold] Tool registry already contains module id "${options.id}".`);
+  const moduleSource = readText(moduleRegistryFile);
+  if (moduleSource.includes(`'${options.id}':`) || moduleSource.includes(`${options.id}:`)) {
+    throw new Error(
+      `[scaffold] Module component registry already contains module id "${options.id}".`,
+    );
   }
 
-  const toolRegistryDir = path.posix.dirname(toolRegistryFile);
+  const moduleRegistryDir = path.posix.dirname(moduleRegistryFile);
   const componentImport = relativeImport(
-    toolRegistryDir,
+    moduleRegistryDir,
     repoPath(moduleDir, `${options.id}.component`),
   );
   const componentEntry = `  '${options.id}': () =>
@@ -163,9 +158,9 @@ export function planCreateModule(cli: CliOptions): ScaffoldPlan {
         insertObjectEntry(coreSource, 'CORE_REGISTRY', coreEntry),
       ),
       updateOperation(
-        toolRegistryFile,
+        moduleRegistryFile,
         'register module component loader',
-        insertObjectEntry(toolSource, 'TOOL_COMPONENT_LOADERS', componentEntry),
+        insertObjectEntry(moduleSource, 'MODULE_COMPONENT_LOADERS', componentEntry),
       ),
     ],
   };

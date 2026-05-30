@@ -1,5 +1,5 @@
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
-import { TOOL_REGISTRY_MAP } from '../core/tool-registry';
+import { MODULE_REGISTRY_MAP } from '../core/module-registry';
 import { PersistenceService } from './persistence.service';
 import { DbService } from './db.service';
 import { GuideService } from './guide.service';
@@ -26,7 +26,7 @@ export class OfflineManagerService {
   smartDownloadEnabled = signal(false);
 
   // Derived
-  totalTools = computed(() => Object.keys(TOOL_REGISTRY_MAP).length);
+  totalTools = computed(() => Object.keys(MODULE_REGISTRY_MAP).length);
   progress = computed(() => {
     const total = this.totalTools();
     if (total === 0) {
@@ -70,7 +70,7 @@ export class OfflineManagerService {
     if (this.isDownloading()) return;
 
     // Check what is missing
-    const allTools = Object.keys(TOOL_REGISTRY_MAP);
+    const allTools = Object.keys(MODULE_REGISTRY_MAP);
     const existing = this.downloadedTools();
     const missing = allTools.filter((id) => !existing.has(id));
 
@@ -125,7 +125,7 @@ export class OfflineManagerService {
         throw new Error('Download cancelled');
       }
 
-      const entry = TOOL_REGISTRY_MAP[toolId];
+      const entry = MODULE_REGISTRY_MAP[toolId];
       if (entry) {
         try {
           const [componentResult, contractResult, kernelResult] = await Promise.allSettled([
@@ -186,13 +186,13 @@ export class OfflineManagerService {
   private async backgroundLoadStep() {
     if (!this.smartDownloadEnabled()) return;
 
-    const allTools = Object.keys(TOOL_REGISTRY_MAP);
+    const allTools = Object.keys(MODULE_REGISTRY_MAP);
     const existing = this.downloadedTools();
     const missing = allTools.find((id) => !existing.has(id));
 
     if (missing) {
       try {
-        const entry = TOOL_REGISTRY_MAP[missing];
+        const entry = MODULE_REGISTRY_MAP[missing];
         if (entry) {
           await Promise.allSettled([entry.component(), entry.contract(), entry.kernel()]);
           this.markAsDownloaded(missing);

@@ -130,12 +130,12 @@ Use kebab-case. The directory name **must exactly match** the `id` in the contra
 
 ```typescript
 // src/synedex-games/focus-grid/focus-grid.contract.ts
-import { ToolContract } from '../../core/tool-contract';
+import { ModuleContract } from '../../core/module-contract';
 import { TRAITS } from '../../core/types/traits';
 import { mapLocalizedField } from '../../core/i18n-mapper';
 import { contractI18n } from './i18n/contract.i18n';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: 'focus-grid',
   metadata: {
     appName: 'synedex', // Always set explicitly. Do not omit.
@@ -218,16 +218,16 @@ Both loaders are dynamic `import()` to ensure lazy loading. The `contract` loade
 
 ### 6. Wire the component registry
 
-Open `src/core/tool-registry.synedex.ts` and add the component loader to `TOOL_COMPONENT_LOADERS`:
+Open `src/core/tool-registry.synedex.ts` and add the component loader to `MODULE_COMPONENT_LOADERS`:
 
 ```typescript
-const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
+const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
   'focus-grid': () =>
     import('../synedex-games/focus-grid/focus-grid.component').then((m) => m.FocusGridComponent),
 };
 ```
 
-The registry builder validates at startup that every entry in `CORE_REGISTRY` has a matching entry in `TOOL_COMPONENT_LOADERS`, and throws if any is missing.
+The registry builder validates at startup that every entry in `CORE_REGISTRY` has a matching entry in `MODULE_COMPONENT_LOADERS`, and throws if any is missing.
 
 ### 7. Add a route
 
@@ -331,7 +331,7 @@ export const contractI18n = {
 } as const;
 ```
 
-This dictionary is consumed by `mapLocalizedField` from `src/core/i18n-mapper.ts` to produce the `Record<string, string>` objects expected by `ToolContract`:
+This dictionary is consumed by `mapLocalizedField` from `src/core/i18n-mapper.ts` to produce the `Record<string, string>` objects expected by `ModuleContract`:
 
 ```typescript
 // focus-grid.contract.ts
@@ -410,14 +410,14 @@ A failed integrity check blocks the build. Fix it by adding the missing key to t
 `CORE_REGISTRY` is the **source of truth** for which games exist in Synedex. Each entry provides:
 
 - `appName`: ownership tag. Set to `'synedex'` for Synedex-only games, `'shared'` for content shown in both apps.
-- `contract`: lazy loader returning the `ToolContract`.
+- `contract`: lazy loader returning the `ModuleContract`.
 - `kernel`: lazy loader returning the kernel module.
 
 `getCoreRegistryForApp('synedex')` filters entries by `appName`, producing the subset of games that belong to this build.
 
 ### tool-registry.synedex.ts
 
-`TOOL_COMPONENT_LOADERS` maps game IDs to their Angular component loaders. The registry builder (`buildToolRegistryMap`) joins this map with the filtered core registry, validates completeness, and exposes `TOOL_REGISTRY_MAP`.
+`MODULE_COMPONENT_LOADERS` maps game IDs to their Angular component loaders. The registry builder (`buildModuleRegistrySourceMap`) joins this map with the filtered core registry, validates completeness, and exposes `MODULE_REGISTRY_SOURCE_MAP`.
 
 The two-registry design separates the **framework-agnostic** layer (contract + kernel — no Angular imports) from the **Angular** layer (component). This keeps kernels portable and usable in non-Angular contexts without pulling in Angular's DI.
 
@@ -461,7 +461,7 @@ All storage keys for Synedex are prefixed with `synedex-` because `STORAGE_KEYS`
 - **Headless / MCP build.** There is no `npm run build:headless` for Synedex. Game kernels should still be pure (no Angular/DOM at the top level), but they are not exposed via any Node API today.
 - **Dashboard widget system.** The Utildex dashboard (drag-and-drop widget grid) is wired into `app.routes.ts` which Synedex does not use. Do not implement widget-related features in `app.routes.synedex.ts` or `app.component.synedex.ts` without deliberate intent to ship them.
 - **Tour overlay.** The guided onboarding tour (`TourService`) is disabled in the Synedex settings modal via an `@if (appConfig.appId !== 'synedex')` guard.
-- **MCP manifest generation.** The pre-build `generate-mcp-manifest.ts` script targets the catalog app that declares `capabilities.mcp: true`. Synedex currently leaves MCP disabled, so it is skipped.
+- **MCP manifest generation.** The pre-build `generate-mcp-manifest.ts` script targets the catalog app that declares `capabilities.mcp: true`. Synedex currently leaves MCP disabled, so it is skipped. Synedex games are not MCP-compatible by default and cannot opt in while MCP support is limited to Utildex tools.
 
 ---
 

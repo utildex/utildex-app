@@ -1,9 +1,9 @@
-import { ToolContract } from '../../core/tool-contract';
+import { ModuleContract } from '../../core/module-contract';
 import { contractI18n } from './i18n/contract.i18n';
 import { mapLocalizedField, mapLocalizedNestedField } from '../../core/i18n-mapper';
 import { schema } from './password-generator.schema';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: 'password-generator',
   metadata: {
     name: mapLocalizedField(contractI18n, 'name'),

@@ -1,9 +1,9 @@
-import { ToolContract } from '../../core/tool-contract';
+import { ModuleContract } from '../../core/module-contract';
 import { TRAITS } from '../../core/types/traits';
 import { mapLocalizedField } from '../../core/i18n-mapper';
 import { contractI18n } from './i18n/contract.i18n';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: 'mental-math',
   metadata: {
     appName: 'synedex',

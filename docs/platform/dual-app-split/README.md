@@ -213,7 +213,7 @@ var saved = localStorage.getItem(appId + '-state-theme');
 - Core utilities: `i18n`, `pipes`, directives, guards
 - Storage layer: `DbService`, `StorageManagerService`, `STORAGE_KEYS`
 - Theme, offline, tour, virtual pets
-- The tool contract type definition (`src/core/tool-contract.ts`)
+- The module contract type definition (`src/core/module-contract.ts`)
 - All shared data types (`src/data/types.ts`, traits, formats)
 - The tool-spaces resolution logic (`src/core/tool-space-resolver.ts`)
 

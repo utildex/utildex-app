@@ -101,17 +101,17 @@ export function run${prefix}(input: ${prefix}Input = {}): ${prefix}Output {
 
 export function moduleContractTemplate(options: ModuleScaffoldOptions): string {
   const moduleDir = repoPath(options.contentRoot, options.id);
-  const toolContract = relativeImport(moduleDir, 'src/core/tool-contract');
+  const moduleContract = relativeImport(moduleDir, 'src/core/module-contract');
   const traits = relativeImport(moduleDir, 'src/core/types/traits');
   const mapper = relativeImport(moduleDir, 'src/core/i18n-mapper');
   const tags = options.tags.map((tag) => `'${escapeSingleQuoted(tag)}'`).join(', ');
 
-  return `import { ToolContract } from '${toolContract}';
+  return `import { ModuleContract } from '${moduleContract}';
 import { TRAITS } from '${traits}';
 import { mapLocalizedField } from '${mapper}';
 import { contractI18n } from './i18n/contract.i18n';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: '${escapeSingleQuoted(options.id)}',
   metadata: {
     appName: '${options.appId}',
@@ -139,7 +139,8 @@ export function moduleContractI18nTemplate(options: ModuleScaffoldOptions): stri
   const name = escapeSingleQuoted(options.name);
   const description = escapeSingleQuoted(options.description);
   const entries = SCAFFOLD_LANGUAGE_CODES.map(
-    (code) => `  ${objectKey(code)}: {\n    name: '${name}',\n    description: '${description}',\n  }`,
+    (code) =>
+      `  ${objectKey(code)}: {\n    name: '${name}',\n    description: '${description}',\n  }`,
   ).join(',\n');
 
   return `export const contractI18n = {
