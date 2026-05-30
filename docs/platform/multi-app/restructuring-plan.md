@@ -239,23 +239,25 @@ Progress note:
 
 - Synedex and Simudex shell, routes, registries, offline loaders, and SEO roots are migrated to `src/apps/<appId>/...` and validated.
 - Synedex and Simudex module roots are now migrated to `src/apps/synedex/games` and `src/apps/simudex/simulations`.
+- Utildex core/module/tool-space/article registries, offline loaders, and SEO root are now canonicalized to `src/apps/utildex/...` with temporary compatibility shims at previous paths.
 - Utildex content root remains `src/utildex-tools` pending the dedicated follow-up decision for default-app module placement.
 
 5. Phase E - Stabilize and document
 
 - [ ] Ensure every app `source.*` entry in `APP_CATALOG` points to the new location.
 - [x] Add a short migration map in docs showing old and new canonical roots.
-- [ ] Mark compatibility shims with a clear PR6 cleanup note.
+- [x] Mark compatibility shims with a clear PR6 cleanup note.
 
 Migration map (current):
 
-| Scope                 | Old root                                                                                                                       | Current canonical root                                    |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
-| Synedex entry assets  | `index.synedex.tsx`, `index.synedex.html`, `app.config.synedex.ts`, `manifest.synedex.webmanifest`, `ngsw-config.synedex.json` | `src/apps/synedex/entry/`                                 |
-| Simudex entry assets  | `index.simudex.tsx`, `index.simudex.html`, `app.config.simudex.ts`, `manifest.simudex.webmanifest`, `ngsw-config.simudex.json` | `src/apps/simudex/entry/`                                 |
-| Synedex runtime roots | `src/synedex-games`, root-level Synedex app/runtime files                                                                      | `src/apps/synedex/games` and `src/apps/synedex/...`       |
-| Simudex runtime roots | `src/simudex-simulations`, root-level Simudex app/runtime files                                                                | `src/apps/simudex/simulations` and `src/apps/simudex/...` |
-| Utildex module root   | `src/utildex-tools`                                                                                                            | Pending follow-up decision in PR4 phase sequence          |
+| Scope                 | Old root                                                                                                                                                                                | Current canonical root                                                                                                          |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Synedex entry assets  | `index.synedex.tsx`, `index.synedex.html`, `app.config.synedex.ts`, `manifest.synedex.webmanifest`, `ngsw-config.synedex.json`                                                          | `src/apps/synedex/entry/`                                                                                                       |
+| Simudex entry assets  | `index.simudex.tsx`, `index.simudex.html`, `app.config.simudex.ts`, `manifest.simudex.webmanifest`, `ngsw-config.simudex.json`                                                          | `src/apps/simudex/entry/`                                                                                                       |
+| Synedex runtime roots | `src/synedex-games`, root-level Synedex app/runtime files                                                                                                                               | `src/apps/synedex/games` and `src/apps/synedex/...`                                                                             |
+| Simudex runtime roots | `src/simudex-simulations`, root-level Simudex app/runtime files                                                                                                                         | `src/apps/simudex/simulations` and `src/apps/simudex/...`                                                                       |
+| Utildex runtime roots | `src/core/core-registry.ts`, `src/core/tool-registry.ts`, `src/data/tool-space-registry.ts`, `src/services/offline-route-loaders.ts`, `src/data/article-registry.ts`, `src/seo/utildex` | `src/apps/utildex/{core-registry.ts,tool-registry.ts,tool-space-registry.ts,offline-route-loaders.ts,article-registry.ts,seo/}` |
+| Utildex module root   | `src/utildex-tools`                                                                                                                                                                     | Pending follow-up decision in PR4 phase sequence                                                                                |
 
 Shim policy (temporary compatibility files):
 

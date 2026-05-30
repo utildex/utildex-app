@@ -114,7 +114,7 @@
                 },
                 {
                   "glob": "*",
-                  "input": "src/seo/utildex",
+                  "input": "src/apps/utildex/seo",
                   "output": "."
                 },
                 {
