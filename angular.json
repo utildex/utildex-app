@@ -202,7 +202,7 @@
               ]
             },
             "simudex": {
-              "serviceWorker": "ngsw-config.simudex.json",
+              "serviceWorker": "src/apps/simudex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -212,7 +212,7 @@
                 "fonts": true
               },
               "index": {
-                "input": "index.simudex.html",
+                "input": "src/apps/simudex/entry/index.html",
                 "output": "index.html"
               },
               "sourceMap": false,
@@ -256,19 +256,19 @@
                   "output": "."
                 },
                 {
-                  "glob": "manifest.simudex.webmanifest",
-                  "input": ".",
+                  "glob": "manifest.webmanifest",
+                  "input": "src/apps/simudex/entry",
                   "output": "."
                 }
               ],
               "fileReplacements": [
                 {
                   "replace": "src/apps/utildex/entry/index.tsx",
-                  "with": "index.simudex.tsx"
+                  "with": "src/apps/simudex/entry/index.tsx"
                 },
                 {
                   "replace": "src/apps/utildex/entry/app.config.ts",
-                  "with": "app.config.simudex.ts"
+                  "with": "src/apps/simudex/entry/app.config.ts"
                 },
                 {
                   "replace": "src/core/core-registry.ts",

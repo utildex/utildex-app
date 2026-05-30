@@ -8,10 +8,10 @@ import {
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { SimudexAppComponent } from './src/app.component.simudex';
-import { routes } from './src/app.routes.simudex';
-import { GlobalErrorHandler } from './src/core/global-error-handler';
-import { TOUR_STEPS } from './src/core/tour.config';
+import { SimudexAppComponent } from '../../../app.component.simudex';
+import { routes } from '../../../app.routes.simudex';
+import { GlobalErrorHandler } from '../../../core/global-error-handler';
+import { TOUR_STEPS } from '../../../core/tour.config';
 
 const isLocalhost =
   typeof window !== 'undefined' &&

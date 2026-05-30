@@ -219,12 +219,12 @@ Execution checklist:
 
 3. Phase C - Migrate app entry assets by app
 - [x] Move Utildex root app files to `src/apps/utildex/entry/`, update catalog paths, and add minimal shims only if required by tooling.
-- [ ] Repeat for Synedex and Simudex with the same deterministic file order.
-- [ ] After each app batch, run full validation gates before starting the next app.
+- [x] Repeat for Synedex and Simudex with the same deterministic file order.
+- [x] After each app batch, run full validation gates before starting the next app.
 
 Progress note:
 
-- Synedex entry assets and wiring are now migrated to `src/apps/synedex/entry/` and validated; Simudex remains for Phase C completion.
+- Synedex and Simudex entry assets and wiring are now migrated to `src/apps/<appId>/entry/` and validated.
 
 4. Phase D - Migrate runtime app-owned source by app
 - [ ] Move shell/routes/registries/offline loaders/seo and app module roots into `src/apps/<appId>/...`.
