@@ -31,7 +31,7 @@
     }
   },
   "files": [
-    "./index.tsx",
+    "./src/apps/utildex/entry/index.tsx",
     "./index.synedex.tsx",
     "./index.simudex.tsx"
   ],

@@ -207,9 +207,9 @@ Documentation placement rule:
 Execution checklist:
 
 1. Phase A - Baseline and move map
-- [ ] Snapshot current app source paths from `APP_CATALOG` and record old->new mapping in this PR description.
-- [ ] Run and capture baseline outputs for `npm run prebuild:checks` and `npm run build:all`.
-- [ ] Freeze naming decisions for app folder conventions before moving files.
+- [x] Snapshot current app source paths from `APP_CATALOG` and record old->new mapping in this PR description.
+- [x] Run and capture baseline outputs for `npm run prebuild:checks` and `npm run build:all`.
+- [x] Freeze naming decisions for app folder conventions before moving files.
 
 2. Phase B - Create destination skeleton (no moves yet)
 - [ ] Create destination folder structure under `src/apps/` for all existing app ids.
@@ -218,7 +218,7 @@ Execution checklist:
 - [ ] Keep behavior identical; this phase should be structural only.
 
 3. Phase C - Migrate app entry assets by app
-- [ ] Move Utildex root app files to `src/apps/utildex/entry/`, update catalog paths, and add minimal shims only if required by tooling.
+- [x] Move Utildex root app files to `src/apps/utildex/entry/`, update catalog paths, and add minimal shims only if required by tooling.
 - [ ] Repeat for Synedex and Simudex with the same deterministic file order.
 - [ ] After each app batch, run full validation gates before starting the next app.
 

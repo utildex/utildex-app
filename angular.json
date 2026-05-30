@@ -16,7 +16,11 @@
               "base": "./dist",
               "browser": "."
             },
-            "browser": "index.tsx",
+            "browser": "src/apps/utildex/entry/index.tsx",
+            "index": {
+              "input": "src/apps/utildex/entry/index.html",
+              "output": "index.html"
+            },
             "tsConfig": "tsconfig.json",
             "assets": [
               {
@@ -60,7 +64,7 @@
           },
           "configurations": {
             "production": {
-              "serviceWorker": "ngsw-config.json",
+              "serviceWorker": "src/apps/utildex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -75,7 +79,7 @@
               "outputHashing": "all"
             },
             "utildex": {
-              "serviceWorker": "ngsw-config.json",
+              "serviceWorker": "src/apps/utildex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -115,7 +119,7 @@
                 },
                 {
                   "glob": "manifest.webmanifest",
-                  "input": ".",
+                  "input": "src/apps/utildex/entry",
                   "output": "."
                 }
               ]
@@ -172,11 +176,11 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "index.tsx",
+                  "replace": "src/apps/utildex/entry/index.tsx",
                   "with": "index.synedex.tsx"
                 },
                 {
-                  "replace": "app.config.ts",
+                  "replace": "src/apps/utildex/entry/app.config.ts",
                   "with": "app.config.synedex.ts"
                 },
                 {
@@ -259,11 +263,11 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "index.tsx",
+                  "replace": "src/apps/utildex/entry/index.tsx",
                   "with": "index.simudex.tsx"
                 },
                 {
-                  "replace": "app.config.ts",
+                  "replace": "src/apps/utildex/entry/app.config.ts",
                   "with": "app.config.simudex.ts"
                 },
                 {

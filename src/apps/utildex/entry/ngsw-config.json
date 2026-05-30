@@ -7,11 +7,7 @@
       "installMode": "prefetch",
       "updateMode": "prefetch",
       "resources": {
-        "files": [
-          "/index.html",
-          "/*.css",
-          "/*.js"
-        ]
+        "files": ["/index.html", "/*.css", "/*.js"]
       }
     },
     {
@@ -35,9 +31,7 @@
       "installMode": "lazy",
       "updateMode": "prefetch",
       "resources": {
-        "files": [
-          "/assets/articles/**"
-        ]
+        "files": ["/assets/articles/**"]
       }
     }
   ]

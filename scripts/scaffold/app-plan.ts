@@ -1,4 +1,4 @@
-import { APP_CATALOG, APP_IDS, getAppCatalogEntry } from '../../src/core/app-catalog';
+import { APP_CATALOG, APP_IDS, DEFAULT_APP_ID, getAppCatalogEntry } from '../../src/core/app-catalog';
 import {
   assertKebabId,
   optionalString,
@@ -73,6 +73,7 @@ function createAppOptions(flags: Map<string, string | boolean>): AppScaffoldOpti
 
 function updateAngularJson(options: AppScaffoldOptions): string {
   const workspace = readJson<Record<string, unknown>>('angular.json');
+  const defaultApp = getAppCatalogEntry(DEFAULT_APP_ID);
   const projects = workspace.projects as Record<string, unknown>;
   const appProject = projects.app as Record<string, unknown>;
   const architect = appProject.architect as Record<string, unknown>;
@@ -136,8 +137,8 @@ function updateAngularJson(options: AppScaffoldOptions): string {
       },
     ],
     fileReplacements: [
-      { replace: 'index.tsx', with: `index.${options.id}.tsx` },
-      { replace: 'app.config.ts', with: `app.config.${options.id}.ts` },
+      { replace: defaultApp.source.entryPointFile, with: `index.${options.id}.tsx` },
+      { replace: defaultApp.source.appConfigFile, with: `app.config.${options.id}.ts` },
       { replace: 'src/core/core-registry.ts', with: `src/core/core-registry.${options.id}.ts` },
       { replace: 'src/core/tool-registry.ts', with: `src/core/tool-registry.${options.id}.ts` },
       {
