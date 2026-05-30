@@ -32,7 +32,7 @@
   },
   "files": [
     "./src/apps/utildex/entry/index.tsx",
-    "./index.synedex.tsx",
+    "./src/apps/synedex/entry/index.tsx",
     "./index.simudex.tsx"
   ],
   "include": [

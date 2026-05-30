@@ -1,12 +1,17 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideZonelessChangeDetection, isDevMode, ErrorHandler } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withPreloading, NoPreloading } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+  NoPreloading,
+} from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { SynedexAppComponent } from './src/app.component.synedex';
-import { routes } from './src/app.routes.synedex';
-import { GlobalErrorHandler } from './src/core/global-error-handler';
-import { TOUR_STEPS } from './src/core/tour.config';
+import { SynedexAppComponent } from '../../../app.component.synedex';
+import { routes } from '../../../app.routes.synedex';
+import { GlobalErrorHandler } from '../../../core/global-error-handler';
+import { TOUR_STEPS } from '../../../core/tour.config';
 
 const isLocalhost =
   typeof window !== 'undefined' &&

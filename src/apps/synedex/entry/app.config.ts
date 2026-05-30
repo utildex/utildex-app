@@ -1,4 +1,4 @@
-import type { AppConfigData } from './src/core/app-catalog';
+import type { AppConfigData } from '../../../core/app-catalog';
 
 export const APP_CONFIG_DATA = {
   appId: 'synedex',

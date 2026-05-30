@@ -125,7 +125,7 @@
               ]
             },
             "synedex": {
-              "serviceWorker": "ngsw-config.synedex.json",
+              "serviceWorker": "src/apps/synedex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -135,7 +135,7 @@
                 "fonts": true
               },
               "index": {
-                "input": "index.synedex.html",
+                "input": "src/apps/synedex/entry/index.html",
                 "output": "index.html"
               },
               "sourceMap": false,
@@ -169,19 +169,19 @@
                   "output": "."
                 },
                 {
-                  "glob": "manifest.synedex.webmanifest",
-                  "input": ".",
+                  "glob": "manifest.webmanifest",
+                  "input": "src/apps/synedex/entry",
                   "output": "."
                 }
               ],
               "fileReplacements": [
                 {
                   "replace": "src/apps/utildex/entry/index.tsx",
-                  "with": "index.synedex.tsx"
+                  "with": "src/apps/synedex/entry/index.tsx"
                 },
                 {
                   "replace": "src/apps/utildex/entry/app.config.ts",
-                  "with": "app.config.synedex.ts"
+                  "with": "src/apps/synedex/entry/app.config.ts"
                 },
                 {
                   "replace": "src/core/core-registry.ts",
