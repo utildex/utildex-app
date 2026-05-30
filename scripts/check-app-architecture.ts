@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import {
   APP_CATALOG,
@@ -163,6 +164,20 @@ function checkAppCatalogEntry(issues: CheckIssue[], catalogKey: AppId, app: AppC
 
   if (app.source.contentRoots.length === 0) {
     addIssue(issues, catalogKey, 'source.contentRoots must declare at least one module root.');
+  }
+
+  const canonicalAppRoot = `src/apps/${catalogKey}`;
+  if (!fs.existsSync(path.join(process.cwd(), canonicalAppRoot))) {
+    addIssue(issues, catalogKey, `canonical app root is missing at "${canonicalAppRoot}".`);
+  }
+
+  const canonicalAppDocsReadme = `docs/apps/${catalogKey}/README.md`;
+  if (!fs.existsSync(path.join(process.cwd(), canonicalAppDocsReadme))) {
+    addIssue(
+      issues,
+      catalogKey,
+      `canonical app docs root is missing at "${canonicalAppDocsReadme}".`,
+    );
   }
 
   const rootLabels = new Set<string>();

@@ -216,14 +216,15 @@ Execution checklist:
 
 - [x] Create destination folder structure under `src/apps/` for all existing app ids.
 - [x] Create destination app docs roots under `docs/apps/<appId>/` and add transitional links from current docs locations.
-- [ ] Update architecture checks (if needed) to allow new canonical path roots while preserving portability constraints.
-- [ ] Keep behavior identical; this phase should be structural only.
+- [x] Update architecture checks (if needed) to allow new canonical path roots while preserving portability constraints.
+- [x] Keep behavior identical; this phase should be structural only.
 
 Progress note:
 
 - `src/apps/utildex`, `src/apps/synedex`, and `src/apps/simudex` now exist as canonical app roots.
 - App docs roots now exist at `docs/apps/utildex/`, `docs/apps/synedex/`, and `docs/apps/simudex/`.
 - Legacy app pages under `docs/platform/synedex/README.md` and `docs/platform/simudex/README.md` now include transitional links to the new canonical docs roots.
+- Architecture guardrails now verify canonical app roots under `src/apps/<appId>/` and canonical app docs roots at `docs/apps/<appId>/README.md`.
 
 3. Phase C - Migrate app entry assets by app
 
