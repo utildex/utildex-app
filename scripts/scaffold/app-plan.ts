@@ -72,7 +72,7 @@ function createAppOptions(flags: Map<string, string | boolean>): AppScaffoldOpti
     ),
     themeColor: optionalString(flags, 'theme-color', '#2563eb'),
     backgroundColor: optionalString(flags, 'background-color', '#0f172a'),
-    contentRoot: optionalString(flags, 'content-root', `src/${id}-${pluralKind(kind)}`),
+    contentRoot: optionalString(flags, 'content-root', `src/apps/${id}/${pluralKind(kind)}`),
   };
 }
 

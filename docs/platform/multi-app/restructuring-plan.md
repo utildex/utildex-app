@@ -207,17 +207,20 @@ Documentation placement rule:
 Execution checklist:
 
 1. Phase A - Baseline and move map
+
 - [x] Snapshot current app source paths from `APP_CATALOG` and record old->new mapping in this PR description.
 - [x] Run and capture baseline outputs for `npm run prebuild:checks` and `npm run build:all`.
 - [x] Freeze naming decisions for app folder conventions before moving files.
 
 2. Phase B - Create destination skeleton (no moves yet)
+
 - [ ] Create destination folder structure under `src/apps/` for all existing app ids.
 - [ ] Create destination app docs roots under `docs/apps/<appId>/` and add transitional links from current docs locations.
 - [ ] Update architecture checks (if needed) to allow new canonical path roots while preserving portability constraints.
 - [ ] Keep behavior identical; this phase should be structural only.
 
 3. Phase C - Migrate app entry assets by app
+
 - [x] Move Utildex root app files to `src/apps/utildex/entry/`, update catalog paths, and add minimal shims only if required by tooling.
 - [x] Repeat for Synedex and Simudex with the same deterministic file order.
 - [x] After each app batch, run full validation gates before starting the next app.
@@ -227,6 +230,7 @@ Progress note:
 - Synedex and Simudex entry assets and wiring are now migrated to `src/apps/<appId>/entry/` and validated.
 
 4. Phase D - Migrate runtime app-owned source by app
+
 - [ ] Move shell/routes/registries/offline loaders/seo and app module roots into `src/apps/<appId>/...`.
 - [ ] Keep legacy import surfaces as re-exports where broad path rewrites would increase risk.
 - [ ] Update only the imports required for compilation; avoid opportunistic refactors.
@@ -234,9 +238,11 @@ Progress note:
 Progress note:
 
 - Synedex and Simudex shell, routes, registries, offline loaders, and SEO roots are migrated to `src/apps/<appId>/...` and validated.
-- App module roots remain in place (`src/synedex-games`, `src/simudex-simulations`) for a dedicated follow-up slice.
+- Synedex and Simudex module roots are now migrated to `src/apps/synedex/games` and `src/apps/simudex/simulations`.
+- Utildex content root remains `src/utildex-tools` pending the dedicated follow-up decision for default-app module placement.
 
 5. Phase E - Stabilize and document
+
 - [ ] Ensure every app `source.*` entry in `APP_CATALOG` points to the new location.
 - [ ] Add a short migration map in docs showing old and new canonical roots.
 - [ ] Mark compatibility shims with a clear PR6 cleanup note.
@@ -250,12 +256,12 @@ Shim policy (temporary compatibility files):
 
 Validation gates (must pass at each phase boundary):
 
-| Gate | Command | Expected result |
-| --- | --- | --- |
-| Architecture and guardrails | `npm run prebuild:checks` | Passes with no new failures introduced by path migration |
-| Per-app build parity | `npm run build:utildex` / `npm run build:synedex` / `npm run build:simudex` | All app builds succeed from moved paths |
-| Aggregate parity | `npm run build:all` | End-to-end parity preserved after migration |
-| Headless safety check | `npm run test:headless` and `npm run test:headless:types` | No regressions in module registry/headless lookup surface |
+| Gate                        | Command                                                                     | Expected result                                           |
+| --------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Architecture and guardrails | `npm run prebuild:checks`                                                   | Passes with no new failures introduced by path migration  |
+| Per-app build parity        | `npm run build:utildex` / `npm run build:synedex` / `npm run build:simudex` | All app builds succeed from moved paths                   |
+| Aggregate parity            | `npm run build:all`                                                         | End-to-end parity preserved after migration               |
+| Headless safety check       | `npm run test:headless` and `npm run test:headless:types`                   | No regressions in module registry/headless lookup surface |
 
 Risk controls:
 

@@ -16,7 +16,7 @@ type ComponentLoader = () => Promise<Type<unknown>>;
 
 const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
   'minimal-debian-terminal': () =>
-    import('../../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.component').then(
+    import('./simulations/minimal-debian-terminal/minimal-debian-terminal.component').then(
       (m) => m.MinimalDebianTerminalComponent,
     ),
 };

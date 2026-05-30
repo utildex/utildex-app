@@ -134,7 +134,7 @@ export const APP_CATALOG = {
       moduleRegistryFile: 'src/apps/synedex/tool-registry.synedex.ts',
       toolSpaceRegistryFile: 'src/apps/synedex/tool-space-registry.synedex.ts',
       offlineRouteLoadersFile: 'src/apps/synedex/offline-route-loaders.synedex.ts',
-      contentRoots: [{ label: 'synedex-games', kind: 'game', path: 'src/synedex-games' }],
+      contentRoots: [{ label: 'synedex-games', kind: 'game', path: 'src/apps/synedex/games' }],
       seoDir: 'src/apps/synedex/seo',
     },
   },
@@ -174,7 +174,11 @@ export const APP_CATALOG = {
       toolSpaceRegistryFile: 'src/apps/simudex/tool-space-registry.simudex.ts',
       offlineRouteLoadersFile: 'src/apps/simudex/offline-route-loaders.simudex.ts',
       contentRoots: [
-        { label: 'simudex-simulations', kind: 'simulation', path: 'src/simudex-simulations' },
+        {
+          label: 'simudex-simulations',
+          kind: 'simulation',
+          path: 'src/apps/simudex/simulations',
+        },
       ],
       seoDir: 'src/apps/simudex/seo',
     },

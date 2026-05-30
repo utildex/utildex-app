@@ -13,11 +13,10 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
   'minimal-debian-terminal': {
     appName: 'simudex',
     contract: () =>
-      import('../../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.contract').then(
+      import('./simulations/minimal-debian-terminal/minimal-debian-terminal.contract').then(
         (m) => m.contract,
       ),
-    kernel: () =>
-      import('../../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.kernel'),
+    kernel: () => import('./simulations/minimal-debian-terminal/minimal-debian-terminal.kernel'),
   },
 };
 

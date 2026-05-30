@@ -1,5 +1,5 @@
-import { ModuleContract } from '../../core/module-contract';
-import { TRAITS } from '../../core/types/traits';
+import { ModuleContract } from '../../../../core/module-contract';
+import { TRAITS } from '../../../../core/types/traits';
 
 export const contract: ModuleContract = {
   id: 'minimal-debian-terminal',

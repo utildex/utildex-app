@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject, input, signal } from '@angular/core';
-import { TerminalPlatformComponent } from '../../components/terminal-platform/terminal-platform.component';
-import { DebianSessionBackendAdapter, MINIMAL_DEBIAN_RUNTIME_MANIFEST } from '../../core/sandbox';
-import { SandboxTerminalSessionService } from '../../services/sandbox-terminal-session.service';
+import { TerminalPlatformComponent } from '../../../../components/terminal-platform/terminal-platform.component';
+import {
+  DebianSessionBackendAdapter,
+  MINIMAL_DEBIAN_RUNTIME_MANIFEST,
+} from '../../../../core/sandbox';
+import { SandboxTerminalSessionService } from '../../../../services/sandbox-terminal-session.service';
 
 @Component({
   selector: 'app-minimal-debian-terminal',

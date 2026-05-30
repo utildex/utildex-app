@@ -1,19 +1,19 @@
-import { ModuleContract } from '../../core/module-contract';
-import { TRAITS } from '../../core/types/traits';
-import { mapLocalizedField } from '../../core/i18n-mapper';
+import { ModuleContract } from '../../../../core/module-contract';
+import { TRAITS } from '../../../../core/types/traits';
+import { mapLocalizedField } from '../../../../core/i18n-mapper';
 import { contractI18n } from './i18n/contract.i18n';
 
 export const contract: ModuleContract = {
-  id: 'mental-math',
+  id: 'sudoku',
   metadata: {
     appName: 'synedex',
     name: mapLocalizedField(contractI18n, 'name'),
     description: mapLocalizedField(contractI18n, 'description'),
-    icon: 'calculate',
+    icon: 'grid_3x3',
     version: '0.1.0',
     categories: ['Cognition'],
-    tags: ['mental math', 'arithmetic', 'calculation', 'speed'],
-    color: '#2563eb',
+    tags: ['sudoku', 'logic', 'puzzle'],
+    color: '#0f766e',
   },
   types: {
     input: { traits: [TRAITS.text] },

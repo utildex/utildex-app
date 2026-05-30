@@ -1,4 +1,4 @@
-import { MINIMAL_DEBIAN_RUNTIME_MANIFEST } from '../../core/sandbox';
+import { MINIMAL_DEBIAN_RUNTIME_MANIFEST } from '../../../../core/sandbox';
 
 export const MINIMAL_DEBIAN_TERMINAL_SIMULATION_ID = 'minimal-debian-terminal';
 

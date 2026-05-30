@@ -28,8 +28,8 @@ import {
   SUDOKU_LEVELS,
 } from './sudoku.kernel';
 import type { RuntimeTestReport } from './sudoku.tests';
-import { PersistenceService } from '../../services/persistence.service';
-import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
+import { PersistenceService } from '../../../../services/persistence.service';
+import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';
