@@ -1,10 +1,10 @@
-import { ToolContract } from '../../core/tool-contract';
+import { ModuleContract } from '../../core/module-contract';
 import { TRAITS } from '../../core/types/traits';
 import { contractI18n } from './i18n/contract.i18n';
 import { mapLocalizedField, mapLocalizedNestedField } from '../../core/i18n-mapper';
 import { schema } from './merge-pdf.schema';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: 'merge-pdf',
   metadata: {
     name: mapLocalizedField(contractI18n, 'name'),

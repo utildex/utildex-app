@@ -1,24 +1,27 @@
 /**
- * Tool Registry — maps tool IDs to their component, contract, and kernel.
+ * Module Registry Source — maps module IDs to their component, contract, and kernel.
  */
 
 import { Type } from '@angular/core';
-import { ToolContract } from './tool-contract';
+import { ModuleContract } from './module-contract';
 import { getCoreRegistryForApp } from './core-registry';
-import { getAppId } from './app.config';
+import { getAppId, type AppId } from './app.config';
+import type { ModuleKind } from './app-catalog';
 
-export interface ToolRegistryEntry {
+export interface ModuleRegistrySourceEntry {
+  appName?: AppId | 'shared';
+  kind?: ModuleKind;
   /** Lazy loader for the Angular component (UI layer). */
   component: () => Promise<Type<unknown>>;
-  /** Lazy loader for the tool contract (metadata + type contract). */
-  contract: () => Promise<ToolContract>;
+  /** Lazy loader for the module contract (metadata + type contract). */
+  contract: () => Promise<ModuleContract>;
   /** Lazy loader for the kernel (pure transformation logic). */
   kernel: () => Promise<Record<string, unknown>>;
 }
 
 type ComponentLoader = () => Promise<Type<unknown>>;
 
-const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
+const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
   'base64-encoder-decoder': () =>
     import('../utildex-tools/base64-encoder-decoder/base64-encoder-decoder.component').then(
       (m) => m.Base64EncoderDecoderComponent,
@@ -137,46 +140,49 @@ const TOOL_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     ),
 };
 
-function assertContractIdMatchesToolId(toolId: string, contract: ToolContract): ToolContract {
-  if (contract.id !== toolId) {
+function assertContractIdMatchesModuleId(
+  moduleId: string,
+  contract: ModuleContract,
+): ModuleContract {
+  if (contract.id !== moduleId) {
     throw new Error(
-      `Tool contract id mismatch for registry key "${toolId}": loaded contract.id="${contract.id}"`,
+      `Module contract id mismatch for registry key "${moduleId}": loaded contract.id="${contract.id}"`,
     );
   }
 
   return contract;
 }
 
-function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
-  const map: Record<string, ToolRegistryEntry> = {};
+function buildModuleRegistrySourceMap(): Record<string, ModuleRegistrySourceEntry> {
+  const map: Record<string, ModuleRegistrySourceEntry> = {};
   const coreRegistry = getCoreRegistryForApp(getAppId());
 
-  for (const [toolId, coreEntry] of Object.entries(coreRegistry)) {
-    if (map[toolId]) {
-      throw new Error(`Duplicate tool id detected while building registry: ${toolId}`);
+  for (const [moduleId, coreEntry] of Object.entries(coreRegistry)) {
+    if (map[moduleId]) {
+      throw new Error(`Duplicate module id detected while building registry: ${moduleId}`);
     }
 
-    const component = TOOL_COMPONENT_LOADERS[toolId];
+    const component = MODULE_COMPONENT_LOADERS[moduleId];
     if (!component) {
-      throw new Error(`Missing Angular component loader for tool id: ${toolId}`);
+      throw new Error(`Missing Angular component loader for module id: ${moduleId}`);
     }
 
     const contract = () =>
       coreEntry
         .contract()
-        .then((loadedContract) => assertContractIdMatchesToolId(toolId, loadedContract));
+        .then((loadedContract) => assertContractIdMatchesModuleId(moduleId, loadedContract));
 
-    map[toolId] = {
+    map[moduleId] = {
       ...coreEntry,
       component,
       contract,
     };
   }
 
-  for (const toolId of Object.keys(coreRegistry)) {
-    if (!TOOL_COMPONENT_LOADERS[toolId]) {
+  for (const moduleId of Object.keys(coreRegistry)) {
+    if (!MODULE_COMPONENT_LOADERS[moduleId]) {
       throw new Error(
-        `Core registry entry declared without component loader for tool id: ${toolId}`,
+        `Core registry entry declared without component loader for module id: ${moduleId}`,
       );
     }
   }
@@ -184,16 +190,5 @@ function buildToolRegistryMap(): Record<string, ToolRegistryEntry> {
   return map;
 }
 
-export const TOOL_REGISTRY_MAP: Record<string, ToolRegistryEntry> = buildToolRegistryMap();
-
-/**
- * Backward-compatible map: toolId → component loader.
- * Used by existing code that only needs component resolution.
- */
-export const TOOL_COMPONENT_MAP: Record<string, () => Promise<Type<unknown>>> = Object.fromEntries(
-  Object.entries(TOOL_REGISTRY_MAP).map(([id, entry]) => [id, entry.component]),
-);
-
-export function getToolComponent(id: string): (() => Promise<Type<unknown>>) | null {
-  return TOOL_REGISTRY_MAP[id]?.component || null;
-}
+export const MODULE_REGISTRY_SOURCE_MAP: Record<string, ModuleRegistrySourceEntry> =
+  buildModuleRegistrySourceMap();

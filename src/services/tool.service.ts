@@ -1,8 +1,8 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { I18nService } from './i18n.service';
 import { DbService } from './db.service';
-import { TOOL_REGISTRY_MAP } from '../core/tool-registry';
-import { ToolContract } from '../core/tool-contract';
+import { MODULE_REGISTRY_MAP } from '../core/module-registry';
+import type { ModuleContract } from '../core/module-contract';
 import { APP_CONFIG } from '../core/app.config';
 import {
   I18nText,
@@ -54,15 +54,16 @@ const CATEGORY_TRANSLATIONS: Record<string, I18nText> = {
 @Injectable({
   providedIn: 'root',
 })
-export class ToolService {
+export class ModuleService {
   private i18n = inject(I18nService);
   private db = inject(DbService);
 
-  /** Cache for loaded contracts (migrated tools only). */
-  private contractCache = new Map<string, ToolContract>();
+  /** Cache for loaded module contracts. */
+  private contractCache = new Map<string, ModuleContract>();
 
   // Core State
   readonly tools = signal<ToolMetadata[]>([]);
+  readonly modules = this.tools;
   favorites = signal<Set<string>>(new Set<string>());
   usageStats = signal<ToolUsageStats>({});
 
@@ -152,12 +153,15 @@ export class ToolService {
 
     return filtered;
   });
+  filteredModules = this.filteredTools;
 
   featuredTools = computed(() => this.tools().filter((t) => t.featured));
+  featuredModules = this.featuredTools;
   favoriteTools = computed(() => {
     const favIds = this.favorites();
     return this.tools().filter((t) => favIds.has(t.id));
   });
+  favoriteModules = this.favoriteTools;
   mostUsedTools = computed(() => {
     const stats = this.usageStats();
     const usedTools = this.tools().filter((t) => stats[t.id]?.count > 0);
@@ -165,11 +169,13 @@ export class ToolService {
       .sort((a, b) => (stats[b.id].count || 0) - (stats[a.id].count || 0))
       .slice(0, 5);
   });
+  mostUsedModules = this.mostUsedTools;
   historyTools = computed(() => {
     const stats = this.usageStats();
     const usedTools = this.tools().filter((t) => stats[t.id]?.lastUsed > 0);
     return usedTools.sort((a, b) => (stats[b.id].lastUsed || 0) - (stats[a.id].lastUsed || 0));
   });
+  historyModules = this.historyTools;
 
   // --- Modal Actions ---
   openAddToolModal() {
@@ -205,6 +211,10 @@ export class ToolService {
     });
   }
 
+  trackModuleUsage(moduleId: string) {
+    this.trackToolUsage(moduleId);
+  }
+
   toggleFavorite(toolId: string) {
     this.favorites.update((favs) => {
       const newFavs = new Set<string>(favs);
@@ -213,6 +223,10 @@ export class ToolService {
       this.persistFavorites(newFavs);
       return newFavs;
     });
+  }
+
+  toggleModuleFavorite(moduleId: string) {
+    this.toggleFavorite(moduleId);
   }
 
   // --- Reset Methods ---
@@ -277,9 +291,15 @@ export class ToolService {
   getToolsByCategory(category: string) {
     return this.tools().filter((t) => t.categories.includes(category));
   }
+  getModulesByCategory(category: string) {
+    return this.getToolsByCategory(category);
+  }
   getLastUsedDate(toolId: string): Date | null {
     const timestamp = this.usageStats()[toolId]?.lastUsed;
     return timestamp ? new Date(timestamp) : null;
+  }
+  getLastUsedModuleDate(moduleId: string): Date | null {
+    return this.getLastUsedDate(moduleId);
   }
   getCategoryName(id: string): string {
     const label = CATEGORY_TRANSLATIONS[id];
@@ -343,26 +363,34 @@ export class ToolService {
   /**
    * Load a tool's contract.
    */
-  async getContract(toolId: string): Promise<ToolContract | null> {
-    if (this.contractCache.has(toolId)) {
-      return this.contractCache.get(toolId)!;
+  async getModuleContract(moduleId: string): Promise<ModuleContract | null> {
+    if (this.contractCache.has(moduleId)) {
+      return this.contractCache.get(moduleId)!;
     }
-    const entry = TOOL_REGISTRY_MAP[toolId];
+    const entry = MODULE_REGISTRY_MAP[moduleId];
     if (!entry) return null;
     const contract = await entry.contract();
-    this.contractCache.set(toolId, contract);
+    this.contractCache.set(moduleId, contract);
     return contract;
   }
 
+  async getContract(toolId: string): Promise<ModuleContract | null> {
+    return this.getModuleContract(toolId);
+  }
+
+  hasModuleContract(moduleId: string): boolean {
+    return MODULE_REGISTRY_MAP[moduleId] != null;
+  }
+
   hasContract(toolId: string): boolean {
-    return TOOL_REGISTRY_MAP[toolId] != null;
+    return this.hasModuleContract(toolId);
   }
 
   /**
    * Loads all tool metadata from contracts.
    */
   private async loadContractMetadata() {
-    const entries = Object.entries(TOOL_REGISTRY_MAP);
+    const entries = Object.entries(MODULE_REGISTRY_MAP);
     if (entries.length === 0) {
       return;
     }
@@ -387,7 +415,10 @@ export class ToolService {
           };
           return metadata;
         } catch (error) {
-          console.error(`[ToolService] Failed to load contract metadata for tool "${id}".`, error);
+          console.error(
+            `[ModuleService] Failed to load contract metadata for module "${id}".`,
+            error,
+          );
           return null;
         }
       }),
@@ -395,7 +426,7 @@ export class ToolService {
 
     const tools = loaded.filter((t): t is ToolMetadata => t !== null);
     if (tools.length === 0) {
-      console.error('[ToolService] No tool metadata loaded successfully.');
+      console.error('[ModuleService] No module metadata loaded successfully.');
       return;
     }
     this.tools.set(tools);
@@ -445,3 +476,5 @@ export class ToolService {
     return Object.values(text).join(' ').toLowerCase();
   }
 }
+
+export { ModuleService as ToolService };

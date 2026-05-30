@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { pathToFileURL } from 'url';
 
-import type { ToolContract } from '../src/core/tool-contract';
+import type { ModuleContract } from '../src/core/module-contract';
+import { isMcpCompatibleModule } from '../src/core/module-core-registry';
 import { validateToolSpaceDefinitions } from '../src/core/tool-space';
 import type { ToolSpaceDefinition } from '../src/core/tool-space';
 import type { I18nText } from '../src/data/types';
@@ -12,6 +13,7 @@ import {
   isAppId,
   type AppCatalogEntry,
   type AppId,
+  type ModuleKind,
 } from '../src/core/app-catalog';
 
 const SPACE_PAGE_SIZE = 50;
@@ -24,7 +26,7 @@ const FALLBACK_SPACE_ID = 'all-other-tools';
 const FALLBACK_GROUP_ID = 'other-tools';
 
 interface ToolIndexModule {
-  contract?: ToolContract;
+  contract?: ModuleContract;
 }
 
 interface CompiledTool {
@@ -39,9 +41,10 @@ interface CompiledTool {
   tags: string[];
   featured: boolean;
   color: string | null;
+  kind: ModuleKind;
   inputTraits: string[];
   outputFormat: string;
-  cost: ToolContract['cost'];
+  cost: ModuleContract['cost'];
   hasSchema: boolean;
   mcpCompatible: boolean;
 }
@@ -195,7 +198,7 @@ function countTopCategories(tools: CompiledTool[]): string[] {
     .map(([category]) => category);
 }
 
-async function loadToolContracts(app: AppCatalogEntry): Promise<CompiledTool[]> {
+async function loadModuleContracts(app: AppCatalogEntry): Promise<CompiledTool[]> {
   const loadedTools: CompiledTool[] = [];
 
   for (const root of app.source.contentRoots) {
@@ -226,8 +229,10 @@ async function loadToolContracts(app: AppCatalogEntry): Promise<CompiledTool[]> 
           );
         }
 
+        const appName = contract.metadata.appName ?? (app.appId as AppId);
+
         return {
-          appName: contract.metadata.appName ?? (app.appId as AppId),
+          appName,
           id: contract.id,
           title: resolveI18n(contract.metadata.name, 'en'),
           oneLine: toOneLine(resolveI18n(contract.metadata.description, 'en')),
@@ -238,11 +243,16 @@ async function loadToolContracts(app: AppCatalogEntry): Promise<CompiledTool[]> 
           tags: [...contract.metadata.tags],
           featured: Boolean(contract.metadata.featured),
           color: contract.metadata.color ?? null,
+          kind: root.kind,
           inputTraits: [...contract.types.input.traits],
           outputFormat: contract.types.output.format,
           cost: contract.cost,
           hasSchema: Boolean(contract.schema),
-          mcpCompatible: contract.mcp?.compatible ?? true,
+          mcpCompatible: isMcpCompatibleModule(contract, {
+            appId: appName,
+            activeAppId: app.appId as AppId,
+            kind: root.kind,
+          }),
         } satisfies CompiledTool;
       }),
     );
@@ -253,7 +263,7 @@ async function loadToolContracts(app: AppCatalogEntry): Promise<CompiledTool[]> 
   const seen = new Set<string>();
   for (const tool of loadedTools) {
     if (seen.has(tool.id)) {
-      throw new Error(`[mcp-manifest] Duplicate tool id detected: ${tool.id}`);
+      throw new Error(`[mcp-manifest] Duplicate module id detected: ${tool.id}`);
     }
     seen.add(tool.id);
   }
@@ -321,7 +331,7 @@ async function main() {
   const app = getAppCatalogEntry(appId);
   console.log(`[mcp-manifest] Generating MCP discovery artifacts for "${appId}"...`);
 
-  const tools = await loadToolContracts(app);
+  const tools = await loadModuleContracts(app);
   const toolMap = new Map<string, CompiledTool>(tools.map((tool) => [tool.id, tool]));
 
   const spaces = addFallbackSpaceIfNeeded(

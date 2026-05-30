@@ -1,8 +1,8 @@
 import { Component, input, inject, signal, effect, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { getToolComponent } from '../../core/tool-registry';
-import { ToolService } from '../../services/tool.service';
+import { getModuleComponent } from '../../core/module-registry';
+import { ModuleService } from '../../services/module.service';
 import { I18nService } from '../../services/i18n.service';
 import { APP_CONFIG } from '../../core/app.config';
 
@@ -49,7 +49,8 @@ export class ToolHostComponent {
   // Input binding from router for :id
   id = input.required<string>();
 
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
+  toolService = this.moduleService;
   router = inject(Router) as Router;
   i18n = inject(I18nService);
 
@@ -71,7 +72,7 @@ export class ToolHostComponent {
       this.componentType.set(null);
       this.error.set(false);
 
-      const importer = getToolComponent(toolId);
+      const importer = getModuleComponent(toolId);
       if (!importer) {
         this.error.set(true);
         return;

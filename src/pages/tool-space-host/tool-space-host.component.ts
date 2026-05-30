@@ -3,7 +3,7 @@ import { Component, Type, computed, effect, inject, input, signal } from '@angul
 import { Router, RouterLink } from '@angular/router';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { getToolComponent } from '../../core/tool-registry';
+import { getModuleComponent } from '../../core/module-registry';
 import { I18nService } from '../../services/i18n.service';
 import {
   ResolvedToolSpace,
@@ -286,7 +286,7 @@ export class ToolSpaceHostComponent {
         this.activeToolId.set(targetToolId);
         this.toolSpaces.rememberToolSelection(currentSpace.id, targetToolId);
 
-        const importer = getToolComponent(targetToolId);
+        const importer = getModuleComponent(targetToolId);
         if (!importer) {
           this.loadError.set(true);
           return;

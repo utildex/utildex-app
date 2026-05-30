@@ -69,7 +69,9 @@ async function main() {
   }
 
   if (duplicates.size > 0) {
-    throw new Error(`[tool-ids] Duplicate tool ids detected: ${Array.from(duplicates).join(', ')}`);
+    throw new Error(
+      `[tool-ids] Duplicate module ids detected: ${Array.from(duplicates).join(', ')}`,
+    );
   }
 
   console.log(

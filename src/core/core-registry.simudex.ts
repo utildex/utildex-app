@@ -1,9 +1,11 @@
-import type { ToolContract } from './tool-contract';
+import type { ModuleContract } from './module-contract';
 import type { AppId } from './app.config';
+import type { ModuleKind } from './app-catalog';
 
 export interface CoreRegistryEntry {
   appName?: AppId | 'shared';
-  contract: () => Promise<ToolContract>;
+  kind?: ModuleKind;
+  contract: () => Promise<ModuleContract>;
   kernel: () => Promise<Record<string, unknown>>;
 }
 

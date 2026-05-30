@@ -11,8 +11,9 @@ import {
 } from '@angular/core';
 import { NgComponentOutlet, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { getToolComponent } from '../../core/tool-registry';
-import { DashboardWidget, ToolService } from '../../services/tool.service';
+import { getModuleComponent } from '../../core/module-registry';
+import { DashboardWidget } from '../../services/tool.service';
+import { ModuleService } from '../../services/module.service';
 import { I18nService } from '../../services/i18n.service';
 
 @Component({
@@ -115,7 +116,8 @@ export class WidgetHostComponent implements OnInit {
   isEditMode = input<boolean>(false);
   isPhantom = input<boolean>(false);
 
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
+  toolService = this.moduleService;
   i18n = inject(I18nService);
 
   componentType = signal<Type<unknown> | null>(null);
@@ -161,7 +163,7 @@ export class WidgetHostComponent implements OnInit {
     const toolId = this.widget().toolId;
     if (!toolId) return;
 
-    const importer = getToolComponent(toolId);
+    const importer = getModuleComponent(toolId);
 
     if (!importer) {
       this.error.set(true);
