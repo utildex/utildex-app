@@ -31,7 +31,7 @@ export interface AppSourceDefinition {
   appComponentTemplateFile: string;
   routesFile: string;
   coreRegistryFile: string;
-  toolRegistryFile: string;
+  moduleRegistryFile: string;
   toolSpaceRegistryFile: string;
   offlineRouteLoadersFile: string;
   contentRoots: readonly AppContentRootDefinition[];
@@ -91,7 +91,7 @@ export const APP_CATALOG = {
       appComponentTemplateFile: 'src/app.component.html',
       routesFile: 'src/app.routes.ts',
       coreRegistryFile: 'src/core/core-registry.ts',
-      toolRegistryFile: 'src/core/tool-registry.ts',
+      moduleRegistryFile: 'src/core/tool-registry.ts',
       toolSpaceRegistryFile: 'src/data/tool-space-registry.ts',
       offlineRouteLoadersFile: 'src/services/offline-route-loaders.ts',
       contentRoots: [{ label: 'utildex-tools', kind: 'tool', path: 'src/utildex-tools' }],
@@ -131,7 +131,7 @@ export const APP_CATALOG = {
       appComponentTemplateFile: 'src/app.component.synedex.html',
       routesFile: 'src/app.routes.synedex.ts',
       coreRegistryFile: 'src/core/core-registry.synedex.ts',
-      toolRegistryFile: 'src/core/tool-registry.synedex.ts',
+      moduleRegistryFile: 'src/core/tool-registry.synedex.ts',
       toolSpaceRegistryFile: 'src/data/tool-space-registry.synedex.ts',
       offlineRouteLoadersFile: 'src/services/offline-route-loaders.synedex.ts',
       contentRoots: [{ label: 'synedex-games', kind: 'game', path: 'src/synedex-games' }],
@@ -170,7 +170,7 @@ export const APP_CATALOG = {
       appComponentTemplateFile: 'src/app.component.simudex.html',
       routesFile: 'src/app.routes.simudex.ts',
       coreRegistryFile: 'src/core/core-registry.simudex.ts',
-      toolRegistryFile: 'src/core/tool-registry.simudex.ts',
+      moduleRegistryFile: 'src/core/tool-registry.simudex.ts',
       toolSpaceRegistryFile: 'src/data/tool-space-registry.simudex.ts',
       offlineRouteLoadersFile: 'src/services/offline-route-loaders.simudex.ts',
       contentRoots: [

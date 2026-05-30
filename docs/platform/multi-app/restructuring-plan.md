@@ -14,13 +14,18 @@ The platform is organized around three concepts:
 
 ## Current Compatibility Layer
 
-The current code still uses tool-centric names in several shared APIs. During the migration:
+The current code still uses a few tool-centric route and file names. During the migration:
 
 - `toolsRouteSegment` in `APP_CATALOG` is treated as the public module route segment.
-- `ToolContract`, `ToolService`, `TOOL_REGISTRY_MAP`, `tool-host`, and `all-tools` remain compatibility names until the module abstraction PR replaces them.
+- `ModuleContract`, `ModuleService`, `MODULE_REGISTRY_MAP`, and module component/core registry helpers are the shared abstractions.
+- `ToolService`, `tool-host`, `all-tools`, and the app-specific `tool-registry.*.ts` filenames remain compatibility names around existing routes, files, and public APIs until later cleanup PRs can move or rename them safely.
 - App content roots now declare a `kind` so the current filesystem can express whether a root contains `tool`, `game`, or `simulation` modules without moving files yet.
 
 Compatibility names should not be expanded into new architecture. New generic infrastructure should use module vocabulary unless it is intentionally bridging existing code.
+
+## MCP Compatibility Rule
+
+MCP compatibility is currently limited to Utildex `tool` modules. For Utildex tools, omitted `mcp.compatible` defaults to `true`; setting `mcp.compatible: false` opts the tool out. For every other app or module kind, including games and simulations, MCP compatibility defaults to `false` and is resolved as `false` even if a contract accidentally sets `mcp.compatible: true`.
 
 ## Catalog Contract
 
@@ -87,7 +92,7 @@ Done note:
 - Documented maintainer and AI-agent usage in `docs/platform/multi-app/scaffolding.md` and linked it from platform docs.
 - Smoke-tested module and app dry-runs through npm scripts and verified architecture/build config guardrails after the change.
 
-### [ ] PR3 - Module Abstraction
+### [x] PR3 - Module Abstraction
 
 Objective:
 
@@ -95,6 +100,16 @@ Objective:
 - Add compatibility adapters so existing tool-centric runtime paths keep working during migration.
 - Migrate shared host/list/runtime code to consume module abstractions.
 - Avoid filesystem moves in this PR to keep behavior changes isolated and reviewable.
+
+Done note:
+
+- Added module-facing contract and registry abstractions in `src/core/module-contract.ts`, `src/core/module-core-registry.ts`, and `src/core/module-registry.ts`.
+- Replaced `ToolContract` usage with `ModuleContract` across module contracts, registries, scripts, tests, templates, and docs.
+- Kept app-specific registry source files in their current paths for Angular file-replacement stability while switching their exported source maps to module vocabulary and adding optional `kind` metadata for future mixed-kind apps.
+- Introduced `ModuleService` with `ToolService` as a compatibility export, plus module-named service aliases for new shared code.
+- Migrated shared dynamic component loaders, offline preloading, and headless runtime lookup to the module registry/core registry facades.
+- Updated scaffolder registry templates so new module entries include module kind metadata.
+- Added module-aware MCP compatibility resolution so only Utildex tool modules can default to MCP-compatible.
 
 ### [ ] PR4 - App-First Filesystem Migration
 

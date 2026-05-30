@@ -12,7 +12,7 @@ export {
 export { routesTemplate, welcomeComponentTemplate } from './app-templates/routes';
 export {
   emptyCoreRegistryTemplate,
-  emptyToolRegistryTemplate,
+  emptyModuleRegistryTemplate,
   emptyToolSpaceRegistryTemplate,
   offlineRouteLoadersTemplate,
 } from './app-templates/registries';

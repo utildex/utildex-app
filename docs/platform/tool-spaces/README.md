@@ -27,7 +27,7 @@ This document covers:
 ### Invariants
 
 - Space IDs and group IDs must be stable and unique.
-- Tool IDs must match contract IDs from the tool registry.
+- Tool IDs must match contract IDs from the module registry.
 - Group order and tool order are intentional and should be treated as UX/API ordering.
 
 ## UI
@@ -67,6 +67,7 @@ This avoids exposing the full tool catalog at once and keeps context usage bound
 ### Compatibility filtering
 
 - `mcpCompatibleOnly` filters out tools marked as non-MCP-compatible.
+- Today, MCP compatibility is only available to Utildex `tool` modules. Utildex tools default to MCP-compatible unless their contract sets `mcp.compatible: false`; all other module kinds and apps default to non-compatible and cannot opt in while MCP remains tool-only.
 - Filtered-out tool references can produce issues such as:
   - `unknown-tool-id`
   - `empty-group-after-resolution`

@@ -118,7 +118,7 @@ function checkAppCatalogEntry(issues: CheckIssue[], catalogKey: AppId, app: AppC
   );
   checkPath(issues, catalogKey, 'source.routesFile', app.source.routesFile);
   checkPath(issues, catalogKey, 'source.coreRegistryFile', app.source.coreRegistryFile);
-  checkPath(issues, catalogKey, 'source.toolRegistryFile', app.source.toolRegistryFile);
+  checkPath(issues, catalogKey, 'source.moduleRegistryFile', app.source.moduleRegistryFile);
   checkPath(issues, catalogKey, 'source.toolSpaceRegistryFile', app.source.toolSpaceRegistryFile);
   checkPath(
     issues,
