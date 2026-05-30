@@ -35,7 +35,7 @@
     "build:utildex": "tsx scripts/run-app-command.ts build --app=utildex",
     "build:synedex": "tsx scripts/run-app-command.ts build --app=synedex",
     "build:simudex": "tsx scripts/run-app-command.ts build --app=simudex",
-    "build:all": "npm run build:utildex && npm run build:synedex && npm run build:simudex",
+    "build:all": "tsx scripts/run-app-command.ts build --all",
     "build:headless": "node -e \"require('node:fs').rmSync('dist-headless', { recursive: true, force: true })\" && esbuild src/headless/index.ts --bundle --platform=node --format=esm --packages=external --target=node24 --outfile=dist-headless/headless/index.js && tsc -p tsconfig.headless.types.json && tsx scripts/write-headless-types-entry.ts",
     "build:simudex-rootfs": "tsx scripts/build-cheerpx-rootfs.ts --project simudex-debian --output sandbox-images/simudex/debian",
     "prepare:r2-artifact": "tsx scripts/prepare-r2-artifact.ts",
