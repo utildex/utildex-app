@@ -120,6 +120,149 @@ Objective:
 - Preserve build output parity for existing apps while moving files.
 - Use temporary shims/re-exports only where needed to keep migration incremental.
 
+Execution principles:
+
+- Keep PR4 scoped to filesystem and import-path migration only; do not combine with runtime behavior rewiring (PR5) or terminology cleanup (PR6).
+- Migrate in deterministic slices with a green build between slices.
+- Move one app at a time, with Utildex as pilot, then Synedex, then Simudex.
+- Treat `src/core/app-catalog.ts` as the source of truth for every moved path.
+- Prefer compatibility re-export shims over broad path rewrites when a move would otherwise force large unrelated edits.
+
+Non-goals (deferred to later PRs):
+
+- No removal of legacy compatibility names that are still needed by file replacement or public APIs.
+- No script/runtime architecture rewiring beyond what is strictly required to resolve moved paths.
+- No refactor of module contracts, registry semantics, or route semantics.
+
+Layout decision record (PR4):
+
+Two valid patterns were considered:
+
+- Option A: Split roots (`apps/<appId>/` for app entry/build assets, `src/apps/<appId>/` for runtime source).
+- Option B: Single root (`src/apps/<appId>/` for both runtime source and app entry/build assets).
+
+Decision:
+
+- Prefer Option B (single root) unless a concrete tooling constraint forces Option A.
+- Rationale: it is easier to navigate, reduces path indirection, keeps app ownership visually unified, and lowers accidental drift between parallel trees.
+
+Canonical target layout (Option B):
+
+```text
+src/apps/
+  utildex/
+    entry/
+      app.config.ts
+      index.tsx
+      index.html
+      manifest.webmanifest
+      ngsw-config.json
+    shell/
+    routing/
+    registries/
+    seo/
+    modules/
+  synedex/
+    entry/
+      app.config.ts
+      index.tsx
+      index.html
+      manifest.webmanifest
+      ngsw-config.json
+    shell/
+    routing/
+    registries/
+    seo/
+    modules/
+  simudex/
+    entry/
+      app.config.ts
+      index.tsx
+      index.html
+      manifest.webmanifest
+      ngsw-config.json
+    shell/
+    routing/
+    registries/
+    seo/
+    modules/
+
+src/platform/
+  ...shared cross-app infrastructure only...
+```
+
+Layout rules:
+
+- `src/apps/<appId>/` is the canonical home for all app-owned files.
+- `src/apps/<appId>/entry/` contains app entry/build assets (config, entrypoint, html, manifest, ngsw).
+- `src/platform/` is reserved for shared app-agnostic code; app-specific files must not be added there.
+- Existing compatibility filenames may remain as shims if required, but shims should not contain business logic.
+
+Documentation placement rule:
+
+- Keep shared architecture docs in `docs/platform/`.
+- Place app-owned docs in `docs/apps/<appId>/` (with optional `screenshots/` beside each app doc set).
+- During migration, maintain redirects/links from existing app-specific platform pages to avoid broken review/bookmark paths.
+
+Execution checklist:
+
+1. Phase A - Baseline and move map
+- [ ] Snapshot current app source paths from `APP_CATALOG` and record old->new mapping in this PR description.
+- [ ] Run and capture baseline outputs for `npm run prebuild:checks` and `npm run build:all`.
+- [ ] Freeze naming decisions for app folder conventions before moving files.
+
+2. Phase B - Create destination skeleton (no moves yet)
+- [ ] Create destination folder structure under `src/apps/` for all existing app ids.
+- [ ] Create destination app docs roots under `docs/apps/<appId>/` and add transitional links from current docs locations.
+- [ ] Update architecture checks (if needed) to allow new canonical path roots while preserving portability constraints.
+- [ ] Keep behavior identical; this phase should be structural only.
+
+3. Phase C - Migrate app entry assets by app
+- [ ] Move Utildex root app files to `src/apps/utildex/entry/`, update catalog paths, and add minimal shims only if required by tooling.
+- [ ] Repeat for Synedex and Simudex with the same deterministic file order.
+- [ ] After each app batch, run full validation gates before starting the next app.
+
+4. Phase D - Migrate runtime app-owned source by app
+- [ ] Move shell/routes/registries/offline loaders/seo and app module roots into `src/apps/<appId>/...`.
+- [ ] Keep legacy import surfaces as re-exports where broad path rewrites would increase risk.
+- [ ] Update only the imports required for compilation; avoid opportunistic refactors.
+
+5. Phase E - Stabilize and document
+- [ ] Ensure every app `source.*` entry in `APP_CATALOG` points to the new location.
+- [ ] Add a short migration map in docs showing old and new canonical roots.
+- [ ] Mark compatibility shims with a clear PR6 cleanup note.
+
+Shim policy (temporary compatibility files):
+
+- Shims are allowed only to preserve incremental compilation and reviewability.
+- Shims must be one-purpose passthrough exports/imports; no side effects, no branching, no duplicated logic.
+- Every shim should carry a short comment marker indicating PR6 cleanup ownership.
+- New code should import canonical app-scoped paths when practical.
+
+Validation gates (must pass at each phase boundary):
+
+| Gate | Command | Expected result |
+| --- | --- | --- |
+| Architecture and guardrails | `npm run prebuild:checks` | Passes with no new failures introduced by path migration |
+| Per-app build parity | `npm run build:utildex` / `npm run build:synedex` / `npm run build:simudex` | All app builds succeed from moved paths |
+| Aggregate parity | `npm run build:all` | End-to-end parity preserved after migration |
+| Headless safety check | `npm run test:headless` and `npm run test:headless:types` | No regressions in module registry/headless lookup surface |
+
+Risk controls:
+
+- Keep commits small and phase-aligned so rollback is commit-level, not manual file surgery.
+- Avoid mixed concerns: if a change is not required for path migration, defer it.
+- Prefer mechanical path updates and scripted rename operations over hand-edited broad refactors.
+- Keep an explicit list of moved files to simplify review and audit.
+
+Definition of done for PR4:
+
+- All app-owned files have canonical homes under app-scoped folders.
+- `APP_CATALOG` path metadata fully reflects the new layout.
+- Existing apps produce equivalent successful builds through current commands.
+- Temporary shims are minimal, documented, and explicitly scheduled for PR6 cleanup.
+- Platform/shared folders contain only cross-app infrastructure.
+
 ### [ ] PR5 - Build And Runtime Rewiring
 
 Objective:
