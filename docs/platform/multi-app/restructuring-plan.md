@@ -69,7 +69,7 @@ Done note:
 - `prebuild:checks` now includes `check:app-architecture`.
 - Full validation chain passed after the change (`prebuild:checks`), with only pre-existing lint warnings outside this PR scope.
 
-### [ ] PR2 - Maintainer Scaffolder CLI
+### [x] PR2 - Maintainer Scaffolder CLI
 
 Objective:
 
@@ -79,6 +79,13 @@ Objective:
 - Provide deterministic output suitable for maintainers and AI agents.
 - Add validation and rollback behavior so partial scaffolds do not leave inconsistent state.
 - Update maintainer docs with command examples and expected workflow.
+
+Done note:
+
+- Implemented `scripts/scaffold.ts` with `create-module` and `create-app` commands, dry-run mode, JSON plan output, deterministic operation ordering, collision checks, and rollback on write failure.
+- Added npm entry points: `scaffold`, `create:module`, and `create:app`.
+- Documented maintainer and AI-agent usage in `docs/platform/multi-app/scaffolding.md` and linked it from platform docs.
+- Smoke-tested module and app dry-runs through npm scripts and verified architecture/build config guardrails after the change.
 
 ### [ ] PR3 - Module Abstraction
 

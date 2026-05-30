@@ -15,6 +15,9 @@
   "scripts": {
     "dev": "ng serve",
     "prepare:simudex-cheerpx": "tsx scripts/sync-cheerpx-runtime.ts",
+    "scaffold": "tsx scripts/scaffold.ts",
+    "create:app": "tsx scripts/scaffold.ts create-app",
+    "create:module": "tsx scripts/scaffold.ts create-module",
     "dev:app": "tsx scripts/run-app-command.ts serve",
     "dev:utildex": "tsx scripts/run-app-command.ts serve --app=utildex",
     "dev:synedex": "tsx scripts/run-app-command.ts serve --app=synedex",
