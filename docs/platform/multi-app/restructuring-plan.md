@@ -240,6 +240,7 @@ Progress note:
 - Synedex and Simudex shell, routes, registries, offline loaders, and SEO roots are migrated to `src/apps/<appId>/...` and validated.
 - Synedex and Simudex module roots are now migrated to `src/apps/synedex/games` and `src/apps/simudex/simulations`.
 - Utildex core/module/tool-space/article registries, offline loaders, and SEO root are now canonicalized to `src/apps/utildex/...` with temporary compatibility shims at previous paths.
+- Utildex shell and routes are now canonicalized to `src/apps/utildex/shell/` and `src/apps/utildex/routing/` with temporary root-level compatibility shims.
 - Utildex content root remains `src/utildex-tools` pending the dedicated follow-up decision for default-app module placement.
 
 5. Phase E - Stabilize and document
@@ -257,6 +258,7 @@ Migration map (current):
 | Synedex runtime roots | `src/synedex-games`, root-level Synedex app/runtime files                                                                                                                               | `src/apps/synedex/games` and `src/apps/synedex/...`                                                                             |
 | Simudex runtime roots | `src/simudex-simulations`, root-level Simudex app/runtime files                                                                                                                         | `src/apps/simudex/simulations` and `src/apps/simudex/...`                                                                       |
 | Utildex runtime roots | `src/core/core-registry.ts`, `src/core/tool-registry.ts`, `src/data/tool-space-registry.ts`, `src/services/offline-route-loaders.ts`, `src/data/article-registry.ts`, `src/seo/utildex` | `src/apps/utildex/{core-registry.ts,tool-registry.ts,tool-space-registry.ts,offline-route-loaders.ts,article-registry.ts,seo/}` |
+| Utildex shell/routes  | `src/app.component.ts`, `src/app.component.html`, `src/app.routes.ts`                                                                                                                   | `src/apps/utildex/shell/` and `src/apps/utildex/routing/`                                                                       |
 | Utildex module root   | `src/utildex-tools`                                                                                                                                                                     | Pending follow-up decision in PR4 phase sequence                                                                                |
 
 Shim policy (temporary compatibility files):
