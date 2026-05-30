@@ -1,5 +1,7 @@
 # Simudex Platform
 
+> Transition note: the canonical app-owned docs root is now [docs/apps/simudex/README.md](../../apps/simudex/README.md). This page remains available during the PR4 migration.
+
 Simudex is the simulations app in the shared multi-app repository. It has an independent Angular bundle boundary and runtime identity. The current implementation includes shared sandbox contracts, the shared terminal platform, the plugin host, the first Debian runtime scaffold, the Debian worker bridge, a local Debian preview shell, and a CheerpX/WebVM runtime client.
 
 ## Current Wiring

@@ -1,5 +1,7 @@
 # Synedex Platform
 
+> Transition note: the canonical app-owned docs root is now [docs/apps/synedex/README.md](../../apps/synedex/README.md). This page remains available during the PR4 migration.
+
 Synedex is the cognitive wellness and games variant of this codebase. It is built from the same repository as Utildex but produces a completely independent bundle via the dual-app build split. This document covers everything specific to Synedex: what makes it different, how its registries work, and how to add a new game.
 
 **Prerequisite:** Read [Dual-App Build Split](../dual-app-split/README.md) first if you haven't already.
