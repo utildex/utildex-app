@@ -244,8 +244,18 @@ Progress note:
 5. Phase E - Stabilize and document
 
 - [ ] Ensure every app `source.*` entry in `APP_CATALOG` points to the new location.
-- [ ] Add a short migration map in docs showing old and new canonical roots.
+- [x] Add a short migration map in docs showing old and new canonical roots.
 - [ ] Mark compatibility shims with a clear PR6 cleanup note.
+
+Migration map (current):
+
+| Scope                 | Old root                                                                                                                       | Current canonical root                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| Synedex entry assets  | `index.synedex.tsx`, `index.synedex.html`, `app.config.synedex.ts`, `manifest.synedex.webmanifest`, `ngsw-config.synedex.json` | `src/apps/synedex/entry/`                                 |
+| Simudex entry assets  | `index.simudex.tsx`, `index.simudex.html`, `app.config.simudex.ts`, `manifest.simudex.webmanifest`, `ngsw-config.simudex.json` | `src/apps/simudex/entry/`                                 |
+| Synedex runtime roots | `src/synedex-games`, root-level Synedex app/runtime files                                                                      | `src/apps/synedex/games` and `src/apps/synedex/...`       |
+| Simudex runtime roots | `src/simudex-simulations`, root-level Simudex app/runtime files                                                                | `src/apps/simudex/simulations` and `src/apps/simudex/...` |
+| Utildex module root   | `src/utildex-tools`                                                                                                            | Pending follow-up decision in PR4 phase sequence          |
 
 Shim policy (temporary compatibility files):
 

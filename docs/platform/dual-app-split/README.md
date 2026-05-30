@@ -237,8 +237,8 @@ var saved = localStorage.getItem(appId + '-state-theme');
 
 ### Synedex-only (not bundled into Utildex)
 
-- `src/app.component.synedex.ts` and `app.routes.synedex.ts`
-- `src/synedex-games/` — all game components, contracts, kernels
+- `src/apps/synedex/app.component.synedex.ts` and `src/apps/synedex/app.routes.synedex.ts`
+- `src/apps/synedex/games/` — all game components, contracts, kernels
 - `src/pages/synedex-welcome/` — Synedex landing page
 
 ---

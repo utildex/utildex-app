@@ -41,7 +41,7 @@ Synedex is the cognitive wellness and games variant of this codebase. It is buil
 
 ## What Is Synedex
 
-Synedex (`appId: 'synedex'`, `appName: 'Synedex'`) is a local-first platform for mindful games and cognitive exercises. It lives at `https://synedex.com`. Games are modelled identically to Utildex tools — same contract/kernel/component pattern — but they live in `src/synedex-games/` and are registered in the Synedex-specific registry files.
+Synedex (`appId: 'synedex'`, `appName: 'Synedex'`) is a local-first platform for mindful games and cognitive exercises. It lives at `https://synedex.com`. Games are modelled identically to Utildex tools — same contract/kernel/component pattern — but they live in `src/apps/synedex/games/` and are registered in the Synedex-specific registry files.
 
 ---
 
@@ -60,19 +60,19 @@ Synedex has its own product and game UX contract. These documents are the target
 
 ## How It Differs from Utildex
 
-| Concern                   | Utildex                | Synedex                    |
-| ------------------------- | ---------------------- | -------------------------- |
-| `appId`                   | `utildex`              | `synedex`                  |
-| `appName`                 | `Utildex`              | `Synedex`                  |
-| Content directory         | `src/utildex-tools/`   | `src/synedex-games/`       |
-| Route segment for content | `tools`                | `games`                    |
-| Landing page              | `pages/home/`          | `pages/synedex-welcome/`   |
-| Root component            | `app.component.ts`     | `app.component.synedex.ts` |
-| Route file                | `app.routes.ts`        | `app.routes.synedex.ts`    |
-| Headless/MCP build        | Yes (`dist-headless/`) | **No**                     |
-| Dashboard widget system   | Yes                    | No                         |
-| Storage key prefix        | `utildex-`             | `synedex-`                 |
-| IDB database              | `utildex-db`           | `synedex-db`               |
+| Concern                   | Utildex                | Synedex                                  |
+| ------------------------- | ---------------------- | ---------------------------------------- |
+| `appId`                   | `utildex`              | `synedex`                                |
+| `appName`                 | `Utildex`              | `Synedex`                                |
+| Content directory         | `src/utildex-tools/`   | `src/apps/synedex/games/`                |
+| Route segment for content | `tools`                | `games`                                  |
+| Landing page              | `pages/home/`          | `pages/synedex-welcome/`                 |
+| Root component            | `app.component.ts`     | `app.component.synedex.ts`               |
+| Route file                | `src/app.routes.ts`    | `src/apps/synedex/app.routes.synedex.ts` |
+| Headless/MCP build        | Yes (`dist-headless/`) | **No**                                   |
+| Dashboard widget system   | Yes                    | No                                       |
+| Storage key prefix        | `utildex-`             | `synedex-`                               |
+| IDB database              | `utildex-db`           | `synedex-db`                             |
 
 ---
 
@@ -80,25 +80,25 @@ Synedex has its own product and game UX contract. These documents are the target
 
 These files are **only** compiled into the Synedex bundle (either as replacements or as Synedex-exclusive imports):
 
-| File                                            | Role                                                 |
-| ----------------------------------------------- | ---------------------------------------------------- |
-| `index.synedex.tsx`                             | Bundle entry point; bootstraps `SynedexAppComponent` |
-| `app.config.synedex.ts`                         | Identity config (`appId`, hosting URL, etc.)         |
-| `src/app.component.synedex.ts`                  | Root shell component for Synedex                     |
-| `src/app.routes.synedex.ts`                     | Complete route manifest                              |
-| `src/core/core-registry.synedex.ts`             | Contract + kernel loaders for all games              |
-| `src/core/tool-registry.synedex.ts`             | Angular component loaders for all games              |
-| `src/data/tool-space-registry.synedex.ts`       | Tool space definitions                               |
-| `src/services/offline-route-loaders.synedex.ts` | SW precache scope                                    |
-| `src/pages/synedex-welcome/`                    | Synedex landing page component                       |
-| `src/synedex-games/`                            | All game implementations                             |
+| File                                                | Role                                                 |
+| --------------------------------------------------- | ---------------------------------------------------- |
+| `src/apps/synedex/entry/index.tsx`                  | Bundle entry point; bootstraps `SynedexAppComponent` |
+| `src/apps/synedex/entry/app.config.ts`              | Identity config (`appId`, hosting URL, etc.)         |
+| `src/apps/synedex/app.component.synedex.ts`         | Root shell component for Synedex                     |
+| `src/apps/synedex/app.routes.synedex.ts`            | Complete route manifest                              |
+| `src/apps/synedex/core-registry.synedex.ts`         | Contract + kernel loaders for all games              |
+| `src/apps/synedex/tool-registry.synedex.ts`         | Angular component loaders for all games              |
+| `src/apps/synedex/tool-space-registry.synedex.ts`   | Tool space definitions                               |
+| `src/apps/synedex/offline-route-loaders.synedex.ts` | SW precache scope                                    |
+| `src/pages/synedex-welcome/`                        | Synedex landing page component                       |
+| `src/apps/synedex/games/`                           | All game implementations                             |
 
 ---
 
 ## Directory Structure for Games
 
 ```
-src/synedex-games/
+src/apps/synedex/games/
 └── <game-id>/
     ├── <game-id>.component.ts     # Angular component (UI + state)
     ├── <game-id>.contract.ts      # Metadata, type contract, widget config
@@ -121,7 +121,7 @@ Use the tool template as a starting scaffold: `src/templates/tool/`.
 ### 1. Create the game directory
 
 ```
-src/synedex-games/<game-id>/
+src/apps/synedex/games/<game-id>/
 ```
 
 Use kebab-case. The directory name **must exactly match** the `id` in the contract. This is validated at build time by `scripts/check-tool-ids.ts`.
@@ -129,10 +129,10 @@ Use kebab-case. The directory name **must exactly match** the `id` in the contra
 ### 2. Write the contract
 
 ```typescript
-// src/synedex-games/focus-grid/focus-grid.contract.ts
-import { ModuleContract } from '../../core/module-contract';
-import { TRAITS } from '../../core/types/traits';
-import { mapLocalizedField } from '../../core/i18n-mapper';
+// src/apps/synedex/games/focus-grid/focus-grid.contract.ts
+import { ModuleContract } from '../../../../core/module-contract';
+import { TRAITS } from '../../../../core/types/traits';
+import { mapLocalizedField } from '../../../../core/i18n-mapper';
 import { contractI18n } from './i18n/contract.i18n';
 
 export const contract: ModuleContract = {
@@ -165,7 +165,7 @@ export const contract: ModuleContract = {
 ### 3. Write the kernel
 
 ```typescript
-// src/synedex-games/focus-grid/focus-grid.kernel.ts
+// src/apps/synedex/games/focus-grid/focus-grid.kernel.ts
 
 export async function run(input: FocusGridInput): Promise<FocusGridOutput> {
   // Pure logic — no Angular, no DOM, no imports of browser-only globals at module level.
@@ -178,7 +178,7 @@ The kernel is the headless-safe processing unit. Even though Synedex does not ha
 ### 4. Write the component
 
 ```typescript
-// src/synedex-games/focus-grid/focus-grid.component.ts
+// src/apps/synedex/games/focus-grid/focus-grid.component.ts
 @Component({
   selector: 'app-focus-grid',
   standalone: true,
@@ -201,15 +201,14 @@ Requirements mirror Utildex tools:
 
 ### 5. Wire the core registry
 
-Open `src/core/core-registry.synedex.ts` and add an entry to `CORE_REGISTRY`:
+Open `src/apps/synedex/core-registry.synedex.ts` and add an entry to `CORE_REGISTRY`:
 
 ```typescript
 export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
   'focus-grid': {
     appName: 'synedex',
-    contract: () =>
-      import('../synedex-games/focus-grid/focus-grid.contract').then((m) => m.contract),
-    kernel: () => import('../synedex-games/focus-grid/focus-grid.kernel'),
+    contract: () => import('./games/focus-grid/focus-grid.contract').then((m) => m.contract),
+    kernel: () => import('./games/focus-grid/focus-grid.kernel'),
   },
 };
 ```
@@ -218,12 +217,12 @@ Both loaders are dynamic `import()` to ensure lazy loading. The `contract` loade
 
 ### 6. Wire the component registry
 
-Open `src/core/tool-registry.synedex.ts` and add the component loader to `MODULE_COMPONENT_LOADERS`:
+Open `src/apps/synedex/tool-registry.synedex.ts` and add the component loader to `MODULE_COMPONENT_LOADERS`:
 
 ```typescript
 const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
   'focus-grid': () =>
-    import('../synedex-games/focus-grid/focus-grid.component').then((m) => m.FocusGridComponent),
+    import('./games/focus-grid/focus-grid.component').then((m) => m.FocusGridComponent),
 };
 ```
 
@@ -231,7 +230,7 @@ The registry builder validates at startup that every entry in `CORE_REGISTRY` ha
 
 ### 7. Add a route
 
-Open `src/app.routes.synedex.ts`. Games are routed via the shared `ToolHostComponent` under `/:lang/games/:id`. No route entry is needed for individual games because `ToolHostComponent` resolves the game ID dynamically from the route parameter.
+Open `src/apps/synedex/app.routes.synedex.ts`. Games are routed via the shared `ToolHostComponent` under `/:lang/games/:id`. No route entry is needed for individual games because `ToolHostComponent` resolves the game ID dynamically from the route parameter.
 
 If your game needs a **dedicated page** (not just `ToolHostComponent`), add a route under the `:lang` children block:
 
@@ -249,7 +248,7 @@ Keep the Synedex route manifest intentionally minimal. Do not add Utildex-only r
 
 ### 8. Add a tool space (optional)
 
-Tool spaces for Synedex are declared in `src/data/tool-space-registry.synedex.ts`. Spaces group games into task-oriented collections displayed in the UI. See [Tool Spaces Platform](../tool-spaces/README.md) for full details.
+Tool spaces for Synedex are declared in `src/apps/synedex/tool-space-registry.synedex.ts`. Spaces group games into task-oriented collections displayed in the UI. See [Tool Spaces Platform](../tool-spaces/README.md) for full details.
 
 ---
 
@@ -260,7 +259,7 @@ Every game has two separate i18n concerns: **component strings** (UI labels, but
 ### Two i18n files per game
 
 ```
-src/synedex-games/<game-id>/i18n/
+src/apps/synedex/games/<game-id>/i18n/
 ├── en.ts              ← component strings (English, the reference)
 ├── fr.ts              ← component strings (French)
 ├── es.ts              ← component strings (Spanish)
@@ -273,7 +272,7 @@ src/synedex-games/<game-id>/i18n/
 Each language file is a plain `export default` object with flat string keys:
 
 ```typescript
-// src/synedex-games/focus-grid/i18n/en.ts
+// src/apps/synedex/games/focus-grid/i18n/en.ts
 export default {
   BTN_START: 'Start',
   BTN_PAUSE: 'Pause',
@@ -284,7 +283,7 @@ export default {
 ```
 
 ```typescript
-// src/synedex-games/focus-grid/i18n/fr.ts
+// src/apps/synedex/games/focus-grid/i18n/fr.ts
 export default {
   BTN_START: 'Démarrer',
   BTN_PAUSE: 'Pause',
@@ -306,7 +305,7 @@ Rules:
 `contract.i18n.ts` is a **multi-language dictionary** in a single file, organised language-first:
 
 ```typescript
-// src/synedex-games/focus-grid/i18n/contract.i18n.ts
+// src/apps/synedex/games/focus-grid/i18n/contract.i18n.ts
 export const contractI18n = {
   en: {
     name: 'Focus Grid',
@@ -393,7 +392,7 @@ The four supported languages are `en`, `fr`, `es`, `zh`. If the user's active la
 
 ### Integrity check
 
-`scripts/check-integrity.ts` validates component i18n automatically as part of the pre-build step. For each game in `src/synedex-games/`, it:
+`scripts/check-integrity.ts` validates component i18n automatically as part of the pre-build step. For each game in `src/apps/synedex/games/`, it:
 
 1. Confirms that `en.ts`, `fr.ts`, `es.ts`, and `zh.ts` all exist.
 2. Loads all four files and compares their key sets against `en.ts`.
@@ -429,7 +428,7 @@ Omitting `appName` in a `CORE_REGISTRY` entry defaults to `'synedex'` (not `'sha
 
 ## Routes
 
-Synedex routes live exclusively in `src/app.routes.synedex.ts`. The structure:
+Synedex routes live exclusively in `src/apps/synedex/app.routes.synedex.ts`. The structure:
 
 ```
 /:lang                       ← language segment, validated by languageGuard
@@ -444,7 +443,7 @@ Synedex routes live exclusively in `src/app.routes.synedex.ts`. The structure:
   /articles/:id              ← Article detail
 ```
 
-`app.routes.ts` (the Utildex routes) is **never included** in the Synedex bundle. They are loaded from separate entry points (`index.tsx` vs `index.synedex.tsx`).
+`app.routes.ts` (the Utildex routes) is **never included** in the Synedex bundle. They are loaded from separate entry points (`src/apps/utildex/entry/index.tsx` vs `src/apps/synedex/entry/index.tsx`).
 
 ---
 
@@ -459,7 +458,7 @@ All storage keys for Synedex are prefixed with `synedex-` because `STORAGE_KEYS`
 ## What Synedex Does NOT Have
 
 - **Headless / MCP build.** There is no `npm run build:headless` for Synedex. Game kernels should still be pure (no Angular/DOM at the top level), but they are not exposed via any Node API today.
-- **Dashboard widget system.** The Utildex dashboard (drag-and-drop widget grid) is wired into `app.routes.ts` which Synedex does not use. Do not implement widget-related features in `app.routes.synedex.ts` or `app.component.synedex.ts` without deliberate intent to ship them.
+- **Dashboard widget system.** The Utildex dashboard (drag-and-drop widget grid) is wired into `src/app.routes.ts` which Synedex does not use. Do not implement widget-related features in `src/apps/synedex/app.routes.synedex.ts` or `src/apps/synedex/app.component.synedex.ts` without deliberate intent to ship them.
 - **Tour overlay.** The guided onboarding tour (`TourService`) is disabled in the Synedex settings modal via an `@if (appConfig.appId !== 'synedex')` guard.
 - **MCP manifest generation.** The pre-build `generate-mcp-manifest.ts` script targets the catalog app that declares `capabilities.mcp: true`. Synedex currently leaves MCP disabled, so it is skipped. Synedex games are not MCP-compatible by default and cannot opt in while MCP support is limited to Utildex tools.
 
@@ -477,7 +476,7 @@ ng serve --configuration=synedex
 # → http://localhost:3000 (Synedex identity, live reload)
 ```
 
-The Synedex build uses `index.synedex.html` as its HTML template (output as `index.html`), the `ngsw-config.synedex.json` service worker config, and excludes the `src/assets/mcp/` directory from the asset bundle.
+The Synedex build uses `src/apps/synedex/entry/index.html` as its HTML template (output as `index.html`), the `src/apps/synedex/entry/ngsw-config.json` service worker config, and excludes the `src/assets/mcp/` directory from the asset bundle.
 
 ---
 
@@ -485,10 +484,10 @@ The Synedex build uses `index.synedex.html` as its HTML template (output as `ind
 
 The standard pre-build scripts run for Synedex too:
 
-| Script                        | What it checks                                                                 |
-| ----------------------------- | ------------------------------------------------------------------------------ |
-| `scripts/check-tool-ids.ts`   | `contract.id` matches the folder name for every game in `src/synedex-games/`   |
-| `scripts/check-integrity.ts`  | i18n key parity across all supported languages for every game                  |
-| `scripts/check-app-parity.ts` | Registry sync (every entry in `CORE_REGISTRY` has a matching component loader) |
+| Script                        | What it checks                                                                    |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| `scripts/check-tool-ids.ts`   | `contract.id` matches the folder name for every game in `src/apps/synedex/games/` |
+| `scripts/check-integrity.ts`  | i18n key parity across all supported languages for every game                     |
+| `scripts/check-app-parity.ts` | Registry sync (every entry in `CORE_REGISTRY` has a matching component loader)    |
 
 Run `npm run build` or `ng build --configuration=synedex` to trigger them. Fix any reported mismatches before merging.

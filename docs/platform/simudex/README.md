@@ -9,22 +9,22 @@ Simudex is the simulations app in the shared multi-app repository. It has an ind
 - Route segment: `/simulations`
 - Build output: `dist/simudex`
 - Dev server port: `3002`
-- Content root: `src/simudex-simulations/`
-- SEO output: `src/seo/simudex/`
+- Content root: `src/apps/simudex/simulations/`
+- SEO output: `src/apps/simudex/seo/`
 
 ## Files
 
-- Runtime config: `app.config.simudex.ts`
-- Entry point: `index.simudex.tsx`
-- HTML shell: `index.simudex.html`
-- App shell: `src/app.component.simudex.ts` and `src/app.component.simudex.html`
-- Routes: `src/app.routes.simudex.ts`
-- Core registry: `src/core/core-registry.simudex.ts`
-- Component registry: `src/core/tool-registry.simudex.ts`
-- Space registry: `src/data/tool-space-registry.simudex.ts`
-- Offline preload routes: `src/services/offline-route-loaders.simudex.ts`
-- Manifest: `manifest.simudex.webmanifest`
-- Service worker config: `ngsw-config.simudex.json`
+- Runtime config: `src/apps/simudex/entry/app.config.ts`
+- Entry point: `src/apps/simudex/entry/index.tsx`
+- HTML shell: `src/apps/simudex/entry/index.html`
+- App shell: `src/apps/simudex/app.component.simudex.ts` and `src/apps/simudex/app.component.simudex.html`
+- Routes: `src/apps/simudex/app.routes.simudex.ts`
+- Core registry: `src/apps/simudex/core-registry.simudex.ts`
+- Component registry: `src/apps/simudex/tool-registry.simudex.ts`
+- Space registry: `src/apps/simudex/tool-space-registry.simudex.ts`
+- Offline preload routes: `src/apps/simudex/offline-route-loaders.simudex.ts`
+- Manifest: `src/apps/simudex/entry/manifest.webmanifest`
+- Service worker config: `src/apps/simudex/entry/ngsw-config.json`
 - Sandbox contracts index: `src/core/sandbox/index.ts`
 - Terminal session contract: `src/core/sandbox/terminal-session.contract.ts`
 - Session backend adapter contract: `src/core/sandbox/session-backend.contract.ts`
@@ -42,7 +42,7 @@ Simudex is the simulations app in the shared multi-app repository. It has an ind
 - Debian backend adapter scaffold: `src/core/sandbox/debian-session-backend.ts`
 - Debian preview shell: `src/core/workers/simudex/debian-preview-shell.ts`
 - Debian worker protocol stub: `src/core/workers/simudex/debian-runtime.worker.ts`
-- First simulation module: `src/simudex-simulations/minimal-debian-terminal/`
+- First simulation module: `src/apps/simudex/simulations/minimal-debian-terminal/`
 
 ## Phase 1 Foundations (Implemented)
 
@@ -97,7 +97,7 @@ The first Simudex simulation is now wired as `minimal-debian-terminal`.
 - `src/core/sandbox/debian-session-backend.ts` implements `SessionBackendAdapter` for the Debian runtime boundary.
 - `src/core/workers/simudex/debian-runtime.worker.ts` reserves the browser worker entry point and acknowledges the protocol without implementing VM execution yet.
 - `src/core/runtime-resources.ts` centralizes the future Debian worker, BIOS, WASM, kernel, initrd, and rootfs asset paths.
-- `src/simudex-simulations/minimal-debian-terminal/` provides the first routeable Simudex simulation and renders the shared `TerminalPlatformComponent`.
+- `src/apps/simudex/simulations/minimal-debian-terminal/` provides the first routeable Simudex simulation and renders the shared `TerminalPlatformComponent`.
 - Simudex registries now expose `minimal-debian-terminal` through `/simulations/minimal-debian-terminal`.
 
 The Phase 4 adapter is intentionally not a full Debian VM yet. It validates the offline-only runtime boundary, exposes runtime and asset metadata through the terminal, supports multi-tab sessions through the shared contract, and keeps VM execution behind the worker protocol for the next phase.
@@ -205,10 +205,10 @@ npm run build:app -- --app=simudex
 
 ## Adding The First Simulation
 
-When a simulation is added, create a module folder under `src/simudex-simulations/`, then wire its contract/kernel in `src/core/core-registry.simudex.ts` and its Angular component loader in `src/core/tool-registry.simudex.ts`. Keep the module id, folder name, route id, and registry key identical so the existing validation scripts can protect the boundary.
+When a simulation is added, create a module folder under `src/apps/simudex/simulations/`, then wire its contract/kernel in `src/apps/simudex/core-registry.simudex.ts` and its Angular component loader in `src/apps/simudex/tool-registry.simudex.ts`. Keep the module id, folder name, route id, and registry key identical so the existing validation scripts can protect the boundary.
 
 The current first simulation follows this rule:
 
-- Folder: `src/simudex-simulations/minimal-debian-terminal/`
+- Folder: `src/apps/simudex/simulations/minimal-debian-terminal/`
 - Registry id: `minimal-debian-terminal`
 - Route: `/simulations/minimal-debian-terminal`
