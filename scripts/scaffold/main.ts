@@ -3,8 +3,8 @@ import { planCreateApp } from './app-plan';
 import { planCreateModule } from './module-plan';
 import { applyPlan, printPlan, validatePlan } from './fs-plan';
 
-export function main(): void {
-  const cli = parseCli();
+export async function main(): Promise<void> {
+  const cli = await parseCli();
   const plan = cli.command === 'create-module' ? planCreateModule(cli) : planCreateApp(cli);
   validatePlan(plan);
   printPlan(plan, cli.json);
@@ -18,7 +18,7 @@ export function main(): void {
 }
 
 try {
-  main();
+  await main();
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);

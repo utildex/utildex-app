@@ -21,6 +21,14 @@ npm run scaffold -- create-module --app=utildex --id=color-palette --dry-run
 npm run scaffold -- create-app --id=physidex --name=Physidex --kind=simulation --route=experiments --dry-run
 ```
 
+Interactive wizard mode is also available when you want guided prompts:
+
+```bash
+npm run scaffold -- --interactive
+```
+
+If you run `npm run scaffold` with no command in a TTY terminal, it also opens the interactive menu.
+
 ## Create Module
 
 `create-module` scaffolds into the current catalog-declared content root for the target app and kind. In the current layout, that means:
