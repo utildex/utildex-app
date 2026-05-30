@@ -306,7 +306,7 @@ Definition of done for PR4:
 - Temporary shims are minimal, documented, and explicitly scheduled for PR6 cleanup.
 - Platform/shared folders contain only cross-app infrastructure.
 
-### [ ] PR5 - Build And Runtime Rewiring
+### [x] PR5 - Build And Runtime Rewiring
 
 Objective:
 
@@ -314,6 +314,13 @@ Objective:
 - Ensure app lifecycle commands and checks are driven by app catalog metadata.
 - Validate sitemap/build/parity/integrity flows against the catalog-driven model.
 - Ensure adding a new app requires minimal manual touch points.
+
+Done note:
+
+- App lifecycle checks and validation scripts are catalog-driven through `APP_IDS`/`APP_CATALOG` (`check-integrity`, `check-tool-ids`, `check-app-architecture`, `check-app-parity`, `check-app-build-config`, and sitemap generation).
+- Aggregate build orchestration is now catalog-driven via `tsx scripts/run-app-command.ts build --all` (wired in `build:all`).
+- `run-app-command` now enforces explicit argument contracts (`--app` vs `--all`) and avoids shell-based child process invocation for safer cross-platform execution.
+- Validation gates remain green after rewiring (`prebuild:checks` and `build:all`).
 
 ### [ ] PR6 - Legacy Cleanup
 

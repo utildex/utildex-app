@@ -1,4 +1,5 @@
 import { spawnSync } from 'child_process';
+import * as path from 'path';
 import {
   APP_IDS,
   DEFAULT_APP_ID,
@@ -67,11 +68,27 @@ function parsePassthroughArgs(): string[] {
   return process.argv.slice(separatorIndex + 1);
 }
 
+function resolveCommand(command: string, args: string[]): { executable: string; argv: string[] } {
+  if (command === 'ng') {
+    const ngCliPath = path.join(process.cwd(), 'node_modules', '@angular', 'cli', 'bin', 'ng.js');
+    return {
+      executable: process.execPath,
+      argv: [ngCliPath, ...args],
+    };
+  }
+
+  return {
+    executable: command,
+    argv: args,
+  };
+}
+
 function run(command: string, args: string[]): void {
-  const result = spawnSync(command, args, {
+  const resolved = resolveCommand(command, args);
+  const result = spawnSync(resolved.executable, resolved.argv, {
     cwd: process.cwd(),
     stdio: 'inherit',
-    shell: process.platform === 'win32',
+    shell: false,
   });
 
   if (result.error) {
