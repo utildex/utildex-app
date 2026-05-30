@@ -10,16 +10,16 @@ Utildex is a **local-first**, **zoneless** Angular application designed for modu
 ## Architecture Overview
 
 Utildex is structured as a **Dual-App** repository:
-1. **Utildex:** The main utility platform. Tools are located in `src/utildex-tools/`.
-2. **Synedex:** A cognitive wellness and games platform. Games are located in `src/synedex-games/`.
+1. **Utildex:** The main utility platform. Tools are located in `src/apps/utildex/tools/`.
+2. **Synedex:** A cognitive wellness and games platform. Games are located in `src/apps/synedex/games/`.
 
 Both apps share the same core engine, services, and UI components. The separation is achieved through Angular build configurations and file replacements (e.g., `index.synedex.tsx`, `app.config.synedex.ts`). When adding a new feature, make sure it is placed in the correct directory.
 
 To keep the application fast and lightweight, both apps use a specific architectural pattern:
 
-1.  **Tool Contracts (`src/utildex-tools/*/*.contract.ts`):** Each tool declares metadata, type contract, widget config, and cost in a local contract file.
-2.  **Tool Kernels (`src/utildex-tools/*/*.kernel.ts`):** Pure processing logic is isolated from Angular/UI so it can be reused in pipelines and tested independently.
-3.  **Lazy Loading (`src/core/tool-registry.ts`):** Components, contracts, and kernels are loaded on demand via dynamic imports.
+1.  **Tool Contracts (`src/apps/utildex/tools/*/*.contract.ts`):** Each tool declares metadata, type contract, widget config, and cost in a local contract file.
+2.  **Tool Kernels (`src/apps/utildex/tools/*/*.kernel.ts`):** Pure processing logic is isolated from Angular/UI so it can be reused in pipelines and tested independently.
+3.  **Lazy Loading (`src/apps/utildex/tool-registry.ts`):** Components, contracts, and kernels are loaded on demand via dynamic imports.
 4.  **Zoneless Angular:** We do not use `Zone.js`. All state changes must be handled via **Signals**.
 
 ### Centralized Runtime Resources
@@ -90,7 +90,7 @@ Validation checklist for this use case:
 Follow these steps to integrate a new utility into the system.
 
 ### 1. Create Tool/Game Directory
-Create a new folder in `src/utildex-tools/` (for Utildex) or `src/synedex-games/` (for Synedex) using **kebab-case** (e.g., `src/utildex-tools/uuid-generator`).
+Create a new folder in `src/apps/utildex/tools/` (for Utildex) or `src/apps/synedex/games/` (for Synedex) using **kebab-case** (e.g., `src/apps/utildex/tools/uuid-generator`).
 
 ### 2. Scaffold Files
 Copy the contents of `src/templates/tool/` into your new directory. You should have:
@@ -113,12 +113,12 @@ This file defines how the app "sees" your tool.
 *   **cost**: One of `low`, `medium`, `high`.
 
 ```typescript
-import { ToolContract } from '../../core/tool-contract';
-import { TRAITS } from '../../core/types/traits';
-import { mapLocalizedField, mapLocalizedNestedField } from '../../core/i18n-mapper';
+import { ModuleContract } from '../../../../core/module-contract';
+import { TRAITS } from '../../../../core/types/traits';
+import { mapLocalizedField, mapLocalizedNestedField } from '../../../../core/i18n-mapper';
 import { contractI18n } from './i18n/contract.i18n';
 
-export const contract: ToolContract = {
+export const contract: ModuleContract = {
   id: 'uuid-generator',
   metadata: {
     name: mapLocalizedField(contractI18n, 'name'),
@@ -216,25 +216,25 @@ export class UuidGeneratorComponent {
 ### 5. Register the Tool (The Wiring)
 Since we don't scan directories at runtime, you must manually register the tool in **2 places**:
 
-1.  **Core registry (`src/core/core-registry.ts`):**
+1.  **Core registry (`src/apps/utildex/core-registry.ts`):**
     Add contract and kernel lazy loaders. The key must match your tool `id`.
     ```typescript
     export const CORE_REGISTRY = {
       // ... existing tools
       'uuid-generator': {
-        contract: () => import('../utildex-tools/uuid-generator/uuid-generator.contract').then((m) => m.contract),
-        kernel: () => import('../utildex-tools/uuid-generator/uuid-generator.kernel'),
+        contract: () => import('./tools/uuid-generator/uuid-generator.contract').then((m) => m.contract),
+        kernel: () => import('./tools/uuid-generator/uuid-generator.kernel'),
       },
     };
     ```
 
-2.  **UI component loader map (`src/core/tool-registry.ts`):**
+2.  **UI component loader map (`src/apps/utildex/tool-registry.ts`):**
     Add the component loader in `TOOL_COMPONENT_LOADERS`.
     ```typescript
     const TOOL_COMPONENT_LOADERS = {
       // ... existing tools
       'uuid-generator': () =>
-        import('../utildex-tools/uuid-generator/uuid-generator.component').then(
+        import('./tools/uuid-generator/uuid-generator.component').then(
           (m) => m.UuidGeneratorComponent,
         ),
     };
@@ -314,7 +314,7 @@ Utildex uses a **Scoped Translation** pattern. Each tool carries its own transla
 
 Quality rule: preserve proper language spelling and punctuation in translation files (including accents/diacritics such as French `é`, `à`, `ç`). Avoid ASCII-only transliteration for user-facing copy.
 
-1.  **Create translation files:** `src/utildex-tools/my-tool/i18n/en.ts`.
+1.  **Create translation files:** `src/apps/utildex/tools/my-tool/i18n/en.ts`.
     ```typescript
     export default {
       "TITLE": "My Tool",
@@ -332,7 +332,7 @@ Quality rule: preserve proper language spelling and punctuation in translation f
 
 Contract metadata i18n is separate from UI text i18n:
 
-1. Keep contract translations in `src/utildex-tools/<tool-id>/i18n/contract.i18n.ts` with language-first top-level keys.
+1. Keep contract translations in `src/apps/utildex/tools/<tool-id>/i18n/contract.i18n.ts` with language-first top-level keys.
 2. In `*.contract.ts`, map values with `mapLocalizedField(...)` and `mapLocalizedNestedField(...)`.
 3. Avoid embedding `{ en, fr, ... }` objects directly in contracts.
 

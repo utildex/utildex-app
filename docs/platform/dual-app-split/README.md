@@ -231,7 +231,7 @@ var saved = localStorage.getItem(appId + '-state-theme');
 ### Utildex-only (not bundled into Synedex)
 
 - `src/app.component.ts` and `app.routes.ts`
-- `src/utildex-tools/` — all tool components, contracts, kernels
+- `src/apps/utildex/tools/` — all tool components, contracts, kernels
 - Dashboard widget system (Utildex routes include it; Synedex routes do not)
 - Headless/MCP build (`dist-headless/`) — Synedex does **not** have a headless build
 
