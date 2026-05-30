@@ -111,7 +111,7 @@ Done note:
 - Updated scaffolder registry templates so new module entries include module kind metadata.
 - Added module-aware MCP compatibility resolution so only Utildex tool modules can default to MCP-compatible.
 
-### [ ] PR4 - App-First Filesystem Migration
+### [x] PR4 - App-First Filesystem Migration
 
 Objective:
 
@@ -119,6 +119,13 @@ Objective:
 - Keep platform/shared runtime code separated from app-owned code.
 - Preserve build output parity for existing apps while moving files.
 - Use temporary shims/re-exports only where needed to keep migration incremental.
+
+Done note:
+
+- All app-owned entry/runtime/module roots now have canonical homes under `src/apps/<appId>/...`.
+- `APP_CATALOG` source paths now point to canonical app-scoped locations for all current apps.
+- Compatibility shims remain in place for incremental safety and are explicitly marked for PR6 cleanup.
+- Validation gates (`prebuild:checks`, per-app builds, and `build:all`) pass after migration slices.
 
 Execution principles:
 
@@ -238,9 +245,9 @@ Progress note:
 
 4. Phase D - Migrate runtime app-owned source by app
 
-- [ ] Move shell/routes/registries/offline loaders/seo and app module roots into `src/apps/<appId>/...`.
-- [ ] Keep legacy import surfaces as re-exports where broad path rewrites would increase risk.
-- [ ] Update only the imports required for compilation; avoid opportunistic refactors.
+- [x] Move shell/routes/registries/offline loaders/seo and app module roots into `src/apps/<appId>/...`.
+- [x] Keep legacy import surfaces as re-exports where broad path rewrites would increase risk.
+- [x] Update only the imports required for compilation; avoid opportunistic refactors.
 
 Progress note:
 
@@ -248,11 +255,11 @@ Progress note:
 - Synedex and Simudex module roots are now migrated to `src/apps/synedex/games` and `src/apps/simudex/simulations`.
 - Utildex core/module/tool-space/article registries, offline loaders, and SEO root are now canonicalized to `src/apps/utildex/...` with temporary compatibility shims at previous paths.
 - Utildex shell and routes are now canonicalized to `src/apps/utildex/shell/` and `src/apps/utildex/routing/` with temporary root-level compatibility shims.
-- Utildex content root remains `src/utildex-tools` pending the dedicated follow-up decision for default-app module placement.
+- Utildex module root is now canonicalized to `src/apps/utildex/tools` and the Utildex registries now import from that app-scoped path.
 
 5. Phase E - Stabilize and document
 
-- [ ] Ensure every app `source.*` entry in `APP_CATALOG` points to the new location.
+- [x] Ensure every app `source.*` entry in `APP_CATALOG` points to the new location.
 - [x] Add a short migration map in docs showing old and new canonical roots.
 - [x] Mark compatibility shims with a clear PR6 cleanup note.
 
@@ -266,7 +273,7 @@ Migration map (current):
 | Simudex runtime roots | `src/simudex-simulations`, root-level Simudex app/runtime files                                                                                                                         | `src/apps/simudex/simulations` and `src/apps/simudex/...`                                                                       |
 | Utildex runtime roots | `src/core/core-registry.ts`, `src/core/tool-registry.ts`, `src/data/tool-space-registry.ts`, `src/services/offline-route-loaders.ts`, `src/data/article-registry.ts`, `src/seo/utildex` | `src/apps/utildex/{core-registry.ts,tool-registry.ts,tool-space-registry.ts,offline-route-loaders.ts,article-registry.ts,seo/}` |
 | Utildex shell/routes  | `src/app.component.ts`, `src/app.component.html`, `src/app.routes.ts`                                                                                                                   | `src/apps/utildex/shell/` and `src/apps/utildex/routing/`                                                                       |
-| Utildex module root   | `src/utildex-tools`                                                                                                                                                                     | Pending follow-up decision in PR4 phase sequence                                                                                |
+| Utildex module root   | `src/utildex-tools`                                                                                                                                                                     | `src/apps/utildex/tools`                                                                                                        |
 
 Shim policy (temporary compatibility files):
 

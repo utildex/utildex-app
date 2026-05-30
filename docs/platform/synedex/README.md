@@ -62,19 +62,19 @@ Synedex has its own product and game UX contract. These documents are the target
 
 ## How It Differs from Utildex
 
-| Concern                   | Utildex                | Synedex                                  |
-| ------------------------- | ---------------------- | ---------------------------------------- |
-| `appId`                   | `utildex`              | `synedex`                                |
-| `appName`                 | `Utildex`              | `Synedex`                                |
-| Content directory         | `src/utildex-tools/`   | `src/apps/synedex/games/`                |
-| Route segment for content | `tools`                | `games`                                  |
-| Landing page              | `pages/home/`          | `pages/synedex-welcome/`                 |
-| Root component            | `app.component.ts`     | `app.component.synedex.ts`               |
-| Route file                | `src/app.routes.ts`    | `src/apps/synedex/app.routes.synedex.ts` |
-| Headless/MCP build        | Yes (`dist-headless/`) | **No**                                   |
-| Dashboard widget system   | Yes                    | No                                       |
-| Storage key prefix        | `utildex-`             | `synedex-`                               |
-| IDB database              | `utildex-db`           | `synedex-db`                             |
+| Concern                   | Utildex                   | Synedex                                  |
+| ------------------------- | ------------------------- | ---------------------------------------- |
+| `appId`                   | `utildex`                 | `synedex`                                |
+| `appName`                 | `Utildex`                 | `Synedex`                                |
+| Content directory         | `src/apps/utildex/tools/` | `src/apps/synedex/games/`                |
+| Route segment for content | `tools`                   | `games`                                  |
+| Landing page              | `pages/home/`             | `pages/synedex-welcome/`                 |
+| Root component            | `app.component.ts`        | `app.component.synedex.ts`               |
+| Route file                | `src/app.routes.ts`       | `src/apps/synedex/app.routes.synedex.ts` |
+| Headless/MCP build        | Yes (`dist-headless/`)    | **No**                                   |
+| Dashboard widget system   | Yes                       | No                                       |
+| Storage key prefix        | `utildex-`                | `synedex-`                               |
+| IDB database              | `utildex-db`              | `synedex-db`                             |
 
 ---
 

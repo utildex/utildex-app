@@ -1,0 +1,17 @@
+﻿export default {
+  TITLE: 'Unir PDF',
+  TITLE_SHORT: 'Unir',
+  DROP_LABEL: 'Suelte PDFs aqu├¡',
+  DROP_EXPLICIT: 'Soltar para unir',
+  ADD_FILES: 'A├▒adir Archivos',
+  BTN_MERGE: 'Unir PDF',
+  BTN_MERGE_SHORT: 'Unir',
+  BTN_RESET: 'Reiniciar',
+  BTN_DOWNLOAD: 'Descargar',
+  EMPTY_STATE: 'Ning├║n archivo seleccionado.',
+  PROCESSING: 'Uniendo...',
+  SUCCESS: '┬íCompletado!',
+  ERR_INVALID: 'Archivo inv├ílido. Solo se permiten PDF.',
+  FILES: 'archivos',
+  UPLOAD_PDF: 'Subir PDFs',
+};

@@ -1,4 +1,4 @@
-import type { ModuleContract } from '../../core/module-contract';
+﻿import type { ModuleContract } from '../../core/module-contract';
 import type { AppId } from '../../core/app.config';
 import type { ModuleKind } from '../../core/app-catalog';
 
@@ -12,201 +12,162 @@ export interface CoreRegistryEntry {
 export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
   'base64-encoder-decoder': {
     contract: () =>
-      import('../../utildex-tools/base64-encoder-decoder/base64-encoder-decoder.contract').then(
+      import('./tools/base64-encoder-decoder/base64-encoder-decoder.contract').then(
         (m) => m.contract,
       ),
-    kernel: () =>
-      import('../../utildex-tools/base64-encoder-decoder/base64-encoder-decoder.kernel'),
+    kernel: () => import('./tools/base64-encoder-decoder/base64-encoder-decoder.kernel'),
   },
   'code-snippet-viewer': {
     contract: () =>
-      import('../../utildex-tools/code-snippet-viewer/code-snippet-viewer.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/code-snippet-viewer/code-snippet-viewer.kernel'),
+      import('./tools/code-snippet-viewer/code-snippet-viewer.contract').then((m) => m.contract),
+    kernel: () => import('./tools/code-snippet-viewer/code-snippet-viewer.kernel'),
   },
   'diff-checker': {
-    contract: () =>
-      import('../../utildex-tools/diff-checker/diff-checker.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/diff-checker/diff-checker.kernel'),
+    contract: () => import('./tools/diff-checker/diff-checker.contract').then((m) => m.contract),
+    kernel: () => import('./tools/diff-checker/diff-checker.kernel'),
   },
   'hash-generator': {
     contract: () =>
-      import('../../utildex-tools/hash-generator/hash-generator.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/hash-generator/hash-generator.kernel'),
+      import('./tools/hash-generator/hash-generator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/hash-generator/hash-generator.kernel'),
   },
   'bmi-calculator': {
     contract: () =>
-      import('../../utildex-tools/bmi-calculator/bmi-calculator.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/bmi-calculator/bmi-calculator.kernel'),
+      import('./tools/bmi-calculator/bmi-calculator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/bmi-calculator/bmi-calculator.kernel'),
   },
   'whr-calculator': {
     contract: () =>
-      import('../../utildex-tools/whr-calculator/whr-calculator.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/whr-calculator/whr-calculator.kernel'),
+      import('./tools/whr-calculator/whr-calculator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/whr-calculator/whr-calculator.kernel'),
   },
   'bai-calculator': {
     contract: () =>
-      import('../../utildex-tools/bai-calculator/bai-calculator.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/bai-calculator/bai-calculator.kernel'),
+      import('./tools/bai-calculator/bai-calculator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/bai-calculator/bai-calculator.kernel'),
   },
   'body-fat-deurenberg': {
     contract: () =>
-      import('../../utildex-tools/body-fat-deurenberg/body-fat-deurenberg.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/body-fat-deurenberg/body-fat-deurenberg.kernel'),
+      import('./tools/body-fat-deurenberg/body-fat-deurenberg.contract').then((m) => m.contract),
+    kernel: () => import('./tools/body-fat-deurenberg/body-fat-deurenberg.kernel'),
   },
   'absi-calculator': {
     contract: () =>
-      import('../../utildex-tools/absi-calculator/absi-calculator.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/absi-calculator/absi-calculator.kernel'),
+      import('./tools/absi-calculator/absi-calculator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/absi-calculator/absi-calculator.kernel'),
   },
   'homa-calculator': {
     contract: () =>
-      import('../../utildex-tools/homa-calculator/homa-calculator.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/homa-calculator/homa-calculator.kernel'),
+      import('./tools/homa-calculator/homa-calculator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/homa-calculator/homa-calculator.kernel'),
   },
   'image-converter': {
     contract: () =>
-      import('../../utildex-tools/image-converter/image-converter.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/image-converter/image-converter.kernel'),
+      import('./tools/image-converter/image-converter.contract').then((m) => m.contract),
+    kernel: () => import('./tools/image-converter/image-converter.kernel'),
   },
   'image-resizer': {
-    contract: () =>
-      import('../../utildex-tools/image-resizer/image-resizer.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/image-resizer/image-resizer.kernel'),
+    contract: () => import('./tools/image-resizer/image-resizer.contract').then((m) => m.contract),
+    kernel: () => import('./tools/image-resizer/image-resizer.kernel'),
   },
   'img-to-pdf': {
-    contract: () =>
-      import('../../utildex-tools/img-to-pdf/img-to-pdf.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/img-to-pdf/img-to-pdf.kernel'),
+    contract: () => import('./tools/img-to-pdf/img-to-pdf.contract').then((m) => m.contract),
+    kernel: () => import('./tools/img-to-pdf/img-to-pdf.kernel'),
   },
   'json-formatter': {
     contract: () =>
-      import('../../utildex-tools/json-formatter/json-formatter.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/json-formatter/json-formatter.kernel'),
+      import('./tools/json-formatter/json-formatter.contract').then((m) => m.contract),
+    kernel: () => import('./tools/json-formatter/json-formatter.kernel'),
   },
   'jwt-decoder': {
-    contract: () =>
-      import('../../utildex-tools/jwt-decoder/jwt-decoder.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/jwt-decoder/jwt-decoder.kernel'),
+    contract: () => import('./tools/jwt-decoder/jwt-decoder.contract').then((m) => m.contract),
+    kernel: () => import('./tools/jwt-decoder/jwt-decoder.kernel'),
   },
   'lorem-ipsum': {
-    contract: () =>
-      import('../../utildex-tools/lorem-ipsum/lorem-ipsum.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/lorem-ipsum/lorem-ipsum.kernel'),
+    contract: () => import('./tools/lorem-ipsum/lorem-ipsum.contract').then((m) => m.contract),
+    kernel: () => import('./tools/lorem-ipsum/lorem-ipsum.kernel'),
   },
   'markdown-preview': {
     contract: () =>
-      import('../../utildex-tools/markdown-preview/markdown-preview.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/markdown-preview/markdown-preview.kernel'),
+      import('./tools/markdown-preview/markdown-preview.contract').then((m) => m.contract),
+    kernel: () => import('./tools/markdown-preview/markdown-preview.kernel'),
   },
   'merge-pdf': {
-    contract: () =>
-      import('../../utildex-tools/merge-pdf/merge-pdf.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/merge-pdf/merge-pdf.kernel'),
+    contract: () => import('./tools/merge-pdf/merge-pdf.contract').then((m) => m.contract),
+    kernel: () => import('./tools/merge-pdf/merge-pdf.kernel'),
   },
   'password-generator': {
     contract: () =>
-      import('../../utildex-tools/password-generator/password-generator.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/password-generator/password-generator.kernel'),
+      import('./tools/password-generator/password-generator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/password-generator/password-generator.kernel'),
   },
   'pdf-to-img': {
-    contract: () =>
-      import('../../utildex-tools/pdf-to-img/pdf-to-img.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/pdf-to-img/pdf-to-img.kernel'),
+    contract: () => import('./tools/pdf-to-img/pdf-to-img.contract').then((m) => m.contract),
+    kernel: () => import('./tools/pdf-to-img/pdf-to-img.kernel'),
   },
   'qr-studio': {
-    contract: () =>
-      import('../../utildex-tools/qr-studio/qr-studio.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/qr-studio/qr-studio.kernel'),
+    contract: () => import('./tools/qr-studio/qr-studio.contract').then((m) => m.contract),
+    kernel: () => import('./tools/qr-studio/qr-studio.kernel'),
   },
   'rotate-pdf': {
-    contract: () =>
-      import('../../utildex-tools/rotate-pdf/rotate-pdf.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/rotate-pdf/rotate-pdf.kernel'),
+    contract: () => import('./tools/rotate-pdf/rotate-pdf.contract').then((m) => m.contract),
+    kernel: () => import('./tools/rotate-pdf/rotate-pdf.kernel'),
   },
   'simple-2d-plots': {
     contract: () =>
-      import('../../utildex-tools/simple-2d-plots/simple-2d-plots.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/simple-2d-plots/simple-2d-plots.kernel'),
+      import('./tools/simple-2d-plots/simple-2d-plots.contract').then((m) => m.contract),
+    kernel: () => import('./tools/simple-2d-plots/simple-2d-plots.kernel'),
   },
   'split-pdf': {
-    contract: () =>
-      import('../../utildex-tools/split-pdf/split-pdf.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/split-pdf/split-pdf.kernel'),
+    contract: () => import('./tools/split-pdf/split-pdf.contract').then((m) => m.contract),
+    kernel: () => import('./tools/split-pdf/split-pdf.kernel'),
   },
   'unit-converter': {
     contract: () =>
-      import('../../utildex-tools/unit-converter/unit-converter.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/unit-converter/unit-converter.kernel'),
+      import('./tools/unit-converter/unit-converter.contract').then((m) => m.contract),
+    kernel: () => import('./tools/unit-converter/unit-converter.kernel'),
   },
   'url-encoder-decoder': {
     contract: () =>
-      import('../../utildex-tools/url-encoder-decoder/url-encoder-decoder.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/url-encoder-decoder/url-encoder-decoder.kernel'),
+      import('./tools/url-encoder-decoder/url-encoder-decoder.contract').then((m) => m.contract),
+    kernel: () => import('./tools/url-encoder-decoder/url-encoder-decoder.kernel'),
   },
   'date-time-calculator': {
     contract: () =>
-      import('../../utildex-tools/date-time-calculator/date-time-calculator.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/date-time-calculator/date-time-calculator.kernel'),
+      import('./tools/date-time-calculator/date-time-calculator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/date-time-calculator/date-time-calculator.kernel'),
   },
   'timezone-converter': {
     contract: () =>
-      import('../../utildex-tools/timezone-converter/timezone-converter.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/timezone-converter/timezone-converter.kernel'),
+      import('./tools/timezone-converter/timezone-converter.contract').then((m) => m.contract),
+    kernel: () => import('./tools/timezone-converter/timezone-converter.kernel'),
   },
   'meeting-time-finder': {
     contract: () =>
-      import('../../utildex-tools/meeting-time-finder/meeting-time-finder.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/meeting-time-finder/meeting-time-finder.kernel'),
+      import('./tools/meeting-time-finder/meeting-time-finder.contract').then((m) => m.contract),
+    kernel: () => import('./tools/meeting-time-finder/meeting-time-finder.kernel'),
   },
   'timestamp-converter': {
     contract: () =>
-      import('../../utildex-tools/timestamp-converter/timestamp-converter.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/timestamp-converter/timestamp-converter.kernel'),
+      import('./tools/timestamp-converter/timestamp-converter.contract').then((m) => m.contract),
+    kernel: () => import('./tools/timestamp-converter/timestamp-converter.kernel'),
   },
   'time-format-converter': {
     contract: () =>
-      import('../../utildex-tools/time-format-converter/time-format-converter.contract').then(
+      import('./tools/time-format-converter/time-format-converter.contract').then(
         (m) => m.contract,
       ),
-    kernel: () => import('../../utildex-tools/time-format-converter/time-format-converter.kernel'),
+    kernel: () => import('./tools/time-format-converter/time-format-converter.kernel'),
   },
   'cron-explainer': {
     contract: () =>
-      import('../../utildex-tools/cron-explainer/cron-explainer.contract').then((m) => m.contract),
-    kernel: () => import('../../utildex-tools/cron-explainer/cron-explainer.kernel'),
+      import('./tools/cron-explainer/cron-explainer.contract').then((m) => m.contract),
+    kernel: () => import('./tools/cron-explainer/cron-explainer.kernel'),
   },
   'ics-event-generator': {
     contract: () =>
-      import('../../utildex-tools/ics-event-generator/ics-event-generator.contract').then(
-        (m) => m.contract,
-      ),
-    kernel: () => import('../../utildex-tools/ics-event-generator/ics-event-generator.kernel'),
+      import('./tools/ics-event-generator/ics-event-generator.contract').then((m) => m.contract),
+    kernel: () => import('./tools/ics-event-generator/ics-event-generator.kernel'),
   },
 };
 

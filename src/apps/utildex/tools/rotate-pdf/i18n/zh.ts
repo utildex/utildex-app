@@ -1,0 +1,18 @@
+﻿export default {
+  DROP_LABEL: 'µïûÕàÑ PDF',
+  BTN_ROTATE_RIGHT: 'Úí║µùÂÚÆê 90┬░',
+  BTN_ROTATE_LEFT: 'ÚÇåµùÂÚÆê 90┬░',
+  BTN_ROTATE_180: '180┬░',
+  BTN_SAVE: 'õ┐ØÕ¡ÿ PDF',
+  BTN_RESET: 'Úçìþ¢«',
+  SUCCESS: 'µùïÞ¢¼ÕÀ▓õ┐ØÕ¡ÿ´╝ü',
+  PROCESSING: 'ÕñäþÉåõ©¡...',
+  WIDGET_EMPTY: 'µïûÕàÑ PDF',
+  LABEL_MODE: 'µùïÞ¢¼µ¿íÕ╝Å',
+  MODE_ALL: 'µëÇµ£ëÚíÁÚØó',
+  MODE_ODD: 'ÕÑçµò░ÚíÁ',
+  MODE_EVEN: 'ÕüÂµò░ÚíÁ',
+  MODE_SPECIFIC: 'þë╣Õ«ÜÚíÁÚØó',
+  PLACEHOLDER_RANGE: 'õ¥ïÕªé´╝Ü1-5, 8',
+  UPLOAD_PDF: 'õ©èõ╝á PDF',
+};

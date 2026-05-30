@@ -94,7 +94,7 @@ export const APP_CATALOG = {
       moduleRegistryFile: 'src/apps/utildex/tool-registry.ts',
       toolSpaceRegistryFile: 'src/apps/utildex/tool-space-registry.ts',
       offlineRouteLoadersFile: 'src/apps/utildex/offline-route-loaders.ts',
-      contentRoots: [{ label: 'utildex-tools', kind: 'tool', path: 'src/utildex-tools' }],
+      contentRoots: [{ label: 'utildex-tools', kind: 'tool', path: 'src/apps/utildex/tools' }],
       articleRegistryFile: 'src/apps/utildex/article-registry.ts',
       seoDir: 'src/apps/utildex/seo',
     },

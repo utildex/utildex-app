@@ -1,0 +1,17 @@
+﻿export default {
+  TITLE: 'ÕÉêÕ╣Â PDF',
+  TITLE_SHORT: 'ÕÉêÕ╣Â',
+  DROP_LABEL: 'Õ░å PDF µïûÕê░µ¡ñÕñä',
+  DROP_EXPLICIT: 'µïûÕàÑõ╗ÑÕÉêÕ╣Â',
+  ADD_FILES: 'µÀ╗Õèáµûçõ╗Â',
+  BTN_MERGE: 'ÕÉêÕ╣Â PDF',
+  BTN_MERGE_SHORT: 'ÕÉêÕ╣Â',
+  BTN_RESET: 'Úçìþ¢«',
+  BTN_DOWNLOAD: 'õ©ïÞ¢¢ÕÉêÕ╣Âµûçõ╗Â',
+  EMPTY_STATE: 'µ£¬ÚÇëµï®µûçõ╗ÂÒÇé',
+  PROCESSING: 'ÕÉêÕ╣Âõ©¡...',
+  SUCCESS: 'ÕÉêÕ╣ÂÕ«îµêÉ´╝ü',
+  ERR_INVALID: 'µùáµòêµûçõ╗Âþ▒╗Õ×ïÒÇéõ╗àµö»µîü PDFÒÇé',
+  FILES: 'õ©¬µûçõ╗Â',
+  UPLOAD_PDF: 'õ©èõ╝á PDF',
+};

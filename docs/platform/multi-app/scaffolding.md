@@ -33,7 +33,7 @@ If you run `npm run scaffold` with no command in a TTY terminal, it also opens t
 
 `create-module` scaffolds into the current catalog-declared content root for the target app and kind. In the current layout, that means:
 
-- `tool` modules for Utildex go under `src/utildex-tools/`.
+- `tool` modules for Utildex go under `src/apps/utildex/tools/`.
 - `game` modules for Synedex go under `src/apps/synedex/games/`.
 - `simulation` modules for Simudex go under `src/apps/simudex/simulations/`.
 

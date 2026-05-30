@@ -1,0 +1,18 @@
+﻿export default {
+  DROP_LABEL: 'Suelte PDF',
+  BTN_ROTATE_RIGHT: '90┬░ Der.',
+  BTN_ROTATE_LEFT: '90┬░ Izq.',
+  BTN_ROTATE_180: '180┬░',
+  BTN_SAVE: 'Guardar',
+  BTN_RESET: 'Reiniciar',
+  SUCCESS: '┬íRotaci├│n guardada!',
+  PROCESSING: 'Procesando...',
+  WIDGET_EMPTY: 'Suelte PDF',
+  LABEL_MODE: 'Modo de rotaci├│n',
+  MODE_ALL: 'Todas las p├íginas',
+  MODE_ODD: 'P├íginas impares',
+  MODE_EVEN: 'P├íginas pares',
+  MODE_SPECIFIC: 'P├íginas espec├¡ficas',
+  PLACEHOLDER_RANGE: 'ej., 1-5, 8',
+  UPLOAD_PDF: 'Subir PDF',
+};
