@@ -1,4 +1,5 @@
-import { pascalCase } from '../common';
+import { objectKey, pascalCase } from '../common';
+import { SCAFFOLD_LANGUAGE_CODES, languageImportIdentifier } from '../languages';
 import type { AppScaffoldOptions } from '../types';
 
 export function indexTsxTemplate(options: AppScaffoldOptions): string {
@@ -89,6 +90,13 @@ export function indexHtmlTemplate(options: AppScaffoldOptions): string {
 
 export function appComponentTsTemplate(options: AppScaffoldOptions): string {
   const className = `${pascalCase(options.id)}AppComponent`;
+  const languageImports = SCAFFOLD_LANGUAGE_CODES.map(
+    (code) => `import ${languageImportIdentifier(code)} from './i18n/${code}';`,
+  ).join('\n');
+  const translationLoaders = SCAFFOLD_LANGUAGE_CODES.map(
+    (code) => `${objectKey(code)}: () => ${languageImportIdentifier(code)}`,
+  ).join(', ');
+
   return `import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -109,10 +117,7 @@ import { ThemeService } from './services/theme.service';
 import { ToastComponent } from './components/toast/toast.component';
 import { AppFooterComponent } from './components/app-footer/app-footer.component';
 import { provideTranslation, ScopedTranslationService } from './core/i18n';
-import en from './i18n/en';
-import fr from './i18n/fr';
-import es from './i18n/es';
-import zh from './i18n/zh';
+${languageImports}
 
 @Component({
   selector: 'app-root',
@@ -132,7 +137,7 @@ import zh from './i18n/zh';
     LocalLinkPipe,
   ],
   templateUrl: './app.component.${options.id}.html',
-  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
+  providers: [provideTranslation({ ${translationLoaders} })],
 })
 export class ${className} implements OnInit {
   private readonly router = inject(Router);

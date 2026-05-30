@@ -29,6 +29,7 @@ import {
   moduleRuntimeI18nTemplate,
   moduleTemplate,
 } from './module-templates';
+import { SCAFFOLD_LANGUAGE_CODES } from './languages';
 import { insertObjectEntry } from './source-edit';
 import type { CliOptions, ModuleScaffoldOptions, ScaffoldPlan } from './types';
 
@@ -77,6 +78,13 @@ export function planCreateModule(cli: CliOptions): ScaffoldPlan {
   const coreRegistryFile = app.source.coreRegistryFile;
   const toolRegistryFile = app.source.toolRegistryFile;
   const className = `${pascalCase(options.id)}Component`;
+  const runtimeI18nFiles = SCAFFOLD_LANGUAGE_CODES.map((languageCode) =>
+    createOperation(
+      repoPath(moduleDir, 'i18n', `${languageCode}.ts`),
+      `runtime translations (${languageCode})`,
+      moduleRuntimeI18nTemplate(options),
+    ),
+  );
 
   const moduleFiles = [
     createOperation(
@@ -114,26 +122,7 @@ export function planCreateModule(cli: CliOptions): ScaffoldPlan {
       'module contract translations',
       moduleContractI18nTemplate(options),
     ),
-    createOperation(
-      repoPath(moduleDir, 'i18n', 'en.ts'),
-      'English runtime translations',
-      moduleRuntimeI18nTemplate(options),
-    ),
-    createOperation(
-      repoPath(moduleDir, 'i18n', 'fr.ts'),
-      'French runtime translations',
-      moduleRuntimeI18nTemplate(options),
-    ),
-    createOperation(
-      repoPath(moduleDir, 'i18n', 'es.ts'),
-      'Spanish runtime translations',
-      moduleRuntimeI18nTemplate(options),
-    ),
-    createOperation(
-      repoPath(moduleDir, 'i18n', 'zh.ts'),
-      'Chinese runtime translations',
-      moduleRuntimeI18nTemplate(options),
-    ),
+    ...runtimeI18nFiles,
   ];
 
   const coreSource = readText(coreRegistryFile);

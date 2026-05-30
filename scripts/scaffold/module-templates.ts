@@ -1,10 +1,12 @@
 import {
   escapeSingleQuoted,
   moduleNoun,
+  objectKey,
   pascalCase,
   relativeImport,
   repoPath,
 } from './common';
+import { SCAFFOLD_LANGUAGE_CODES, languageImportIdentifier } from './languages';
 import type { ModuleScaffoldOptions } from './types';
 
 export function moduleComponentTemplate(options: ModuleScaffoldOptions): string {
@@ -12,21 +14,24 @@ export function moduleComponentTemplate(options: ModuleScaffoldOptions): string 
   const moduleDir = repoPath(options.contentRoot, options.id);
   const coreI18n = relativeImport(moduleDir, 'src/core/i18n');
   const toolLayout = relativeImport(moduleDir, 'src/components/tool-layout/tool-layout.component');
+  const languageImports = SCAFFOLD_LANGUAGE_CODES.map(
+    (code) => `import ${languageImportIdentifier(code)} from './i18n/${code}';`,
+  ).join('\n');
+  const translationLoaders = SCAFFOLD_LANGUAGE_CODES.map(
+    (code) => `${objectKey(code)}: () => ${languageImportIdentifier(code)}`,
+  ).join(', ');
 
   return `import { CommonModule } from '@angular/common';
 import { Component, inject, input } from '@angular/core';
 import { ToolLayoutComponent } from '${toolLayout}';
 import { provideTranslation, ScopedTranslationService } from '${coreI18n}';
-import en from './i18n/en';
-import fr from './i18n/fr';
-import es from './i18n/es';
-import zh from './i18n/zh';
+${languageImports}
 
 @Component({
   selector: 'app-${options.id}',
   standalone: true,
   imports: [CommonModule, ToolLayoutComponent],
-  providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
+  providers: [provideTranslation({ ${translationLoaders} })],
   templateUrl: './${options.id}.component.html',
   styleUrl: './${options.id}.component.css',
 })
@@ -133,23 +138,12 @@ export const contract: ToolContract = {
 export function moduleContractI18nTemplate(options: ModuleScaffoldOptions): string {
   const name = escapeSingleQuoted(options.name);
   const description = escapeSingleQuoted(options.description);
+  const entries = SCAFFOLD_LANGUAGE_CODES.map(
+    (code) => `  ${objectKey(code)}: {\n    name: '${name}',\n    description: '${description}',\n  }`,
+  ).join(',\n');
+
   return `export const contractI18n = {
-  en: {
-    name: '${name}',
-    description: '${description}',
-  },
-  fr: {
-    name: '${name}',
-    description: '${description}',
-  },
-  es: {
-    name: '${name}',
-    description: '${description}',
-  },
-  zh: {
-    name: '${name}',
-    description: '${description}',
-  },
+${entries}
 } as const;
 `;
 }

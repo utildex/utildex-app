@@ -54,6 +54,8 @@ Optional options:
 
 Planned output includes component, template, styles, kernel, contract, runtime i18n, contract i18n, barrel export, and registry updates for the app's core/component registries.
 
+Runtime and contract i18n files are generated from `src/data/languages.ts`. Adding a new language there automatically updates future scaffold output.
+
 ## Create App
 
 `create-app` bootstraps a new app variant using the current multi-app bundle boundary. It creates app files and updates the shared coordination files needed by the current Angular setup.
