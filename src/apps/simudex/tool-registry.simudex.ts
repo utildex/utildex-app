@@ -1,8 +1,8 @@
 import { Type } from '@angular/core';
-import { ModuleContract } from './module-contract';
-import { getCoreRegistryForApp } from './core-registry';
-import { getAppId, type AppId } from './app.config';
-import type { ModuleKind } from './app-catalog';
+import { ModuleContract } from '../../core/module-contract';
+import { getCoreRegistryForApp } from './core-registry.simudex';
+import { getAppId, type AppId } from '../../core/app.config';
+import type { ModuleKind } from '../../core/app-catalog';
 
 export interface ModuleRegistrySourceEntry {
   appName?: AppId | 'shared';
@@ -16,7 +16,7 @@ type ComponentLoader = () => Promise<Type<unknown>>;
 
 const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
   'minimal-debian-terminal': () =>
-    import('../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.component').then(
+    import('../../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.component').then(
       (m) => m.MinimalDebianTerminalComponent,
     ),
 };

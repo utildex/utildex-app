@@ -21,6 +21,11 @@ function normalized(value: string): string {
   return value.replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/, '');
 }
 
+function isAllowedSeoDir(value: string): boolean {
+  const seoDir = normalized(value);
+  return seoDir.startsWith('src/seo/') || /^src\/apps\/[^/]+\/seo(?:\/|$)/.test(seoDir);
+}
+
 function isPortableRelativePath(value: string): boolean {
   if (!value) return false;
   if (value.includes('\\')) return false;
@@ -132,8 +137,12 @@ function checkAppCatalogEntry(issues: CheckIssue[], catalogKey: AppId, app: AppC
     addIssue(issues, catalogKey, 'outputPath must stay under dist/.');
   }
 
-  if (!normalized(app.source.seoDir).startsWith('src/seo/')) {
-    addIssue(issues, catalogKey, 'source.seoDir must stay under src/seo/.');
+  if (!isAllowedSeoDir(app.source.seoDir)) {
+    addIssue(
+      issues,
+      catalogKey,
+      'source.seoDir must stay under src/seo/ or src/apps/<appId>/seo/.',
+    );
   }
 
   if (app.source.articleRegistryFile) {

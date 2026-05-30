@@ -8,8 +8,8 @@ import {
 } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { SynedexAppComponent } from '../../../app.component.synedex';
-import { routes } from '../../../app.routes.synedex';
+import { SynedexAppComponent } from '../app.component.synedex';
+import { routes } from '../app.routes.synedex';
 import { GlobalErrorHandler } from '../../../core/global-error-handler';
 import { TOUR_STEPS } from '../../../core/tour.config';
 

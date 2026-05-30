@@ -9,10 +9,10 @@ import { ErrorHandler, isDevMode, provideZonelessChangeDetection } from '@angula
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withPreloading, NoPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { ${className} } from './src/app.component.${options.id}';
-import { routes } from './src/app.routes.${options.id}';
-import { GlobalErrorHandler } from './src/core/global-error-handler';
-import { TOUR_STEPS } from './src/core/tour.config';
+import { ${className} } from '../app.component.${options.id}';
+import { routes } from '../app.routes.${options.id}';
+import { GlobalErrorHandler } from '../../../core/global-error-handler';
+import { TOUR_STEPS } from '../../../core/tour.config';
 
 const isLocalhost =
   typeof window !== 'undefined' &&
@@ -72,7 +72,7 @@ export function indexHtmlTemplate(options: AppScaffoldOptions): string {
     <meta property="og:title" content="${options.name}" />
     <meta property="og:description" content="${options.description}" />
 
-    <link rel="manifest" href="/manifest.${options.id}.webmanifest" />
+    <link rel="manifest" href="/manifest.webmanifest" />
   </head>
 
   <body class="overflow-x-hidden bg-transparent text-slate-900 transition-colors duration-300 dark:text-slate-100">
@@ -91,7 +91,7 @@ export function indexHtmlTemplate(options: AppScaffoldOptions): string {
 export function appComponentTsTemplate(options: AppScaffoldOptions): string {
   const className = `${pascalCase(options.id)}AppComponent`;
   const languageImports = SCAFFOLD_LANGUAGE_CODES.map(
-    (code) => `import ${languageImportIdentifier(code)} from './i18n/${code}';`,
+    (code) => `import ${languageImportIdentifier(code)} from '../../i18n/${code}';`,
   ).join('\n');
   const translationLoaders = SCAFFOLD_LANGUAGE_CODES.map(
     (code) => `${objectKey(code)}: () => ${languageImportIdentifier(code)}`,
@@ -100,23 +100,23 @@ export function appComponentTsTemplate(options: AppScaffoldOptions): string {
   return `import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { AppUpdateService } from './services/app-update.service';
-import { AppConfigService } from './services/app-config.service';
-import { BackgroundComponent } from './components/background/background.component';
-import { BubbleDirective } from './directives/bubble.directive';
-import { CommandPaletteComponent } from './components/command-palette/command-palette.component';
-import { ErrorOverlayComponent } from './components/error-overlay/error-overlay.component';
-import { FontLoaderService } from './services/font-loader.service';
-import { I18nService } from './services/i18n.service';
-import { LocalLinkPipe } from './core/pipes/local-link.pipe';
-import { NetworkStatusComponent } from './components/network-status/network-status.component';
-import { SeoService } from './services/seo.service';
-import { SettingsModalComponent } from './components/settings-modal/settings-modal.component';
-import { ShortcutService } from './services/shortcut.service';
-import { ThemeService } from './services/theme.service';
-import { ToastComponent } from './components/toast/toast.component';
-import { AppFooterComponent } from './components/app-footer/app-footer.component';
-import { provideTranslation, ScopedTranslationService } from './core/i18n';
+import { AppUpdateService } from '../../services/app-update.service';
+import { AppConfigService } from '../../services/app-config.service';
+import { BackgroundComponent } from '../../components/background/background.component';
+import { BubbleDirective } from '../../directives/bubble.directive';
+import { CommandPaletteComponent } from '../../components/command-palette/command-palette.component';
+import { ErrorOverlayComponent } from '../../components/error-overlay/error-overlay.component';
+import { FontLoaderService } from '../../services/font-loader.service';
+import { I18nService } from '../../services/i18n.service';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
+import { NetworkStatusComponent } from '../../components/network-status/network-status.component';
+import { SeoService } from '../../services/seo.service';
+import { SettingsModalComponent } from '../../components/settings-modal/settings-modal.component';
+import { ShortcutService } from '../../services/shortcut.service';
+import { ThemeService } from '../../services/theme.service';
+import { ToastComponent } from '../../components/toast/toast.component';
+import { AppFooterComponent } from '../../components/app-footer/app-footer.component';
+import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 ${languageImports}
 
 @Component({

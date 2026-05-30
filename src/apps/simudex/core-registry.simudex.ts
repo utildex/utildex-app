@@ -1,6 +1,6 @@
-import type { ModuleContract } from './module-contract';
-import type { AppId } from './app.config';
-import type { ModuleKind } from './app-catalog';
+import type { ModuleContract } from '../../core/module-contract';
+import type { AppId } from '../../core/app.config';
+import type { ModuleKind } from '../../core/app-catalog';
 
 export interface CoreRegistryEntry {
   appName?: AppId | 'shared';
@@ -13,11 +13,11 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
   'minimal-debian-terminal': {
     appName: 'simudex',
     contract: () =>
-      import('../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.contract').then(
+      import('../../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.contract').then(
         (m) => m.contract,
       ),
     kernel: () =>
-      import('../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.kernel'),
+      import('../../simudex-simulations/minimal-debian-terminal/minimal-debian-terminal.kernel'),
   },
 };
 

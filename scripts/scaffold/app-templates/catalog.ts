@@ -40,26 +40,26 @@ export function appCatalogEntryTemplate(options: AppScaffoldOptions): string {
     outputPath: 'dist/${options.id}',
     devServerPort: ${options.port},
     source: {
-      appConfigFile: 'app.config.${options.id}.ts',
-      entryPointFile: 'index.${options.id}.tsx',
-      indexHtmlFile: 'index.${options.id}.html',
-      manifestFile: 'manifest.${options.id}.webmanifest',
-      serviceWorkerConfigFile: 'ngsw-config.${options.id}.json',
-      appComponentFile: 'src/app.component.${options.id}.ts',
-      appComponentTemplateFile: 'src/app.component.${options.id}.html',
-      routesFile: 'src/app.routes.${options.id}.ts',
-      coreRegistryFile: 'src/core/core-registry.${options.id}.ts',
-      moduleRegistryFile: 'src/core/tool-registry.${options.id}.ts',
-      toolSpaceRegistryFile: 'src/data/tool-space-registry.${options.id}.ts',
-      offlineRouteLoadersFile: 'src/services/offline-route-loaders.${options.id}.ts',
+      appConfigFile: 'src/apps/${options.id}/entry/app.config.ts',
+      entryPointFile: 'src/apps/${options.id}/entry/index.tsx',
+      indexHtmlFile: 'src/apps/${options.id}/entry/index.html',
+      manifestFile: 'src/apps/${options.id}/entry/manifest.webmanifest',
+      serviceWorkerConfigFile: 'src/apps/${options.id}/entry/ngsw-config.json',
+      appComponentFile: 'src/apps/${options.id}/app.component.${options.id}.ts',
+      appComponentTemplateFile: 'src/apps/${options.id}/app.component.${options.id}.html',
+      routesFile: 'src/apps/${options.id}/app.routes.${options.id}.ts',
+      coreRegistryFile: 'src/apps/${options.id}/core-registry.${options.id}.ts',
+      moduleRegistryFile: 'src/apps/${options.id}/tool-registry.${options.id}.ts',
+      toolSpaceRegistryFile: 'src/apps/${options.id}/tool-space-registry.${options.id}.ts',
+      offlineRouteLoadersFile: 'src/apps/${options.id}/offline-route-loaders.${options.id}.ts',
       contentRoots: [{ label: '${options.id}-${pluralKind(options.kind)}', kind: '${options.kind}', path: '${options.contentRoot}' }],
-      seoDir: 'src/seo/${options.id}',
+      seoDir: 'src/apps/${options.id}/seo',
     },
   }`;
 }
 
 export function appConfigTemplate(options: AppScaffoldOptions): string {
-  return `import type { AppConfigData } from './src/core/app-catalog';
+  return `import type { AppConfigData } from '../../../core/app-catalog';
 
 export const APP_CONFIG_DATA = {
   appId: '${options.id}',

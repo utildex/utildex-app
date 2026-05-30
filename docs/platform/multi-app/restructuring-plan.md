@@ -231,6 +231,11 @@ Progress note:
 - [ ] Keep legacy import surfaces as re-exports where broad path rewrites would increase risk.
 - [ ] Update only the imports required for compilation; avoid opportunistic refactors.
 
+Progress note:
+
+- Synedex and Simudex shell, routes, registries, offline loaders, and SEO roots are migrated to `src/apps/<appId>/...` and validated.
+- App module roots remain in place (`src/synedex-games`, `src/simudex-simulations`) for a dedicated follow-up slice.
+
 5. Phase E - Stabilize and document
 - [ ] Ensure every app `source.*` entry in `APP_CATALOG` points to the new location.
 - [ ] Add a short migration map in docs showing old and new canonical roots.

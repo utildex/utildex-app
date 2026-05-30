@@ -3,10 +3,10 @@
  */
 
 import { Type } from '@angular/core';
-import { ModuleContract } from './module-contract';
-import { getCoreRegistryForApp } from './core-registry';
-import { getAppId, type AppId } from './app.config';
-import type { ModuleKind } from './app-catalog';
+import { ModuleContract } from '../../core/module-contract';
+import { getCoreRegistryForApp } from './core-registry.synedex';
+import { getAppId, type AppId } from '../../core/app.config';
+import type { ModuleKind } from '../../core/app-catalog';
 
 export interface ModuleRegistrySourceEntry {
   appName?: AppId | 'shared';
@@ -20,8 +20,11 @@ type ComponentLoader = () => Promise<Type<unknown>>;
 
 const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
   'mental-math': () =>
-    import('../synedex-games/mental-math/mental-math.component').then((m) => m.MentalMathComponent),
-  sudoku: () => import('../synedex-games/sudoku/sudoku.component').then((m) => m.SudokuComponent),
+    import('../../synedex-games/mental-math/mental-math.component').then(
+      (m) => m.MentalMathComponent,
+    ),
+  sudoku: () =>
+    import('../../synedex-games/sudoku/sudoku.component').then((m) => m.SudokuComponent),
 };
 
 function assertContractIdMatchesModuleId(

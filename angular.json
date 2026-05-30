@@ -165,7 +165,7 @@
                 },
                 {
                   "glob": "*",
-                  "input": "src/seo/synedex",
+                  "input": "src/apps/synedex/seo",
                   "output": "."
                 },
                 {
@@ -185,19 +185,19 @@
                 },
                 {
                   "replace": "src/core/core-registry.ts",
-                  "with": "src/core/core-registry.synedex.ts"
+                  "with": "src/apps/synedex/core-registry.synedex.ts"
                 },
                 {
                   "replace": "src/core/tool-registry.ts",
-                  "with": "src/core/tool-registry.synedex.ts"
+                  "with": "src/apps/synedex/tool-registry.synedex.ts"
                 },
                 {
                   "replace": "src/data/tool-space-registry.ts",
-                  "with": "src/data/tool-space-registry.synedex.ts"
+                  "with": "src/apps/synedex/tool-space-registry.synedex.ts"
                 },
                 {
                   "replace": "src/services/offline-route-loaders.ts",
-                  "with": "src/services/offline-route-loaders.synedex.ts"
+                  "with": "src/apps/synedex/offline-route-loaders.synedex.ts"
                 }
               ]
             },
@@ -252,7 +252,7 @@
                 },
                 {
                   "glob": "*",
-                  "input": "src/seo/simudex",
+                  "input": "src/apps/simudex/seo",
                   "output": "."
                 },
                 {
@@ -272,19 +272,19 @@
                 },
                 {
                   "replace": "src/core/core-registry.ts",
-                  "with": "src/core/core-registry.simudex.ts"
+                  "with": "src/apps/simudex/core-registry.simudex.ts"
                 },
                 {
                   "replace": "src/core/tool-registry.ts",
-                  "with": "src/core/tool-registry.simudex.ts"
+                  "with": "src/apps/simudex/tool-registry.simudex.ts"
                 },
                 {
                   "replace": "src/data/tool-space-registry.ts",
-                  "with": "src/data/tool-space-registry.simudex.ts"
+                  "with": "src/apps/simudex/tool-space-registry.simudex.ts"
                 },
                 {
                   "replace": "src/services/offline-route-loaders.ts",
-                  "with": "src/services/offline-route-loaders.simudex.ts"
+                  "with": "src/apps/simudex/offline-route-loaders.simudex.ts"
                 }
               ]
             },

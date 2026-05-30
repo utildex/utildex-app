@@ -1,6 +1,6 @@
-import type { ModuleContract } from './module-contract';
-import type { AppId } from './app.config';
-import type { ModuleKind } from './app-catalog';
+import type { ModuleContract } from '../../core/module-contract';
+import type { AppId } from '../../core/app.config';
+import type { ModuleKind } from '../../core/app-catalog';
 
 export interface CoreRegistryEntry {
   appName?: AppId | 'shared';
@@ -13,13 +13,13 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
   'mental-math': {
     appName: 'synedex',
     contract: () =>
-      import('../synedex-games/mental-math/mental-math.contract').then((m) => m.contract),
-    kernel: () => import('../synedex-games/mental-math/mental-math.kernel'),
+      import('../../synedex-games/mental-math/mental-math.contract').then((m) => m.contract),
+    kernel: () => import('../../synedex-games/mental-math/mental-math.kernel'),
   },
   sudoku: {
     appName: 'synedex',
-    contract: () => import('../synedex-games/sudoku/sudoku.contract').then((m) => m.contract),
-    kernel: () => import('../synedex-games/sudoku/sudoku.kernel'),
+    contract: () => import('../../synedex-games/sudoku/sudoku.contract').then((m) => m.contract),
+    kernel: () => import('../../synedex-games/sudoku/sudoku.kernel'),
   },
 };
 
