@@ -13,7 +13,7 @@
   PRIMARY_RESULT_LABEL: 'Body fat',
   RESULT_HINT: 'Estimated body-fat percentage (Deurenberg)',
   SECONDARY_RESULTS_LABEL: 'Composition',
-  RESULT_PLACEHOLDER: 'ÔÇö',
+  RESULT_PLACEHOLDER: '—',
   ENTER_ALL_HINT: 'Enter weight, height, sex and age to calculate.',
   BMI_LABEL: 'BMI',
   FAT_MASS_LABEL: 'Fat mass',
@@ -23,7 +23,7 @@
   AXIS_LEFT_LABEL: 'Essential',
   AXIS_RIGHT_LABEL: 'Obese',
   PROFILE_DEFAULTS_BADGE: 'Using default profile',
-  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use ÔÇö personalize for accuracy.',
+  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use — personalize for accuracy.',
 
   TIER_ESSENTIAL: 'Essential fat',
   TIER_ATHLETIC: 'Athletes',
@@ -36,14 +36,14 @@
   SUMMARY_ATHLETIC:
     'Your estimated body-fat is in the athletic range, typical of trained individuals.',
   SUMMARY_FITNESS:
-    'Your estimated body-fat is in the fitness range ÔÇö typically associated with regular exercise.',
+    'Your estimated body-fat is in the fitness range — typically associated with regular exercise.',
   SUMMARY_AVERAGE:
     'Your estimated body-fat is in the average range for the general adult population.',
   SUMMARY_OBESE:
-    'Your estimated body-fat is in the obese range ÔÇö consider discussing it with a clinician.',
+    'Your estimated body-fat is in the obese range — consider discussing it with a clinician.',
 
   NOTE_PEDIATRIC_FORMULA:
-    'Pediatric Deurenberg formula applied (ages 7ÔÇô15). Estimates in children are less precise.',
+    'Pediatric Deurenberg formula applied (ages 7–15). Estimates in children are less precise.',
   NOTE_VERY_YOUNG_BLOCKED: 'Deurenberg formulas are not validated under age 7.',
   NOTE_OLDER_ADULT:
     'Above ~75 years, body composition shifts may reduce the formula\u2019s accuracy.',
@@ -65,20 +65,20 @@
   MODAL_CLOSE: 'Close',
   METHOD_HEADING: 'Methodology & limitations',
   METHOD_BODY:
-    'Deurenberg et al. (1991) developed regression equations linking body-fat percentage to BMI, age and sex, validated against densitometry. The pediatric variant (ages 7ÔÇô15) uses different coefficients.',
+    'Deurenberg et al. (1991) developed regression equations linking body-fat percentage to BMI, age and sex, validated against densitometry. The pediatric variant (ages 7–15) uses different coefficients.',
   METHOD_FORMULA_ADULT:
-    'Adults: BF% = 1.20┬ÀBMI + 0.23┬Àage ÔêÆ 10.8┬Àsex ÔêÆ 5.4    (sex: male = 1, female = 0)',
-  METHOD_FORMULA_CHILD: 'Children (7ÔÇô15): BF% = 1.51┬ÀBMI ÔêÆ 0.70┬Àage ÔêÆ 3.6┬Àsex + 1.4',
+    'Adults: BF% = 1.20·BMI + 0.23·age − 10.8·sex − 5.4    (sex: male = 1, female = 0)',
+  METHOD_FORMULA_CHILD: 'Children (7–15): BF% = 1.51·BMI − 0.70·age − 3.6·sex + 1.4',
   METHOD_LIMITATIONS:
-    'Limitations: Regression equations explain ~70ÔÇô80% of body-fat variance and have a typical error of ┬▒4%. Accuracy degrades for very lean athletes (overestimates fat), highly muscular builds, very obese individuals, the elderly, and ethnic groups outside the original cohort. For clinical decisions, prefer DXA or air-displacement plethysmography.',
+    'Limitations: Regression equations explain ~70–80% of body-fat variance and have a typical error of ±4%. Accuracy degrades for very lean athletes (overestimates fat), highly muscular builds, very obese individuals, the elderly, and ethnic groups outside the original cohort. For clinical decisions, prefer DXA or air-displacement plethysmography.',
 
   REFERENCES_HEADING: 'References',
   REF_DEURENBERG_1991:
-    'Deurenberg P, Weststrate JA, Seidell JC. Body mass index as a measure of body fatness: age- and sex-specific prediction formulas. Br J Nutr. 1991;65(2):105ÔÇô14.',
+    'Deurenberg P, Weststrate JA, Seidell JC. Body mass index as a measure of body fatness: age- and sex-specific prediction formulas. Br J Nutr. 1991;65(2):105–14.',
   REF_DEURENBERG_1998:
-    'Deurenberg P, Yap M, van Staveren WA. Body mass index and percent body fat: a meta-analysis among different ethnic groups. Int J Obes. 1998;22(12):1164ÔÇô71.',
+    'Deurenberg P, Yap M, van Staveren WA. Body mass index and percent body fat: a meta-analysis among different ethnic groups. Int J Obes. 1998;22(12):1164–71.',
   REF_GALLAGHER_2000:
-    'Gallagher D et al. Healthy percentage body fat ranges: an approach for developing guidelines based on body mass index. Am J Clin Nutr. 2000;72(3):694ÔÇô701.',
+    'Gallagher D et al. Healthy percentage body fat ranges: an approach for developing guidelines based on body mass index. Am J Clin Nutr. 2000;72(3):694–701.',
 
   PRIVACY_NOTE: 'No data leaves your device. All calculations run locally.',
   DISCLAIMER:

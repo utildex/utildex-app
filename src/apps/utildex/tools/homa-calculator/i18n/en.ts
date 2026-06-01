@@ -14,7 +14,7 @@
   CLINICAL_HEADING: 'Clinical inputs',
   GLUCOSE_LABEL: 'Fasting glucose',
   INSULIN_LABEL: 'Fasting insulin',
-  INSULIN_UNIT: '┬ÁU/mL (mIU/L)',
+  INSULIN_UNIT: 'µU/mL (mIU/L)',
   UNIT_MGDL: 'mg/dL',
   UNIT_MMOL: 'mmol/L',
   UNIT_TOGGLE_LABEL: 'Glucose unit',
@@ -23,7 +23,7 @@
   // Results
   PRIMARY_RESULT_LABEL: 'Primary result',
   SECONDARY_RESULTS_LABEL: 'Other indices',
-  RESULT_PLACEHOLDER: 'ÔÇö',
+  RESULT_PLACEHOLDER: '—',
   ENTER_BOTH_HINT: 'Enter glucose and insulin to compute results.',
   GLUCOSE_TOO_LOW: 'Glucose value too low for beta-cell function calculation.',
 
@@ -32,8 +32,8 @@
   INTERPRETATION_BASED_ON: 'Based on:',
   PROFILE_DEFAULTS_BADGE: 'Using default profile',
   PROFILE_DEFAULTS_HINT:
-    'These are default values ÔÇö enter your profile below for a personalized interpretation.',
-  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use ÔÇö personalize for accuracy.',
+    'These are default values — enter your profile below for a personalized interpretation.',
+  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use — personalize for accuracy.',
   AXIS_LEFT_LABEL: 'Optimal',
   AXIS_RIGHT_LABEL: 'High',
   TIER_OPTIMAL: 'Optimal',
@@ -52,14 +52,14 @@
   IR_SUMMARY_MILD:
     'Your result suggests mildly elevated insulin resistance. Lifestyle factors often shift this back into the normal range.',
   IR_SUMMARY_ELEVATED:
-    'Your result suggests elevated insulin resistance ÔÇö consider discussing it with a clinician.',
+    'Your result suggests elevated insulin resistance — consider discussing it with a clinician.',
   IR_SUMMARY_HIGH:
-    'Your result suggests a high insulin resistance ÔÇö we recommend discussing it with a clinician.',
+    'Your result suggests a high insulin resistance — we recommend discussing it with a clinician.',
 
   QUICKI_SUMMARY_OPTIMAL: 'Your QUICKI value suggests high insulin sensitivity.',
   QUICKI_SUMMARY_NORMAL: 'Your QUICKI value is within the normal sensitivity range.',
   QUICKI_SUMMARY_REDUCED:
-    'Your QUICKI value suggests reduced insulin sensitivity ÔÇö consider discussing it with a clinician.',
+    'Your QUICKI value suggests reduced insulin sensitivity — consider discussing it with a clinician.',
 
   HOMA_B_NOTE:
     '100% represents estimated normal beta-cell function in a healthy young adult. Values below 100% suggest reduced function; above 100% may indicate compensatory hypersecretion.',
@@ -121,26 +121,26 @@
   MODAL_CLOSE: 'Close',
   REFERENCES_HEADING: 'References',
   REF_MATTHEWS_1985:
-    'Matthews DR, Hosker JP, Rudenski AS, et al. Homeostasis model assessment: insulin resistance and ╬▓-cell function from fasting plasma glucose and insulin concentrations in man. Diabetologia. 1985.',
+    'Matthews DR, Hosker JP, Rudenski AS, et al. Homeostasis model assessment: insulin resistance and β-cell function from fasting plasma glucose and insulin concentrations in man. Diabetologia. 1985.',
   REF_LEVY_1998:
-    'Levy JC, Matthews DR, Hermans MP. Correct homeostasis model assessment (HOMA) evaluation uses the computer program (HOMA2). Diabetes Care. 1998. ÔÇö Oxford OCDEM HOMA Calculator.',
+    'Levy JC, Matthews DR, Hermans MP. Correct homeostasis model assessment (HOMA) evaluation uses the computer program (HOMA2). Diabetes Care. 1998. — Oxford OCDEM HOMA Calculator.',
   REF_KATZ_2000:
     'Katz A, Nambi SS, Mather K, et al. Quantitative insulin sensitivity check index: a simple, accurate method for assessing insulin sensitivity in humans (QUICKI). J Clin Endocrinol Metab. 2000.',
   REF_MATLI_2021:
     'Matli B et al. HOMA-IR reference intervals in a German population. Clinical Chemistry and Laboratory Medicine (CCLM). 2021.',
   REF_ICHIKAWA_2014:
-    'Ichikawa T et al. Japanese cutoff for insulin resistance (HOMA-IR ÔëÑ 1.7). Internal Medicine. 2014.',
+    'Ichikawa T et al. Japanese cutoff for insulin resistance (HOMA-IR ≥ 1.7). Internal Medicine. 2014.',
   REF_KNHANES:
-    'Korea National Health and Nutrition Examination Survey (KNHANES) 2008ÔÇô2010 ÔÇö Korean reference values for HOMA-IR.',
+    'Korea National Health and Nutrition Examination Survey (KNHANES) 2008–2010 — Korean reference values for HOMA-IR.',
   REF_EPIRCE:
-    'EPIRCE study (Spain) ÔÇö Age- and sex-specific HOMA-IR distributions in the Spanish population.',
+    'EPIRCE study (Spain) — Age- and sex-specific HOMA-IR distributions in the Spanish population.',
   METHOD_HEADING: 'Methodology & limitations',
   METHOD_BODY:
     'HOMA (Homeostatic Model Assessment) was introduced by Matthews et al. in 1985. It is a screening tool, not a diagnostic test. Results depend on the insulin assay used; absolute cutoffs vary across laboratories. This tool computes:',
-  METHOD_FORMULA_IR: 'HOMA-IR = insulin (┬ÁU/mL) ├ù glucose (mmol/L) / 22.5',
-  METHOD_FORMULA_B: 'HOMA-%B = 20 ├ù insulin / (glucose mmol/L ÔêÆ 3.5)',
+  METHOD_FORMULA_IR: 'HOMA-IR = insulin (µU/mL) × glucose (mmol/L) / 22.5',
+  METHOD_FORMULA_B: 'HOMA-%B = 20 × insulin / (glucose mmol/L − 3.5)',
   METHOD_FORMULA_S: 'HOMA-%S = 100 / HOMA-IR',
-  METHOD_FORMULA_QUICKI: 'QUICKI = 1 / (logÔéüÔéÇ(insulin) + logÔéüÔéÇ(glucose mg/dL))',
+  METHOD_FORMULA_QUICKI: 'QUICKI = 1 / (log10(insulin) + log10(glucose mg/dL))',
   METHOD_LIMITATIONS:
     'Limitations: HOMA assumes steady-state fasting conditions, performs less well in advanced diabetes, and is sensitive to assay variability. Always interpret alongside clinical context.',
   METHOD_REFERENCE: 'Reference paper: Matthews DR et al., Diabetologia 1985.',

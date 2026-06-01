@@ -28,7 +28,7 @@
   LABEL_END_DATE: 'End date',
   LABEL_END_TIME: 'End time',
   LABEL_ZONE: 'Time zone',
-  ZONE_SEARCH_PLACEHOLDER: 'Search city or zoneÔÇª',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
   ZONE_SEARCH_EMPTY: 'No matching zones',
 
   LABEL_RECURRENCE: 'Repeats',

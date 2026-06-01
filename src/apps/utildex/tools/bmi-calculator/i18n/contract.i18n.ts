@@ -7,16 +7,16 @@
   fr: {
     name: 'Calculateur d\u2019IMC',
     description:
-      'Calculez votre indice de masse corporelle ├á partir de la taille et du poids. Choisissez entre les seuils OMS et Asie-Pacifique. Aucune donn├®e ne quitte votre appareil.',
+      'Calculez votre indice de masse corporelle à partir de la taille et du poids. Choisissez entre les seuils OMS et Asie-Pacifique. Aucune donnée ne quitte votre appareil.',
   },
   es: {
     name: 'Calculadora de IMC',
     description:
-      'Calcula tu ├ìndice de Masa Corporal a partir de la altura y el peso. Elige entre los puntos de corte de la OMS y los de Asia-Pac├¡fico. Ning├║n dato sale de tu dispositivo.',
+      'Calcula tu Índice de Masa Corporal a partir de la altura y el peso. Elige entre los puntos de corte de la OMS y los de Asia-Pacífico. Ningún dato sale de tu dispositivo.',
   },
   zh: {
-    name: 'BMI Þ«íþ«ùÕÖ¿',
+    name: 'BMI 计算器',
     description:
-      'µá╣µì«Þ║½Ú½ÿõ©Äõ¢ôÚçìÞ«íþ«ùÞ║½õ¢ôÞ┤¿ÚçÅµîçµò░´╝êBMI´╝ë´╝øÕÅ»ÚÇë WHO µêûõ║ÜÕñ¬Õ£░Õî║Õêçþé╣ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çµé¿þÜäÞ«¥ÕñçÒÇé',
+      '根据身高与体重计算身体质量指数（BMI）；可选 WHO 或亚太地区切点。数据不会离开您的设备。',
   },
 } as const;

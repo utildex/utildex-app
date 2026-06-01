@@ -11,7 +11,7 @@
   fr: {
     name: 'Generateur de Hash',
     description:
-      'Calculez des hachages MD5, SHA-1, SHA-256, SHA-384, SHA-512 a partir de texte ou de fichiers. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Calculez des hachages MD5, SHA-1, SHA-256, SHA-384, SHA-512 a partir de texte ou de fichiers. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       standard: 'Standard',
       compact: 'Compact',
@@ -27,12 +27,12 @@
     },
   },
   zh: {
-    name: 'ÕôêÕ©îþöƒµêÉÕÖ¿',
+    name: '哈希生成器',
     description:
-      'õ╗Äµûçµ£¼µêûµûçõ╗ÂÞ«íþ«ù MD5ÒÇüSHA-1ÒÇüSHA-256ÒÇüSHA-384ÒÇüSHA-512 ÕôêÕ©îÕÇ╝ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '从文本或文件计算 MD5、SHA-1、SHA-256、SHA-384、SHA-512 哈希值。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      standard: 'µáçÕçå',
-      compact: 'þ┤ºÕçæ',
+      standard: '标准',
+      compact: '紧凑',
     },
   },
 } as const;

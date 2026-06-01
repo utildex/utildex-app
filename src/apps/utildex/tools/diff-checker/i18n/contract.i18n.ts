@@ -11,7 +11,7 @@
   fr: {
     name: 'Comparateur de Texte',
     description:
-      'Comparez du texte ou du code pour trouver les differences. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Comparez du texte ou du code pour trouver les differences. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       wideCompare: 'Large',
       miniEditor: 'Mini Editeur',
@@ -27,12 +27,12 @@
     },
   },
   zh: {
-    name: 'µûçµ£¼ÕÀ«Õ╝éÕ»╣µ»ö',
+    name: '文本差异对比',
     description:
-      'Õ»╣µ»öµûçµ£¼µêûõ╗úþáüõ╗ÑµƒÑµë¥ÕÀ«Õ╝éÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '对比文本或代码以查找差异。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      wideCompare: 'Õ«¢Õ▒ÅÕ»╣µ»ö',
-      miniEditor: 'Þ┐Àõ¢áþ╝ûÞ¥æÕÖ¿',
+      wideCompare: '宽屏对比',
+      miniEditor: '迷你编辑器',
     },
   },
 } as const;

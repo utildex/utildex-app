@@ -1,11 +1,11 @@
 ﻿export default {
   TITLE: 'Comparateur de Texte',
   ORIGINAL_LABEL: 'Original',
-  MODIFIED_LABEL: 'Modifi├®',
+  MODIFIED_LABEL: 'Modifié',
   PLACEHOLDER_ORIG: 'Collez le contenu original ici...',
-  PLACEHOLDER_MOD: 'Collez le contenu modifi├® ici...',
+  PLACEHOLDER_MOD: 'Collez le contenu modifié ici...',
   MODE_LABEL: 'Mode de comparaison',
-  MODE_CHARS: 'Caract├¿res',
+  MODE_CHARS: 'Caractères',
   MODE_WORDS: 'Mots',
   MODE_LINES: 'Lignes',
   OPT_WHITESPACE: 'Ignorer les espaces',
@@ -19,12 +19,12 @@
 
   // Widget
   W_TITLE: 'Comparateur',
-  W_TAB_INPUT: 'Entr├®e',
+  W_TAB_INPUT: 'Entrée',
   W_TAB_DIFF: 'Diff',
   W_PASTE_ORIG: 'Original...',
-  W_PASTE_MOD: 'Modifi├®...',
+  W_PASTE_MOD: 'Modifié...',
   W_IDENTICAL: 'Identique',
-  W_DIFFERENT: 'Diff├®rent',
+  W_DIFFERENT: 'Différent',
   W_EMPTY: 'Vide',
   W_HINT: 'Collez du texte pour comparer',
 };

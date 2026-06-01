@@ -11,7 +11,7 @@
   fr: {
     name: 'Generateur de Mots de Passe',
     description:
-      'Cr├®ez des mots de passe al├®atoires et s├®curis├®s avec une longueur et des jeux de caract├¿res personnalisables. Aucune donn├®e ne quitte votre appareil. Fonctionne enti├¿rement hors ligne ; vous pouvez couper internet.',
+      'Créez des mots de passe aléatoires et sécurisés avec une longueur et des jeux de caractères personnalisables. Aucune donnée ne quitte votre appareil. Fonctionne entièrement hors ligne ; vous pouvez couper internet.',
     widgetPresets: {
       standard: 'Standard',
       compact: 'Compact',
@@ -27,12 +27,12 @@
     },
   },
   zh: {
-    name: 'Õ»åþáüþöƒµêÉÕÖ¿',
+    name: '密码生成器',
     description:
-      'ÕêøÕ╗║Õ«ëÕà¿ÒÇüÚÜÅµ£║þÜäÕ»åþáü´╝îµö»µîüÞç¬Õ«Üõ╣ëÚò┐Õ║ªÕÆîÕ¡ùþ¼ªÚøåÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '创建安全、随机的密码，支持自定义长度和字符集。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      standard: 'µáçÕçå',
-      compact: 'þ┤ºÕçæ',
+      standard: '标准',
+      compact: '紧凑',
     },
   },
 } as const;

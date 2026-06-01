@@ -16,7 +16,7 @@
   LABEL_TODAY: 'Today',
 
   DIR_ADD: 'Add (+)',
-  DIR_SUB: 'Subtract (ÔêÆ)',
+  DIR_SUB: 'Subtract (−)',
 
   UNIT_DAYS: 'days',
   UNIT_WEEKS: 'weeks',

@@ -23,9 +23,9 @@
   DATE_FORMAT_MDY: 'MM/DD/YYYY',
   DATE_FORMAT_LONG: 'Long (localized)',
 
-  PLACEHOLDER_PICK_ZONE: 'Pick a time zoneÔÇª',
-  PLACEHOLDER_FILTER: 'Filter zonesÔÇª',
-  ZONE_SEARCH_PLACEHOLDER: 'Search city or zoneÔÇª',
+  PLACEHOLDER_PICK_ZONE: 'Pick a time zone…',
+  PLACEHOLDER_FILTER: 'Filter zones…',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
   ZONE_SEARCH_EMPTY: 'No matching zones',
 
   RESULT_HEADING: 'Converted times',
@@ -37,7 +37,7 @@
   DAY_NEXT: 'next day',
   DAY_PREV: 'previous day',
   DAY_PLUS: '+{n} days',
-  DAY_MINUS: 'ÔêÆ{n} days',
+  DAY_MINUS: '−{n} days',
 
   COPY_FORMAT: 'Copy as',
   COPY_ISO_UTC: 'ISO 8601 (UTC)',

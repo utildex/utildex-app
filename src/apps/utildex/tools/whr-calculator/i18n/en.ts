@@ -14,7 +14,7 @@
   RESULT_HINT: 'Waist-to-Hip Ratio',
   SECONDARY_RESULTS_LABEL: 'Additional info',
   WAIST_CIRCUMFERENCE_LABEL: 'Waist circumference',
-  RESULT_PLACEHOLDER: 'ÔÇö',
+  RESULT_PLACEHOLDER: '—',
   ENTER_BOTH_HINT: 'Enter your waist and hip measurements to calculate.',
 
   // Interpretation
@@ -22,7 +22,7 @@
   AXIS_LEFT_LABEL: 'Low risk',
   AXIS_RIGHT_LABEL: 'High risk',
   PROFILE_DEFAULTS_BADGE: 'Using default profile',
-  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use ÔÇö personalize for accuracy.',
+  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use — personalize for accuracy.',
 
   TIER_LOW: 'Low risk',
   TIER_MODERATE: 'Moderate risk',
@@ -32,7 +32,7 @@
   SUMMARY_MODERATE:
     'Your WHR indicates a moderately increased cardiometabolic risk. Lifestyle adjustments often help.',
   SUMMARY_HIGH:
-    'Your WHR indicates a substantially increased cardiometabolic risk ÔÇö consider discussing it with a clinician.',
+    'Your WHR indicates a substantially increased cardiometabolic risk — consider discussing it with a clinician.',
 
   WAIST_RISK_NOTE_HIGH: 'Your waist circumference is at or above the WHO action threshold.',
   WAIST_RISK_NOTE_OK: 'Your waist circumference is below the WHO action threshold.',
@@ -62,17 +62,17 @@
     'WHR is the ratio of waist circumference to hip circumference. It is a simple proxy for central (abdominal) adiposity, which is a stronger predictor of cardiovascular disease and type 2 diabetes than overall obesity. Measurements should be taken with a non-stretching tape, on bare skin, after a normal exhale.',
   METHOD_FORMULA: 'WHR = waist (cm) / hip (cm)',
   METHOD_THRESHOLDS:
-    'WHO 2008 cutoffs ÔÇö Women: low Ôëñ 0.80, moderate 0.81ÔÇô0.85, high > 0.85. Men: low Ôëñ 0.90, moderate 0.91ÔÇô0.99, high > 0.99. Waist action thresholds: 88 cm (women), 102 cm (men).',
+    'WHO 2008 cutoffs — Women: low ≤ 0.80, moderate 0.81–0.85, high > 0.85. Men: low ≤ 0.90, moderate 0.91–0.99, high > 0.99. Waist action thresholds: 88 cm (women), 102 cm (men).',
   METHOD_LIMITATIONS:
     'Limitations: WHR depends on measurement technique and may not be appropriate during pregnancy or in individuals with significant abdominal surgery history. Always interpret with clinical context.',
 
   REFERENCES_HEADING: 'References',
   REF_WHO_2008:
-    'WHO. Waist Circumference and WaistÔÇôHip Ratio: Report of a WHO Expert Consultation. Geneva, 2008.',
+    'WHO. Waist Circumference and Waist–Hip Ratio: Report of a WHO Expert Consultation. Geneva, 2008.',
   REF_WHO_2011:
-    'WHO. Waist Circumference and WaistÔÇôHip Ratio Action Levels. WHO Technical Report. 2011.',
+    'WHO. Waist Circumference and Waist–Hip Ratio Action Levels. WHO Technical Report. 2011.',
   REF_DESPRES_2012:
-    'Despr├®s JP. Body Fat Distribution and Risk of Cardiovascular Disease: An Update. Circulation. 2012.',
+    'Després JP. Body Fat Distribution and Risk of Cardiovascular Disease: An Update. Circulation. 2012.',
 
   PRIVACY_NOTE: 'No data leaves your device. All calculations run locally.',
   DISCLAIMER:

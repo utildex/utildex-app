@@ -7,7 +7,7 @@
   fr: {
     name: 'Formateur JSON',
     description:
-      'Validez, formatez et minifiez les donnees JSON. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Validez, formatez et minifiez les donnees JSON. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
   },
   es: {
     name: 'Formateador JSON',
@@ -15,8 +15,8 @@
       'Valida, formatea y minimiza datos JSON. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
   },
   zh: {
-    name: 'JSON µá╝Õ╝ÅÕîû',
+    name: 'JSON 格式化',
     description:
-      'Ú¬îÞ»üÒÇüµá╝Õ╝ÅÕîûÕÆîÕÄïþ╝® JSON µò░µì«ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '验证、格式化和压缩 JSON 数据。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

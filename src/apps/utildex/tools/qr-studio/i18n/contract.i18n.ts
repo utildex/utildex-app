@@ -12,7 +12,7 @@
   fr: {
     name: 'Studio QR Code',
     description:
-      'Generez des QR codes statiques et prives pour URL, WiFi et texte. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Generez des QR codes statiques et prives pour URL, WiFi et texte. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       small: 'Petit',
       wide: 'Large',
@@ -20,23 +20,23 @@
     },
   },
   es: {
-    name: 'Estudio C├│digo QR',
+    name: 'Estudio Código QR',
     description:
       'Genere codigos QR estaticos y privados para URL, WiFi y texto. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
     widgetPresets: {
-      small: 'Peque├▒o',
+      small: 'Pequeño',
       wide: 'Ancho',
       large: 'Grande',
     },
   },
   zh: {
-    name: 'õ║îþ╗┤þáüÕÀÑõ¢£Õ«ñ',
+    name: '二维码工作室',
     description:
-      'þöƒµêÉþö¿õ║Ä URLÒÇüWiFi ÕÆîµûçµ£¼þÜäÚØÖµÇüÚÜÉþºüõ║îþ╗┤þáüÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '生成用于 URL、WiFi 和文本的静态隐私二维码。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      small: 'Õ░Å',
-      wide: 'Õ«¢',
-      large: 'Õñº',
+      small: '小',
+      wide: '宽',
+      large: '大',
     },
   },
 } as const;

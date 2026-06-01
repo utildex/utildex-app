@@ -1,7 +1,7 @@
 ﻿export default {
   TITLE: 'Sudoku',
   WIDGET_COPY: 'Abre la vista completa para jugar.',
-  SUBTITLE: 'Elige un nivel, conserva tu progreso y concÃ©ntrate en el tablero.',
+  SUBTITLE: 'Elige un nivel, conserva tu progreso y concéntrate en el tablero.',
   MENU_PROGRESS_SUMMARY: 'Desbloqueado L{unlocked} - {completed} completados - Mejor {best}',
   LABEL_LEVEL: 'Nivel',
   LEVEL_OPTION: 'L{level} - {group} {rank}',

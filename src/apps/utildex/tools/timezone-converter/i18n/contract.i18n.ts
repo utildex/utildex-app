@@ -7,16 +7,16 @@
   fr: {
     name: 'Convertisseur de fuseaux horaires',
     description:
-      'Convertissez une date et une heure entre fuseaux horaires IANA avec d├®calages UTC, changements de jour et heure d\u2019├®t├® g├®r├®s automatiquement. Aucune donn├®e ne quitte votre appareil. Fonctionne enti├¿rement hors ligne ; vous pouvez couper internet.',
+      'Convertissez une date et une heure entre fuseaux horaires IANA avec décalages UTC, changements de jour et heure d\u2019été gérés automatiquement. Aucune donnée ne quitte votre appareil. Fonctionne entièrement hors ligne ; vous pouvez couper internet.',
   },
   es: {
     name: 'Conversor de zonas horarias',
     description:
-      'Convierte una fecha y hora entre zonas horarias IANA con desfases UTC, cambios de d├¡a y horario de verano gestionados autom├íticamente. Ning├║n dato sale de tu dispositivo. Funciona completamente sin conexi├│n; puede desconectar internet.',
+      'Convierte una fecha y hora entre zonas horarias IANA con desfases UTC, cambios de día y horario de verano gestionados automáticamente. Ningún dato sale de tu dispositivo. Funciona completamente sin conexión; puede desconectar internet.',
   },
   zh: {
-    name: 'µùÂÕî║Þ¢¼µìóÕÖ¿',
+    name: '时区转换器',
     description:
-      'Õ£¿ IANA µùÂÕî║õ╣ïÚù┤Þ¢¼µìóµùÑµ£ƒõ©ÄµùÂÚù┤´╝îÞç¬Õè¿ÕñäþÉå UTC ÕüÅþº╗ÒÇüÞÀ¿µùÑÕÅèÕñÅõ╗ñµùÂÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çµé¿þÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øµé¿ÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '在 IANA 时区之间转换日期与时间，自动处理 UTC 偏移、跨日及夏令时。数据不会离开您的设备。完全离线运行；您可以断开网络。',
   },
 } as const;

@@ -5,9 +5,9 @@
 
   LABEL_INPUT: 'Date or time',
   LABEL_INPUT_PLACEHOLDER:
-    'e.g. 2026-05-10T12:34:56Z, 1746878400, Sun, 10 May 2026 12:34:56 +0200ÔÇª',
+    'e.g. 2026-05-10T12:34:56Z, 1746878400, Sun, 10 May 2026 12:34:56 +0200…',
   LABEL_ZONE: 'Local time zone',
-  ZONE_SEARCH_PLACEHOLDER: 'Search city or zoneÔÇª',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
   ZONE_SEARCH_EMPTY: 'No matching zones',
   LABEL_NOW: 'Now',
 

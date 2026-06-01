@@ -1,9 +1,9 @@
 ﻿export default {
   TITLE: 'Redimensionar',
   TITLE_SHORT: 'Redim.',
-  DROP_LABEL: 'Soltar im├ígenes',
+  DROP_LABEL: 'Soltar imágenes',
   DROP_EXPLICIT: 'Soltar para reducir',
-  BTN_ADD: 'A├▒adir',
+  BTN_ADD: 'Añadir',
   BTN_DOWNLOAD: 'Descargar',
   BTN_DOWNLOAD_ALL: 'Descargar Todo',
   BTN_RESET: 'Reiniciar',
@@ -26,9 +26,9 @@
   STATS_ORIGINAL: 'Original',
   STATS_RESULT: 'Resultado',
   STATS_DIMENSIONS: 'Dimensiones',
-  STATS_SIZE: 'Tama├▒o',
+  STATS_SIZE: 'Tamaño',
 
-  MSG_SUCCESS: '┬í├ëxito!',
+  MSG_SUCCESS: '¡Éxito!',
   MSG_PROCESSING: 'Procesando...',
   FILES: 'archivos',
 

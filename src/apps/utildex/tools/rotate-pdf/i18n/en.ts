@@ -1,8 +1,8 @@
 ﻿export default {
   DROP_LABEL: 'Drop PDF',
-  BTN_ROTATE_RIGHT: '90┬░ CW',
-  BTN_ROTATE_LEFT: '90┬░ CCW',
-  BTN_ROTATE_180: '180┬░',
+  BTN_ROTATE_RIGHT: '90° CW',
+  BTN_ROTATE_LEFT: '90° CCW',
+  BTN_ROTATE_180: '180°',
   BTN_SAVE: 'Save PDF',
   BTN_RESET: 'Reset',
   SUCCESS: 'Rotation Saved!',

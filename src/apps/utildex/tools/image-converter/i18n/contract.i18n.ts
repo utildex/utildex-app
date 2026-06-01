@@ -11,7 +11,7 @@
   fr: {
     name: 'Convertisseur Image',
     description:
-      'Convertissez des images (JPG, PNG, WEBP, HEIC) localement par lots. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Convertissez des images (JPG, PNG, WEBP, HEIC) localement par lots. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       icon: 'Icone',
       standard: 'Standard',
@@ -27,12 +27,12 @@
     },
   },
   zh: {
-    name: 'Õø¥þëçÞ¢¼µìóÕÖ¿',
+    name: '图片转换器',
     description:
-      'µ£¼Õ£░µë╣ÚçÅÞ¢¼µìóÕø¥þëç´╝êJPG, PNG, WEBP, HEIC´╝ëÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '本地批量转换图片（JPG, PNG, WEBP, HEIC）。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      icon: 'Õø¥µáç',
-      standard: 'µáçÕçå',
+      icon: '图标',
+      standard: '标准',
     },
   },
 } as const;

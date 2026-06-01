@@ -7,7 +7,7 @@
   fr: {
     name: "Convertisseur d'unites",
     description:
-      'Convertissez entre les unites courantes de longueur, de poids et de temperature. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Convertissez entre les unites courantes de longueur, de poids et de temperature. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
   },
   es: {
     name: 'Convertidor de Unidades',
@@ -15,8 +15,8 @@
       'Convierta entre unidades comunes de longitud, peso y temperatura. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
   },
   zh: {
-    name: 'Õìòõ¢ìÞ¢¼µìóÕÖ¿',
+    name: '单位转换器',
     description:
-      'Õ£¿Úò┐Õ║ªÒÇüÚçìÚçÅÕÆîµ©®Õ║ªþÜäÕ©©þö¿Õìòõ¢ìõ╣ïÚù┤Þ┐øÞíîÞ¢¼µìóÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '在长度、重量和温度的常用单位之间进行转换。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

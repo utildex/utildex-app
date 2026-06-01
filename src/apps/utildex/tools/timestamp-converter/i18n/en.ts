@@ -19,7 +19,7 @@
   LABEL_DATE: 'Date',
   LABEL_TIME: 'Time',
   LABEL_ZONE: 'Time zone',
-  ZONE_SEARCH_PLACEHOLDER: 'Search city or zoneÔÇª',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
   ZONE_SEARCH_EMPTY: 'No matching zones',
 
   LABEL_NOW: 'Now',

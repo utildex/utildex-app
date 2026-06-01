@@ -13,7 +13,7 @@
   fr: {
     name: 'Diviser PDF',
     description:
-      'Extrayez des pages specifiques dun document PDF. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Extrayez des pages specifiques dun document PDF. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       icon: 'Icone',
       wide: 'Large',
@@ -33,14 +33,14 @@
     },
   },
   zh: {
-    name: 'µïåÕêå PDF',
+    name: '拆分 PDF',
     description:
-      'õ╗Ä PDF µûçµíúõ©¡µÅÉÕÅûþë╣Õ«ÜÚíÁÚØóÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '从 PDF 文档中提取特定页面。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      icon: 'Õø¥µáç',
-      wide: 'Õ«¢',
+      icon: '图标',
+      wide: '宽',
       tall: 'Ú½ÿ',
-      large: 'Õñº',
+      large: '大',
     },
   },
 } as const;

@@ -7,7 +7,7 @@
   fr: {
     name: 'Pivoter PDF',
     description:
-      'Faites pivoter toutes ou certaines pages dun document PDF de facon permanente. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Faites pivoter toutes ou certaines pages dun document PDF de facon permanente. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
   },
   es: {
     name: 'Rotar PDF',
@@ -15,8 +15,8 @@
       'Rote todas o las paginas seleccionadas de un documento PDF permanentemente. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
   },
   zh: {
-    name: 'µùïÞ¢¼ PDF',
+    name: '旋转 PDF',
     description:
-      'µ░©õ╣àµùïÞ¢¼ PDF µûçµíúþÜäµëÇµ£ëµêûÚÇëÕ«ÜÚíÁÚØóÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '永久旋转 PDF 文档的所有或选定页面。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

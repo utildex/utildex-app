@@ -14,7 +14,7 @@
   STRENGTH_FAIR: 'Moyen',
   STRENGTH_GOOD: 'Bon',
   STRENGTH_STRONG: 'Fort',
-  BTN_REGENERATE: 'R├®g├®n├®rer',
+  BTN_REGENERATE: 'Régénérer',
   BTN_COPY: 'Copier',
-  BTN_COPIED: 'Copi├®',
+  BTN_COPIED: 'Copié',
 };

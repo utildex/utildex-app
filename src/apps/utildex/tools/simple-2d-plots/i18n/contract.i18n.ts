@@ -7,7 +7,7 @@
   fr: {
     name: 'Graphiques 2D Simples',
     description:
-      'Cr├®ez des graphiques 2D propres ├á partir de donn├®es JSON avec des presets s├®rie unique, multi-s├®rie et styl├®s, ainsi que des options dÔÇÖexport. Aucune donn├®e ne quitte votre appareil. Fonctionne enti├¿rement hors ligne ; vous pouvez couper internet.',
+      'Créez des graphiques 2D propres à partir de données JSON avec des presets série unique, multi-série et stylés, ainsi que des options d’export. Aucune donnée ne quitte votre appareil. Fonctionne entièrement hors ligne ; vous pouvez couper internet.',
   },
   es: {
     name: 'Graficos 2D Simples',
@@ -15,8 +15,8 @@
       'Crea graficos 2D limpios a partir de datos JSON con presets de serie unica, multi-serie y estilos, ademas de opciones de exportacion. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
   },
   zh: {
-    name: 'þ«ÇÕìòõ║îþ╗┤þ╗ÿÕø¥',
+    name: '简单二维绘图',
     description:
-      'õ¢┐þö¿ JSON µò░µì«ÕêøÕ╗║µ©àµÖ░þÜäõ║îþ╗┤µèÿþ║┐Õø¥´╝îµö»µîüÕìòÕ║ÅÕêùÒÇüÕñÜÕ║ÅÕêùÕÆîµáÀÕ╝ÅÕîûÚóäÞ«¥´╝îÕ╣ÂÕÅ»Õ»╝Õç║ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '使用 JSON 数据创建清晰的二维折线图，支持单序列、多序列和样式化预设，并可导出。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

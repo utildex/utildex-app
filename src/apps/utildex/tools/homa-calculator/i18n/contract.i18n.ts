@@ -15,8 +15,8 @@
       'Calcula HOMA-IR, HOMA-%B, HOMA-%S y QUICKI a partir de glucosa e insulina en ayunas. La interpretacion se adapta a tu perfil. Ningun dato sale de tu dispositivo.',
   },
   zh: {
-    name: 'HOMA Þ«íþ«ùÕÖ¿',
+    name: 'HOMA 计算器',
     description:
-      'Õƒ║õ║Äþ®║Þà╣ÞíÇþ│ûõ©ÄÞâ░Õ▓øþ┤áÞ«íþ«ù HOMA-IRÒÇüHOMA-%BÒÇüHOMA-%S ÕÆî QUICKI´╝øµá╣µì«õ©¬õ║║ÞÁäµûÖÞ░âµò┤ÞºúÞ»╗ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇé',
+      '基于空腹血糖与胰岛素计算 HOMA-IR、HOMA-%B、HOMA-%S 和 QUICKI；根据个人资料调整解读。数据不会离开你的设备。',
   },
 } as const;

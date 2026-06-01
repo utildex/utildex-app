@@ -2,21 +2,21 @@
   en: {
     name: 'Date & Time Calculator',
     description:
-      'Add or subtract durations, count business days, measure gaps and project deadlines ÔÇö time-zone-safe, in your preferred date format. No data leaves your device. Works fully offline; feel free to disconnect.',
+      'Add or subtract durations, count business days, measure gaps and project deadlines — time-zone-safe, in your preferred date format. No data leaves your device. Works fully offline; feel free to disconnect.',
   },
   fr: {
     name: 'Calculateur de dates et d\u2019heures',
     description:
-      'Ajoutez ou soustrayez des dur├®es, comptez les jours ouvr├®s, mesurez les ├®carts et projetez des ├®ch├®ances ÔÇö sans fuseau horaire, dans votre format de date pr├®f├®r├®. Aucune donn├®e ne quitte votre appareil. Fonctionne enti├¿rement hors ligne ; vous pouvez couper internet.',
+      'Ajoutez ou soustrayez des durées, comptez les jours ouvrés, mesurez les écarts et projetez des échéances — sans fuseau horaire, dans votre format de date préféré. Aucune donnée ne quitte votre appareil. Fonctionne entièrement hors ligne ; vous pouvez couper internet.',
   },
   es: {
     name: 'Calculadora de fechas y horas',
     description:
-      'Suma o resta duraciones, cuenta d├¡as h├íbiles, mide diferencias y proyecta fechas l├¡mite ÔÇö independiente de la zona horaria, en el formato de fecha que prefieras. Ning├║n dato sale de tu dispositivo. Funciona completamente sin conexi├│n; puede desconectar internet.',
+      'Suma o resta duraciones, cuenta días hábiles, mide diferencias y proyecta fechas límite — independiente de la zona horaria, en el formato de fecha que prefieras. Ningún dato sale de tu dispositivo. Funciona completamente sin conexión; puede desconectar internet.',
   },
   zh: {
-    name: 'µùÑµ£ƒõ©ÄµùÂÚù┤Þ«íþ«ùÕÖ¿',
+    name: '日期与时间计算器',
     description:
-      'ÕèáÕçÅµùÂÚò┐ÒÇüÞ«íþ«ùÕÀÑõ¢£µùÑÒÇüµÁïÚçÅµùÑµ£ƒÕÀ«Õ╣ÂµÄ¿þ«ùµê¬µ¡óµùÑµ£ƒ ÔÇöÔÇö µùÂÕî║Õ«ëÕà¿´╝îµîëõ¢áÕüÅÕÑ¢þÜäµùÑµ£ƒµá╝Õ╝ÅÞ¥ôÕç║ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çµé¿þÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øµé¿ÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '加减时长、计算工作日、测量日期差并推算截止日期 —— 时区安全，按你偏好的日期格式输出。数据不会离开您的设备。完全离线运行；您可以断开网络。',
   },
 } as const;

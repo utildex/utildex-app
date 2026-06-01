@@ -13,16 +13,16 @@
   fr: {
     name: 'Images en PDF',
     description:
-      'Convertissez des images PNG, JPG ou WEBP en un seul document PDF. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Convertissez des images PNG, JPG ou WEBP en un seul document PDF. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
-      icon: 'Ic├┤ne',
+      icon: 'Icône',
       wide: 'Large',
       tall: 'Haut',
       large: 'Grand',
     },
   },
   es: {
-    name: 'Im├ígenes a PDF',
+    name: 'Imágenes a PDF',
     description:
       'Convierta imagenes PNG, JPG o WEBP en un solo documento PDF. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
     widgetPresets: {
@@ -33,14 +33,14 @@
     },
   },
   zh: {
-    name: 'Õø¥þëçÞ¢¼ PDF',
+    name: '图片转 PDF',
     description:
-      'Õ░å PNGÒÇüJPG µêû WEBP Õø¥þëçÞ¢¼µìóõ©║Õìòõ©¬ PDF µûçµíúÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '将 PNG、JPG 或 WEBP 图片转换为单个 PDF 文档。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      icon: 'Õø¥µáç',
-      wide: 'Õ«¢',
+      icon: '图标',
+      wide: '宽',
       tall: 'Ú½ÿ',
-      large: 'Õñº',
+      large: '大',
     },
   },
 } as const;

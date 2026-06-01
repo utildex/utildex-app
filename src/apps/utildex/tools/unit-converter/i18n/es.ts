@@ -1,5 +1,5 @@
 ﻿export default {
-  LABEL_TYPE: 'Tipo de Conversi├│n',
+  LABEL_TYPE: 'Tipo de Conversión',
   LABEL_FROM: 'De',
   LABEL_TO: 'A',
   LABEL_AMOUNT: 'Cantidad',
@@ -7,8 +7,8 @@
   TYPE_WEIGHT: 'Peso',
   TYPE_TEMP: 'Temperatura',
   UNIT_METER: 'Metros (m)',
-  UNIT_KILOMETER: 'Kil├│metros (km)',
-  UNIT_CENTIMETER: 'Cent├¡metros (cm)',
+  UNIT_KILOMETER: 'Kilómetros (km)',
+  UNIT_CENTIMETER: 'Centímetros (cm)',
   UNIT_FOOT: 'Pies (ft)',
   UNIT_INCH: 'Pulgadas (in)',
   UNIT_MILE: 'Millas (mi)',
@@ -16,7 +16,7 @@
   UNIT_GRAM: 'Gramos (g)',
   UNIT_POUND: 'Libras (lb)',
   UNIT_OUNCE: 'Onzas (oz)',
-  UNIT_CELSIUS: 'Celsius (┬░C)',
-  UNIT_FAHRENHEIT: 'Fahrenheit (┬░F)',
+  UNIT_CELSIUS: 'Celsius (°C)',
+  UNIT_FAHRENHEIT: 'Fahrenheit (°F)',
   UNIT_KELVIN: 'Kelvin (K)',
 };

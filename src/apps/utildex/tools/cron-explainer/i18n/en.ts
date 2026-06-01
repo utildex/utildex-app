@@ -6,7 +6,7 @@
   LABEL_EXPRESSION: 'Cron expression',
   LABEL_EXPRESSION_PLACEHOLDER: 'e.g. 0 9 * * 1-5',
   LABEL_ZONE: 'Time zone',
-  ZONE_SEARCH_PLACEHOLDER: 'Search city or zoneÔÇª',
+  ZONE_SEARCH_PLACEHOLDER: 'Search city or zone…',
   ZONE_SEARCH_EMPTY: 'No matching zones',
   LABEL_COUNT: 'Upcoming runs',
 

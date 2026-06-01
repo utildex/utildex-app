@@ -1,9 +1,9 @@
 ﻿export default {
   TITLE: 'Convertidor de Imagen',
   TITLE_SHORT: 'Convertir',
-  DROP_LABEL: 'Suelte im├ígenes aqu├¡ (JPG, PNG, WEBP, HEIC)',
+  DROP_LABEL: 'Suelte imágenes aquí (JPG, PNG, WEBP, HEIC)',
   DROP_EXPLICIT: 'Suelte para convertir',
-  BTN_ADD: 'A├▒adir Im├ígenes',
+  BTN_ADD: 'Añadir Imágenes',
   BTN_CONVERT: 'Convertir',
   BTN_CONVERT_SHORT: 'Convertir',
   BTN_DOWNLOAD_ZIP: 'Descargar Todo (ZIP)',
@@ -15,7 +15,7 @@
   STATUS_DONE: 'Hecho',
   STATUS_ERROR: 'Error',
   ERR_LOAD: 'Error al cargar',
-  ERR_HEIC: 'Fallo conversi├│n HEIC',
-  SUCCESS_MSG: '┬íConversi├│n completa!',
-  FILES: 'im├ígenes',
+  ERR_HEIC: 'Fallo conversión HEIC',
+  SUCCESS_MSG: '¡Conversión completa!',
+  FILES: 'imágenes',
 };

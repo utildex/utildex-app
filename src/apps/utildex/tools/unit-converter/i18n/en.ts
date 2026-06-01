@@ -16,7 +16,7 @@
   UNIT_GRAM: 'Grams (g)',
   UNIT_POUND: 'Pounds (lb)',
   UNIT_OUNCE: 'Ounces (oz)',
-  UNIT_CELSIUS: 'Celsius (┬░C)',
-  UNIT_FAHRENHEIT: 'Fahrenheit (┬░F)',
+  UNIT_CELSIUS: 'Celsius (°C)',
+  UNIT_FAHRENHEIT: 'Fahrenheit (°F)',
   UNIT_KELVIN: 'Kelvin (K)',
 };

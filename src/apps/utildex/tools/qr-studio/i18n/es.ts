@@ -1,5 +1,5 @@
 ﻿export default {
-  TITLE: 'Estudio C├│digo QR',
+  TITLE: 'Estudio Código QR',
   TYPE_LABEL: 'Tipo de Contenido',
   TYPE_URL: 'URL / Enlace',
   TYPE_TEXT: 'Texto Plano',
@@ -7,7 +7,7 @@
   INPUT_URL: 'URL del sitio',
   INPUT_TEXT: 'Contenido de texto',
   WIFI_SSID: 'Nombre de red (SSID)',
-  WIFI_PASS: 'Contrase├▒a',
+  WIFI_PASS: 'Contraseña',
   WIFI_HIDDEN: 'Red oculta',
   COLOR_FG: 'Color frontal',
   COLOR_BG: 'Color de fondo',
@@ -18,7 +18,7 @@
   BTN_DOWNLOAD: 'Descargar PNG',
   WIDGET_EMPTY: 'Configurar QR',
   PRIVACY_NOTE:
-    'Este es un c├│digo QR est├ítico. Los datos se almacenan en la imagen. No se utilizan servidores de rastreo.',
+    'Este es un código QR estático. Los datos se almacenan en la imagen. No se utilizan servidores de rastreo.',
 
   // Widget Short Labels
   W_TITLE: 'Estudio QR',

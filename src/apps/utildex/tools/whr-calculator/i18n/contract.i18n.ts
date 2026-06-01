@@ -2,21 +2,21 @@
   en: {
     name: 'WHR Calculator',
     description:
-      'Compute your Waist-to-Hip Ratio ÔÇö a quick indicator of central adiposity and cardiometabolic risk. No data leaves your device.',
+      'Compute your Waist-to-Hip Ratio — a quick indicator of central adiposity and cardiometabolic risk. No data leaves your device.',
   },
   fr: {
     name: 'Calculateur de RTH',
     description:
-      'Calculez votre rapport tour de taille / tour de hanches ÔÇö un indicateur rapide de l\u2019adiposit├® centrale et du risque cardiom├®tabolique. Aucune donn├®e ne quitte votre appareil.',
+      'Calculez votre rapport tour de taille / tour de hanches — un indicateur rapide de l\u2019adiposité centrale et du risque cardiométabolique. Aucune donnée ne quitte votre appareil.',
   },
   es: {
     name: 'Calculadora de ICC',
     description:
-      'Calcula tu ├ìndice Cintura-Cadera ÔÇö un indicador r├ípido de adiposidad central y riesgo cardiometab├│lico. Ning├║n dato sale de tu dispositivo.',
+      'Calcula tu Índice Cintura-Cadera — un indicador rápido de adiposidad central y riesgo cardiometabólico. Ningún dato sale de tu dispositivo.',
   },
   zh: {
-    name: 'Þà░ÞçÇµ»öÞ«íþ«ùÕÖ¿',
+    name: '腰臀比计算器',
     description:
-      'Þ«íþ«ùµé¿þÜäÞà░ÞçÇµ»ö´╝êWHR´╝ëÔÇöÔÇöõ©¡Õ┐âµÇºÞéÑÞâûõ©ÄÕ┐âÞíÇþ«íõ╗úÞ░óÚúÄÚÖ®þÜäÕ┐½ÚÇƒµîçµáçÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çµé¿þÜäÞ«¥ÕñçÒÇé',
+      '计算您的腰臀比（WHR）——中心性肥胖与心血管代谢风险的快速指标。数据不会离开您的设备。',
   },
 } as const;

@@ -8,9 +8,9 @@
     },
   },
   fr: {
-    name: 'D├®codeur JWT',
+    name: 'Décodeur JWT',
     description:
-      'D├®codez et inspectez instantan├®ment les JSON Web Tokens (JWT), y compris le header, le payload et les claims temporelles. Aucune donn├®e ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Décodez et inspectez instantanément les JSON Web Tokens (JWT), y compris le header, le payload et les claims temporelles. Aucune donnée ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       standard: 'Standard',
     },
@@ -18,17 +18,17 @@
   es: {
     name: 'Decodificador JWT',
     description:
-      'Decodifica e inspecciona JSON Web Tokens (JWT) al instante, incluyendo header, payload y claims temporales. Ning├║n dato sale de su dispositivo. Funciona completamente sin conexi├│n; puede desconectar internet.',
+      'Decodifica e inspecciona JSON Web Tokens (JWT) al instante, incluyendo header, payload y claims temporales. Ningún dato sale de su dispositivo. Funciona completamente sin conexión; puede desconectar internet.',
     widgetPresets: {
       standard: 'Estandar',
     },
   },
   zh: {
-    name: 'JWT ÞºúþáüÕÖ¿',
+    name: 'JWT 解码器',
     description:
-      'Õì│µùÂÞºúþáüÕ╣ÂµúÇµƒÑ JSON Web Token (JWT)´╝îÕîàµï¼Õñ┤Úâ¿ÒÇüÞ¢¢ÞìÀÕÆîµùÂÚù┤þø©Õà│Õú░µÿÄÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '即时解码并检查 JSON Web Token (JWT)，包括头部、载荷和时间相关声明。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      standard: 'µáçÕçå',
+      standard: '标准',
     },
   },
 } as const;

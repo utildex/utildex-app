@@ -1,8 +1,8 @@
 ﻿export default {
   LABEL_PARAGRAPHS: 'PARAGRAPHES',
   LABEL_START_LOREM: 'Commencer par "Lorem ipsum"',
-  BTN_GENERATE: 'G├®n├®rer',
+  BTN_GENERATE: 'Générer',
   BTN_COPY: 'Copier',
-  BTN_COPIED: 'Copi├® !',
-  EMPTY_STATE: 'Cliquez sur G├®n├®rer pour cr├®er du texte de remplissage.',
+  BTN_COPIED: 'Copié !',
+  EMPTY_STATE: 'Cliquez sur Générer pour créer du texte de remplissage.',
 };

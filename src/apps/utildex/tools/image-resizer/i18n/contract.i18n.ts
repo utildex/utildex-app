@@ -11,7 +11,7 @@
   fr: {
     name: 'Redimensionner Image',
     description:
-      'Redimensionnez des images par pourcentage ou dimension avec apercu en direct. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Redimensionnez des images par pourcentage ou dimension avec apercu en direct. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       icon: 'Icone',
       standard: 'Standard',
@@ -27,12 +27,12 @@
     },
   },
   zh: {
-    name: 'Õø¥þëçþ╝®µö¥',
+    name: '图片缩放',
     description:
-      'ÚÇÜÞ┐çþÖ¥Õêåµ»öµêûÕ░║Õ»©Þ░âµò┤Õø¥þëçÕñºÕ░Å´╝îµö»µîüÕ«×µùÂÚóäÞºêÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '通过百分比或尺寸调整图片大小，支持实时预览。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      icon: 'Õø¥µáç',
-      standard: 'µáçÕçå',
+      icon: '图标',
+      standard: '标准',
     },
   },
 } as const;

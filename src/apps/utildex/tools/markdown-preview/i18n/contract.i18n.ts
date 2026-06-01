@@ -7,7 +7,7 @@
   fr: {
     name: 'Apercu Markdown',
     description:
-      'Editeur en direct pour ecrire et previsualiser instantanement du texte formate en Markdown. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Editeur en direct pour ecrire et previsualiser instantanement du texte formate en Markdown. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
   },
   es: {
     name: 'Vista previa Markdown',
@@ -15,8 +15,8 @@
       'Editor en vivo para escribir y previsualizar texto formateado en Markdown al instante. Ningun dato sale de su dispositivo. Funciona completamente sin conexion; puede desconectar internet.',
   },
   zh: {
-    name: 'Markdown ÚóäÞºê',
+    name: 'Markdown 预览',
     description:
-      'Õì│µùÂþ╝ûÕåÖÕÆîÚóäÞºê Markdown µá╝Õ╝Åµûçµ£¼ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '即时编写和预览 Markdown 格式文本。数据不会离开你的设备。完全离线运行；你可以断开网络。',
   },
 } as const;

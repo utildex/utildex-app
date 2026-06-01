@@ -16,10 +16,10 @@
 
   // Result
   PRIMARY_RESULT_LABEL: 'BMI',
-  RESULT_HINT: 'Body Mass Index (kg/m┬▓)',
+  RESULT_HINT: 'Body Mass Index (kg/m²)',
   SECONDARY_RESULTS_LABEL: 'Additional info',
   HEALTHY_RANGE_LABEL: 'Healthy weight range',
-  RESULT_PLACEHOLDER: 'ÔÇö',
+  RESULT_PLACEHOLDER: '—',
   ENTER_BOTH_HINT: 'Enter your height and weight to calculate.',
 
   // Interpretation
@@ -27,7 +27,7 @@
   AXIS_LEFT_LABEL: 'Underweight',
   AXIS_RIGHT_LABEL: 'Obese',
   PROFILE_DEFAULTS_BADGE: 'Using default profile',
-  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use ÔÇö personalize for accuracy.',
+  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use — personalize for accuracy.',
 
   TIER_UNDERWEIGHT: 'Underweight',
   TIER_NORMAL: 'Normal weight',
@@ -42,11 +42,11 @@
   SUMMARY_OVERWEIGHT:
     'Your BMI is above the healthy range. Lifestyle adjustments often bring it back into range.',
   SUMMARY_OBESE_I:
-    'Your BMI indicates obesity class I ÔÇö consider discussing it with a clinician.',
+    'Your BMI indicates obesity class I — consider discussing it with a clinician.',
   SUMMARY_OBESE_II:
-    'Your BMI indicates obesity class II ÔÇö we recommend discussing it with a clinician.',
+    'Your BMI indicates obesity class II — we recommend discussing it with a clinician.',
   SUMMARY_OBESE_III:
-    'Your BMI indicates obesity class III ÔÇö we recommend discussing it with a clinician.',
+    'Your BMI indicates obesity class III — we recommend discussing it with a clinician.',
 
   // Notes
   NOTE_ASIA_PACIFIC: 'Using WHO Asia-Pacific cutoffs (lower thresholds for overweight & obesity).',
@@ -71,7 +71,7 @@
   WHY_AGE:
     'BMI cutoffs apply to adults only. Above 65, body composition changes reduce BMI accuracy.',
   WHY_STANDARD:
-    'WHO Asia-Pacific cutoffs (overweight ÔëÑ 23, obesity ÔëÑ 27.5) better reflect cardiometabolic risk in East and South Asian populations.',
+    'WHO Asia-Pacific cutoffs (overweight ≥ 23, obesity ≥ 27.5) better reflect cardiometabolic risk in East and South Asian populations.',
 
   // Methodology
   METHODOLOGY_BUTTON: 'Methodology & references',
@@ -79,7 +79,7 @@
   METHOD_HEADING: 'Methodology & limitations',
   METHOD_BODY:
     'BMI was popularized by Adolphe Quetelet in the 19th century and adopted by the WHO as a population-level screening tool. It is a screening index, not a diagnostic test. The same BMI may correspond to different body-fat percentages across age, sex, ethnicity, and fitness level.',
-  METHOD_FORMULA: 'BMI = weight (kg) / height (m)┬▓',
+  METHOD_FORMULA: 'BMI = weight (kg) / height (m)²',
   METHOD_LIMITATIONS:
     'Limitations: BMI does not measure body composition. It can overestimate adiposity in muscular individuals and underestimate it in older adults with sarcopenia. Always interpret with clinical context.',
 

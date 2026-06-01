@@ -16,7 +16,7 @@
   PRIMARY_RESULT_LABEL: 'ABSI z-score',
   RESULT_HINT: 'Sex- and age-adjusted shape index (mortality risk)',
   SECONDARY_RESULTS_LABEL: 'Details',
-  RESULT_PLACEHOLDER: 'ÔÇö',
+  RESULT_PLACEHOLDER: '—',
   ENTER_ALL_HINT: 'Enter waist, height, weight, sex and age to calculate.',
   ABSI_RAW_LABEL: 'ABSI',
   BMI_LABEL: 'BMI',
@@ -25,7 +25,7 @@
   AXIS_LEFT_LABEL: 'Very low risk',
   AXIS_RIGHT_LABEL: 'Very high risk',
   PROFILE_DEFAULTS_BADGE: 'Using default profile',
-  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use ÔÇö personalize for accuracy.',
+  PROFILE_DEFAULTS_HINT_SHORT: 'Defaults in use — personalize for accuracy.',
 
   TIER_VERYLOW: 'Very low risk',
   TIER_LOW: 'Low risk',
@@ -34,14 +34,14 @@
   TIER_VERYHIGH: 'Very high risk',
 
   SUMMARY_VERYLOW:
-    'Your ABSI is well below average for your sex and age ÔÇö associated with the lowest mortality risk in this metric.',
+    'Your ABSI is well below average for your sex and age — associated with the lowest mortality risk in this metric.',
   SUMMARY_LOW:
-    'Your ABSI is below average for your sex and age ÔÇö associated with lower mortality risk.',
+    'Your ABSI is below average for your sex and age — associated with lower mortality risk.',
   SUMMARY_AVERAGE: 'Your ABSI is near the population average for your sex and age.',
   SUMMARY_HIGH:
-    'Your ABSI is above average for your sex and age ÔÇö associated with elevated mortality risk independent of BMI.',
+    'Your ABSI is above average for your sex and age — associated with elevated mortality risk independent of BMI.',
   SUMMARY_VERYHIGH:
-    'Your ABSI is well above average for your sex and age ÔÇö associated with the highest mortality risk in this metric. Consider discussing with a clinician.',
+    'Your ABSI is well above average for your sex and age — associated with the highest mortality risk in this metric. Consider discussing with a clinician.',
 
   NOTE_PEDIATRIC_BLOCKED:
     'ABSI z-score reference data are not established for children and adolescents.',
@@ -66,7 +66,7 @@
   METHOD_BODY:
     'Krakauer & Krakauer (2012) defined ABSI to capture abdominal shape independently of overall size. The z-score compares your ABSI to NHANES sex- and age-decade reference values; positive z-scores indicate a more cylindrical/abdominal profile, associated with increased all-cause mortality risk independently of BMI.',
   METHOD_FORMULA:
-    'ABSI = WC(m) / (BMI^(2/3) ┬À height(m)^(1/2))    with BMI = weight(kg) / height(m)^2',
+    'ABSI = WC(m) / (BMI^(2/3) · height(m)^(1/2))    with BMI = weight(kg) / height(m)^2',
   METHOD_LIMITATIONS:
     'Limitations: ABSI is a research-grade metric most useful for population-level mortality stratification. It does not replace clinical evaluation, and reference data here are derived from NHANES adults. Avoid over-interpreting individual scores near the average.',
 
@@ -76,7 +76,7 @@
   REF_KRAKAUER_2014:
     'Krakauer NY, Krakauer JC. Dynamic association of mortality hazard with body shape. PLoS ONE. 2014;9(2):e88793.',
   REF_DHANA_2016:
-    'Dhana K et al. Anthropometric measures in cardiovascular disease prediction: comparison of laboratory-based versus non-laboratory-based model. Heart. 2016;102(13):1023ÔÇô9.',
+    'Dhana K et al. Anthropometric measures in cardiovascular disease prediction: comparison of laboratory-based versus non-laboratory-based model. Heart. 2016;102(13):1023–9.',
 
   PRIVACY_NOTE: 'No data leaves your device. All calculations run locally.',
   DISCLAIMER:

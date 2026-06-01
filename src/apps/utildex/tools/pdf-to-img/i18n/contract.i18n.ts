@@ -11,7 +11,7 @@
   fr: {
     name: 'PDF en Image',
     description:
-      'Convertissez des pages PDF en images JPG, PNG ou WebP. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Convertissez des pages PDF en images JPG, PNG ou WebP. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       icon: 'Icone',
       standard: 'Standard',
@@ -27,12 +27,12 @@
     },
   },
   zh: {
-    name: 'PDF Þ¢¼Õø¥þëç',
+    name: 'PDF 转图片',
     description:
-      'Õ░å PDF ÚíÁÚØóÞ¢¼µìóõ©║ JPGÒÇüPNG µêû WebP Õø¥þëçÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '将 PDF 页面转换为 JPG、PNG 或 WebP 图片。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      icon: 'Õø¥µáç',
-      standard: 'µáçÕçå',
+      icon: '图标',
+      standard: '标准',
     },
   },
 } as const;

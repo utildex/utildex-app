@@ -2,7 +2,7 @@
   en: {
     name: 'Unix Timestamp Converter',
     description:
-      'Convert Unix epoch timestamps (seconds, milliseconds, microseconds, nanoseconds) to UTC, local and any IANA time zone ÔÇö and back. Auto-detects the unit by magnitude. No data leaves your device. Works fully offline; feel free to disconnect.',
+      'Convert Unix epoch timestamps (seconds, milliseconds, microseconds, nanoseconds) to UTC, local and any IANA time zone — and back. Auto-detects the unit by magnitude. No data leaves your device. Works fully offline; feel free to disconnect.',
   },
   fr: {
     name: 'Convertisseur d\u2019horodatage Unix',

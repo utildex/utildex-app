@@ -13,7 +13,7 @@
   fr: {
     name: 'Fusionner PDF',
     description:
-      'Combinez plusieurs fichiers PDF en un seul document. Reorganisez facilement. Aucune donnee ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Combinez plusieurs fichiers PDF en un seul document. Reorganisez facilement. Aucune donnee ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       icon: 'Icone',
       wide: 'Large',
@@ -33,14 +33,14 @@
     },
   },
   zh: {
-    name: 'ÕÉêÕ╣Â PDF',
+    name: '合并 PDF',
     description:
-      'Õ░åÕñÜõ©¬ PDF µûçõ╗ÂÕÉêÕ╣Âõ©║õ©Çõ©¬µûçµíú´╝îÕ╣ÂÞ¢╗µØ¥Úçìµû░µÄÆÕ║ÅÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '将多个 PDF 文件合并为一个文档，并轻松重新排序。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      icon: 'Õø¥µáç',
-      wide: 'Õ«¢',
+      icon: '图标',
+      wide: '宽',
       tall: 'Ú½ÿ',
-      large: 'Õñº',
+      large: '大',
     },
   },
 } as const;

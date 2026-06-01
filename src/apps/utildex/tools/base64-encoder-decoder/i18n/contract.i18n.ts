@@ -9,9 +9,9 @@
     },
   },
   fr: {
-    name: 'Encodeur D├®codeur Base64',
+    name: 'Encodeur Décodeur Base64',
     description:
-      'Encodez du texte en Base64 et d├®codez du Base64 en texte instantan├®ment. Aucune donn├®e ne quitte votre appareil. Fonctionne enti├¿rement hors ligne; vous pouvez couper internet.',
+      'Encodez du texte en Base64 et décodez du Base64 en texte instantanément. Aucune donnée ne quitte votre appareil. Fonctionne entièrement hors ligne; vous pouvez couper internet.',
     widgetPresets: {
       wide: 'Large',
       standard: 'Standard',
@@ -20,19 +20,19 @@
   es: {
     name: 'Codificador Decodificador Base64',
     description:
-      'Codifica texto en Base64 y decodifica Base64 a texto al instante. Ning├║n dato sale de su dispositivo. Funciona completamente sin conexi├│n; puede desconectar internet.',
+      'Codifica texto en Base64 y decodifica Base64 a texto al instante. Ningún dato sale de su dispositivo. Funciona completamente sin conexión; puede desconectar internet.',
     widgetPresets: {
       wide: 'Ancho',
-      standard: 'Est├índar',
+      standard: 'Estándar',
     },
   },
   zh: {
-    name: 'Base64 þ╝ûþáüÞºúþáüÕÖ¿',
+    name: 'Base64 编码解码器',
     description:
-      'Õ░åþ║»µûçµ£¼þ╝ûþáüõ©║ Base64´╝îÕ╣ÂÕ░å Base64 Õ┐½ÚÇƒÞºúþáüõ©║µûçµ£¼ÒÇéµò░µì«õ©ìõ╝Üþª╗Õ╝Çõ¢áþÜäÞ«¥ÕñçÒÇéÕ«îÕà¿þª╗þ║┐Þ┐ÉÞíî´╝øõ¢áÕÅ»õ╗Ñµû¡Õ╝Çþ¢æþ╗£ÒÇé',
+      '将纯文本编码为 Base64，并将 Base64 快速解码为文本。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
-      wide: 'Õ«¢Õ▒Å',
-      standard: 'µáçÕçå',
+      wide: '宽屏',
+      standard: '标准',
     },
   },
 } as const;
