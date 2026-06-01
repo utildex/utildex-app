@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '简单二维绘图',
   PRESET_LABEL: '预设',
   PRESET_SINGLE: '单序列',
@@ -36,17 +36,16 @@
   EXPORT_BG_COLOR: '背景颜色',
   EXPORT_BG_PREVIEW: '背景预览',
   EXPORT_BG_ANIM_HINT: 'GIF 导出时为动态效果',
-  QUALITY_LOW: 'õ¢Ä',
-  QUALITY_MEDIUM: 'õ©¡',
-  QUALITY_HIGH: 'Ú½ÿ',
+  QUALITY_LOW: '低',
+  QUALITY_MEDIUM: '中',
+  QUALITY_HIGH: '高',
   GIF_SETTINGS: 'GIF 设置',
   GIF_FPS: '帧率',
   GIF_DURATION: '时长毫秒',
   GIF_COLORS: '最大颜色数',
   BTN_CANCEL: '取消',
   BTN_EXPORT: '导出',
-  HELP_SCHEMA:
-    '编辑器下方显示支持的 JSON 结构。点击“渲染图表”进行校验并绘制。',
+  HELP_SCHEMA: '编辑器下方显示支持的 JSON 结构。点击“渲染图表”进行校验并绘制。',
   SCHEMA_SINGLE: '单序列: [[x,y], ...] 或 { id, label, data: [[x,y], ...] }',
   SCHEMA_MULTI: '多序列/样式: { x: number[], series: [{ id, label?, y: number[] }] }',
   SCHEMA_STYLES: '样式: { seriesId: { color?, strokeWidth?, strokeDasharray? } }',

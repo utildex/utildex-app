@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '图片转 PDF',
   TITLE_SHORT: '图片转 PDF',
   DROP_LABEL: '将图片拖到此处',
@@ -6,7 +6,7 @@
   ADD_IMAGES: '添加图片',
   BTN_CONVERT: '转换为 PDF',
   BTN_CONVERT_SHORT: '转换',
-  BTN_RESET: 'Úçìþ¢«',
+  BTN_RESET: '重置',
   PAGE_SIZE: '页面大小',
   SIZE_A4: 'A4',
   SIZE_LETTER: '美式信纸',

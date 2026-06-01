@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '图片缩放',
   TITLE_SHORT: '缩放',
   DROP_LABEL: '拖放图片',
@@ -6,7 +6,7 @@
   BTN_ADD: '添加图片',
   BTN_DOWNLOAD: '下载',
   BTN_DOWNLOAD_ALL: '全部下载',
-  BTN_RESET: 'Úçìþ¢«',
+  BTN_RESET: '重置',
   BTN_RESIZE: '开始缩放',
 
   SECTION_RESIZE: '缩放设置',
@@ -34,7 +34,7 @@
 
   // Widget
   W_DROP: '拖入图片',
-  W_CONF: 'Úàìþ¢«',
+  W_CONF: '配置',
   W_DONE: '完成',
   W_SELECT_HINT: '选择图片以预览',
   W_GO: '开始',

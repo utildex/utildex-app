@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   HIP_LABEL: '臀围',
   HEIGHT_LABEL: '身高',
   HIP_HINT: '在臀部最宽处测量。',
@@ -41,10 +41,8 @@
   PROFILE_SEX_MALE: '男性',
   PROFILE_AGE: '年龄',
 
-  WHY_SEX:
-    'BAI 切点在男女之间不同，因为脂肪分布与体脂总比例存在性别差异。',
-  WHY_AGE:
-    'BAI 切点按年龄段分层（20–39、40–59、60–79）。18 岁以下未定义。',
+  WHY_SEX: 'BAI 切点在男女之间不同，因为脂肪分布与体脂总比例存在性别差异。',
+  WHY_AGE: 'BAI 切点按年龄段分层（20–39、40–59、60–79）。18 岁以下未定义。',
 
   METHODOLOGY_BUTTON: '方法学与参考文献',
   MODAL_CLOSE: '关闭',
@@ -57,7 +55,7 @@
 
   REFERENCES_HEADING: '参考文献',
   REF_BERGMAN_2011:
-    'Bergman RN þ¡ëÒÇéA better index of body adiposityÒÇéObesity (Silver Spring)´╝î2011ÒÇé',
+    'Bergman RN 等。A better index of body adiposity。Obesity (Silver Spring)，2011。',
   REF_FREEDMAN_2012:
     'Freedman DS 等。The body adiposity index (hip circumference ÷ height^1.5) is not a more accurate measure of adiposity than BMI, waist circumference, or hip circumference。Obesity，2012。',
   REF_LOPEZ_2012:

@@ -1,5 +1,5 @@
-﻿export default {
-  CONFIG_TITLE: 'Úàìþ¢«',
+export default {
+  CONFIG_TITLE: '配置',
   LABEL_LENGTH: '长度',
   LABEL_UPPERCASE: '大写字母',
   DESC_UPPERCASE: 'ABC...',

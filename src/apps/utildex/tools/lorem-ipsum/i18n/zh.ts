@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   LABEL_PARAGRAPHS: '段落数',
   LABEL_START_LOREM: '以 "Lorem ipsum" 开头',
   BTN_GENERATE: '生成',

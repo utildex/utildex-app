@@ -28,8 +28,7 @@
   },
   zh: {
     name: '文本差异对比',
-    description:
-      '对比文本或代码以查找差异。数据不会离开你的设备。完全离线运行；你可以断开网络。',
+    description: '对比文本或代码以查找差异。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
       wideCompare: '宽屏对比',
       miniEditor: '迷你编辑器',

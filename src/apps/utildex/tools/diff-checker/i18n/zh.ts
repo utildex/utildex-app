@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '文本差异对比',
   ORIGINAL_LABEL: '原文',
   MODIFIED_LABEL: '修改后',
@@ -25,6 +25,6 @@
   W_PASTE_MOD: '粘贴修改版...',
   W_IDENTICAL: '相同',
   W_DIFFERENT: '不同',
-  W_EMPTY: 'þ®║',
+  W_EMPTY: '空',
   W_HINT: '粘贴文本以进行比较',
 };

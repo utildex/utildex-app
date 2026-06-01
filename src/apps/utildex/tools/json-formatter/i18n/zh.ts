@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   INPUT_LABEL: '输入 JSON',
   INPUT_PLACEHOLDER: '在此粘贴 JSON 或拖入文件...',
   WIDGET_TITLE: 'JSON 格式化',

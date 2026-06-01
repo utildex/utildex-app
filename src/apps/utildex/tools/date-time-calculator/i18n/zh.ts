@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '日期与时间计算器',
   TZ_NOTE: '日历日期均以 UTC 计算，因此结果在不同时区都保持一致。',
 
@@ -39,8 +39,7 @@
   PHRASE_BUSINESS_ADD: '在 {start} 之后 {amount} 个工作日',
   PHRASE_BUSINESS_SUB: '在 {start} 之前 {amount} 个工作日',
   PHRASE_DEADLINE: '截止日期：自 {start} 起 {amount} {unit}',
-  PHRASE_BETWEEN:
-    '从 {start} 到 {end}：{years} 年 {months} 月 {days} 天（共 {totalDays} 天）',
+  PHRASE_BETWEEN: '从 {start} 到 {end}：{years} 年 {months} 月 {days} 天（共 {totalDays} 天）',
 
   COPY_FORMAT: '复制为',
   COPY_PLAIN: '纯文本',

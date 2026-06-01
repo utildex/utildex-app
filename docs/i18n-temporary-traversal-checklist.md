@@ -27,8 +27,7 @@ Generated: 2026-06-01T08:59:46.970Z
 
 | Date | Session owner | Folders covered | Files reviewed | Notes |
 |---|---|---|---:|---|
-|  |  |  |  |  |
-|  |  |  |  |  |
+| 2026-06-01 | agent | zh.ts under src/apps/utildex/tools | 33 | Restored from clean git history (commit 6e51957 old-path). 0 corrupted characters remain post-fix. |
 
 ## Per-Directory Checklist
 

@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: 'ICS \u4e8b\u4ef6\u751f\u6210\u5668',
   PRIVACY_NOTE:
     '\u6570\u636e\u4e0d\u4f1a\u79bb\u5f00\u60a8\u7684\u8bbe\u5907\u3002.ics \u6587\u4ef6\u5728\u672c\u5730\u751f\u6210\u3002',

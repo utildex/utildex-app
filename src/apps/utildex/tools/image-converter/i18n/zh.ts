@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '图片转换器',
   TITLE_SHORT: '转换',
   DROP_LABEL: '将图片拖到此处 (JPG, PNG, WEBP, HEIC)',

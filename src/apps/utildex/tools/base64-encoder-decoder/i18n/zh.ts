@@ -1,13 +1,13 @@
-﻿export default {
+export default {
   WIDGET_TITLE: 'Base64',
-  MODE_ENCODE: 'þ╝ûþáü',
+  MODE_ENCODE: '编码',
   MODE_DECODE: '解码',
   INPUT_LABEL: '输入',
   OUTPUT_LABEL: '输出',
   INPUT_PLACEHOLDER_ENCODE: '输入要编码为 Base64 的文本...',
   INPUT_PLACEHOLDER_DECODE: '粘贴要解码的 Base64 文本...',
   OUTPUT_PLACEHOLDER: '结果显示在这里...',
-  TOGGLE_URL_SAFE: 'õ¢┐þö¿ URL-safe Base64',
+  TOGGLE_URL_SAFE: '使用 URL-safe Base64',
   SETTING_LABEL: '设置',
   BTN_COPY: '复制',
   BTN_COPIED: '已复制',

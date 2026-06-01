@@ -1,10 +1,10 @@
-﻿export default {
+export default {
   HEIGHT_LABEL: '身高',
-  WEIGHT_LABEL: 'õ¢ôÚçì',
+  WEIGHT_LABEL: '体重',
   UNIT_CM: '厘米',
   UNIT_IN: '英寸',
   UNIT_KG: '千克',
-  UNIT_LB: 'þúà',
+  UNIT_LB: '磅',
   UNIT_TOGGLE_HEIGHT: '身高单位',
   UNIT_TOGGLE_WEIGHT: '体重单位',
   CONVERTED_PREFIX: '=',
@@ -35,19 +35,15 @@
 
   SUMMARY_UNDERWEIGHT: '您的 BMI 低于健康范围，建议与临床医生讨论。',
   SUMMARY_NORMAL: '您的 BMI 处于所选标准的健康范围内。',
-  SUMMARY_OVERWEIGHT:
-    '您的 BMI 高于健康范围，调整生活方式通常可回到范围内。',
+  SUMMARY_OVERWEIGHT: '您的 BMI 高于健康范围，调整生活方式通常可回到范围内。',
   SUMMARY_OBESE_I: '您的 BMI 提示 I 级肥胖——建议与临床医生讨论。',
   SUMMARY_OBESE_II: '您的 BMI 提示 II 级肥胖——建议与临床医生讨论。',
   SUMMARY_OBESE_III: '您的 BMI 提示 III 级肥胖——建议与临床医生讨论。',
 
   NOTE_ASIA_PACIFIC: '已使用 WHO 亚太切点（超重 ≥ 23，肥胖 ≥ 27.5）。',
-  NOTE_PEDIATRIC_BLOCKED:
-    '儿童与青少年的解读需要按年龄与性别的百分位数，本工具未实现。',
-  NOTE_OLDER_ADULT:
-    '65 岁以上 BMI 准确性下降；肌肉流失与体成分变化会影响解读。',
-  NOTE_ATHLETE_CAVEAT:
-    'BMI 不区分肌肉与脂肪，肌肉发达者可能被高估脂肪比例。',
+  NOTE_PEDIATRIC_BLOCKED: '儿童与青少年的解读需要按年龄与性别的百分位数，本工具未实现。',
+  NOTE_OLDER_ADULT: '65 岁以上 BMI 准确性下降；肌肉流失与体成分变化会影响解读。',
+  NOTE_ATHLETE_CAVEAT: 'BMI 不区分肌肉与脂肪，肌肉发达者可能被高估脂肪比例。',
 
   PROFILE_HEADING: '您的资料',
   PROFILE_SEX: '性别',
@@ -56,11 +52,9 @@
   PROFILE_AGE: '年龄',
   PROFILE_STANDARD: '标准',
 
-  WHY_SEX:
-    '性别不改变成人 BMI 切点，但影响体成分解读；女性必需脂肪含量高于男性。',
+  WHY_SEX: '性别不改变成人 BMI 切点，但影响体成分解读；女性必需脂肪含量高于男性。',
   WHY_AGE: 'BMI 切点仅适用于成人。65 岁后体成分变化使准确性降低。',
-  WHY_STANDARD:
-    'WHO 亚太切点（超重 ≥ 23，肥胖 ≥ 27.5）更能反映东亚与南亚人群的心血管代谢风险。',
+  WHY_STANDARD: 'WHO 亚太切点（超重 ≥ 23，肥胖 ≥ 27.5）更能反映东亚与南亚人群的心血管代谢风险。',
 
   METHODOLOGY_BUTTON: '方法学与参考文献',
   MODAL_CLOSE: '关闭',

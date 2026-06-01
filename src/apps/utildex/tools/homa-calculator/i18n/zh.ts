@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   METHOD_LABEL: '计算方法',
   METHOD_HOMA_IR: 'HOMA-IR',
   METHOD_HOMA_B: 'HOMA-%B',
@@ -42,8 +42,7 @@
 
   IR_SUMMARY_OPTIMAL: '您的结果在该资料的最佳范围，提示胰岛素敏感性较好。',
   IR_SUMMARY_NORMAL: '您的结果在该资料的正常范围内。',
-  IR_SUMMARY_MILD:
-    '结果提示轻度升高。生活方式调整通常可使其回到正常范围。',
+  IR_SUMMARY_MILD: '结果提示轻度升高。生活方式调整通常可使其回到正常范围。',
   IR_SUMMARY_ELEVATED: '结果提示胰岛素抵抗升高，建议与临床医生讨论。',
   IR_SUMMARY_HIGH: '结果提示明显的胰岛素抵抗，强烈建议与临床医生讨论。',
 
@@ -57,10 +56,8 @@
 
   NOTE_BMI_ADJUSTED: '已根据您的 BMI 类别调整参考范围。',
   NOTE_POSTMENO_ADJUSTED: '上限因绝经后生理特点略微上调。',
-  NOTE_POPULATION_FALLBACK:
-    '该群体的人口特异参考数据有限，使用西欧人群范围作为回退。',
-  NOTE_PEDIATRIC_BLOCKED:
-    '儿童青少年解读需要按年龄/性别的儿科参考曲线，本工具未实现。',
+  NOTE_POPULATION_FALLBACK: '该群体的人口特异参考数据有限，使用西欧人群范围作为回退。',
+  NOTE_PEDIATRIC_BLOCKED: '儿童青少年解读需要按年龄/性别的儿科参考曲线，本工具未实现。',
   NOTE_YOUNG_ADULT: '25 岁以下的数值可能略低于成年参考。',
   NOTE_OLDER_ADULT: '随年龄增长存在轻度上漂；65 岁以上解读精度下降。',
   NOTE_PROFILE_CHANGED: '您的分数未变，但与新的资料对应的参考范围不同。',
@@ -70,7 +67,7 @@
   PROFILE_TOGGLE_HIDE: '收起资料',
   PROFILE_SEX: '性别',
   PROFILE_SEX_FEMALE: '女',
-  PROFILE_SEX_MALE: 'þöÀ',
+  PROFILE_SEX_MALE: '男',
   PROFILE_AGE: '年龄',
   PROFILE_BMI: 'BMI 类别',
   PROFILE_BMI_UNDER: '体重过低',
@@ -82,7 +79,7 @@
   POP_EAST_ASIAN: '东亚人（日本／中国／韩国）',
   POP_SOUTH_ASIAN: '南亚人',
   POP_HISPANIC: '西班牙裔／拉丁美洲人',
-  POP_MIDDLE_EASTERN: 'õ©¡õ©£õ║║',
+  POP_MIDDLE_EASTERN: '中东人',
   POP_SUB_SAHARAN: '撒哈拉以南非洲人',
   POP_OTHER: '其他／未指定',
   PROFILE_MENOPAUSE: '绝经状态',
