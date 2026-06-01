@@ -304,10 +304,10 @@ import zh from './i18n/zh';
               </div>
               <div class="grid grid-cols-1 gap-1.5 text-sm text-slate-700 dark:text-slate-200">
                 <div>
-                  alg: <span class="font-mono">{{ decoded().algorithm || 'ÔÇö' }}</span>
+                  alg: <span class="font-mono">{{ decoded().algorithm || '—' }}</span>
                 </div>
                 <div>
-                  typ: <span class="font-mono">{{ decoded().tokenType || 'ÔÇö' }}</span>
+                  typ: <span class="font-mono">{{ decoded().tokenType || '—' }}</span>
                 </div>
                 <div>
                   {{ t.map()['CLAIM_IAT'] }}:
@@ -435,20 +435,20 @@ export class JwtDecoderComponent {
 
   claimText(name: string): string {
     const payload = this.decoded().payload;
-    if (!payload) return 'ÔÇö';
+    if (!payload) return '—';
 
     const value = payload[name];
-    if (value === undefined || value === null) return 'ÔÇö';
+    if (value === undefined || value === null) return '—';
     if (Array.isArray(value)) return value.join(', ');
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
   }
 
   timeText(value: number | null): string {
-    if (value === null) return 'ÔÇö';
+    if (value === null) return '—';
 
     const dt = new Date(value * 1000);
-    if (Number.isNaN(dt.getTime())) return 'ÔÇö';
+    if (Number.isNaN(dt.getTime())) return '—';
 
     return `${value} (${dt.toLocaleString()})`;
   }

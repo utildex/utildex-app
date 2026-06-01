@@ -2,15 +2,15 @@
 import { schema } from './timestamp-converter.schema';
 
 /**
- * Unix Timestamp Converter ÔÇö pure computation kernel.
+ * Unix Timestamp Converter — pure computation kernel.
  *
  * Supports four units: seconds (s), milliseconds (ms), microseconds (us),
  * nanoseconds (ns). Microseconds and nanoseconds are carried as strings to
  * avoid Number precision loss above 2^53.
  *
  * Two modes:
- *  - parse:    a raw timestamp string + unit (or 'auto') ÔåÆ all formats.
- *  - compose:  a wall-clock date+time in a zone ÔåÆ all formats.
+ *  - parse:    a raw timestamp string + unit (or 'auto') → all formats.
+ *  - compose:  a wall-clock date+time in a zone → all formats.
  */
 
 export type EpochUnit = 's' | 'ms' | 'us' | 'ns';
@@ -90,10 +90,10 @@ function offsetLabel(minutes: number): string {
 /**
  * Auto-detect unit by magnitude. Heuristic boundaries chosen so that any
  * "current era" (1970ÔÇô~2300) timestamp resolves correctly:
- *   |x| < 1e11   ÔåÆ seconds         (years up to ~5138)
- *   |x| < 1e14   ÔåÆ milliseconds    (years up to ~5138)
- *   |x| < 1e17   ÔåÆ microseconds
- *   else          ÔåÆ nanoseconds
+ *   |x| < 1e11   → seconds         (years up to ~5138)
+ *   |x| < 1e14   → milliseconds    (years up to ~5138)
+ *   |x| < 1e17   → microseconds
+ *   else          → nanoseconds
  */
 export function detectUnit(raw: string): EpochUnit {
   if (!SIGNED_INT_RE.test(raw)) return 'ms';

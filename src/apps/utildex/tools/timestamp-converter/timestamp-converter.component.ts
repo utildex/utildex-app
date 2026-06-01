@@ -238,7 +238,7 @@ interface CopyRow {
                   {{ f.zoneTime }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
-                  {{ f.zoneDate }} ┬À {{ f.weekday }} ┬À UTC {{ f.offsetLabel }}
+                  {{ f.zoneDate }} · {{ f.weekday }} · UTC {{ f.offsetLabel }}
                 </p>
               </div>
               <div
@@ -251,7 +251,7 @@ interface CopyRow {
                   {{ f.localTime }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
-                  {{ f.localDate }} ┬À
+                  {{ f.localDate }} ·
                   <span class="italic">{{ f.relative }}</span>
                 </p>
               </div>
@@ -326,7 +326,7 @@ interface CopyRow {
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>┬À</span>
+          <span>·</span>
           <span>{{ t.map()['DST_NOTE'] }}</span>
         </p>
       </div>

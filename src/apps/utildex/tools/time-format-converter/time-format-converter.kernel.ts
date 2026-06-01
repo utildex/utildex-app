@@ -2,7 +2,7 @@
 import { schema } from './time-format-converter.schema';
 
 /**
- * Time Format Converter ÔÇö pure parsing + formatting kernel.
+ * Time Format Converter — pure parsing + formatting kernel.
  *
  * Recognises and parses:
  *  - ISO 8601 / RFC 3339 (`2026-05-10T12:34:56Z`, `ÔÇª+02:00`, `ÔÇª-0500`, fractional seconds)
@@ -189,7 +189,7 @@ export function parseTime(raw: string, zone: string): ParseResult | null {
     return { format: 'unix-s', instantMs: Math.round(v * 1000) };
   }
 
-  // ISO 8601 / RFC 3339 ÔÇö and the SQL DATETIME variant with a space separator
+  // ISO 8601 / RFC 3339 — and the SQL DATETIME variant with a space separator
   // and no offset is matched by SQL_DATETIME_RE.
   const isoMatch = ISO_RE.exec(trimmed);
   if (isoMatch?.groups) {
@@ -233,7 +233,7 @@ export function parseTime(raw: string, zone: string): ParseResult | null {
     return { format: 'sql-datetime', instantMs: instant };
   }
 
-  // SQL DATE ÔåÆ midnight in the supplied zone.
+  // SQL DATE → midnight in the supplied zone.
   const sqlDateMatch = SQL_DATE_RE.exec(trimmed);
   if (sqlDateMatch) {
     const [, ys, ms2, ds] = sqlDateMatch;
@@ -260,7 +260,7 @@ export function parseTime(raw: string, zone: string): ParseResult | null {
     return { format: isHttp ? 'http-date' : 'rfc2822', instantMs: instant };
   }
 
-  // Fallback ÔÇö generic locale parse.
+  // Fallback — generic locale parse.
   const fallback = Date.parse(trimmed);
   if (Number.isFinite(fallback)) {
     return { format: 'locale', instantMs: fallback };

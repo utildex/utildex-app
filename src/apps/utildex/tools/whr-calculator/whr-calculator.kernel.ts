@@ -2,7 +2,7 @@
 import { schema } from './whr-calculator.schema';
 
 /**
- * Waist-to-Hip Ratio (WHR) Calculator ÔÇö pure computation kernel.
+ * Waist-to-Hip Ratio (WHR) Calculator — pure computation kernel.
  * All logic is deterministic and runs locally.
  */
 

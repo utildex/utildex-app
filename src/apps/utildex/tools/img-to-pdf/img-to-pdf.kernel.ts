@@ -2,7 +2,7 @@
 import { schema } from './img-to-pdf.schema';
 
 /**
- * Images-to-PDF Kernel ÔÇö pure transformation logic.
+ * Images-to-PDF Kernel — pure transformation logic.
  *
  * No Angular imports. No UI dependencies. No registry access.
  * Callable as a pure function for pipeline orchestration.
@@ -122,7 +122,7 @@ export async function convertImagesToPdf(
 }
 
 /**
- * Pipeline entry point ÔÇö convert image buffers to PDF with default settings.
+ * Pipeline entry point — convert image buffers to PDF with default settings.
  */
 export async function run(
   input: z.infer<typeof schema.input>,

@@ -2,7 +2,7 @@
 import { schema } from './json-formatter.schema';
 
 /**
- * JSON Formatter Kernel ÔÇö pure transformation logic.
+ * JSON Formatter Kernel — pure transformation logic.
  *
  * No Angular imports. No UI dependencies. No registry access.
  * Callable as a pure function for pipeline orchestration.
@@ -164,7 +164,7 @@ function lineColumnToPosition(text: string, line: number, column: number): numbe
 }
 
 /**
- * Pipeline entry point ÔÇö format JSON with default settings.
+ * Pipeline entry point — format JSON with default settings.
  */
 export function run(input: z.infer<typeof schema.input>): z.infer<typeof schema.output> {
   return formatJson(input, 2);

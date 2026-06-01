@@ -237,7 +237,7 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
                     {{ t.map()['RESULT_DIFF_LABEL'] }}
                   </p>
                   <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {{ diff()?.years }}y ┬À {{ diff()?.months }}m ┬À {{ diff()?.days }}d
+                    {{ diff()?.years }}y · {{ diff()?.months }}m · {{ diff()?.days }}d
                   </p>
                 </div>
               </div>
@@ -251,7 +251,7 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
               <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 {{ resultWeekday() }}
                 @if (format() !== 'iso') {
-                  ┬À <span class="font-mono">{{ resultIso() }}</span>
+                  · <span class="font-mono">{{ resultIso() }}</span>
                 }
               </p>
             }
@@ -303,7 +303,7 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>┬À</span>
+          <span>·</span>
           <span>{{ t.map()['TZ_NOTE'] }}</span>
         </p>
       </div>
@@ -606,7 +606,7 @@ export class DateTimeCalculatorComponent {
         })}`;
       }
       case 'deadline': {
-        return `${result} ÔÇö ${this.fillTemplate(map['PHRASE_DEADLINE'], {
+        return `${result} — ${this.fillTemplate(map['PHRASE_DEADLINE'], {
           amount: Math.abs(this.amount()),
           unit: this.unitLabel(this.deadlineUnit()),
           start: this.fmt(this.startDate()),

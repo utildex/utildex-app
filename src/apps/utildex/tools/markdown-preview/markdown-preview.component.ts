@@ -160,7 +160,7 @@ import zh from './i18n/zh';
         <div
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500"
         >
-          <span>{{ wordCount() }} words ÔÇó {{ charCount() }} chars</span>
+          <span>{{ wordCount() }} words • {{ charCount() }} chars</span>
           <span class="text-slate-400">Markdown to HTML preview</span>
         </div>
 
@@ -221,7 +221,7 @@ import zh from './i18n/zh';
         <div
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500"
         >
-          <span>{{ wordCount() }} words ÔÇó {{ charCount() }} chars</span>
+          <span>{{ wordCount() }} words • {{ charCount() }} chars</span>
           <span class="text-slate-400">Esc to close</span>
         </div>
 

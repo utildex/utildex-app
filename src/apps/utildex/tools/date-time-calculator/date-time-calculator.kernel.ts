@@ -2,7 +2,7 @@
 import { schema } from './date-time-calculator.schema';
 
 /**
- * Date & Time Calculator ÔÇö pure computation kernel.
+ * Date & Time Calculator — pure computation kernel.
  *
  * All operations work on calendar dates (no time-of-day) and are time-zone
  * safe by serializing everything as UTC ISO date strings (YYYY-MM-DD). Inputs

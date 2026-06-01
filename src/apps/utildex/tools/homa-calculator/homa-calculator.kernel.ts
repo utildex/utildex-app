@@ -2,7 +2,7 @@
 import { schema } from './homa-calculator.schema';
 
 /**
- * HOMA Calculator ÔÇö pure computation kernel.
+ * HOMA Calculator — pure computation kernel.
  * All logic is deterministic and runs locally (no I/O, no network).
  */
 

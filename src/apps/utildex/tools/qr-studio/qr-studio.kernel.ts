@@ -2,7 +2,7 @@
 import { schema } from './qr-studio.schema';
 
 /**
- * QR Studio Kernel ÔÇö pure transformation logic.
+ * QR Studio Kernel — pure transformation logic.
  *
  * No Angular imports. No UI dependencies. No registry access.
  * Callable as a pure function for pipeline orchestration.
@@ -90,7 +90,7 @@ export async function generateQr(
 }
 
 /**
- * Pipeline entry point ÔÇö generate QR from text with defaults.
+ * Pipeline entry point — generate QR from text with defaults.
  */
 export async function run(
   input: z.infer<typeof schema.input>,

@@ -335,7 +335,7 @@ function addHourToTime(t: string): string {
               <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
               {{ t.map()['PRIVACY_NOTE'] }}
             </span>
-            <span>┬À</span>
+            <span>·</span>
             <span>{{ t.map()['DST_NOTE'] }}</span>
           </p>
         </div>
@@ -380,7 +380,7 @@ function addHourToTime(t: string): string {
               <span class="font-semibold text-slate-700 dark:text-slate-200">{{
                 formatDuration(s.durationMinutes)
               }}</span>
-              ┬À {{ t.map()['RESULT_RRULE'] }}:
+              · {{ t.map()['RESULT_RRULE'] }}:
               <span class="font-semibold text-slate-700 dark:text-slate-200">{{
                 s.rruleHuman ?? t.map()['RESULT_NO_RRULE']
               }}</span>

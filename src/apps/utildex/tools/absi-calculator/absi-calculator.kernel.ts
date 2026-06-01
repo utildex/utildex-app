@@ -2,8 +2,8 @@
 import { schema } from './absi-calculator.schema';
 
 /**
- * A Body Shape Index (ABSI) ÔÇö Krakauer & Krakauer, 2012.
- * ABSI = WC(m) / (BMI^(2/3) ┬À height(m)^(1/2))
+ * A Body Shape Index (ABSI) — Krakauer & Krakauer, 2012.
+ * ABSI = WC(m) / (BMI^(2/3) · height(m)^(1/2))
  * Reference (mean/SD) ABSI values from NHANES are sex- and age-stratified;
  * a z-score quantifies abdominal-shape mortality risk independent of BMI.
  * Pure, deterministic, runs locally.

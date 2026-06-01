@@ -213,7 +213,7 @@ import zh from './i18n/zh';
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
         >
           <span>
-            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} ÔÇó {{ charCount() }}
+            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} • {{ charCount() }}
             {{ t.map()['STATUS_CHARS'] }}
           </span>
           @if (content().trim()) {
@@ -350,7 +350,7 @@ import zh from './i18n/zh';
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
         >
           <span>
-            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} ÔÇó {{ charCount() }}
+            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} • {{ charCount() }}
             {{ t.map()['STATUS_CHARS'] }}
           </span>
           @if (content().trim()) {

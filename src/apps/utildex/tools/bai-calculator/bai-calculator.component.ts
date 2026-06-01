@@ -522,7 +522,7 @@ export class BaiCalculatorComponent {
 
   primaryDisplay = computed(() => {
     const v = this.results().bai;
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'ÔÇö';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     return `${v.toFixed(1)}%`;
   });
 
@@ -588,7 +588,7 @@ export class BaiCalculatorComponent {
     const map = this.t.map();
     const r = this.results();
     const fmt = (v: number | null, digits = 1) =>
-      v === null || !Number.isFinite(v) ? 'ÔÇö' : v.toFixed(digits);
+      v === null || !Number.isFinite(v) ? '—' : v.toFixed(digits);
     const lines = [
       `${map['HIP_LABEL']}: ${this.hipInput()} ${this.hipUnit()}`,
       `${map['HEIGHT_LABEL']}: ${this.heightInput()} ${this.heightUnit()}`,
@@ -596,7 +596,7 @@ export class BaiCalculatorComponent {
       `${map['PRIMARY_RESULT_LABEL']}: ${fmt(r.bai)}%`,
       `${map['INTERPRETATION_HEADING']}: ${this.tierLabel()}`,
       '',
-      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} ┬À ${map['PROFILE_AGE']}: ${this.age()}`,
+      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} · ${map['PROFILE_AGE']}: ${this.age()}`,
       '',
       map['DISCLAIMER'],
       map['PRIVACY_NOTE'],

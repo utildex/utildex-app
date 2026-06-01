@@ -2,7 +2,7 @@
 import { schema } from './cron-explainer.schema';
 
 /**
- * Cron Expression Explainer ÔÇö pure parser, validator, describer and next-run
+ * Cron Expression Explainer — pure parser, validator, describer and next-run
  * iterator. Supports classic 5-field cron with optional 6-field (seconds-first)
  * and 7-field (year-last) variants used by Quartz/AWS:
  *
@@ -16,18 +16,18 @@ import { schema } from './cron-explainer.schema';
  *     * * * * * * *
  *
  * Supported syntax:
- *  - `*`            ÔåÆ wildcard
- *  - `a,b,c`        ÔåÆ list
- *  - `a-b`          ÔåÆ range
- *  - `a-b/n`, `* /n` ÔåÆ step
+ *  - `*`            → wildcard
+ *  - `a,b,c`        → list
+ *  - `a-b`          → range
+ *  - `a-b/n`, `* /n` → step
  *  - JAN..DEC, SUN..SAT (case-insensitive) for month/day-of-week
- *  - `?`            ÔåÆ equivalent to `*` for day-of-month / day-of-week
+ *  - `?`            → equivalent to `*` for day-of-month / day-of-week
  *  - Macros: @yearly @annually @monthly @weekly @daily @midnight @hourly
  *
- * Not supported (intentionally ÔÇö uncommon, ambiguous): `L`, `W`, `#`, `@reboot`.
+ * Not supported (intentionally — uncommon, ambiguous): `L`, `W`, `#`, `@reboot`.
  *
  * Next-run iteration walks the calendar in the user's IANA zone using
- * `Intl.DateTimeFormat` to recover wall-clock parts and a wallÔåÆUTC round-trip
+ * `Intl.DateTimeFormat` to recover wall-clock parts and a wall→UTC round-trip
  * to handle DST transitions.
  */
 
@@ -327,7 +327,7 @@ export function describe(parts: CronParts, labels: DescribeLabels): string {
     if (stepM != null) phrases.push(labels.everyXMinutes(stepM));
     else phrases.push(labels.pastEveryHour + ' (' + describeNumericList(m.values, pad2) + ')');
   } else {
-    // Both fixed ÔåÆ list of HH:MM times.
+    // Both fixed → list of HH:MM times.
     const times: string[] = [];
     for (const hv of h.values) {
       for (const mv of m.values) {
@@ -472,7 +472,7 @@ interface IteratorState {
  *
  * Algorithm: classic "increment-and-check", using the constraint:
  *  - If both DOM and DOW are restricted (neither wildcard), match if EITHER
- *    matches (Vixie cron semantics ÔÇö the OR rule).
+ *    matches (Vixie cron semantics — the OR rule).
  *  - If only one is restricted, that one must match.
  */
 function findNextMatch(

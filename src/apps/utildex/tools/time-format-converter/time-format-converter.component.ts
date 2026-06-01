@@ -127,7 +127,7 @@ const EXAMPLES = [
                 {{ detectedLabel() }}
               </span>
               <span class="ml-2 font-mono text-slate-400 normal-case"
-                >{{ f.zone }} ┬À UTC {{ f.offsetLabel }}</span
+                >{{ f.zone }} · UTC {{ f.offsetLabel }}</span
               >
             </p>
             <button
@@ -188,7 +188,7 @@ const EXAMPLES = [
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>┬À</span>
+          <span>·</span>
           <span>{{ t.map()['DST_NOTE'] }}</span>
         </p>
       </div>

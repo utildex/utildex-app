@@ -2,7 +2,7 @@
 import { schema } from './bmi-calculator.schema';
 
 /**
- * BMI Calculator ÔÇö pure computation kernel.
+ * BMI Calculator — pure computation kernel.
  * All logic is deterministic and runs locally.
  */
 
