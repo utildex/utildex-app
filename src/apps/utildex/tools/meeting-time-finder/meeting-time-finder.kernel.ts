@@ -2,7 +2,7 @@
 import { schema } from './meeting-time-finder.schema';
 
 /**
- * Meeting Time Finder ÔÇö pure computation kernel.
+ * Meeting Time Finder — pure computation kernel.
  *
  * Given a date in an "anchor" time zone and a list of participants (each with
  * an IANA zone + working-hours window), generates a grid of half-hourly slots
@@ -179,7 +179,7 @@ function isParticipantWorking(view: ParticipantSlotView, participant: Participan
   if (isWeekend && !participant.includeWeekends) return false;
   const m = parseHM(view.time);
   if (m == null) return false;
-  // Wrapping window (overnight shift e.g. 22:00 ÔåÆ 06:00) supported.
+  // Wrapping window (overnight shift e.g. 22:00 → 06:00) supported.
   if (end > start) return m >= start && m < end;
   if (end < start) return m >= start || m < end;
   return false;
@@ -188,7 +188,7 @@ function isParticipantWorking(view: ParticipantSlotView, participant: Participan
 /**
  * Compute meeting slots and full-overlap windows.
  * The grid spans 48 hours starting at 00:00 of the previous day in the anchor
- * zone ÔÇö this captures wraparound for distant time zones around the chosen
+ * zone — this captures wraparound for distant time zones around the chosen
  * date without surprising the user.
  */
 export function findOverlap(input: FindOverlapInput): FindOverlapOutput {
@@ -203,7 +203,7 @@ export function findOverlap(input: FindOverlapInput): FindOverlapOutput {
     return { slots: [], fullOverlapWindows: [] };
   }
 
-  // Window: previous day 00:00 ÔåÆ next day 00:00 in anchor zone (48h total).
+  // Window: previous day 00:00 → next day 00:00 in anchor zone (48h total).
   const [y, mo, d] = input.date.split('-').map(Number);
   if (!Number.isFinite(y) || !Number.isFinite(mo) || !Number.isFinite(d)) {
     return { slots: [], fullOverlapWindows: [] };

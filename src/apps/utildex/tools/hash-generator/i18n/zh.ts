@@ -1,9 +1,9 @@
-﻿export default {
+export default {
   TITLE: '哈希生成器',
   INPUT_LABEL: '输入',
   INPUT_PLACEHOLDER: '输入要哈希的文本...',
   ALGORITHM_LABEL: '算法',
-  OPTIONS_TITLE: 'ÚÇëÚí╣',
+  OPTIONS_TITLE: '选项',
   FILE_DROP_LABEL: '拖放文件到这里或点击选择',
   FILE_SELECTED: '已选择文件',
   RESULT_LABEL: '哈希结果',

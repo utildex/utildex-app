@@ -41,8 +41,7 @@
   SUMMARY_NORMAL: 'Your BMI is within the healthy range for your reference standard.',
   SUMMARY_OVERWEIGHT:
     'Your BMI is above the healthy range. Lifestyle adjustments often bring it back into range.',
-  SUMMARY_OBESE_I:
-    'Your BMI indicates obesity class I — consider discussing it with a clinician.',
+  SUMMARY_OBESE_I: 'Your BMI indicates obesity class I — consider discussing it with a clinician.',
   SUMMARY_OBESE_II:
     'Your BMI indicates obesity class II — we recommend discussing it with a clinician.',
   SUMMARY_OBESE_III:

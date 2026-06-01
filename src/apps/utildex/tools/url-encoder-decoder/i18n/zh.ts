@@ -1,6 +1,6 @@
-﻿export default {
+export default {
   WIDGET_TITLE: 'URL',
-  MODE_ENCODE: 'þ╝ûþáü',
+  MODE_ENCODE: '编码',
   MODE_DECODE: '解码',
   INPUT_LABEL: '输入',
   OUTPUT_LABEL: '输出',

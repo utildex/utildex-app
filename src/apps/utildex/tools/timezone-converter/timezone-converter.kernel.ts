@@ -2,7 +2,7 @@
 import { schema } from './timezone-converter.schema';
 
 /**
- * Time Zone Converter ÔÇö pure computation kernel.
+ * Time Zone Converter — pure computation kernel.
  *
  * Converts a wall-clock moment in a "source" IANA time zone into the equivalent
  * wall-clock time in any number of target IANA zones, with UTC offset and
@@ -181,7 +181,7 @@ export function convert(input: ConvertInput): ConvertOutput {
   return { utcIso, source, targets };
 }
 
-/** "Now" in the source zone ÔÇö returns ISO date + 24h time. */
+/** "Now" in the source zone — returns ISO date + 24h time. */
 export function nowInZone(zone: string): { date: string; time: string } {
   const safeZone = isValidIanaZone(zone) ? zone : 'UTC';
   const dtf = new Intl.DateTimeFormat('en-US', {

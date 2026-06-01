@@ -3,8 +3,8 @@
   PRIVACY_NOTE: 'No data leaves your device. All conversion runs locally.',
   DST_NOTE: 'DST and historical offsets resolved by your browser.',
 
-  MODE_PARSE: 'Timestamp ÔåÆ date',
-  MODE_COMPOSE: 'Date ÔåÆ timestamp',
+  MODE_PARSE: 'Timestamp → date',
+  MODE_COMPOSE: 'Date → timestamp',
 
   LABEL_TIMESTAMP: 'Epoch timestamp',
   LABEL_TIMESTAMP_PLACEHOLDER: 'e.g. 1746878400 or 1746878400000',

@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '时区转换器',
   PRIVACY_NOTE: '数据不会离开您的设备。所有计算均在本地进行。',
   DST_NOTE: '夏令时与历史偏移由浏览器解析。',
@@ -11,7 +11,7 @@
   LABEL_NOW: '现在',
   LABEL_DETECT: '我的时区',
   LABEL_SWAP_WITH_SOURCE: '设为源时区',
-  LABEL_REMOVE: 'þº╗ÚÖñ',
+  LABEL_REMOVE: '移除',
   LABEL_DATE_FORMAT: '日期格式',
   LABEL_TIME_FORMAT: '时间格式',
 
@@ -40,7 +40,7 @@
   DAY_MINUS: '−{n} 天',
 
   COPY_FORMAT: '复制为',
-  COPY_ISO_UTC: 'ISO 8601´╝êUTC´╝ë',
+  COPY_ISO_UTC: 'ISO 8601（UTC）',
   COPY_LOCAL: '本地时间',
   COPY_TABLE: '摘要',
   COPY_DONE: '已复制到剪贴板',

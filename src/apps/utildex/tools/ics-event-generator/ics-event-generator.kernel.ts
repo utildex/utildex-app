@@ -2,7 +2,7 @@
 import { schema } from './ics-event-generator.schema';
 
 /**
- * ICS Event Generator ÔÇö emits an RFC 5545 VCALENDAR/VEVENT block from
+ * ICS Event Generator — emits an RFC 5545 VCALENDAR/VEVENT block from
  * structured input. All output is built in the browser; no network is used.
  *
  * Notes on time handling:
@@ -10,7 +10,7 @@ import { schema } from './ics-event-generator.schema';
  *    DTEND is exclusive, so a one-day event ends on the next day.
  *  - When `allDay` is false, DTSTART/DTEND are emitted as
  *    `TZID=<zone>:YYYYMMDDTHHMMSS`. A minimal VTIMEZONE block is emitted with
- *    the current standard offset of the zone ÔÇö sufficient for most calendar
+ *    the current standard offset of the zone — sufficient for most calendar
  *    clients (which apply their own zone database). For UTC, `Z`-suffix form
  *    is used and no VTIMEZONE is emitted.
  *  - DTSTAMP is the current UTC instant (required, RFC 5545 ┬º3.8.7.2).
@@ -18,7 +18,7 @@ import { schema } from './ics-event-generator.schema';
  * Folding: lines longer than 75 octets are folded with `\r\n ` as required by
  * RFC 5545 ┬º3.1.
  *
- * Escaping: per ┬º3.3.11 ÔÇö `\\`, `\;`, `\,`, `\n` for newlines.
+ * Escaping: per ┬º3.3.11 — `\\`, `\;`, `\,`, `\n` for newlines.
  */
 
 export type ConvertInput = z.infer<typeof schema.input>;
@@ -214,7 +214,7 @@ function offsetTokens(minutes: number): string {
 function buildVtimezone(zone: string, sampleInstantMs: number): string[] {
   const off = zoneOffsetAt(zone, sampleInstantMs);
   const tok = offsetTokens(off);
-  // Minimal but valid VTIMEZONE ÔÇö STANDARD-only, no transitions. Most
+  // Minimal but valid VTIMEZONE — STANDARD-only, no transitions. Most
   // calendar clients will still apply their own database for DST.
   return [
     'BEGIN:VTIMEZONE',

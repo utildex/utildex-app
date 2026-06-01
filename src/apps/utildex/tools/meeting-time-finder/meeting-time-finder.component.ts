@@ -180,7 +180,7 @@ function makeId(): string {
                       (change)="updateParticipant(p.id, { startTime: $any($event.target).value })"
                       class="focus:ring-primary focus:border-primary w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-900 tabular-nums dark:border-slate-600 dark:bg-slate-900 dark:text-white"
                     />
-                    <span class="text-xs text-slate-400">ÔåÆ</span>
+                    <span class="text-xs text-slate-400">→</span>
                     <input
                       type="time"
                       [value]="p.endTime"
@@ -294,7 +294,7 @@ function makeId(): string {
                       @for (cell of row.cells; track cell.utcIso) {
                         <td
                           [class]="cellClass(cell.isWorking)"
-                          [title]="cell.time + ' (' + cell.weekday + ') ┬À UTC ' + cell.offsetLabel"
+                          [title]="cell.time + ' (' + cell.weekday + ') · UTC ' + cell.offsetLabel"
                         ></td>
                       }
                     </tr>
@@ -347,11 +347,11 @@ function makeId(): string {
                           {{ zoneLabel(slot.zone) }}
                         </p>
                         <p class="font-semibold text-slate-800 tabular-nums dark:text-slate-100">
-                          {{ formatTimeDisplay(slot.startTime) }} ÔåÆ
+                          {{ formatTimeDisplay(slot.startTime) }} →
                           {{ formatTimeDisplay(slot.endTime) }}
                           @if (slot.startDate !== slot.endDate) {
                             <span class="text-[10px] text-slate-400">
-                              ({{ slot.startDate }} ÔåÆ {{ slot.endDate }})
+                              ({{ slot.startDate }} → {{ slot.endDate }})
                             </span>
                           } @else {
                             <span class="text-[10px] text-slate-400">({{ slot.startDate }})</span>
@@ -409,7 +409,7 @@ function makeId(): string {
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>┬À</span>
+          <span>·</span>
           <span>{{ t.map()['DST_NOTE'] }}</span>
         </p>
       </div>
@@ -591,7 +591,7 @@ export class MeetingTimeFinderComponent {
   });
 
   // Detect participants whose chosen meeting day is a weekend in their zone
-  // AND who have weekends excluded ÔÇö they cannot match by definition.
+  // AND who have weekends excluded — they cannot match by definition.
   weekendBlocked = computed(() => {
     const slots = this.result().slots;
     if (slots.length === 0) return [] as { id: string; name: string }[];
@@ -648,15 +648,15 @@ export class MeetingTimeFinderComponent {
     const lines = w.perParticipant.map((slot) => {
       const span =
         slot.startDate === slot.endDate
-          ? `${this.formatTimeDisplay(slot.startTime)} ÔåÆ ${this.formatTimeDisplay(slot.endTime)} (${slot.startDate})`
-          : `${this.formatTimeDisplay(slot.startTime)} (${slot.startDate}) ÔåÆ ${this.formatTimeDisplay(slot.endTime)} (${slot.endDate})`;
-      return `  ÔÇó ${zoneLabel(slot.zone)}: ${span}`;
+          ? `${this.formatTimeDisplay(slot.startTime)} → ${this.formatTimeDisplay(slot.endTime)} (${slot.startDate})`
+          : `${this.formatTimeDisplay(slot.startTime)} (${slot.startDate}) → ${this.formatTimeDisplay(slot.endTime)} (${slot.endDate})`;
+      return `  • ${zoneLabel(slot.zone)}: ${span}`;
     });
-    return [`${dur} ÔÇö UTC ${w.startUtcIso} ÔåÆ ${w.endUtcIso}`, ...lines].join('\n');
+    return [`${dur} — UTC ${w.startUtcIso} → ${w.endUtcIso}`, ...lines].join('\n');
   }
 
   private toIcsDate(iso: string): string {
-    // YYYY-MM-DDTHH:MM:SSZ ÔåÆ YYYYMMDDTHHMMSSZ
+    // YYYY-MM-DDTHH:MM:SSZ → YYYYMMDDTHHMMSSZ
     return iso.replace(/[-:]/g, '');
   }
 

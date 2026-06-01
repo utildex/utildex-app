@@ -34,8 +34,7 @@
   },
   zh: {
     name: '拆分 PDF',
-    description:
-      '从 PDF 文档中提取特定页面。数据不会离开你的设备。完全离线运行；你可以断开网络。',
+    description: '从 PDF 文档中提取特定页面。数据不会离开你的设备。完全离线运行；你可以断开网络。',
     widgetPresets: {
       icon: '图标',
       wide: '宽',

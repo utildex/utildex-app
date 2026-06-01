@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   TITLE: '会议时间查找器',
   PRIVACY_NOTE: '数据不会离开您的设备。所有匹配均在本地完成。',
   DST_NOTE: '夏令时与历史偏移由浏览器解析。',
@@ -10,7 +10,7 @@
   ZONE_SEARCH_EMPTY: '无匹配的时区',
   LABEL_PARTICIPANTS: '参会人',
   LABEL_ADD_PARTICIPANT: '添加参会人',
-  LABEL_REMOVE: 'þº╗ÚÖñ',
+  LABEL_REMOVE: '移除',
   LABEL_NAME: '名称',
   LABEL_NAME_PLACEHOLDER: '名称（可选）',
   LABEL_ZONE: '时区',
@@ -50,10 +50,10 @@
 
   PARTICIPANT_DEFAULT_NAME: '参会人 {n}',
   WEEKDAY_SUN: '日',
-  WEEKDAY_MON: 'õ©Ç',
-  WEEKDAY_TUE: 'õ║î',
-  WEEKDAY_WED: 'õ©ë',
+  WEEKDAY_MON: '一',
+  WEEKDAY_TUE: '二',
+  WEEKDAY_WED: '三',
   WEEKDAY_THU: '四',
-  WEEKDAY_FRI: 'õ║ö',
+  WEEKDAY_FRI: '五',
   WEEKDAY_SAT: '六',
 };

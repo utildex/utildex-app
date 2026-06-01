@@ -139,7 +139,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
                   pdfFile()?.name
                 }}</span>
                 <span class="text-xs text-slate-500"
-                  >{{ pages().length }} {{ t.map()['PAGES'] }} ÔÇó {{ selectedCount() }}
+                  >{{ pages().length }} {{ t.map()['PAGES'] }} • {{ selectedCount() }}
                   {{ t.map()['SELECTED'] }}</span
                 >
               </div>

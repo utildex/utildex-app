@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   WIDGET_TITLE: 'JWT',
   TITLE: 'JWT 解码器',
   INPUT_LABEL: '输入令牌',
@@ -13,7 +13,7 @@
   SIGNATURE_LABEL: '签名',
   CLAIMS_TITLE: '声明概览',
   CLAIM_ISS: '签发者',
-  CLAIM_SUB: 'õ©╗Úóÿ',
+  CLAIM_SUB: '主题',
   CLAIM_AUD: '受众',
   CLAIM_IAT: '签发时间',
   CLAIM_NBF: '生效时间',

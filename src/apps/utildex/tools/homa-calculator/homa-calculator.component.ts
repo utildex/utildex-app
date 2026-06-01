@@ -786,7 +786,7 @@ export class HomaCalculatorComponent {
 
   primaryDisplay = computed(() => {
     const v = this.primaryValue();
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'ÔÇö';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     if (this.method() === 'quicki') return v.toFixed(3);
     if (this.method() === 'homa-b' || this.method() === 'homa-s') {
       return `${v.toFixed(0)}%`;
@@ -821,7 +821,7 @@ export class HomaCalculatorComponent {
     return this.method() === 'homa-ir' || this.method() === 'quicki';
   });
 
-  /** Position 0..100 of the marker on the greenÔåÆred gradient. */
+  /** Position 0..100 of the marker on the green→red gradient. */
   gradientPercent = computed<number | null>(() => {
     if (!this.axisVisible()) return null;
     const clamp = (n: number) => Math.max(0, Math.min(100, n));
@@ -916,14 +916,14 @@ export class HomaCalculatorComponent {
     if (this.showMenopauseField()) {
       parts.push(this.menopausalStatus() === 'pre' ? map['MENO_PRE'] : map['MENO_POST']);
     }
-    return parts.filter(Boolean).join(' ┬À ');
+    return parts.filter(Boolean).join(' · ');
   });
 
   exportText = computed(() => {
     const map = this.t.map();
     const r = this.results();
     const fmt = (v: number | null, digits = 2, suffix = '') =>
-      v === null || !Number.isFinite(v) ? 'ÔÇö' : `${v.toFixed(digits)}${suffix}`;
+      v === null || !Number.isFinite(v) ? '—' : `${v.toFixed(digits)}${suffix}`;
     const lines = [
       `${map['CLINICAL_HEADING']}`,
       `  ${map['GLUCOSE_LABEL']}: ${this.glucoseInput()} ${this.glucoseUnit()}`,
@@ -957,7 +957,7 @@ export class HomaCalculatorComponent {
 
   secondaryDisplay(method: Method): string {
     const r = this.results();
-    const placeholder = this.t.map()['RESULT_PLACEHOLDER'] ?? 'ÔÇö';
+    const placeholder = this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     if (!this.hasInputs()) return placeholder;
     switch (method) {
       case 'homa-ir':

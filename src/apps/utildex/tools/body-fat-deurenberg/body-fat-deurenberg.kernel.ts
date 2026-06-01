@@ -2,9 +2,9 @@
 import { schema } from './body-fat-deurenberg.schema';
 
 /**
- * Body-fat percentage estimate ÔÇö Deurenberg formulas (1991, 1998).
- * - Adult formula (Deurenberg 1991): BF% = 1.20┬ÀBMI + 0.23┬Àage ÔêÆ 10.8┬Àsex ÔêÆ 5.4
- * - Pediatric formula (Deurenberg 1991): BF% = 1.51┬ÀBMI ÔêÆ 0.70┬Àage ÔêÆ 3.6┬Àsex + 1.4
+ * Body-fat percentage estimate — Deurenberg formulas (1991, 1998).
+ * - Adult formula (Deurenberg 1991): BF% = 1.20·BMI + 0.23·age ÔêÆ 10.8·sex ÔêÆ 5.4
+ * - Pediatric formula (Deurenberg 1991): BF% = 1.51·BMI ÔêÆ 0.70·age ÔêÆ 3.6·sex + 1.4
  *   where sex = 1 (male), 0 (female).
  * Pure, deterministic, runs locally.
  */

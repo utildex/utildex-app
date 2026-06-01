@@ -163,7 +163,7 @@ interface FieldRow {
                           {{
                             row.field.isWildcard
                               ? t.map()['ANY']
-                              : row.field.values.length + ' ÔÇó ' + previewValues(row.field)
+                              : row.field.values.length + ' • ' + previewValues(row.field)
                           }}
                         </span>
                       </p>
@@ -206,7 +206,7 @@ interface FieldRow {
                     </p>
                   </li>
                 } @empty {
-                  <li class="py-2 text-xs text-slate-500 dark:text-slate-400">ÔÇö</li>
+                  <li class="py-2 text-xs text-slate-500 dark:text-slate-400">—</li>
                 }
               </ol>
             </section>
@@ -220,7 +220,7 @@ interface FieldRow {
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>┬À</span>
+          <span>·</span>
           <span>{{ t.map()['DST_NOTE'] }}</span>
         </p>
       </div>

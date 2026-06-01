@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   WAIST_LABEL: '腰围',
   HIP_LABEL: '臀围',
   WAIST_HINT: '在自然腰部（肚脐上方）测量，呼气放松。',
@@ -16,20 +16,18 @@
   ENTER_BOTH_HINT: '请输入腰围与臀围以计算。',
 
   INTERPRETATION_HEADING: '解读',
-  AXIS_LEFT_LABEL: 'õ¢ÄÚúÄÚÖ®',
-  AXIS_RIGHT_LABEL: 'Ú½ÿÚúÄÚÖ®',
+  AXIS_LEFT_LABEL: '低风险',
+  AXIS_RIGHT_LABEL: '高风险',
   PROFILE_DEFAULTS_BADGE: '使用默认资料',
   PROFILE_DEFAULTS_HINT_SHORT: '使用默认值——填写资料以提高准确度。',
 
-  TIER_LOW: 'õ¢ÄÚúÄÚÖ®',
-  TIER_MODERATE: 'õ©¡þ¡ëÚúÄÚÖ®',
-  TIER_HIGH: 'Ú½ÿÚúÄÚÖ®',
+  TIER_LOW: '低风险',
+  TIER_MODERATE: '中等风险',
+  TIER_HIGH: '高风险',
 
   SUMMARY_LOW: '您的 WHR 处于您性别的低风险范围。',
-  SUMMARY_MODERATE:
-    '您的 WHR 提示心血管代谢风险中等增加，调整生活方式通常有助。',
-  SUMMARY_HIGH:
-    '您的 WHR 提示心血管代谢风险显著增加——建议与临床医生讨论。',
+  SUMMARY_MODERATE: '您的 WHR 提示心血管代谢风险中等增加，调整生活方式通常有助。',
+  SUMMARY_HIGH: '您的 WHR 提示心血管代谢风险显著增加——建议与临床医生讨论。',
 
   WAIST_RISK_NOTE_HIGH: '您的腰围达到或超过 WHO 行动阈值。',
   WAIST_RISK_NOTE_OK: '您的腰围低于 WHO 行动阈值。',

@@ -1,16 +1,16 @@
-﻿export default {
+export default {
   TITLE: '拆分 PDF',
   TITLE_SHORT: '拆分 PDF',
   DROP_LABEL: '将 PDF 拖到此处',
   DROP_EXPLICIT: '拖入以拆分',
   SELECT_FILE: '选择 PDF 文件',
   LOADED_FILE: '已加载：',
-  PAGES_COUNT: 'ÚíÁ',
+  PAGES_COUNT: '页',
   RANGE_LABEL: '拆分配置',
   RANGE_PLACEHOLDER: '例如：1-5; 6-10; 11',
   RANGE_HINT: "使用 ; 分隔以创建多个文件（例如 '1-5; 6-10'）。",
   BTN_SPLIT: '拆分 PDF',
-  BTN_RESET: 'Úçìþ¢«',
+  BTN_RESET: '重置',
   PROCESSING: '处理中...',
   SUCCESS: '处理完成！',
   ERR_NO_FILE: '请先选择文件。',
@@ -23,5 +23,5 @@
   BTN_START_OVER: '重新开始',
   FILES: '个文件',
   FILES_READY: '文件就绪',
-  UPLOAD_PDF: 'õ©èõ╝á PDF',
+  UPLOAD_PDF: '上传 PDF',
 };

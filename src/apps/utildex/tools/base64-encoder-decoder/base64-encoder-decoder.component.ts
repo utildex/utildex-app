@@ -225,7 +225,7 @@ import zh from './i18n/zh';
                 }}</span>
               </div>
               <span class="text-[11px] text-slate-500 dark:text-slate-300"
-                >{{ inputLength() }} {{ t.map()['STATUS_CHARS'] }} ÔÇó {{ inputBytes() }}
+                >{{ inputLength() }} {{ t.map()['STATUS_CHARS'] }} • {{ inputBytes() }}
                 {{ t.map()['STATUS_BYTES'] }}</span
               >
             </div>
@@ -255,7 +255,7 @@ import zh from './i18n/zh';
                 <span class="material-symbols-outlined text-xs text-slate-400">lock</span>
               </div>
               <span class="text-[11px] text-slate-500 dark:text-slate-300"
-                >{{ outputLength() }} {{ t.map()['STATUS_CHARS'] }} ÔÇó {{ outputBytes() }}
+                >{{ outputLength() }} {{ t.map()['STATUS_CHARS'] }} • {{ outputBytes() }}
                 {{ t.map()['STATUS_BYTES'] }}</span
               >
             </div>

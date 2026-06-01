@@ -57,7 +57,7 @@ type InputMode = 'text' | 'file';
               class="flex-1 cursor-pointer overflow-auto rounded-lg bg-slate-100 p-2 font-mono text-xs break-all text-slate-800 transition-colors hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
               (click)="copyHash()"
             >
-              {{ hashResult() || 'ÔÇö' }}
+              {{ hashResult() || '—' }}
             </div>
           </div>
         } @else {
@@ -90,7 +90,7 @@ type InputMode = 'text' | 'file';
             <div
               class="rounded-lg border border-slate-200 bg-slate-100 p-3 font-mono text-xs break-all text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
-              {{ hashResult() || 'ÔÇö' }}
+              {{ hashResult() || '—' }}
             </div>
             <button
               (click)="copyHash()"
@@ -311,7 +311,7 @@ type InputMode = 'text' | 'file';
                 <code
                   class="font-mono text-sm break-all text-slate-800 select-all dark:text-slate-100"
                 >
-                  {{ hashResult() || 'ÔÇö' }}
+                  {{ hashResult() || '—' }}
                 </code>
               }
             </div>

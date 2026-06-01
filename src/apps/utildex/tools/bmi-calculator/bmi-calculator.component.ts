@@ -625,7 +625,7 @@ export class BmiCalculatorComponent {
 
   primaryDisplay = computed(() => {
     const v = this.results().bmi;
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'ÔÇö';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     return v.toFixed(1);
   });
 
@@ -699,7 +699,7 @@ export class BmiCalculatorComponent {
     const map = this.t.map();
     const r = this.results();
     const fmt = (v: number | null, digits = 1) =>
-      v === null || !Number.isFinite(v) ? 'ÔÇö' : v.toFixed(digits);
+      v === null || !Number.isFinite(v) ? '—' : v.toFixed(digits);
     const range = r.heightMeters
       ? healthyWeightRangeKg(r.heightMeters, this.resolved().thresholds)
       : null;
@@ -713,7 +713,7 @@ export class BmiCalculatorComponent {
         ? `${map['HEALTHY_RANGE_LABEL']}: ${range.min.toFixed(1)}ÔÇô${range.max.toFixed(1)} kg`
         : '',
       '',
-      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} ┬À ${map['PROFILE_AGE']}: ${this.age()} ┬À ${this.standard() === 'who' ? map['STANDARD_WHO'] : map['STANDARD_ASIA_PACIFIC']}`,
+      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} · ${map['PROFILE_AGE']}: ${this.age()} · ${this.standard() === 'who' ? map['STANDARD_WHO'] : map['STANDARD_ASIA_PACIFIC']}`,
       '',
       map['DISCLAIMER'],
       map['PRIVACY_NOTE'],

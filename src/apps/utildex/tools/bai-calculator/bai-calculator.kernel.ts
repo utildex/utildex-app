@@ -2,7 +2,7 @@
 import { schema } from './bai-calculator.schema';
 
 /**
- * Body Adiposity Index (BAI) ÔÇö pure computation kernel.
+ * Body Adiposity Index (BAI) — pure computation kernel.
  * BAI = hip(cm) / height(m)^1.5 ÔêÆ 18 (Bergman et al., 2011).
  * All logic is deterministic and runs locally.
  */
