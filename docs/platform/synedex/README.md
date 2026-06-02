@@ -69,8 +69,8 @@ Synedex has its own product and game UX contract. These documents are the target
 | Content directory         | `src/apps/utildex/tools/` | `src/apps/synedex/games/`                |
 | Route segment for content | `tools`                   | `games`                                  |
 | Landing page              | `pages/home/`             | `pages/synedex-welcome/`                 |
-| Root component            | `app.component.ts`        | `app.component.synedex.ts`               |
-| Route file                | `src/app.routes.ts`       | `src/apps/synedex/app.routes.synedex.ts` |
+| Root component            | `app.component.ts`        | `shell/app.component.ts`                 |
+| Route file                | `src/app.routes.ts`       | `src/apps/synedex/routing/app.routes.ts` |
 | Headless/MCP build        | Yes (`dist-headless/`)    | **No**                                   |
 | Dashboard widget system   | Yes                       | No                                       |
 | Storage key prefix        | `utildex-`                | `synedex-`                               |
@@ -86,8 +86,8 @@ These files are **only** compiled into the Synedex bundle (either as replacement
 | --------------------------------------------------- | ---------------------------------------------------- |
 | `src/apps/synedex/entry/index.tsx`                  | Bundle entry point; bootstraps `SynedexAppComponent` |
 | `src/apps/synedex/entry/app.config.ts`              | Identity config (`appId`, hosting URL, etc.)         |
-| `src/apps/synedex/app.component.synedex.ts`         | Root shell component for Synedex                     |
-| `src/apps/synedex/app.routes.synedex.ts`            | Complete route manifest                              |
+| `src/apps/synedex/shell/app.component.ts`           | Root shell component for Synedex                     |
+| `src/apps/synedex/routing/app.routes.ts`            | Complete route manifest                              |
 | `src/apps/synedex/core-registry.synedex.ts`         | Contract + kernel loaders for all games              |
 | `src/apps/synedex/tool-registry.synedex.ts`         | Angular component loaders for all games              |
 | `src/apps/synedex/tool-space-registry.synedex.ts`   | Tool space definitions                               |
@@ -232,7 +232,7 @@ The registry builder validates at startup that every entry in `CORE_REGISTRY` ha
 
 ### 7. Add a route
 
-Open `src/apps/synedex/app.routes.synedex.ts`. Games are routed via the shared `ToolHostComponent` under `/:lang/games/:id`. No route entry is needed for individual games because `ToolHostComponent` resolves the game ID dynamically from the route parameter.
+Open `src/apps/synedex/routing/app.routes.ts`. Games are routed via the shared `ToolHostComponent` under `/:lang/games/:id`. No route entry is needed for individual games because `ToolHostComponent` resolves the game ID dynamically from the route parameter.
 
 If your game needs a **dedicated page** (not just `ToolHostComponent`), add a route under the `:lang` children block:
 
@@ -430,7 +430,7 @@ Omitting `appName` in a `CORE_REGISTRY` entry defaults to `'synedex'` (not `'sha
 
 ## Routes
 
-Synedex routes live exclusively in `src/apps/synedex/app.routes.synedex.ts`. The structure:
+Synedex routes live exclusively in `src/apps/synedex/routing/app.routes.ts`. The structure:
 
 ```
 /:lang                       ← language segment, validated by languageGuard
@@ -460,7 +460,7 @@ All storage keys for Synedex are prefixed with `synedex-` because `STORAGE_KEYS`
 ## What Synedex Does NOT Have
 
 - **Headless / MCP build.** There is no `npm run build:headless` for Synedex. Game kernels should still be pure (no Angular/DOM at the top level), but they are not exposed via any Node API today.
-- **Dashboard widget system.** The Utildex dashboard (drag-and-drop widget grid) is wired into `src/app.routes.ts` which Synedex does not use. Do not implement widget-related features in `src/apps/synedex/app.routes.synedex.ts` or `src/apps/synedex/app.component.synedex.ts` without deliberate intent to ship them.
+- **Dashboard widget system.** The Utildex dashboard (drag-and-drop widget grid) is wired into `src/app.routes.ts` which Synedex does not use. Do not implement widget-related features in `src/apps/synedex/routing/app.routes.ts` or `src/apps/synedex/shell/app.component.ts` without deliberate intent to ship them.
 - **Tour overlay.** The guided onboarding tour (`TourService`) is disabled in the Synedex settings modal via an `@if (appConfig.appId !== 'synedex')` guard.
 - **MCP manifest generation.** The pre-build `generate-mcp-manifest.ts` script targets the catalog app that declares `capabilities.mcp: true`. Synedex currently leaves MCP disabled, so it is skipped. Synedex games are not MCP-compatible by default and cannot opt in while MCP support is limited to Utildex tools.
 

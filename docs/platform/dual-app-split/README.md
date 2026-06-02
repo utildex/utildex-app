@@ -60,12 +60,12 @@ import { AppComponent } from './src/app.component';
 import { routes } from './src/app.routes';
 ```
 
-**Synedex** (`index.synedex.tsx`) bootstraps `SynedexAppComponent` with `routes` from `app.routes.synedex.ts`:
+**Synedex** (`index.tsx`) bootstraps `SynedexAppComponent` with `routes` from `app.routes.ts`:
 
 ```typescript
-// index.synedex.tsx (Synedex)
-import { SynedexAppComponent } from './src/app.component.synedex';
-import { routes } from './src/app.routes.synedex';
+// index.tsx (Synedex)
+import { SynedexAppComponent } from './src/apps/synedex/shell/app.component';
+import { routes } from './src/apps/synedex/routing/app.routes';
 ```
 
 Because the entry points are entirely separate, `app.routes.ts` is **never included** in the Synedex bundle, and vice versa. There is no runtime route filtering.
@@ -237,7 +237,7 @@ var saved = localStorage.getItem(appId + '-state-theme');
 
 ### Synedex-only (not bundled into Utildex)
 
-- `src/apps/synedex/app.component.synedex.ts` and `src/apps/synedex/app.routes.synedex.ts`
+- `src/apps/synedex/shell/app.component.ts` and `src/apps/synedex/routing/app.routes.ts`
 - `src/apps/synedex/games/` — all game components, contracts, kernels
 - `src/pages/synedex-welcome/` — Synedex landing page
 

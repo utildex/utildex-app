@@ -37,10 +37,10 @@
               </svg>
             </div>
             @if (!isWelcomePage()) {
-            <span
-              class="group-hover:text-primary text-xl font-bold tracking-tight text-slate-900 transition-colors dark:text-white"
-              >Synedex</span
-            >
+              <span
+                class="group-hover:text-primary text-xl font-bold tracking-tight text-slate-900 transition-colors dark:text-white"
+                >Synedex</span
+              >
             }
           </a>
         </div>
@@ -59,19 +59,18 @@
           <div class="mx-1 hidden h-6 w-px bg-slate-200 md:block dark:bg-slate-700"></div>
 
           @if (updates.isUpdateAvailable()) {
-          <button
-            [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
-            [bubblePos]="'bottom'"
-            (click)="updates.applyUpdateAndReload()"
-            [disabled]="updates.isUpdating()"
-            class="animate-glow-pulse bg-primary mr-1 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-white shadow-lg transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 md:flex"
-          >
-            <span class="material-symbols-outlined text-lg">system_update_alt</span>
-            <span class="text-xs font-bold"
-              >{{ updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE']
-              }}</span
+            <button
+              [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
+              [bubblePos]="'bottom'"
+              (click)="updates.applyUpdateAndReload()"
+              [disabled]="updates.isUpdating()"
+              class="animate-glow-pulse bg-primary mr-1 hidden items-center gap-2 rounded-lg px-3 py-1.5 text-white shadow-lg transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70 md:flex"
             >
-          </button>
+              <span class="material-symbols-outlined text-lg">system_update_alt</span>
+              <span class="text-xs font-bold">{{
+                updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE']
+              }}</span>
+            </button>
           }
 
           <button
@@ -120,54 +119,56 @@
     </div>
 
     @if (mobileMenuOpen()) {
-    <div
-      class="animate-fade-in absolute top-16 left-0 z-40 w-full border-b border-slate-200 bg-white shadow-xl md:hidden dark:border-slate-800 dark:bg-slate-900"
-    >
-      <div class="space-y-4 px-4 py-6">
-        <nav class="flex flex-col space-y-2">
-          <button
-            (click)="openCommandPalette(); mobileMenuOpen.set(false)"
-            class="flex w-full items-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-left font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400"
-          >
-            <span class="material-symbols-outlined">search</span>
-            {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
-          </button>
+      <div
+        class="animate-fade-in absolute top-16 left-0 z-40 w-full border-b border-slate-200 bg-white shadow-xl md:hidden dark:border-slate-800 dark:bg-slate-900"
+      >
+        <div class="space-y-4 px-4 py-6">
+          <nav class="flex flex-col space-y-2">
+            <button
+              (click)="openCommandPalette(); mobileMenuOpen.set(false)"
+              class="flex w-full items-center gap-2 rounded-xl bg-slate-100 px-4 py-3 text-left font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+            >
+              <span class="material-symbols-outlined">search</span>
+              {{ t.map()['NAV_SEARCH_MOBILE'] || 'Search...' }}
+            </button>
 
-          @if (updates.isUpdateAvailable()) {
-          <button
-            [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
-            [bubblePos]="'bottom'"
-            (click)="updates.applyUpdateAndReload(); mobileMenuOpen.set(false)"
-            [disabled]="updates.isUpdating()"
-            class="animate-glow-pulse border-primary/50 text-primary bg-primary/5 flex w-full items-center gap-2 rounded-xl border px-4 py-3 text-left font-bold disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            <span class="material-symbols-outlined">system_update_alt</span>
-            {{ updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE'] }}
-          </button>
-          }
+            @if (updates.isUpdateAvailable()) {
+              <button
+                [appBubble]="'BUBBLE_UPDATE_AVAILABLE'"
+                [bubblePos]="'bottom'"
+                (click)="updates.applyUpdateAndReload(); mobileMenuOpen.set(false)"
+                [disabled]="updates.isUpdating()"
+                class="animate-glow-pulse border-primary/50 text-primary bg-primary/5 flex w-full items-center gap-2 rounded-xl border px-4 py-3 text-left font-bold disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                <span class="material-symbols-outlined">system_update_alt</span>
+                {{
+                  updates.isUpdating() ? t.map()['BTN_UPDATING'] : t.map()['BTN_UPDATE_AVAILABLE']
+                }}
+              </button>
+            }
 
-          <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
+            <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
 
-          <a
-            [routerLink]="'/games' | localLink"
-            (click)="mobileMenuOpen.set(false)"
-            class="rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
-          >
-            {{ t.map()['NAV_GAMES'] || 'Games' }}
-          </a>
+            <a
+              [routerLink]="'/games' | localLink"
+              (click)="mobileMenuOpen.set(false)"
+              class="rounded-xl bg-slate-50 px-4 py-3 font-medium text-slate-900 dark:bg-slate-800/50 dark:text-white"
+            >
+              {{ t.map()['NAV_GAMES'] || 'Games' }}
+            </a>
 
-          <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
+            <div class="my-2 h-px bg-slate-100 dark:bg-slate-800"></div>
 
-          <button
-            (click)="toggleSettings(); mobileMenuOpen.set(false)"
-            class="glass-control flex w-full items-center gap-2 rounded-xl px-4 py-3 text-left font-medium text-slate-700 dark:text-slate-300"
-          >
-            <span class="material-symbols-outlined">settings</span>
-            {{ t.map()['TOUR_TITLE_SETTINGS_OPEN'] || 'Settings' }}
-          </button>
-        </nav>
+            <button
+              (click)="toggleSettings(); mobileMenuOpen.set(false)"
+              class="glass-control flex w-full items-center gap-2 rounded-xl px-4 py-3 text-left font-medium text-slate-700 dark:text-slate-300"
+            >
+              <span class="material-symbols-outlined">settings</span>
+              {{ t.map()['TOUR_TITLE_SETTINGS_OPEN'] || 'Settings' }}
+            </button>
+          </nav>
+        </div>
       </div>
-    </div>
     }
   </header>
 
@@ -183,7 +184,9 @@
   <app-command-palette></app-command-palette>
   <app-error-overlay></app-error-overlay>
 
-  @if (settingsOpen()) { @defer (when settingsOpen()) {
-  <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
-  } }
+  @if (settingsOpen()) {
+    @defer (when settingsOpen()) {
+      <app-settings-modal (close)="settingsOpen.set(false)"></app-settings-modal>
+    }
+  }
 </div>

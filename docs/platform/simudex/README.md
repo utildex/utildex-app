@@ -19,8 +19,8 @@ Simudex is the simulations app in the shared multi-app repository. It has an ind
 - Runtime config: `src/apps/simudex/entry/app.config.ts`
 - Entry point: `src/apps/simudex/entry/index.tsx`
 - HTML shell: `src/apps/simudex/entry/index.html`
-- App shell: `src/apps/simudex/app.component.simudex.ts` and `src/apps/simudex/app.component.simudex.html`
-- Routes: `src/apps/simudex/app.routes.simudex.ts`
+- App shell: `src/apps/simudex/shell/app.component.ts` and `src/apps/simudex/shell/app.component.html`
+- Routes: `src/apps/simudex/routing/app.routes.ts`
 - Core registry: `src/apps/simudex/core-registry.simudex.ts`
 - Component registry: `src/apps/simudex/tool-registry.simudex.ts`
 - Space registry: `src/apps/simudex/tool-space-registry.simudex.ts`

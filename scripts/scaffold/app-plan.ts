@@ -254,17 +254,17 @@ export function planCreateApp(cli: CliOptions): ScaffoldPlan {
         ngswTemplate(),
       ),
       createOperation(
-        `src/apps/${options.id}/app.component.${options.id}.ts`,
+        `src/apps/${options.id}/shell/app.component.ts`,
         'app shell component',
         appComponentTsTemplate(options),
       ),
       createOperation(
-        `src/apps/${options.id}/app.component.${options.id}.html`,
+        `src/apps/${options.id}/shell/app.component.html`,
         'app shell template',
         appComponentHtmlTemplate(),
       ),
       createOperation(
-        `src/apps/${options.id}/app.routes.${options.id}.ts`,
+        `src/apps/${options.id}/routing/app.routes.ts`,
         'app route manifest',
         routesTemplate(options),
       ),

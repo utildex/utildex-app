@@ -9,8 +9,8 @@ import { ErrorHandler, isDevMode, provideZonelessChangeDetection } from '@angula
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withPreloading, NoPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { ${className} } from '../app.component.${options.id}';
-import { routes } from '../app.routes.${options.id}';
+import { ${className} } from '../shell/app.component';
+import { routes } from '../routing/app.routes';
 import { GlobalErrorHandler } from '../../../core/global-error-handler';
 import { TOUR_STEPS } from '../../../core/tour.config';
 
@@ -136,7 +136,7 @@ ${languageImports}
     AppFooterComponent,
     LocalLinkPipe,
   ],
-  templateUrl: './app.component.${options.id}.html',
+  templateUrl: './app.component.html',
   providers: [provideTranslation({ ${translationLoaders} })],
 })
 export class ${className} implements OnInit {

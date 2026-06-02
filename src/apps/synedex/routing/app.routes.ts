@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { languageGuard } from '../../core/guards/language.guard';
-import { I18nService } from '../../services/i18n.service';
+import { languageGuard } from '../../../core/guards/language.guard';
+import { I18nService } from '../../../services/i18n.service';
 
 /**
  * Synedex-only route manifest.
@@ -33,7 +33,7 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
-          import('../../pages/synedex-welcome/synedex-welcome.component').then(
+          import('../../../pages/synedex-welcome/synedex-welcome.component').then(
             (m) => m.SynedexWelcomeComponent,
           ),
         title: 'Synedex - Mental Games',
@@ -41,43 +41,45 @@ export const routes: Routes = [
       {
         path: 'games',
         loadComponent: () =>
-          import('../../pages/all-tools/all-tools.component').then((m) => m.AllToolsComponent),
+          import('../../../pages/all-tools/all-tools.component').then((m) => m.AllToolsComponent),
         title: 'All Games - Synedex',
       },
       {
         path: 'games/:id',
         loadComponent: () =>
-          import('../../pages/tool-host/tool-host.component').then((m) => m.ToolHostComponent),
+          import('../../../pages/tool-host/tool-host.component').then((m) => m.ToolHostComponent),
         // Title handled by SeoService
       },
       {
         path: 'legal',
         loadComponent: () =>
-          import('../../pages/legal/legal.component').then((m) => m.LegalComponent),
+          import('../../../pages/legal/legal.component').then((m) => m.LegalComponent),
         title: 'Legal Notice - Synedex',
       },
       {
         path: 'terms',
         loadComponent: () =>
-          import('../../pages/terms/terms.component').then((m) => m.TermsComponent),
+          import('../../../pages/terms/terms.component').then((m) => m.TermsComponent),
         title: 'Terms of Use - Synedex',
       },
       {
         path: 'privacy',
         loadComponent: () =>
-          import('../../pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
+          import('../../../pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
         title: 'Privacy Policy - Synedex',
       },
       {
         path: 'categories',
         loadComponent: () =>
-          import('../../pages/categories/categories.component').then((m) => m.CategoriesComponent),
+          import('../../../pages/categories/categories.component').then(
+            (m) => m.CategoriesComponent,
+          ),
         title: 'Categories - Synedex',
       },
       {
         path: 'categories/:id',
         loadComponent: () =>
-          import('../../pages/category-detail/category-detail.component').then(
+          import('../../../pages/category-detail/category-detail.component').then(
             (m) => m.CategoryDetailComponent,
           ),
         title: 'Category - Synedex',
@@ -85,7 +87,7 @@ export const routes: Routes = [
       {
         path: 'preview-banner',
         loadComponent: () =>
-          import('../../pages/preview-banner/preview-banner.component').then(
+          import('../../../pages/preview-banner/preview-banner.component').then(
             (m) => m.PreviewBannerComponent,
           ),
         canMatch: [() => isDevMode()],

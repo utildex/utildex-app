@@ -1,27 +1,27 @@
 import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { ThemeService } from '../../services/theme.service';
-import { I18nService } from '../../services/i18n.service';
-import { ShortcutService } from '../../services/shortcut.service';
-import { SeoService } from '../../services/seo.service';
-import { AppConfigService } from '../../services/app-config.service';
-import { FontLoaderService } from '../../services/font-loader.service';
-import { AppUpdateService } from '../../services/app-update.service';
-import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { BackgroundComponent } from '../../components/background/background.component';
-import { ToastComponent } from '../../components/toast/toast.component';
-import { SettingsModalComponent } from '../../components/settings-modal/settings-modal.component';
-import { CommandPaletteComponent } from '../../components/command-palette/command-palette.component';
-import { ErrorOverlayComponent } from '../../components/error-overlay/error-overlay.component';
-import { NetworkStatusComponent } from '../../components/network-status/network-status.component';
-import { BubbleDirective } from '../../directives/bubble.directive';
-import { AppFooterComponent } from '../../components/app-footer/app-footer.component';
-import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import en from '../../i18n/en';
-import fr from '../../i18n/fr';
-import es from '../../i18n/es';
-import zh from '../../i18n/zh';
+import { ThemeService } from '../../../services/theme.service';
+import { I18nService } from '../../../services/i18n.service';
+import { ShortcutService } from '../../../services/shortcut.service';
+import { SeoService } from '../../../services/seo.service';
+import { AppConfigService } from '../../../services/app-config.service';
+import { FontLoaderService } from '../../../services/font-loader.service';
+import { AppUpdateService } from '../../../services/app-update.service';
+import { provideTranslation, ScopedTranslationService } from '../../../core/i18n';
+import { BackgroundComponent } from '../../../components/background/background.component';
+import { ToastComponent } from '../../../components/toast/toast.component';
+import { SettingsModalComponent } from '../../../components/settings-modal/settings-modal.component';
+import { CommandPaletteComponent } from '../../../components/command-palette/command-palette.component';
+import { ErrorOverlayComponent } from '../../../components/error-overlay/error-overlay.component';
+import { NetworkStatusComponent } from '../../../components/network-status/network-status.component';
+import { BubbleDirective } from '../../../directives/bubble.directive';
+import { AppFooterComponent } from '../../../components/app-footer/app-footer.component';
+import { LocalLinkPipe } from '../../../core/pipes/local-link.pipe';
+import en from '../../../i18n/en';
+import fr from '../../../i18n/fr';
+import es from '../../../i18n/es';
+import zh from '../../../i18n/zh';
 
 @Component({
   selector: 'app-root',
@@ -40,7 +40,7 @@ import zh from '../../i18n/zh';
     AppFooterComponent,
     LocalLinkPipe,
   ],
-  templateUrl: './app.component.simudex.html',
+  templateUrl: './app.component.html',
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
 })
 export class SimudexAppComponent implements OnInit {

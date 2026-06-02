@@ -1,9 +1,9 @@
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { languageGuard } from '../../core/guards/language.guard';
-import { I18nService } from '../../services/i18n.service';
-import { type Language } from '../../data/languages';
+import { languageGuard } from '../../../core/guards/language.guard';
+import { I18nService } from '../../../services/i18n.service';
+import { type Language } from '../../../data/languages';
 
 function isLanguage(value: string): value is Language {
   return value === 'en' || value === 'fr' || value === 'es' || value === 'zh';
@@ -46,7 +46,7 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
-          import('../../pages/simudex-welcome/simudex-welcome.component').then(
+          import('../../../pages/simudex-welcome/simudex-welcome.component').then(
             (m) => m.SimudexWelcomeComponent,
           ),
         title: localizedTitle({
@@ -59,7 +59,7 @@ export const routes: Routes = [
       {
         path: 'simulations',
         loadComponent: () =>
-          import('../../pages/all-tools/all-tools.component').then((m) => m.AllToolsComponent),
+          import('../../../pages/all-tools/all-tools.component').then((m) => m.AllToolsComponent),
         title: localizedTitle({
           en: 'All Simulations - Simudex',
           fr: 'Toutes les simulations - Simudex',
@@ -70,12 +70,12 @@ export const routes: Routes = [
       {
         path: 'simulations/:id',
         loadComponent: () =>
-          import('../../pages/tool-host/tool-host.component').then((m) => m.ToolHostComponent),
+          import('../../../pages/tool-host/tool-host.component').then((m) => m.ToolHostComponent),
       },
       {
         path: 'legal',
         loadComponent: () =>
-          import('../../pages/legal/legal.component').then((m) => m.LegalComponent),
+          import('../../../pages/legal/legal.component').then((m) => m.LegalComponent),
         title: localizedTitle({
           en: 'Legal Notice - Simudex',
           fr: 'Mentions legales - Simudex',
@@ -86,7 +86,7 @@ export const routes: Routes = [
       {
         path: 'terms',
         loadComponent: () =>
-          import('../../pages/terms/terms.component').then((m) => m.TermsComponent),
+          import('../../../pages/terms/terms.component').then((m) => m.TermsComponent),
         title: localizedTitle({
           en: 'Terms of Use - Simudex',
           fr: "Conditions d'utilisation - Simudex",
@@ -97,7 +97,7 @@ export const routes: Routes = [
       {
         path: 'privacy',
         loadComponent: () =>
-          import('../../pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
+          import('../../../pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
         title: localizedTitle({
           en: 'Privacy Policy - Simudex',
           fr: 'Politique de confidentialite - Simudex',
@@ -108,7 +108,7 @@ export const routes: Routes = [
       {
         path: 'preview-banner',
         loadComponent: () =>
-          import('../../pages/preview-banner/preview-banner.component').then(
+          import('../../../pages/preview-banner/preview-banner.component').then(
             (m) => m.PreviewBannerComponent,
           ),
         canMatch: [() => isDevMode()],
