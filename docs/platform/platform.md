@@ -36,3 +36,10 @@ Use the following structure for platform features:
 - `docs/platform/<feature>/screenshots/`
 
 This keeps narrative docs and future visual assets together.
+
+App-owned documentation uses a separate root:
+
+- `docs/apps/<appId>/README.md`
+- `docs/apps/<appId>/screenshots/`
+
+Use `docs/platform/` only for shared cross-app platform topics.

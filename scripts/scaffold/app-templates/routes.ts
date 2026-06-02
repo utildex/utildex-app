@@ -6,8 +6,8 @@ export function routesTemplate(options: AppScaffoldOptions): string {
   return `import { Routes } from '@angular/router';
 import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { languageGuard } from './core/guards/language.guard';
-import { I18nService } from './services/i18n.service';
+import { languageGuard } from '../../core/guards/language.guard';
+import { I18nService } from '../../services/i18n.service';
 
 export const routes: Routes = [
   {
@@ -32,7 +32,7 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         loadComponent: () =>
-          import('./pages/${options.id}-welcome/${options.id}-welcome.component').then(
+          import('../../pages/${options.id}-welcome/${options.id}-welcome.component').then(
             (m) => m.${welcomeClass},
           ),
         title: '${escapeSingleQuoted(options.name)}',
@@ -40,34 +40,36 @@ export const routes: Routes = [
       {
         path: '${options.route}',
         loadComponent: () =>
-          import('./pages/all-tools/all-tools.component').then((m) => m.AllToolsComponent),
+          import('../../pages/all-tools/all-tools.component').then((m) => m.AllToolsComponent),
         title: '${escapeSingleQuoted(options.name)} Modules',
       },
       {
         path: '${options.route}/:id',
         loadComponent: () =>
-          import('./pages/tool-host/tool-host.component').then((m) => m.ToolHostComponent),
+          import('../../pages/tool-host/tool-host.component').then((m) => m.ToolHostComponent),
       },
       {
         path: 'legal',
-        loadComponent: () => import('./pages/legal/legal.component').then((m) => m.LegalComponent),
+        loadComponent: () =>
+          import('../../pages/legal/legal.component').then((m) => m.LegalComponent),
         title: 'Legal Notice - ${escapeSingleQuoted(options.name)}',
       },
       {
         path: 'terms',
-        loadComponent: () => import('./pages/terms/terms.component').then((m) => m.TermsComponent),
+        loadComponent: () =>
+          import('../../pages/terms/terms.component').then((m) => m.TermsComponent),
         title: 'Terms of Use - ${escapeSingleQuoted(options.name)}',
       },
       {
         path: 'privacy',
         loadComponent: () =>
-          import('./pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
+          import('../../pages/privacy/privacy.component').then((m) => m.PrivacyComponent),
         title: 'Privacy Policy - ${escapeSingleQuoted(options.name)}',
       },
       {
         path: 'preview-banner',
         loadComponent: () =>
-          import('./pages/preview-banner/preview-banner.component').then(
+          import('../../pages/preview-banner/preview-banner.component').then(
             (m) => m.PreviewBannerComponent,
           ),
         canMatch: [() => isDevMode()],

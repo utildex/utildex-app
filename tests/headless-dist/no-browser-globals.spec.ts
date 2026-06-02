@@ -14,9 +14,9 @@ const FORBIDDEN_PATTERNS = [
 ] as const;
 
 const BROWSER_ONLY_KERNEL_SECTIONS = new Set([
-  'src/utildex-tools/image-converter/image-converter.kernel.ts',
-  'src/utildex-tools/image-resizer/image-resizer.kernel.ts',
-  'src/utildex-tools/pdf-to-img/pdf-to-img.kernel.ts',
+  'src/apps/utildex/tools/image-converter/image-converter.kernel.ts',
+  'src/apps/utildex/tools/image-resizer/image-resizer.kernel.ts',
+  'src/apps/utildex/tools/pdf-to-img/pdf-to-img.kernel.ts',
 ]);
 
 interface BrowserGlobalHit {

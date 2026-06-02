@@ -1,4 +1,9 @@
-import { APP_CATALOG, APP_IDS, getAppCatalogEntry } from '../../src/core/app-catalog';
+import {
+  APP_CATALOG,
+  APP_IDS,
+  DEFAULT_APP_ID,
+  getAppCatalogEntry,
+} from '../../src/core/app-catalog';
 import {
   assertKebabId,
   optionalString,
@@ -67,12 +72,13 @@ function createAppOptions(flags: Map<string, string | boolean>): AppScaffoldOpti
     ),
     themeColor: optionalString(flags, 'theme-color', '#2563eb'),
     backgroundColor: optionalString(flags, 'background-color', '#0f172a'),
-    contentRoot: optionalString(flags, 'content-root', `src/${id}-${pluralKind(kind)}`),
+    contentRoot: optionalString(flags, 'content-root', `src/apps/${id}/${pluralKind(kind)}`),
   };
 }
 
 function updateAngularJson(options: AppScaffoldOptions): string {
   const workspace = readJson<Record<string, unknown>>('angular.json');
+  const defaultApp = getAppCatalogEntry(DEFAULT_APP_ID);
   const projects = workspace.projects as Record<string, unknown>;
   const appProject = projects.app as Record<string, unknown>;
   const architect = appProject.architect as Record<string, unknown>;
@@ -86,7 +92,7 @@ function updateAngularJson(options: AppScaffoldOptions): string {
   }
 
   buildConfigurations[options.id] = {
-    serviceWorker: `ngsw-config.${options.id}.json`,
+    serviceWorker: `src/apps/${options.id}/entry/ngsw-config.json`,
     optimization: {
       scripts: true,
       styles: {
@@ -96,7 +102,7 @@ function updateAngularJson(options: AppScaffoldOptions): string {
       fonts: true,
     },
     index: {
-      input: `index.${options.id}.html`,
+      input: `src/apps/${options.id}/entry/index.html`,
       output: 'index.html',
     },
     sourceMap: false,
@@ -126,27 +132,39 @@ function updateAngularJson(options: AppScaffoldOptions): string {
       },
       {
         glob: '*',
-        input: `src/seo/${options.id}`,
+        input: `src/apps/${options.id}/seo`,
         output: '.',
       },
       {
-        glob: `manifest.${options.id}.webmanifest`,
-        input: '.',
+        glob: 'manifest.webmanifest',
+        input: `src/apps/${options.id}/entry`,
         output: '.',
       },
     ],
     fileReplacements: [
-      { replace: 'index.tsx', with: `index.${options.id}.tsx` },
-      { replace: 'app.config.ts', with: `app.config.${options.id}.ts` },
-      { replace: 'src/core/core-registry.ts', with: `src/core/core-registry.${options.id}.ts` },
-      { replace: 'src/core/tool-registry.ts', with: `src/core/tool-registry.${options.id}.ts` },
+      {
+        replace: defaultApp.source.entryPointFile,
+        with: `src/apps/${options.id}/entry/index.tsx`,
+      },
+      {
+        replace: defaultApp.source.appConfigFile,
+        with: `src/apps/${options.id}/entry/app.config.ts`,
+      },
+      {
+        replace: 'src/core/core-registry.ts',
+        with: `src/apps/${options.id}/core-registry.${options.id}.ts`,
+      },
+      {
+        replace: 'src/core/tool-registry.ts',
+        with: `src/apps/${options.id}/tool-registry.${options.id}.ts`,
+      },
       {
         replace: 'src/data/tool-space-registry.ts',
-        with: `src/data/tool-space-registry.${options.id}.ts`,
+        with: `src/apps/${options.id}/tool-space-registry.${options.id}.ts`,
       },
       {
         replace: 'src/services/offline-route-loaders.ts',
-        with: `src/services/offline-route-loaders.${options.id}.ts`,
+        with: `src/apps/${options.id}/offline-route-loaders.${options.id}.ts`,
       },
     ],
   };
@@ -187,7 +205,7 @@ function updateTsConfig(options: AppScaffoldOptions): string {
   const tsconfig = readJson<TsConfigLike>('tsconfig.json');
   const files = tsconfig.files ?? [];
   tsconfig.files = files;
-  const entry = `./index.${options.id}.tsx`;
+  const entry = `./src/apps/${options.id}/entry/index.tsx`;
   if (files.includes(entry)) {
     throw new Error(`[scaffold] tsconfig.json already includes ${entry}.`);
   }
@@ -211,38 +229,42 @@ export function planCreateApp(cli: CliOptions): ScaffoldPlan {
     dryRun: cli.dryRun,
     operations: [
       createOperation(
-        `app.config.${options.id}.ts`,
+        `src/apps/${options.id}/entry/app.config.ts`,
         'app runtime config',
         appConfigTemplate(options),
       ),
       createOperation(
-        `index.${options.id}.tsx`,
+        `src/apps/${options.id}/entry/index.tsx`,
         'app bootstrap entry point',
         indexTsxTemplate(options),
       ),
-      createOperation(`index.${options.id}.html`, 'app index HTML', indexHtmlTemplate(options)),
       createOperation(
-        `manifest.${options.id}.webmanifest`,
+        `src/apps/${options.id}/entry/index.html`,
+        'app index HTML',
+        indexHtmlTemplate(options),
+      ),
+      createOperation(
+        `src/apps/${options.id}/entry/manifest.webmanifest`,
         'app web manifest',
         manifestTemplate(options),
       ),
       createOperation(
-        `ngsw-config.${options.id}.json`,
+        `src/apps/${options.id}/entry/ngsw-config.json`,
         'app service worker config',
         ngswTemplate(),
       ),
       createOperation(
-        `src/app.component.${options.id}.ts`,
+        `src/apps/${options.id}/app.component.${options.id}.ts`,
         'app shell component',
         appComponentTsTemplate(options),
       ),
       createOperation(
-        `src/app.component.${options.id}.html`,
+        `src/apps/${options.id}/app.component.${options.id}.html`,
         'app shell template',
         appComponentHtmlTemplate(),
       ),
       createOperation(
-        `src/app.routes.${options.id}.ts`,
+        `src/apps/${options.id}/app.routes.${options.id}.ts`,
         'app route manifest',
         routesTemplate(options),
       ),
@@ -252,22 +274,22 @@ export function planCreateApp(cli: CliOptions): ScaffoldPlan {
         welcomeComponentTemplate(options),
       ),
       createOperation(
-        `src/core/core-registry.${options.id}.ts`,
+        `src/apps/${options.id}/core-registry.${options.id}.ts`,
         'empty app core registry',
         emptyCoreRegistryTemplate(options),
       ),
       createOperation(
-        `src/core/tool-registry.${options.id}.ts`,
+        `src/apps/${options.id}/tool-registry.${options.id}.ts`,
         'empty app component registry',
-        emptyModuleRegistryTemplate(),
+        emptyModuleRegistryTemplate(options),
       ),
       createOperation(
-        `src/data/tool-space-registry.${options.id}.ts`,
+        `src/apps/${options.id}/tool-space-registry.${options.id}.ts`,
         'empty app space registry',
         emptyToolSpaceRegistryTemplate(),
       ),
       createOperation(
-        `src/services/offline-route-loaders.${options.id}.ts`,
+        `src/apps/${options.id}/offline-route-loaders.${options.id}.ts`,
         'app offline route loaders',
         offlineRouteLoadersTemplate(options),
       ),
@@ -276,7 +298,11 @@ export function planCreateApp(cli: CliOptions): ScaffoldPlan {
         'app module root placeholder',
         `# ${options.name} Modules\n\nScaffolded ${pluralKind(options.kind)} live in this directory.\n`,
       ),
-      createOperation(`src/seo/${options.id}/.gitkeep`, 'app SEO output directory placeholder', ''),
+      createOperation(
+        `src/apps/${options.id}/seo/.gitkeep`,
+        'app SEO output directory placeholder',
+        '',
+      ),
       updateOperation(
         'src/core/app-catalog.ts',
         'register app in APP_CATALOG',

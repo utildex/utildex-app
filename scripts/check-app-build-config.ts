@@ -77,16 +77,18 @@ function hasAssetInput(assets: readonly AngularAsset[] | undefined, input: strin
   );
 }
 
-function hasRootManifestAsset(
-  assets: readonly AngularAsset[] | undefined,
-  manifestFile: string,
-): boolean {
+function hasManifestAsset(assets: readonly AngularAsset[] | undefined, manifestFile: string): boolean {
+  const normalizedManifest = normalizePath(manifestFile);
+  const parts = normalizedManifest.split('/').filter(Boolean);
+  const glob = parts.pop() ?? '';
+  const input = parts.join('/');
+
   return Boolean(
     assets?.some(
       (asset) =>
         typeof asset !== 'string' &&
-        normalizePath(asset.input) === '' &&
-        asset.glob === manifestFile &&
+        normalizePath(asset.input) === input &&
+        asset.glob === glob &&
         asset.output === '.',
     ),
   );
@@ -108,6 +110,9 @@ function checkAngularConfig(): boolean {
   const workspace = readJson<AngularWorkspace>('angular.json');
   const buildConfigs = workspace.projects?.app?.architect?.build?.configurations ?? {};
   const serveConfigs = workspace.projects?.app?.architect?.serve?.configurations ?? {};
+  const defaultApp = getAppCatalogEntry(DEFAULT_APP_ID);
+  const canonicalEntryPoint = normalizePath(defaultApp.source.entryPointFile);
+  const canonicalAppConfig = normalizePath(defaultApp.source.appConfigFile);
   let ok = true;
 
   for (const appId of APP_IDS) {
@@ -163,9 +168,9 @@ function checkAngularConfig(): boolean {
       ok = false;
     }
 
-    if (!hasRootManifestAsset(buildConfig.assets, app.source.manifestFile)) {
+    if (!hasManifestAsset(buildConfig.assets, app.source.manifestFile)) {
       console.error(
-        `[ERROR] [${appId}] Angular assets do not copy root manifest "${app.source.manifestFile}".`,
+        `[ERROR] [${appId}] Angular assets do not copy manifest "${app.source.manifestFile}".`,
       );
       ok = false;
     }
@@ -180,8 +185,8 @@ function checkAngularConfig(): boolean {
       ok = reportMismatch(`[${appId}] index output`, 'index.html', buildConfig.index?.output) && ok;
 
       const expectedReplacements = [
-        ['index.tsx', app.source.entryPointFile],
-        ['app.config.ts', app.source.appConfigFile],
+        [canonicalEntryPoint, app.source.entryPointFile],
+        [canonicalAppConfig, app.source.appConfigFile],
         ['src/core/core-registry.ts', app.source.coreRegistryFile],
         ['src/core/tool-registry.ts', app.source.moduleRegistryFile],
         ['src/data/tool-space-registry.ts', app.source.toolSpaceRegistryFile],

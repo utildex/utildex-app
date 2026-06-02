@@ -1,4 +1,4 @@
-import { APP_CONFIG_DATA } from '../../app.config';
+import { APP_CONFIG_DATA } from '../apps/utildex/entry/app.config';
 import { isAppId as isKnownAppId, type AppConfigData, type AppId } from './app-catalog';
 
 export type { AppId } from './app-catalog';

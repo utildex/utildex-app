@@ -1,9 +1,9 @@
 import type { AppScaffoldOptions } from '../types';
 
 export function emptyCoreRegistryTemplate(options: AppScaffoldOptions): string {
-  return `import type { ModuleContract } from './module-contract';
-import type { AppId } from './app.config';
-import type { ModuleKind } from './app-catalog';
+  return `import type { ModuleContract } from '../../core/module-contract';
+import type { AppId } from '../../core/app.config';
+import type { ModuleKind } from '../../core/app-catalog';
 
 export interface CoreRegistryEntry {
   appName?: AppId | 'shared';
@@ -27,12 +27,12 @@ export function getCoreRegistryForApp(appId: AppId): Record<string, CoreRegistry
 `;
 }
 
-export function emptyModuleRegistryTemplate(): string {
+export function emptyModuleRegistryTemplate(options: AppScaffoldOptions): string {
   return `import { Type } from '@angular/core';
-import { ModuleContract } from './module-contract';
-import { getCoreRegistryForApp } from './core-registry';
-import { getAppId, type AppId } from './app.config';
-import type { ModuleKind } from './app-catalog';
+import { ModuleContract } from '../../core/module-contract';
+import { getCoreRegistryForApp } from './core-registry.${options.id}';
+import { getAppId, type AppId } from '../../core/app.config';
+import type { ModuleKind } from '../../core/app-catalog';
 
 export interface ModuleRegistrySourceEntry {
   appName?: AppId | 'shared';
@@ -99,8 +99,8 @@ export const MODULE_REGISTRY_SOURCE_MAP: Record<string, ModuleRegistrySourceEntr
 }
 
 export function emptyToolSpaceRegistryTemplate(): string {
-  return `import type { ToolSpaceDefinition } from '../core/tool-space';
-import type { AppId } from '../core/app.config';
+  return `import type { ToolSpaceDefinition } from '../../core/tool-space';
+import type { AppId } from '../../core/app.config';
 
 export const DEFAULT_TOOL_SPACE_ID = '';
 
@@ -117,12 +117,12 @@ export function getToolSpacesForApp(appId: AppId): ToolSpaceDefinition[] {
 
 export function offlineRouteLoadersTemplate(options: AppScaffoldOptions): string {
   return `export const OFFLINE_ROUTE_LOADERS: Array<() => Promise<unknown>> = [
-  () => import('../pages/${options.id}-welcome/${options.id}-welcome.component'),
-  () => import('../pages/legal/legal.component'),
-  () => import('../pages/terms/terms.component'),
-  () => import('../pages/privacy/privacy.component'),
-  () => import('../pages/all-tools/all-tools.component'),
-  () => import('../pages/tool-host/tool-host.component'),
+  () => import('../../pages/${options.id}-welcome/${options.id}-welcome.component'),
+  () => import('../../pages/legal/legal.component'),
+  () => import('../../pages/terms/terms.component'),
+  () => import('../../pages/privacy/privacy.component'),
+  () => import('../../pages/all-tools/all-tools.component'),
+  () => import('../../pages/tool-host/tool-host.component'),
 ];
 `;
 }

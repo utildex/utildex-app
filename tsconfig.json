@@ -31,9 +31,9 @@
     }
   },
   "files": [
-    "./index.tsx",
-    "./index.synedex.tsx",
-    "./index.simudex.tsx"
+    "./src/apps/utildex/entry/index.tsx",
+    "./src/apps/synedex/entry/index.tsx",
+    "./src/apps/simudex/entry/index.tsx"
   ],
   "include": [
     "src/**/*.ts"

@@ -33,9 +33,9 @@ If you run `npm run scaffold` with no command in a TTY terminal, it also opens t
 
 `create-module` scaffolds into the current catalog-declared content root for the target app and kind. In the current layout, that means:
 
-- `tool` modules for Utildex go under `src/utildex-tools/`.
-- `game` modules for Synedex go under `src/synedex-games/`.
-- `simulation` modules for Simudex go under `src/simudex-simulations/`.
+- `tool` modules for Utildex go under `src/apps/utildex/tools/`.
+- `game` modules for Synedex go under `src/apps/synedex/games/`.
+- `simulation` modules for Simudex go under `src/apps/simudex/simulations/`.
 
 Required options:
 
@@ -74,7 +74,7 @@ Optional options:
 - `--github-url=<url>`: defaults to the repository URL used by existing non-default apps.
 - `--description="..."`: used in index HTML, manifest, and welcome page.
 - `--theme-color=<hex>` and `--background-color=<hex>`: used in generated web assets.
-- `--content-root=<path>`: defaults to `src/<app-id>-<kind-plural>`.
+- `--content-root=<path>`: defaults to `src/apps/<app-id>/<kind-plural>`.
 
 Planned output includes app config, bootstrap entry, index HTML, manifest, service worker config, shell component/template, route manifest, welcome page, empty registries, offline route loaders, module root placeholder, SEO placeholder, and updates to `APP_CATALOG`, `angular.json`, `package.json`, and `tsconfig.json`.
 

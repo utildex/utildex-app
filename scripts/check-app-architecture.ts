@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import {
   APP_CATALOG,
@@ -19,6 +20,11 @@ interface CheckIssue {
 
 function normalized(value: string): string {
   return value.replace(/\\/g, '/').replace(/^\.\//, '').replace(/\/+$/, '');
+}
+
+function isAllowedSeoDir(value: string): boolean {
+  const seoDir = normalized(value);
+  return seoDir.startsWith('src/seo/') || /^src\/apps\/[^/]+\/seo(?:\/|$)/.test(seoDir);
 }
 
 function isPortableRelativePath(value: string): boolean {
@@ -132,8 +138,12 @@ function checkAppCatalogEntry(issues: CheckIssue[], catalogKey: AppId, app: AppC
     addIssue(issues, catalogKey, 'outputPath must stay under dist/.');
   }
 
-  if (!normalized(app.source.seoDir).startsWith('src/seo/')) {
-    addIssue(issues, catalogKey, 'source.seoDir must stay under src/seo/.');
+  if (!isAllowedSeoDir(app.source.seoDir)) {
+    addIssue(
+      issues,
+      catalogKey,
+      'source.seoDir must stay under src/seo/ or src/apps/<appId>/seo/.',
+    );
   }
 
   if (app.source.articleRegistryFile) {
@@ -154,6 +164,20 @@ function checkAppCatalogEntry(issues: CheckIssue[], catalogKey: AppId, app: AppC
 
   if (app.source.contentRoots.length === 0) {
     addIssue(issues, catalogKey, 'source.contentRoots must declare at least one module root.');
+  }
+
+  const canonicalAppRoot = `src/apps/${catalogKey}`;
+  if (!fs.existsSync(path.join(process.cwd(), canonicalAppRoot))) {
+    addIssue(issues, catalogKey, `canonical app root is missing at "${canonicalAppRoot}".`);
+  }
+
+  const canonicalAppDocsReadme = `docs/apps/${catalogKey}/README.md`;
+  if (!fs.existsSync(path.join(process.cwd(), canonicalAppDocsReadme))) {
+    addIssue(
+      issues,
+      catalogKey,
+      `canonical app docs root is missing at "${canonicalAppDocsReadme}".`,
+    );
   }
 
   const rootLabels = new Set<string>();

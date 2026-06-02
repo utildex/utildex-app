@@ -55,7 +55,7 @@ jobs:
           npm run sitemap:synedex
           npm run sitemap:simudex
           npm run generate:mcp-manifest
-          git diff --exit-code src/seo src/assets/mcp
+          git diff --exit-code src/apps/utildex/seo src/apps/synedex/seo src/apps/simudex/seo src/assets/mcp
 
       - name: Audit Production Dependencies
         run: npm audit --audit-level=high --omit=dev

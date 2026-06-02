@@ -16,7 +16,11 @@
               "base": "./dist",
               "browser": "."
             },
-            "browser": "index.tsx",
+            "browser": "src/apps/utildex/entry/index.tsx",
+            "index": {
+              "input": "src/apps/utildex/entry/index.html",
+              "output": "index.html"
+            },
             "tsConfig": "tsconfig.json",
             "assets": [
               {
@@ -60,7 +64,7 @@
           },
           "configurations": {
             "production": {
-              "serviceWorker": "ngsw-config.json",
+              "serviceWorker": "src/apps/utildex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -75,7 +79,7 @@
               "outputHashing": "all"
             },
             "utildex": {
-              "serviceWorker": "ngsw-config.json",
+              "serviceWorker": "src/apps/utildex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -110,18 +114,18 @@
                 },
                 {
                   "glob": "*",
-                  "input": "src/seo/utildex",
+                  "input": "src/apps/utildex/seo",
                   "output": "."
                 },
                 {
                   "glob": "manifest.webmanifest",
-                  "input": ".",
+                  "input": "src/apps/utildex/entry",
                   "output": "."
                 }
               ]
             },
             "synedex": {
-              "serviceWorker": "ngsw-config.synedex.json",
+              "serviceWorker": "src/apps/synedex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -131,7 +135,7 @@
                 "fonts": true
               },
               "index": {
-                "input": "index.synedex.html",
+                "input": "src/apps/synedex/entry/index.html",
                 "output": "index.html"
               },
               "sourceMap": false,
@@ -161,44 +165,44 @@
                 },
                 {
                   "glob": "*",
-                  "input": "src/seo/synedex",
+                  "input": "src/apps/synedex/seo",
                   "output": "."
                 },
                 {
-                  "glob": "manifest.synedex.webmanifest",
-                  "input": ".",
+                  "glob": "manifest.webmanifest",
+                  "input": "src/apps/synedex/entry",
                   "output": "."
                 }
               ],
               "fileReplacements": [
                 {
-                  "replace": "index.tsx",
-                  "with": "index.synedex.tsx"
+                  "replace": "src/apps/utildex/entry/index.tsx",
+                  "with": "src/apps/synedex/entry/index.tsx"
                 },
                 {
-                  "replace": "app.config.ts",
-                  "with": "app.config.synedex.ts"
+                  "replace": "src/apps/utildex/entry/app.config.ts",
+                  "with": "src/apps/synedex/entry/app.config.ts"
                 },
                 {
                   "replace": "src/core/core-registry.ts",
-                  "with": "src/core/core-registry.synedex.ts"
+                  "with": "src/apps/synedex/core-registry.synedex.ts"
                 },
                 {
                   "replace": "src/core/tool-registry.ts",
-                  "with": "src/core/tool-registry.synedex.ts"
+                  "with": "src/apps/synedex/tool-registry.synedex.ts"
                 },
                 {
                   "replace": "src/data/tool-space-registry.ts",
-                  "with": "src/data/tool-space-registry.synedex.ts"
+                  "with": "src/apps/synedex/tool-space-registry.synedex.ts"
                 },
                 {
                   "replace": "src/services/offline-route-loaders.ts",
-                  "with": "src/services/offline-route-loaders.synedex.ts"
+                  "with": "src/apps/synedex/offline-route-loaders.synedex.ts"
                 }
               ]
             },
             "simudex": {
-              "serviceWorker": "ngsw-config.simudex.json",
+              "serviceWorker": "src/apps/simudex/entry/ngsw-config.json",
               "optimization": {
                 "scripts": true,
                 "styles": {
@@ -208,7 +212,7 @@
                 "fonts": true
               },
               "index": {
-                "input": "index.simudex.html",
+                "input": "src/apps/simudex/entry/index.html",
                 "output": "index.html"
               },
               "sourceMap": false,
@@ -248,39 +252,39 @@
                 },
                 {
                   "glob": "*",
-                  "input": "src/seo/simudex",
+                  "input": "src/apps/simudex/seo",
                   "output": "."
                 },
                 {
-                  "glob": "manifest.simudex.webmanifest",
-                  "input": ".",
+                  "glob": "manifest.webmanifest",
+                  "input": "src/apps/simudex/entry",
                   "output": "."
                 }
               ],
               "fileReplacements": [
                 {
-                  "replace": "index.tsx",
-                  "with": "index.simudex.tsx"
+                  "replace": "src/apps/utildex/entry/index.tsx",
+                  "with": "src/apps/simudex/entry/index.tsx"
                 },
                 {
-                  "replace": "app.config.ts",
-                  "with": "app.config.simudex.ts"
+                  "replace": "src/apps/utildex/entry/app.config.ts",
+                  "with": "src/apps/simudex/entry/app.config.ts"
                 },
                 {
                   "replace": "src/core/core-registry.ts",
-                  "with": "src/core/core-registry.simudex.ts"
+                  "with": "src/apps/simudex/core-registry.simudex.ts"
                 },
                 {
                   "replace": "src/core/tool-registry.ts",
-                  "with": "src/core/tool-registry.simudex.ts"
+                  "with": "src/apps/simudex/tool-registry.simudex.ts"
                 },
                 {
                   "replace": "src/data/tool-space-registry.ts",
-                  "with": "src/data/tool-space-registry.simudex.ts"
+                  "with": "src/apps/simudex/tool-space-registry.simudex.ts"
                 },
                 {
                   "replace": "src/services/offline-route-loaders.ts",
-                  "with": "src/services/offline-route-loaders.simudex.ts"
+                  "with": "src/apps/simudex/offline-route-loaders.simudex.ts"
                 }
               ]
             },
