@@ -14,7 +14,7 @@ import { RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ArticleService } from '../../services/article.service';
-import { ArticleMetadata } from '../../data/article-registry';
+import { ArticleMetadata } from '../../apps/utildex/article-registry';
 import { I18nService, Language } from '../../services/i18n.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { FontLoaderService } from '../../services/font-loader.service';

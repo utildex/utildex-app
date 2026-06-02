@@ -14,7 +14,7 @@ import {
   resolveToolSpaces,
 } from '../core/tool-space-resolver';
 import type { ResolvedToolSpace } from '../core/tool-space-resolver';
-import { DEFAULT_TOOL_SPACE_ID, getToolSpacesForApp } from '../data/tool-space-registry';
+import { DEFAULT_TOOL_SPACE_ID, getToolSpacesForApp } from '../apps/utildex/tool-space-registry';
 import { PersistenceService } from './persistence.service';
 import { ToolService } from './tool.service';
 import { AppConfigService } from './app-config.service';

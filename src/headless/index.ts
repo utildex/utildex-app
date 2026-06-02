@@ -11,7 +11,7 @@ import {
 } from '../core/tool-space-resolver';
 import type { ModuleContract } from '../core/module-contract';
 import type { ResolvedToolSpace } from '../core/tool-space-resolver';
-import { getToolSpacesForApp } from '../data/tool-space-registry';
+import { getToolSpacesForApp } from '../apps/utildex/tool-space-registry';
 import type { ToolMetadata } from '../data/types';
 
 type KernelRun = (input: unknown) => unknown | Promise<unknown>;

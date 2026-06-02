@@ -3,7 +3,7 @@ import { MODULE_REGISTRY_MAP } from '../core/module-registry';
 import { PersistenceService } from './persistence.service';
 import { DbService } from './db.service';
 import { GuideService } from './guide.service';
-import { OFFLINE_ROUTE_LOADERS } from './offline-route-loaders';
+import { OFFLINE_ROUTE_LOADERS } from '../apps/utildex/offline-route-loaders';
 
 @Injectable({
   providedIn: 'root',
