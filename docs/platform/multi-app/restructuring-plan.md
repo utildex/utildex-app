@@ -153,57 +153,99 @@ Decision:
 - Prefer Option B (single root) unless a concrete tooling constraint forces Option A.
 - Rationale: it is easier to navigate, reduces path indirection, keeps app ownership visually unified, and lowers accidental drift between parallel trees.
 
-Canonical target layout (Option B):
+Canonical target layout (Option B, post-PR6):
 
 ```text
-src/apps/
-  utildex/
-    entry/
-      app.config.ts
-      index.tsx
-      index.html
-      manifest.webmanifest
-      ngsw-config.json
-    shell/
-    routing/
-    registries/
-    seo/
-    modules/
-  synedex/
-    entry/
-      app.config.ts
-      index.tsx
-      index.html
-      manifest.webmanifest
-      ngsw-config.json
-    shell/
-    routing/
-    registries/
-    seo/
-    modules/
-  simudex/
-    entry/
-      app.config.ts
-      index.tsx
-      index.html
-      manifest.webmanifest
-      ngsw-config.json
-    shell/
-    routing/
-    registries/
-    seo/
-    modules/
+src/
+  apps/
+    utildex/
+      entry/                          # Bootstrap, app config, index.html, manifest, ngsw-config
+      shell/                          # app.component.ts, app.component.html
+      routing/                        # app.routes.ts
+      seo/                            # robots.txt, sitemap.xml
+      tools/                          # Module content root (kind: tool)
+        base64-encoder-decoder/
+        bmi-calculator/
+        ... (33 tools)
+      tool-spaces/                    # Tool-space contracts (developer, health, office)
+      core-registry.ts                # CORE_REGISTRY → contract + kernel loaders
+      module-registry.ts              # MODULE_COMPONENT_LOADERS → Angular component loaders
+      tool-space-registry.ts          # Tool-space definitions
+      article-registry.ts             # Article definitions
+      offline-route-loaders.ts        # Offline preloading
+      tour-steps.ts                   # DEFAULT_TOUR_STEPS (Utildex-specific)
+      virtual-pets.types.ts           # Pet type definitions (gated by capabilities.virtualPets)
+    synedex/
+      entry/
+      shell/
+      routing/
+      seo/
+      games/                          # Module content root (kind: game)
+        mental-math/
+        sudoku/
+      core-registry.synedex.ts → core-registry.ts  (renamed in PR6)
+      module-registry.ts              (renamed from tool-registry.synedex.ts)
+      tool-space-registry.synedex.ts
+      offline-route-loaders.synedex.ts
+    simudex/
+      entry/
+      shell/
+      routing/
+      seo/
+      simulations/                    # Module content root (kind: simulation)
+        minimal-debian-terminal/
+      core-registry.simudex.ts → core-registry.ts  (renamed in PR6)
+      module-registry.ts              (renamed from tool-registry.simudex.ts)
+      tool-space-registry.simudex.ts
+      offline-route-loaders.simudex.ts
 
-src/platform/
-  ...shared cross-app infrastructure only...
+  core/                               # Shared platform infrastructure
+    app-catalog.ts                    # Source of truth for all app definitions
+    app.config.ts                     # Runtime APP_CONFIG facade
+    module-contract.ts                # ModuleContract type
+    module-core-registry.ts           # Headless module registry abstraction
+    module-registry.ts                # Angular module registry abstraction
+    storage-keys.ts                   # App-prefixed storage key constants
+    tour.config.ts                    # TOUR_STEPS InjectionToken (shared token only)
+    tool-space.ts                     # ToolSpace types
+    tool-space-resolver.ts            # Space resolution logic
+    global-error-handler.ts
+    i18n.ts, i18n-mapper.ts
+    export/                           # Shared export utilities
+    guards/                           # Route guards (language.guard.ts)
+    pipes/                            # Shared pipes (local-link.pipe.ts)
+    planner/                          # Module planner
+    plotting/                         # Pretty-plotting engine
+    sandbox/                          # CheerpX/WebVM sandbox infrastructure
+    types/                            # Shared types (formats.ts, traits.ts, type-registry.ts, shared.ts, languages.ts)
+    workers/                          # Web Workers (gif, simudex)
+
+  services/                           # Organized into subdirectories in PR6
+    data/                             # db, persistence, storage-manager, clipboard, tool-state
+    platform/                         # app-config, app-update, font-loader, global-error, network, offline-*, seo, shortcut
+    ui/                               # guide, i18n, theme, toast, tour, virtual-pets
+    modules/                          # module (tool.service), tool-spaces, article, sandbox-*
+
+  components/                         # Shared UI components (24 component dirs)
+  pages/                              # Shared page components (16 page dirs)
+  headless/                           # Headless Node.js API bundle
+  directives/                         # Shared directives
+  i18n/                               # Translation files (en, fr, es, zh)
+  assets/                             # Static assets
+  templates/                          # Scaffolder templates
+  testing/                            # Test helpers
 ```
+
+**Directories removed in PR6:** `src/seo/`, `src/data/`, `src/types/`
 
 Layout rules:
 
 - `src/apps/<appId>/` is the canonical home for all app-owned files.
 - `src/apps/<appId>/entry/` contains app entry/build assets (config, entrypoint, html, manifest, ngsw).
-- `src/platform/` is reserved for shared app-agnostic code; app-specific files must not be added there.
-- Existing compatibility filenames may remain as shims if required, but shims should not contain business logic.
+- `src/apps/<appId>/shell/` and `src/apps/<appId>/routing/` are the canonical homes for every app's shell component and route manifest (normalized across all three apps in PR6).
+- `src/core/` contains shared cross-app infrastructure only; app-specific registries must live under `src/apps/<appId>/`.
+- `src/services/` is organized into `data/`, `platform/`, `ui/`, `modules/` subdirectories.
+- No compatibility shims or passthrough re-exports remain anywhere in the codebase.
 
 Documentation placement rule:
 
@@ -275,6 +317,23 @@ Migration map (current):
 | Utildex shell/routes  | `src/app.component.ts`, `src/app.component.html`, `src/app.routes.ts`                                                                                                                   | `src/apps/utildex/shell/` and `src/apps/utildex/routing/`                                                                       |
 | Utildex module root   | `src/utildex-tools`                                                                                                                                                                     | `src/apps/utildex/tools`                                                                                                        |
 
+### PR6 Migration Map (additional moves)
+
+| Scope                          | PR4/legacy location                                                                                          | PR6 canonical location                                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
+| Compatibility shims (delete)   | `src/app.component.ts`, `src/app.routes.ts`, `src/core/core-registry.ts`, `src/core/tool-registry.ts`, `src/data/tool-space-registry.ts`, `src/data/article-registry.ts` | *(deleted — consumers point directly to `src/apps/utildex/...`)* |
+| Synedex shell/routing          | `src/apps/synedex/app.component.synedex.ts`, `src/apps/synedex/app.routes.synedex.ts`                        | `src/apps/synedex/shell/app.component.ts`, `src/apps/synedex/routing/app.routes.ts`                       |
+| Simudex shell/routing          | `src/apps/simudex/app.component.simudex.ts`, `src/apps/simudex/app.routes.simudex.ts`                        | `src/apps/simudex/shell/app.component.ts`, `src/apps/simudex/routing/app.routes.ts`                       |
+| Registry filenames             | `src/apps/*/tool-registry.ts` / `.synedex.ts` / `.simudex.ts`                                                | `src/apps/*/module-registry.ts`                                                                           |
+| Service filename               | `src/services/tool.service.ts`                                                                               | `src/services/modules/module.service.ts`                                                                  |
+| Dangling SEO dirs (delete)     | `src/seo/simudex/`, `src/seo/synedex/`                                                                       | *(deleted — canonical copies at `src/apps/<app>/seo/`)*                                                   |
+| Utildex tool-spaces            | `src/data/tool-spaces/`                                                                                      | `src/apps/utildex/tool-spaces/`                                                                           |
+| Shared types                   | `src/data/types.ts`, `src/data/languages.ts`                                                                 | `src/core/types/shared.ts`, `src/core/types/languages.ts`                                                 |
+| Virtual pets types             | `src/data/virtual-pets.types.ts`                                                                             | `src/apps/utildex/virtual-pets.types.ts`                                                                  |
+| TOUR_STEPS defaults            | `src/core/tour.config.ts` (DEFAULT_TOUR_STEPS)                                                               | `src/apps/utildex/tour-steps.ts`                                                                          |
+| Services organization          | `src/services/*.ts` (flat 35 files)                                                                          | `src/services/{data,platform,ui,modules}/*.ts`                                                            |
+| Empty dirs (delete)            | `src/types/`, `src/data/` (after moves)                                                                      | *(deleted)*                                                                                              |
+
 Shim policy (temporary compatibility files):
 
 - Shims are allowed only to preserve incremental compilation and reviewability.
@@ -322,14 +381,236 @@ Done note:
 - `run-app-command` now enforces explicit argument contracts (`--app` vs `--all`) and avoids shell-based child process invocation for safer cross-platform execution.
 - Validation gates remain green after rewiring (`prebuild:checks` and `build:all`).
 
-### [ ] PR6 - Legacy Cleanup
+### [ ] PR6 - Legacy Cleanup & Architecture Normalization
 
 Objective:
 
-- Remove compatibility aliases that are no longer needed after module migration.
-- Rename remaining tool-centric internals that no longer represent platform semantics.
-- Clean obsolete files and migration shims.
-- Finalize docs so architecture and terminology are consistent end-to-end.
+- Remove every PR4 compatibility shim so there is a single canonical path for every file.
+- Normalize Synedex and Simudex app layouts to match the Utildex shell/routing convention.
+- Clean up half-migrated and dangling directories left behind by PR4.
+- Rename remaining tool-centric filenames to module-centric vocabulary.
+- Fix cross-app storage key leaks introduced during the multi-app split.
+- Resolve cross-app concerns around TOUR_STEPS, Docker parity, and services organization.
+
+---
+
+#### Phase A — Remove Compatibility Shims
+
+The following root-level files are pure passthrough re-exports pointing to `src/apps/utildex/...`. They must be **deleted** and every consumer import updated to the canonical path.
+
+| Shim file | Canonical target | Consumers to update |
+|-----------|-----------------|---------------------|
+| `src/app.component.ts` | `src/apps/utildex/shell/app.component.ts` | Angular bootstrap in `src/apps/utildex/entry/index.tsx` |
+| `src/app.routes.ts` | `src/apps/utildex/routing/app.routes.ts` | Any import of `./app.routes` (check scripts, tests) |
+| `src/core/core-registry.ts` | `src/apps/utildex/core-registry.ts` | `src/core/module-core-registry.ts`, `src/headless/index.ts`, any test/spec files |
+| `src/core/tool-registry.ts` | `src/apps/utildex/tool-registry.ts` | `src/core/module-registry.ts`, `src/services/tool.service.ts` |
+| `src/data/tool-space-registry.ts` | `src/apps/utildex/tool-space-registry.ts` | `src/headless/index.ts`, `src/services/tool-spaces.service.ts` |
+| `src/data/article-registry.ts` | `src/apps/utildex/article-registry.ts` | `src/services/article.service.ts`, route files that reference articles |
+
+**Execution rules:**
+- Delete each shim only after all consumers have been updated and the build passes.
+- Run `npm run prebuild:checks` and `npm run build:all` after each shim removal to catch missed imports early.
+- If a consumer outside `src/apps/utildex/` imports from a shim, evaluate whether that consumer should actually depend on Utildex-specific code (may indicate a cross-app leak).
+
+**Post-phase validation:** `grep -r "TODO(PR6)" src/` should return zero results.
+
+---
+
+#### Phase B — Normalize App File Layouts
+
+Synedex and Simudex currently use a flat `.synedex.ts` / `.simudex.ts` suffix convention for shell and routing files, while Utildex uses `shell/` and `routing/` subdirectories. Normalize all three apps to the subdirectory pattern.
+
+**Synedex moves:**
+
+| Current path | New path |
+|-------------|----------|
+| `src/apps/synedex/app.component.synedex.ts` | `src/apps/synedex/shell/app.component.ts` |
+| `src/apps/synedex/app.component.synedex.html` | `src/apps/synedex/shell/app.component.html` |
+| `src/apps/synedex/app.routes.synedex.ts` | `src/apps/synedex/routing/app.routes.ts` |
+
+**Simudex moves:**
+
+| Current path | New path |
+|-------------|----------|
+| `src/apps/simudex/app.component.simudex.ts` | `src/apps/simudex/shell/app.component.ts` |
+| `src/apps/simudex/app.component.simudex.html` | `src/apps/simudex/shell/app.component.html` |
+| `src/apps/simudex/app.routes.simudex.ts` | `src/apps/simudex/routing/app.routes.ts` |
+
+**Catalog update:** Update `APP_CATALOG` entries for Synedex and Simudex so `source.appComponentFile`, `source.appComponentTemplateFile`, and `source.routesFile` point to the new canonical paths.
+
+**Import updates:** Update the Synedex and Simudex entry points (`src/apps/*/entry/index.tsx`) to import from the new paths. Check all cross-references (scripts, tests, docs) for stale `.synedex.ts` / `.simudex.ts` path references.
+
+---
+
+#### Phase C — Rename Registry Files to Module Vocabulary
+
+The app-specific `tool-registry.*.ts` files still carry the old "tool" name. Rename them to `module-registry.*.ts` and update all imports. The exported symbol `ModuleRegistrySourceEntry` and internal `MODULE_COMPONENT_LOADERS` map are already module-named; only the filename is stale.
+
+| Current path | New path |
+|-------------|----------|
+| `src/apps/utildex/tool-registry.ts` | `src/apps/utildex/module-registry.ts` |
+| `src/apps/synedex/tool-registry.synedex.ts` | `src/apps/synedex/module-registry.ts` |
+| `src/apps/simudex/tool-registry.simudex.ts` | `src/apps/simudex/module-registry.ts` |
+
+**Catalog update:** Update `APP_CATALOG` entries: `source.moduleRegistryFile` for all three apps.
+
+**Import updates:**
+- `src/core/module-registry.ts` imports from `./tool-registry` → update to `../apps/utildex/module-registry`
+- `src/core/tool-registry.ts` shim (deleted in Phase A) — no action needed
+- Any script, test, or doc referencing the old filename
+
+**Service rename:** Rename `src/services/tool.service.ts` → `src/services/module.service.ts`. This file already exports `ModuleService` with `ToolService` as a compatibility alias. After the rename, drop the `ToolService` alias. The `src/services/module.service.ts` re-export shim can then be deleted.
+
+---
+
+#### Phase D — Clean Up Dangling & Half-Migrated Directories
+
+**D.1 — Remove duplicate `src/seo/` entries**
+
+`src/seo/simudex/` and `src/seo/synedex/` are pre-PR4 copies. Canonical SEO files now live at `src/apps/<app>/seo/`. Delete the `src/seo/` directory entirely.
+
+**D.2 — Move Utildex-specific tool-spaces out of `src/data/`**
+
+The three tool-space contracts under `src/data/tool-spaces/` (developer, health, office) are Utildex-only. Move them to `src/apps/utildex/tool-spaces/`. Update imports in `src/apps/utildex/tool-space-registry.ts` and the headless resolver.
+
+**D.3 — Relocate remaining shared types from `src/data/`**
+
+After moving tool-spaces, `src/data/` still contains genuinely shared files:
+
+| File | Disposition |
+|------|-------------|
+| `src/data/types.ts` | Move to `src/core/types/shared.ts` (core types: `I18nText`, `ToolMetadata`, `WidgetCapability`, `WidgetLayout`, `WidgetPreset`) |
+| `src/data/languages.ts` | Move to `src/core/types/languages.ts` |
+| `src/data/virtual-pets.types.ts` | Move to `src/apps/utildex/virtual-pets.types.ts` (Utildex-only, gated by `capabilities.virtualPets`) |
+
+Delete `src/data/` directory once empty.
+
+**D.4 — Remove empty `src/types/`**
+
+This directory contains no files. Delete it.
+
+**Post-phase validation:** `src/data/`, `src/types/`, and `src/seo/` should no longer exist.
+
+---
+
+#### Phase E — Fix Cross-App Storage Key Leaks
+
+These are bugs where shared services hardcode `'utildex-*'` storage keys, violating the app-prefixed `STORAGE_KEYS` namespacing strategy.
+
+**E.1 — ClipboardService (`src/services/clipboard.service.ts`)**
+
+Currently hardcodes `'utildex-clipboard-history'` in its `load`/`save`/`clear` calls (documented in repo memory as using hardcoded keys despite `STORAGE_KEYS.CLIPBOARD_HISTORY` being available). Change to use `STORAGE_KEYS.CLIPBOARD_HISTORY` which is already app-prefixed via `storage-keys.ts`.
+
+**E.2 — Article Reader (`src/pages/article-reader/article-reader.component.ts`)**
+
+Currently hardcodes `'utildex-reader-size'` and `'utildex-reader-font'` localStorage keys (lines 379, 382, 386–387). Replace with keys built from `STORAGE_KEYS.PREFIX_APP` (or a new dedicated key in `storage-keys.ts`). Since the articles page is included in Synedex routes, this leak causes font/size preferences to bleed between apps.
+
+**E.3 — Add ESLint guard rule**
+
+Add a custom ESLint rule (or `no-restricted-syntax` configuration) in `eslint.config.js` that flags string literals matching `/^utildex-[a-z]/` outside of `src/apps/utildex/` and `src/core/storage-keys.ts`. This prevents future hardcoded app-specific key leaks.
+
+---
+
+#### Phase F — Resolve Cross-App Concerns
+
+**F.1 — Extract TOUR_STEPS token from Utildex-specific defaults**
+
+`src/core/tour.config.ts` currently co-locates the `TOUR_STEPS` InjectionToken with `DEFAULT_TOUR_STEPS` (which contain Utildex-only routes like `/tools`, `/my-dashboard`). While Synedex and Simudex already override the token with `useValue: []` at bootstrap, they still import from a file that defines Utildex-specific data.
+
+Split into:
+- `src/core/tour.config.ts` — keep `TOUR_STEPS` InjectionToken only (shared)
+- `src/apps/utildex/tour-steps.ts` — move `DEFAULT_TOUR_STEPS` here (Utildex-specific)
+
+Update Utildex entry point to import `DEFAULT_TOUR_STEPS` from the new app-scoped path. Synedex/Simudex entry points continue importing `TOUR_STEPS` from the shared location (unchanged).
+
+**F.2 — Add Simudex service to docker-compose.yml**
+
+`docker-compose.yml` currently defines `utildex` and `synedex` services but no `simudex`. Add a `simudex` service following the same pattern, with a distinct port default (e.g. `SIMUDEX_PORT:-9528`). The Dockerfile already supports `APP_BUILD` as a build arg, so no Dockerfile changes are needed.
+
+**F.3 — Organize `src/services/` into subdirectories**
+
+The flat 35-file `src/services/` directory makes it hard to reason about service boundaries. Group into:
+
+```
+src/services/
+  data/           # Data persistence and state
+    db.service.ts
+    persistence.service.ts
+    storage-manager.service.ts
+    clipboard.service.ts
+    tool-state.ts
+  platform/       # App lifecycle and infrastructure
+    app-config.service.ts
+    app-update.service.ts
+    font-loader.service.ts
+    global-error.service.ts
+    network.service.ts
+    offline-manager.service.ts
+    offline-route-loaders.ts
+    seo.service.ts
+    shortcut.service.ts
+  ui/             # User-facing services
+    guide.service.ts
+    i18n.service.ts
+    theme.service.ts
+    toast.service.ts
+    tour.service.ts
+    virtual-pets.service.ts
+  modules/        # Module/tool/game/simulation services
+    module.service.ts       (renamed from tool.service.ts in Phase C)
+    tool-spaces.service.ts
+    article.service.ts
+    sandbox-plugin-manager.service.ts
+    sandbox-terminal-session.service.ts
+```
+
+This is a pure file move with import-path updates. No logic changes. Spec files move alongside their implementations.
+
+---
+
+#### Phase G — Documentation & Final Validation
+
+**G.1 — Update migration map**
+
+Add PR6 moves to the migration map table in this document.
+
+**G.2 — Update canonical target layout**
+
+The target layout earlier in this document shows `registries/` and `modules/` subdirectories. After PR6 the actual layout is:
+- `shell/` (app component)
+- `routing/` (routes)
+- `entry/` (bootstrap, config, HTML, manifest, ngsw)
+- `seo/` (robots.txt, sitemap.xml)
+- Registry files at app root (`core-registry.ts`, `module-registry.ts`, `tool-space-registry.ts`, `article-registry.ts`, `offline-route-loaders.ts`) — these can optionally move into a `registries/` subdirectory if desired, but that is deferred to a future PR to avoid scope creep.
+- Module content roots: `tools/` (Utildex), `games/` (Synedex), `simulations/` (Simudex)
+
+Update the canonical target layout tree to reflect reality.
+
+**G.3 — Validation gates**
+
+| Gate | Command | Expected result |
+|------|---------|-----------------|
+| Architecture checks | `npm run prebuild:checks` | Passes with zero shim references, zero stale paths |
+| All app builds | `npm run build:all` | All three apps build from canonical paths only |
+| Headless safety | `npm run test:headless && npm run test:headless:types` | Headless registry resolution unchanged |
+| No TODO(PR6) remaining | `grep -r "TODO(PR6)" src/` | Zero results |
+| No stale directories | Check existence of `src/seo/`, `src/data/`, `src/types/` | None exist |
+| Docker compose | `docker compose config` | Three services defined, no config errors |
+
+**G.4 — Definition of done for PR6**
+
+- Zero compatibility shims remain in the codebase.
+- All three apps use `shell/` and `routing/` subdirectories.
+- All registry filenames use module vocabulary (`module-registry.ts`).
+- `src/data/`, `src/types/`, and `src/seo/` directories no longer exist.
+- No hardcoded `'utildex-*'` storage keys exist outside `src/apps/utildex/` and `src/core/storage-keys.ts`.
+- ESLint rule prevents future cross-app storage key leaks.
+- TOUR_STEPS token is separated from Utildex-specific tour data.
+- Docker Compose defines all three app services.
+- `src/services/` is organized into `data/`, `platform/`, `ui/`, `modules/` subdirectories.
+- All validation gates pass.
+
+---
 
 ## Guardrails
 
