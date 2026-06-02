@@ -50,7 +50,7 @@ export class ToolHostComponent {
   id = input.required<string>();
 
   moduleService = inject(ModuleService);
-  toolService = this.moduleService;
+  ModuleService = this.moduleService;
   router = inject(Router) as Router;
   i18n = inject(I18nService);
 

@@ -1,7 +1,7 @@
 import { Component, input, inject, computed, effect } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { ToolService } from '../../services/tool.service';
+import { ModuleService } from '../../services/module.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { APP_CONFIG } from '../../core/app.config';
@@ -60,7 +60,7 @@ import zh from './i18n/zh';
                     <span
                       class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
                     >
-                      {{ toolService.getCategoryName(cat) }}
+                      {{ moduleService.getCategoryName(cat) }}
                     </span>
                   }
                   <span
@@ -135,12 +135,12 @@ import zh from './i18n/zh';
 })
 export class ToolLayoutComponent {
   toolId = input.required<string>();
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   i18n = inject(I18nService);
   router = inject(Router);
   t = inject(ScopedTranslationService);
 
-  tool = computed(() => this.toolService.tools().find((t) => t.id === this.toolId()));
+  tool = computed(() => this.moduleService.tools().find((t) => t.id === this.toolId()));
   name = computed(() => (this.tool() ? this.i18n.resolve(this.tool()!.name) : ''));
   description = computed(() => (this.tool() ? this.i18n.resolve(this.tool()!.description) : ''));
 
@@ -157,20 +157,20 @@ export class ToolLayoutComponent {
 
   showInlineBreadcrumb = computed(() => this.resolveSpaceIdFromUrl() === null);
 
-  isFav = computed(() => this.toolService.favorites().has(this.toolId()));
+  isFav = computed(() => this.moduleService.favorites().has(this.toolId()));
 
   constructor() {
     effect(() => {
       const id = this.toolId();
       if (id) {
         // Track usage when tool is loaded
-        this.toolService.trackToolUsage(id);
+        this.moduleService.trackToolUsage(id);
       }
     });
   }
 
   toggleFav() {
-    this.toolService.toggleFavorite(this.toolId());
+    this.moduleService.toggleFavorite(this.toolId());
   }
 
   private resolveSpaceIdFromUrl(): string | null {

@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppConfigService } from './app-config.service';
 import { PersistenceService } from './persistence.service';
-import { ToolService } from './tool.service';
+import { ModuleService } from './module.service';
 import { ToolSpacesService } from './tool-spaces.service';
 import type { ToolMetadata } from '../data/types';
 import type { ToolSpaceDefinition } from '../core/tool-space';
@@ -46,17 +46,17 @@ describe('ToolSpacesService', () => {
   ];
 
   let persistence: { storage: ReturnType<typeof vi.fn> };
-  let toolService: { tools: ReturnType<typeof signal<ToolMetadata[]>> };
+  let mockModuleService: { tools: ReturnType<typeof signal<ToolMetadata[]>> };
 
   beforeEach(() => {
     persistence = { storage: vi.fn() };
-    toolService = { tools: signal(catalog) };
+    mockModuleService = { tools: signal(catalog) };
 
     TestBed.configureTestingModule({
       providers: [
         ToolSpacesService,
         { provide: PersistenceService, useValue: persistence },
-        { provide: ToolService, useValue: toolService },
+        { provide: ModuleService, useValue: mockModuleService },
         { provide: AppConfigService, useValue: { appId: 'utildex' } },
       ],
     });

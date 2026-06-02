@@ -4,9 +4,9 @@ import { APP_CONFIG } from '../core/app.config';
 import { flushPromises } from '../testing/service-test-helpers';
 import { DbService } from './db.service';
 import { I18nService } from './i18n.service';
-import { ToolService } from './tool.service';
+import { ModuleService } from './module.service';
 
-describe('ToolService', () => {
+describe('ModuleService', () => {
   let db: { get: ReturnType<typeof vi.fn>; set: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
@@ -17,7 +17,7 @@ describe('ToolService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        ToolService,
+        ModuleService,
         { provide: DbService, useValue: db },
         {
           provide: I18nService,
@@ -34,8 +34,8 @@ describe('ToolService', () => {
     vi.restoreAllMocks();
   });
 
-  async function getReadyService(): Promise<ToolService> {
-    const service = TestBed.inject(ToolService);
+  async function getReadyService(): Promise<ModuleService> {
+    const service = TestBed.inject(ModuleService);
     await vi.waitFor(() => expect(service.tools().length).toBeGreaterThan(0));
     return service;
   }
@@ -140,7 +140,7 @@ describe('ToolService', () => {
       return Promise.resolve(undefined);
     });
 
-    const service = TestBed.inject(ToolService);
+    const service = TestBed.inject(ModuleService);
     await flushPromises();
 
     expect(service.favorites().has('json-formatter')).toBe(true);

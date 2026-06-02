@@ -1,7 +1,7 @@
 import { Component, input, output, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { ToolMetadata } from '../../services/tool.service';
+import { ToolMetadata } from '../../services/module.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';

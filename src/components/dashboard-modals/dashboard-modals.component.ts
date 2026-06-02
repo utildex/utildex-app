@@ -1,11 +1,11 @@
 import { Component, inject, signal, computed, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
-  ToolService,
+  ModuleService,
   ToolMetadata,
   WidgetPreset,
   PendingPlacement,
-} from '../../services/tool.service';
+} from '../../services/module.service';
 import { I18nService } from '../../services/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 // Local translations for self-contained component
@@ -21,7 +21,7 @@ import zh from './i18n/zh';
   providers: [provideTranslation({ en: () => en, fr: () => fr, es: () => es, zh: () => zh })],
   template: `
     <!-- Modal: Add Tool -->
-    @if (toolService.addModalOpen()) {
+    @if (moduleService.addModalOpen()) {
       <div class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close()"></div>
         <div
@@ -152,7 +152,7 @@ import zh from './i18n/zh';
     }
 
     <!-- Modal: Add Filler -->
-    @if (toolService.fillerModalOpen()) {
+    @if (moduleService.fillerModalOpen()) {
       <div class="fixed inset-0 z-[2000] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" (click)="close()"></div>
         <div
@@ -241,7 +241,7 @@ import zh from './i18n/zh';
   ],
 })
 export class DashboardModalsComponent {
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   i18n = inject(I18nService);
   t = inject(ScopedTranslationService);
 
@@ -250,7 +250,7 @@ export class DashboardModalsComponent {
 
   widgetableTools = computed(() => {
     const query = this.searchQuery().toLowerCase();
-    const all = this.toolService.tools().filter((t) => t.widget?.supported);
+    const all = this.moduleService.tools().filter((t) => t.widget?.supported);
 
     if (!query) return all;
 
@@ -267,7 +267,7 @@ export class DashboardModalsComponent {
   }
 
   close() {
-    this.toolService.closeModals();
+    this.moduleService.closeModals();
     this.searchQuery.set('');
     this.selectedToolForSize.set(null);
   }
@@ -294,7 +294,7 @@ export class DashboardModalsComponent {
   }
 
   submitPlacement(p: PendingPlacement) {
-    this.toolService.requestPlacement(p);
+    this.moduleService.requestPlacement(p);
     // Cleanup local state
     this.searchQuery.set('');
     this.selectedToolForSize.set(null);

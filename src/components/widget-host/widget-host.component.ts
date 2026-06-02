@@ -12,7 +12,7 @@ import {
 import { NgComponentOutlet, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { getModuleComponent } from '../../core/module-registry';
-import { DashboardWidget } from '../../services/tool.service';
+import { DashboardWidget } from '../../services/module.service';
 import { ModuleService } from '../../services/module.service';
 import { I18nService } from '../../services/i18n.service';
 
@@ -117,7 +117,7 @@ export class WidgetHostComponent implements OnInit {
   isPhantom = input<boolean>(false);
 
   moduleService = inject(ModuleService);
-  toolService = this.moduleService;
+  ModuleService = this.moduleService;
   i18n = inject(I18nService);
 
   componentType = signal<Type<unknown> | null>(null);
@@ -185,7 +185,7 @@ export class WidgetHostComponent implements OnInit {
     if (this.updateTimeout) clearTimeout(this.updateTimeout);
 
     this.updateTimeout = setTimeout(() => {
-      this.toolService.updateWidgetData(this.widget().instanceId, { content });
+      this.moduleService.updateWidgetData(this.widget().instanceId, { content });
     }, 500); // 500ms Debounce
   }
 
@@ -200,7 +200,7 @@ export class WidgetHostComponent implements OnInit {
       const reader = new FileReader();
       reader.onload = (e) => {
         const url = e.target?.result as string;
-        this.toolService.updateWidgetData(this.widget().instanceId, { url });
+        this.moduleService.updateWidgetData(this.widget().instanceId, { url });
       };
       reader.readAsDataURL(file);
     }

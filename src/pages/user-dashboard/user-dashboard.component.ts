@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ToolService, DashboardWidget, PendingPlacement } from '../../services/tool.service';
+import { ModuleService, DashboardWidget, PendingPlacement } from '../../services/module.service';
 import { WidgetHostComponent } from '../../components/widget-host/widget-host.component';
 import { I18nService } from '../../services/i18n.service';
 import { ToastService } from '../../services/toast.service';
@@ -283,7 +283,7 @@ import { TourService } from '../../services/tour.service';
   `,
 })
 export class UserDashboardComponent {
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   i18n = inject(I18nService);
   t = inject(ScopedTranslationService);
   toast = inject(ToastService);
@@ -317,7 +317,7 @@ export class UserDashboardComponent {
 
     // Listen for placement requests from the global modal
     effect(() => {
-      const request = this.toolService.consumePlacementRequest();
+      const request = this.moduleService.consumePlacementRequest();
       if (request) {
         if (this.isMobile()) {
           request.w = 1;
@@ -343,7 +343,7 @@ export class UserDashboardComponent {
   rowHeight = 200; // px
 
   // Signals
-  dashboardWidgets = this.toolService.dashboardWidgets;
+  dashboardWidgets = this.moduleService.dashboardWidgets;
 
   // Validation Check
   isPositionValid = computed(() => {
@@ -351,7 +351,7 @@ export class UserDashboardComponent {
     const pending = this.pendingPlacement();
     if (!slot || !pending) return false;
 
-    return this.toolService.isPositionValid(
+    return this.moduleService.isPositionValid(
       slot.x,
       slot.y,
       pending.w,
@@ -383,7 +383,7 @@ export class UserDashboardComponent {
     if (!pending) return;
 
     if (
-      this.toolService.isPositionValid(
+      this.moduleService.isPositionValid(
         col,
         row,
         pending.w,
@@ -392,7 +392,7 @@ export class UserDashboardComponent {
         this.cols,
       )
     ) {
-      this.toolService.placeWidget({
+      this.moduleService.placeWidget({
         instanceId: crypto.randomUUID(),
         type: pending.type,
         toolId: pending.toolId,
@@ -455,16 +455,16 @@ export class UserDashboardComponent {
   // --- Actions ---
 
   openAddModal() {
-    this.toolService.openAddToolModal();
+    this.moduleService.openAddToolModal();
   }
 
   openFillerModal() {
-    this.toolService.openFillerModal();
+    this.moduleService.openFillerModal();
   }
 
   pickupWidget(widget: DashboardWidget) {
     // Remove from board and set as pending (move operation)
-    this.toolService.removeWidget(widget.instanceId);
+    this.moduleService.removeWidget(widget.instanceId);
     this.pendingPlacement.set({
       type: widget.type,
       toolId: widget.toolId,
@@ -503,7 +503,7 @@ export class UserDashboardComponent {
       return;
     }
 
-    const canPlace = this.toolService.isPositionValid(
+    const canPlace = this.moduleService.isPositionValid(
       slot.x,
       slot.y,
       pending.w,
@@ -519,7 +519,7 @@ export class UserDashboardComponent {
     }
 
     const original = this.draggedWidget();
-    this.toolService.placeWidget({
+    this.moduleService.placeWidget({
       instanceId: original?.instanceId ?? crypto.randomUUID(),
       type: pending.type,
       toolId: pending.toolId,
@@ -535,7 +535,7 @@ export class UserDashboardComponent {
   private restoreDraggedWidget() {
     const original = this.draggedWidget();
     if (original) {
-      this.toolService.placeWidget(original);
+      this.moduleService.placeWidget(original);
     }
 
     this.draggedWidget.set(null);
@@ -545,7 +545,7 @@ export class UserDashboardComponent {
   }
 
   deleteWidget(id: string) {
-    this.toolService.removeWidget(id);
+    this.moduleService.removeWidget(id);
     this.toast.show('Widget removed', 'info');
   }
 }

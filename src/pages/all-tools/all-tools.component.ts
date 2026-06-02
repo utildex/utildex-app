@@ -36,7 +36,7 @@ import zh from './i18n/zh';
             <input
               type="text"
               [ngModel]="searchQuery()"
-              (ngModelChange)="toolService.setSearch($event)"
+              (ngModelChange)="moduleService.setSearch($event)"
               [placeholder]="t.map()['SEARCH_PLACEHOLDER']"
               class="glass-control focus:ring-primary h-12 w-full rounded-xl pr-4 pl-11 text-base text-slate-800 placeholder-slate-500 transition-all focus:ring-2 focus:outline-none dark:text-slate-100 dark:placeholder-slate-400"
             />
@@ -58,7 +58,7 @@ import zh from './i18n/zh';
               ]"
               [value]="sortOrder()"
               [selectedLabel]="getSortLabel()"
-              (valueChange)="toolService.setSort($event)"
+              (valueChange)="moduleService.setSort($event)"
             ></app-dropdown>
           </div>
         </div>
@@ -66,7 +66,7 @@ import zh from './i18n/zh';
         <!-- Categories (Pills) -->
         <div class="flex flex-wrap gap-2 pb-2" appTourTarget="tour-filters">
           <button
-            (click)="toolService.clearCategories()"
+            (click)="moduleService.clearCategories()"
             class="glass-control hover:text-primary hover:ring-primary/40 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:ring-1"
             [class.text-primary]="selectedCategories().size === 0"
             [class.font-semibold]="selectedCategories().size === 0"
@@ -79,7 +79,7 @@ import zh from './i18n/zh';
           </button>
           @for (cat of categories(); track cat) {
             <button
-              (click)="toolService.toggleCategory(cat)"
+              (click)="moduleService.toggleCategory(cat)"
               class="glass-control hover:text-primary hover:ring-primary/40 cursor-pointer rounded-full px-4 py-2 text-sm font-medium transition-all hover:ring-1"
               [class.text-primary]="isCategorySelected(cat)"
               [class.font-semibold]="isCategorySelected(cat)"
@@ -88,7 +88,7 @@ import zh from './i18n/zh';
               [class.text-slate-600]="!isCategorySelected(cat)"
               [class.dark:text-slate-300]="!isCategorySelected(cat)"
             >
-              {{ toolService.getCategoryName(cat) }}
+              {{ moduleService.getCategoryName(cat) }}
             </button>
           }
         </div>
@@ -100,7 +100,7 @@ import zh from './i18n/zh';
           <!-- Dynamic Title if needed, or just showing count -->
           <h2 class="text-xl font-bold text-slate-800 dark:text-slate-200">
             @if (selectedCategories().size === 1) {
-              {{ toolService.getCategoryName(singleSelectedCategory()!) }}
+              {{ moduleService.getCategoryName(singleSelectedCategory()!) }}
             } @else {
               {{ t.map()['TITLE'] }}
             }
@@ -117,7 +117,10 @@ import zh from './i18n/zh';
             <span class="material-symbols-outlined mb-4 text-5xl text-slate-300">search_off</span>
             <p class="mb-4 text-lg text-slate-500">{{ t.map()['NO_TOOLS_TITLE'] }}</p>
             <p class="text-sm text-slate-400">{{ t.map()['NO_TOOLS_DESC'] }}</p>
-            <button (click)="toolService.resetFilters()" class="text-primary mt-4 hover:underline">
+            <button
+              (click)="moduleService.resetFilters()"
+              class="text-primary mt-4 hover:underline"
+            >
               {{ t.map()['RESET_FILTERS'] }}
             </button>
           </div>
@@ -183,17 +186,17 @@ import zh from './i18n/zh';
 })
 export class AllToolsComponent {
   moduleService = inject(ModuleService);
-  toolService = this.moduleService;
+  ModuleService = this.moduleService;
   t = inject(ScopedTranslationService);
 
   gridTop = viewChild<ElementRef>('gridTop');
 
-  searchQuery = this.toolService.searchQuery;
-  categories = this.toolService.categories;
-  selectedCategories = this.toolService.selectedCategories;
-  sortOrder = this.toolService.sortOrder;
-  filteredTools = this.toolService.filteredTools;
-  favorites = this.toolService.favorites;
+  searchQuery = this.moduleService.searchQuery;
+  categories = this.moduleService.categories;
+  selectedCategories = this.moduleService.selectedCategories;
+  sortOrder = this.moduleService.sortOrder;
+  filteredTools = this.moduleService.filteredTools;
+  favorites = this.moduleService.favorites;
 
   singleSelectedCategory = computed(() => {
     const selected = this.selectedCategories();
@@ -262,7 +265,7 @@ export class AllToolsComponent {
   }
 
   toggleFav(id: string) {
-    this.toolService.toggleFavorite(id);
+    this.moduleService.toggleFavorite(id);
   }
 
   isFav(id: string): boolean {

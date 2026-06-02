@@ -16,7 +16,7 @@ import {
 import type { ResolvedToolSpace } from '../core/tool-space-resolver';
 import { DEFAULT_TOOL_SPACE_ID, getToolSpacesForApp } from '../apps/utildex/tool-space-registry';
 import { PersistenceService } from './persistence.service';
-import { ToolService } from './tool.service';
+import { ModuleService } from './module.service';
 import { AppConfigService } from './app-config.service';
 
 export type { ResolvedToolSpace, ResolvedToolSpaceGroup } from '../core/tool-space-resolver';
@@ -48,7 +48,7 @@ function areStringRecordsEqual(
   providedIn: 'root',
 })
 export class ToolSpacesService {
-  private toolService = inject(ToolService);
+  private moduleService = inject(ModuleService);
   private persistence = inject(PersistenceService);
   private appConfig = inject(AppConfigService);
 
@@ -63,11 +63,11 @@ export class ToolSpacesService {
 
   definitionIssues = computed(() => validateToolSpaceDefinitions(this.spaceDefinitions()));
 
-  private toolCatalogReady = computed(() => this.toolService.tools().length > 0);
+  private toolCatalogReady = computed(() => this.moduleService.tools().length > 0);
 
   private toolMap = computed(() => {
     const map = new Map<string, ToolMetadata>();
-    for (const tool of this.toolService.tools()) {
+    for (const tool of this.moduleService.tools()) {
       map.set(tool.id, tool);
     }
     return map;
@@ -90,7 +90,7 @@ export class ToolSpacesService {
     return collectToolSpaceRuntimeIssues(
       this.spaceDefinitions(),
       this.resolvedSpaces(),
-      new Set<string>(this.toolService.tools().map((tool) => tool.id)),
+      new Set<string>(this.moduleService.tools().map((tool) => tool.id)),
     );
   });
 

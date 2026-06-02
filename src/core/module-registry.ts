@@ -10,7 +10,7 @@ import {
 import {
   MODULE_REGISTRY_SOURCE_MAP,
   type ModuleRegistrySourceEntry,
-} from '../apps/utildex/tool-registry';
+} from '../apps/utildex/module-registry';
 
 export type ModuleComponentLoader = () => Promise<Type<unknown>>;
 

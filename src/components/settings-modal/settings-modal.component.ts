@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { ThemeService, PrimaryColor } from '../../services/theme.service';
 import { I18nService, type LanguageInfo } from '../../services/i18n.service';
 //import { NetworkService } from '../../services/network.service';
-import { ToolService } from '../../services/tool.service';
+import { ModuleService } from '../../services/module.service';
 import { ClipboardService } from '../../services/clipboard.service';
 import { StorageManagerService, StorageStats } from '../../services/storage-manager.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
@@ -655,7 +655,7 @@ export class SettingsModalComponent {
   t = inject(ScopedTranslationService);
   // network = inject(NetworkService);
   storage = inject(StorageManagerService);
-  tools = inject(ToolService);
+  tools = inject(ModuleService);
   clipboard = inject(ClipboardService);
   toast = inject(ToastService);
   offline = inject(OfflineManagerService);

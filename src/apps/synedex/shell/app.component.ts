@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { ThemeService } from '../../../services/theme.service';
-import { ToolService } from '../../../services/tool.service';
+import { ModuleService } from '../../../services/module.service';
 import { I18nService } from '../../../services/i18n.service';
 import { ShortcutService } from '../../../services/shortcut.service';
 import { SeoService } from '../../../services/seo.service';
@@ -48,7 +48,7 @@ export class SynedexAppComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly i18nService = inject(I18nService);
   themeService = inject(ThemeService);
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   shortcutService = inject(ShortcutService);
   seoService = inject(SeoService);
   appConfig = inject(AppConfigService);

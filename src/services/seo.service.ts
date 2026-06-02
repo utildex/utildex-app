@@ -2,7 +2,7 @@ import { Injectable, inject, effect } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { ToolService } from './tool.service';
+import { ModuleService } from './module.service';
 import { ArticleService } from './article.service';
 import { I18nService } from './i18n.service';
 import { AppConfigService } from './app-config.service';
@@ -16,7 +16,7 @@ export class SeoService {
   private meta: Meta = inject(Meta);
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
-  private toolService = inject(ToolService);
+  private moduleService = inject(ModuleService);
   private articleService = inject(ArticleService);
   private i18n = inject(I18nService);
   private appConfig = inject(AppConfigService);
@@ -108,7 +108,7 @@ export class SeoService {
     };
 
     if (routeInfo.kind === 'tool' && routeInfo.toolId) {
-      const tool = this.toolService.tools().find((t) => t.id === routeInfo.toolId);
+      const tool = this.moduleService.tools().find((t) => t.id === routeInfo.toolId);
 
       if (tool) {
         schema = {
@@ -174,7 +174,7 @@ export class SeoService {
     let image = ''; // Default OG Image if available
 
     if (routeInfo.kind === 'tool' && routeInfo.toolId) {
-      const tool = this.toolService.tools().find((t) => t.id === routeInfo.toolId);
+      const tool = this.moduleService.tools().find((t) => t.id === routeInfo.toolId);
 
       if (tool) {
         title = `${this.i18n.resolve(tool.name)} - ${this.appConfig.appName}`;

@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { ToolService } from '../../services/tool.service';
+import { ModuleService } from '../../services/module.service';
 import { I18nService } from '../../services/i18n.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -51,7 +51,7 @@ import zh from './i18n/zh';
             <div class="flex flex-col gap-2">
               <span class="pl-1 font-mono text-xs text-slate-400 dark:text-slate-500">
                 {{ t.map()['LAST_USED_PREFIX'] }}
-                {{ toolService.getLastUsedDate(tool.id) | date: 'medium' }}
+                {{ moduleService.getLastUsedDate(tool.id) | date: 'medium' }}
               </span>
               <div class="flex-1">
                 <app-tool-card
@@ -69,17 +69,17 @@ import zh from './i18n/zh';
   `,
 })
 export class HistoryComponent {
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   i18nService = inject(I18nService);
   t = inject(ScopedTranslationService);
 
-  historyTools = this.toolService.historyTools;
-  favorites = this.toolService.favorites;
+  historyTools = this.moduleService.historyTools;
+  favorites = this.moduleService.favorites;
   // Expose currentLang for date pipe if needed in the future, currently just using default
   currentLang = this.i18nService.currentLang;
 
   toggleFav(id: string) {
-    this.toolService.toggleFavorite(id);
+    this.moduleService.toggleFavorite(id);
   }
 
   isFav(id: string): boolean {

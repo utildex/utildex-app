@@ -1,7 +1,7 @@
 import { Component, inject, signal, computed, ElementRef, viewChild, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToolService } from '../../services/tool.service';
+import { ModuleService } from '../../services/module.service';
 import { ThemeService } from '../../services/theme.service';
 import { ShortcutService } from '../../services/shortcut.service';
 import { I18nService } from '../../services/i18n.service';
@@ -93,7 +93,7 @@ interface CommandResult {
                     [class.text-slate-600]="selectedCategory() !== cat"
                     [class.dark:text-slate-300]="selectedCategory() !== cat"
                   >
-                    {{ toolService.getCategoryName(cat) }}
+                    {{ moduleService.getCategoryName(cat) }}
                   </button>
                 }
               </div>
@@ -218,7 +218,7 @@ export class CommandPaletteComponent {
 
   inputRef = viewChild<ElementRef>('searchInput');
 
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   themeService = inject(ThemeService);
   router: Router = inject(Router);
   shortcuts = inject(ShortcutService);
@@ -228,7 +228,7 @@ export class CommandPaletteComponent {
 
   categories = computed(() => {
     const cats = new Set<string>();
-    this.toolService.tools().forEach((tool) => {
+    this.moduleService.tools().forEach((tool) => {
       tool.categories.forEach((c) => cats.add(c));
     });
     return Array.from(cats).sort();
@@ -276,7 +276,7 @@ export class CommandPaletteComponent {
       list.push(...actions.filter((a) => a.title.toLowerCase().includes(q)));
     }
 
-    let tools = this.toolService.tools();
+    let tools = this.moduleService.tools();
 
     if (cat) {
       tools = tools.filter((t) => t.categories.includes(cat));

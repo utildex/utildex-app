@@ -1,7 +1,7 @@
-﻿import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { ThemeService } from '../../../services/theme.service';
-import { ToolService } from '../../../services/tool.service';
+import { ModuleService } from '../../../services/module.service';
 import { I18nService } from '../../../services/i18n.service';
 import { ShortcutService } from '../../../services/shortcut.service';
 import { SeoService } from '../../../services/seo.service';
@@ -62,7 +62,7 @@ import { AppFooterComponent } from '../../../components/app-footer/app-footer.co
 })
 export class AppComponent implements OnInit {
   themeService = inject(ThemeService);
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   i18nService = inject(I18nService);
   shortcutService = inject(ShortcutService);
   seoService = inject(SeoService);

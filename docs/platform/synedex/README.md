@@ -31,7 +31,7 @@ Synedex is the cognitive wellness and games variant of this codebase. It is buil
   - [Integrity check](#integrity-check)
 - [Registry Architecture](#registry-architecture)
   - [core-registry.synedex.ts](#core-registrysynedexts)
-  - [tool-registry.synedex.ts](#tool-registrysynedexts)
+  - [module-registry.ts](#module-registryts)
   - [appName default rule](#appname-default-rule)
 - [Routes](#routes)
 - [Storage](#storage)
@@ -89,7 +89,7 @@ These files are **only** compiled into the Synedex bundle (either as replacement
 | `src/apps/synedex/shell/app.component.ts`           | Root shell component for Synedex                     |
 | `src/apps/synedex/routing/app.routes.ts`            | Complete route manifest                              |
 | `src/apps/synedex/core-registry.synedex.ts`         | Contract + kernel loaders for all games              |
-| `src/apps/synedex/tool-registry.synedex.ts`         | Angular component loaders for all games              |
+| `src/apps/synedex/module-registry.ts`               | Angular component loaders for all games              |
 | `src/apps/synedex/tool-space-registry.synedex.ts`   | Tool space definitions                               |
 | `src/apps/synedex/offline-route-loaders.synedex.ts` | SW precache scope                                    |
 | `src/pages/synedex-welcome/`                        | Synedex landing page component                       |
@@ -219,7 +219,7 @@ Both loaders are dynamic `import()` to ensure lazy loading. The `contract` loade
 
 ### 6. Wire the component registry
 
-Open `src/apps/synedex/tool-registry.synedex.ts` and add the component loader to `MODULE_COMPONENT_LOADERS`:
+Open `src/apps/synedex/module-registry.ts` and add the component loader to `MODULE_COMPONENT_LOADERS`:
 
 ```typescript
 const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
@@ -416,7 +416,7 @@ A failed integrity check blocks the build. Fix it by adding the missing key to t
 
 `getCoreRegistryForApp('synedex')` filters entries by `appName`, producing the subset of games that belong to this build.
 
-### tool-registry.synedex.ts
+### module-registry.ts
 
 `MODULE_COMPONENT_LOADERS` maps game IDs to their Angular component loaders. The registry builder (`buildModuleRegistrySourceMap`) joins this map with the filtered core registry, validates completeness, and exposes `MODULE_REGISTRY_SOURCE_MAP`.
 
