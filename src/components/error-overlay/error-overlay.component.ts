@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { GlobalErrorService } from '../../services/global-error.service';
-import { DbService } from '../../services/db.service';
+import { GlobalErrorService } from '../../services/platform/global-error.service';
+import { DbService } from '../../services/data/db.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';
 import fr from './i18n/fr';

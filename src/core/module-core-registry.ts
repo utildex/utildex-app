@@ -1,7 +1,7 @@
 import type { AppId } from './app.config';
 import type { ModuleKind } from './app-catalog';
 import { getAppCatalogEntry } from './app-catalog';
-import { getCoreRegistryForApp, type CoreRegistryEntry } from './core-registry';
+import { getCoreRegistryForApp, type CoreRegistryEntry } from '../apps/utildex/core-registry';
 import type { ModuleContract } from './module-contract';
 
 export interface ModuleOwnerMetadata {

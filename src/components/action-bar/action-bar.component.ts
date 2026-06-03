@@ -1,5 +1,5 @@
 import { Component, input, inject, computed } from '@angular/core';
-import { ClipboardService } from '../../services/clipboard.service';
+import { ClipboardService } from '../../services/data/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';
 import fr from './i18n/fr';

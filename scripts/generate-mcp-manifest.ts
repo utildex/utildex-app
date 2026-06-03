@@ -6,7 +6,7 @@ import type { ModuleContract } from '../src/core/module-contract';
 import { isMcpCompatibleModule } from '../src/core/module-core-registry';
 import { validateToolSpaceDefinitions } from '../src/core/tool-space';
 import type { ToolSpaceDefinition } from '../src/core/tool-space';
-import type { I18nText } from '../src/data/types';
+import type { I18nText } from '../src/core/types/shared';
 import {
   APP_IDS,
   getAppCatalogEntry,

@@ -1,9 +1,9 @@
-﻿import { Component, inject, signal, computed, input, ElementRef, viewChild } from '@angular/core';
+import { Component, inject, signal, computed, input, ElementRef, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { FileDropDirective } from '../../../../directives/file-drop.directive';
-import { ToastService } from '../../../../services/toast.service';
+import { ToastService } from '../../../../services/ui/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { formatBytes as formatKernelBytes, processImageBlob } from './image-converter.kernel';
 import en from './i18n/en';

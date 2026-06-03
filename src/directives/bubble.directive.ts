@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, Input, inject } from '@angular/core';
-import { GuideService } from '../services/guide.service';
+import { GuideService } from '../services/ui/guide.service';
 
 @Directive({
   selector: '[appBubble]',

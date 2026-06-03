@@ -19,10 +19,10 @@ Simudex is the simulations app in the shared multi-app repository. It has an ind
 - Runtime config: `src/apps/simudex/entry/app.config.ts`
 - Entry point: `src/apps/simudex/entry/index.tsx`
 - HTML shell: `src/apps/simudex/entry/index.html`
-- App shell: `src/apps/simudex/app.component.simudex.ts` and `src/apps/simudex/app.component.simudex.html`
-- Routes: `src/apps/simudex/app.routes.simudex.ts`
+- App shell: `src/apps/simudex/shell/app.component.ts` and `src/apps/simudex/shell/app.component.html`
+- Routes: `src/apps/simudex/routing/app.routes.ts`
 - Core registry: `src/apps/simudex/core-registry.simudex.ts`
-- Component registry: `src/apps/simudex/tool-registry.simudex.ts`
+- Component registry: `src/apps/simudex/module-registry.ts`
 - Space registry: `src/apps/simudex/tool-space-registry.simudex.ts`
 - Offline preload routes: `src/apps/simudex/offline-route-loaders.simudex.ts`
 - Manifest: `src/apps/simudex/entry/manifest.webmanifest`
@@ -207,7 +207,7 @@ npm run build:app -- --app=simudex
 
 ## Adding The First Simulation
 
-When a simulation is added, create a module folder under `src/apps/simudex/simulations/`, then wire its contract/kernel in `src/apps/simudex/core-registry.simudex.ts` and its Angular component loader in `src/apps/simudex/tool-registry.simudex.ts`. Keep the module id, folder name, route id, and registry key identical so the existing validation scripts can protect the boundary.
+When a simulation is added, create a module folder under `src/apps/simudex/simulations/`, then wire its contract/kernel in `src/apps/simudex/core-registry.simudex.ts` and its Angular component loader in `src/apps/simudex/module-registry.ts`. Keep the module id, folder name, route id, and registry key identical so the existing validation scripts can protect the boundary.
 
 The current first simulation follows this rule:
 

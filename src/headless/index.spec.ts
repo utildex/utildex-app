@@ -3,8 +3,8 @@ import { z } from 'zod';
 
 import type { ModuleContract } from '../core/module-contract';
 import type { ToolSpaceDefinition } from '../core/tool-space';
-import type { CoreRegistryEntry } from '../core/core-registry';
-import type { ToolMetadata } from '../data/types';
+import type { CoreRegistryEntry } from '../apps/utildex/core-registry';
+import type { ToolMetadata } from '../core/types/shared';
 
 type HeadlessModule = typeof import('./index');
 type MockRegistry = Record<string, CoreRegistryEntry>;
@@ -79,10 +79,10 @@ async function loadHeadlessModuleWithMocks(
   registry: MockRegistry,
   spaces: ToolSpaceDefinition[] = [],
 ): Promise<HeadlessModule> {
-  vi.doMock('../core/core-registry', () => ({
+  vi.doMock('../apps/utildex/core-registry', () => ({
     getCoreRegistryForApp: vi.fn(() => registry),
   }));
-  vi.doMock('../data/tool-space-registry', () => ({
+  vi.doMock('../apps/utildex/tool-space-registry', () => ({
     getToolSpacesForApp: vi.fn(() => spaces),
   }));
 
@@ -106,8 +106,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.doUnmock('../core/core-registry');
-  vi.doUnmock('../data/tool-space-registry');
+  vi.doUnmock('../apps/utildex/core-registry');
+  vi.doUnmock('../apps/utildex/tool-space-registry');
 });
 
 describe('listHeadlessTools', () => {

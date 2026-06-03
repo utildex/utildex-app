@@ -1,8 +1,8 @@
 import type { ToolSpaceDefinition } from '../../core/tool-space';
 import type { AppId } from '../../core/app.config';
-import { developerToolSpaceContract } from '../../data/tool-spaces/developer/space.contract';
-import { officeToolSpaceContract } from '../../data/tool-spaces/office/space.contract';
-import { healthToolSpaceContract } from '../../data/tool-spaces/health/space.contract';
+import { developerToolSpaceContract } from './tool-spaces/developer/space.contract';
+import { officeToolSpaceContract } from './tool-spaces/office/space.contract';
+import { healthToolSpaceContract } from './tool-spaces/health/space.contract';
 
 export const DEFAULT_TOOL_SPACE_ID = 'developer';
 

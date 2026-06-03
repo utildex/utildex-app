@@ -7,7 +7,10 @@ import {
   resolveModuleOwner,
   type ModuleOwnerMetadata,
 } from './module-core-registry';
-import { MODULE_REGISTRY_SOURCE_MAP, type ModuleRegistrySourceEntry } from './tool-registry';
+import {
+  MODULE_REGISTRY_SOURCE_MAP,
+  type ModuleRegistrySourceEntry,
+} from '../apps/utildex/module-registry';
 
 export type ModuleComponentLoader = () => Promise<Type<unknown>>;
 

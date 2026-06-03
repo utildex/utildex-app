@@ -1,4 +1,4 @@
-﻿import {
+import {
   AfterViewInit,
   Component,
   ElementRef,
@@ -21,10 +21,10 @@ import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-lay
 import { ProcessingLoaderComponent } from '../../../../components/processing-loader';
 import type { ProcessingLoaderState } from '../../../../components/processing-loader';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
-import { ClipboardService } from '../../../../services/clipboard.service';
-import { DbService } from '../../../../services/db.service';
-import { ToastService } from '../../../../services/toast.service';
-import { ToolState } from '../../../../services/tool-state';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
+import { DbService } from '../../../../services/data/db.service';
+import { ToastService } from '../../../../services/ui/toast.service';
+import { ToolState } from '../../../../services/data/tool-state';
 import {
   CodeSnippetKernel,
   type ExportPresetId,

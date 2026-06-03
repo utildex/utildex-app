@@ -1,6 +1,6 @@
 import { Component, inject, computed, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GuideService } from '../../services/guide.service';
+import { GuideService } from '../../services/ui/guide.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import en from '../../i18n/en';
 import fr from '../../i18n/fr';

@@ -1,9 +1,9 @@
-ï»¿import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
-import { PersistenceService } from '../../../../services/persistence.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import {
   classifyZ,
@@ -593,7 +593,7 @@ export class AbsiCalculatorComponent {
 
   primaryDisplay = computed(() => {
     const v = this.results().absiZ;
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'â€”';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     const sign = v > 0 ? '+' : '';
     return `${sign}${v.toFixed(2)}`;
   });
@@ -660,7 +660,7 @@ export class AbsiCalculatorComponent {
     const map = this.t.map();
     const r = this.results();
     const fmtZ = (v: number | null) =>
-      v === null || !Number.isFinite(v) ? 'â€”' : `${v > 0 ? '+' : ''}${v.toFixed(2)}`;
+      v === null || !Number.isFinite(v) ? '—' : `${v > 0 ? '+' : ''}${v.toFixed(2)}`;
     const lines = [
       `${map['WAIST_LABEL']}: ${this.waistInput()} ${this.waistUnit()}`,
       `${map['HEIGHT_LABEL']}: ${this.heightInput()} ${this.heightUnit()}`,
@@ -671,7 +671,7 @@ export class AbsiCalculatorComponent {
       `${map['ABSI_RAW_LABEL']}: ${this.formatAbsi(r.absi)}`,
       `${map['BMI_LABEL']}: ${this.formatNumber(r.bmi, 1)}`,
       '',
-      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} Â· ${map['PROFILE_AGE']}: ${this.age()}`,
+      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} · ${map['PROFILE_AGE']}: ${this.age()}`,
       '',
       map['DISCLAIMER'],
       map['PRIVACY_NOTE'],
@@ -686,13 +686,13 @@ export class AbsiCalculatorComponent {
   }
 
   formatNumber(v: number | null, digits = 1): string {
-    if (v === null || !Number.isFinite(v)) return 'â€”';
+    if (v === null || !Number.isFinite(v)) return '—';
     return v.toFixed(digits);
   }
 
-  /** ABSI is on the order of ~0.08 â€” show 4 significant digits. */
+  /** ABSI is on the order of ~0.08 — show 4 significant digits. */
   formatAbsi(v: number | null): string {
-    if (v === null || !Number.isFinite(v)) return 'â€”';
+    if (v === null || !Number.isFinite(v)) return '—';
     return v.toFixed(4);
   }
 

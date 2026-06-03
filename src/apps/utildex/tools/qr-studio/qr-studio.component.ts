@@ -1,9 +1,9 @@
-﻿import { Component, inject, signal, computed, effect, input } from '@angular/core';
+import { Component, inject, signal, computed, effect, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
-import { ToolService } from '../../../../services/tool.service';
-import { AppConfigService } from '../../../../services/app-config.service';
+import { ModuleService } from '../../../../services/modules/module.service';
+import { AppConfigService } from '../../../../services/platform/app-config.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { generateQr, type QrType, type ErrorCorrectionLevel } from './qr-studio.kernel';
 import en from './i18n/en';
@@ -714,7 +714,7 @@ export class QrStudioComponent {
   } | null>(null);
 
   t = inject(ScopedTranslationService);
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   appConfig = inject(AppConfigService);
 
   // State
@@ -858,7 +858,7 @@ export class QrStudioComponent {
   saveToWidget() {
     const cfg = this.widgetConfig();
     if (cfg && cfg.instanceId) {
-      this.toolService.updateWidgetData(cfg.instanceId, {
+      this.moduleService.updateWidgetData(cfg.instanceId, {
         qrData: {
           type: this.currentType(),
           url: this.urlValue(),
@@ -894,7 +894,7 @@ export class QrStudioComponent {
   clearWidgetData() {
     const cfg = this.widgetConfig();
     if (cfg && cfg.instanceId) {
-      this.toolService.updateWidgetData(cfg.instanceId, { qrData: null });
+      this.moduleService.updateWidgetData(cfg.instanceId, { qrData: null });
       this.qrDataUrl.set('');
       this.isFlipped.set(false);
     }

@@ -1,4 +1,4 @@
-import { ToolMetadata } from '../data/types';
+import { ToolMetadata } from './types/shared';
 import { ToolSpaceDefinition, ToolSpaceGroupDefinition, ToolSpaceIssue } from './tool-space';
 
 export interface ResolvedToolSpaceGroup {

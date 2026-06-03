@@ -155,8 +155,8 @@ function updateAngularJson(options: AppScaffoldOptions): string {
         with: `src/apps/${options.id}/core-registry.${options.id}.ts`,
       },
       {
-        replace: 'src/core/tool-registry.ts',
-        with: `src/apps/${options.id}/tool-registry.${options.id}.ts`,
+        replace: 'src/apps/utildex/module-registry.ts',
+        with: `src/apps/${options.id}/module-registry.ts`,
       },
       {
         replace: 'src/data/tool-space-registry.ts',
@@ -254,17 +254,17 @@ export function planCreateApp(cli: CliOptions): ScaffoldPlan {
         ngswTemplate(),
       ),
       createOperation(
-        `src/apps/${options.id}/app.component.${options.id}.ts`,
+        `src/apps/${options.id}/shell/app.component.ts`,
         'app shell component',
         appComponentTsTemplate(options),
       ),
       createOperation(
-        `src/apps/${options.id}/app.component.${options.id}.html`,
+        `src/apps/${options.id}/shell/app.component.html`,
         'app shell template',
         appComponentHtmlTemplate(),
       ),
       createOperation(
-        `src/apps/${options.id}/app.routes.${options.id}.ts`,
+        `src/apps/${options.id}/routing/app.routes.ts`,
         'app route manifest',
         routesTemplate(options),
       ),
@@ -279,7 +279,7 @@ export function planCreateApp(cli: CliOptions): ScaffoldPlan {
         emptyCoreRegistryTemplate(options),
       ),
       createOperation(
-        `src/apps/${options.id}/tool-registry.${options.id}.ts`,
+        `src/apps/${options.id}/module-registry.ts`,
         'empty app component registry',
         emptyModuleRegistryTemplate(options),
       ),

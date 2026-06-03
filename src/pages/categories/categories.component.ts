@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { ToolService } from '../../services/tool.service';
+import { ModuleService } from '../../services/modules/module.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';
 import fr from './i18n/fr';
@@ -51,10 +51,10 @@ import zh from './i18n/zh';
             <h2
               class="group-hover:text-primary mb-2 text-xl font-bold text-slate-900 transition-colors dark:text-white"
             >
-              {{ toolService.getCategoryName(cat) }}
+              {{ moduleService.getCategoryName(cat) }}
             </h2>
             <p class="text-sm text-slate-500 dark:text-slate-400">
-              {{ toolService.getToolsByCategory(cat).length }} {{ t.map()['TOOLS_COUNT_SUFFIX'] }}
+              {{ moduleService.getToolsByCategory(cat).length }} {{ t.map()['TOOLS_COUNT_SUFFIX'] }}
             </p>
           </a>
         }
@@ -80,14 +80,14 @@ import zh from './i18n/zh';
   ],
 })
 export class CategoriesComponent {
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   t = inject(ScopedTranslationService);
-  categories = this.toolService.categories;
+  categories = this.moduleService.categories;
 
   getSubtitle(): string {
     const template =
       this.t.map()['SUBTITLE'] || 'Exploring {0} categories containing {1} total tools.';
-    const totalTools = this.toolService.tools().length;
+    const totalTools = this.moduleService.tools().length;
     return template
       .replace('{0}', this.categories().length.toString())
       .replace('{1}', totalTools.toString());

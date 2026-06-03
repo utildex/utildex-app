@@ -1,7 +1,7 @@
 import { NgZone } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { GlobalErrorService } from '../services/global-error.service';
+import { GlobalErrorService } from '../services/platform/global-error.service';
 import { GlobalErrorHandler } from './global-error-handler';
 
 describe('GlobalErrorHandler', () => {

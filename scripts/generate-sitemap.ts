@@ -3,7 +3,7 @@ import * as path from 'path';
 import { pathToFileURL } from 'url';
 
 // 1. Import Shared Data
-import { LANGUAGES } from '../src/data/languages';
+import { LANGUAGES } from '../src/core/types/languages';
 import { type AppId, resolvePublicBaseUrl } from '../src/core/app.config';
 import { APP_IDS, DEFAULT_APP_ID, getAppCatalogEntry, isAppId } from '../src/core/app-catalog';
 

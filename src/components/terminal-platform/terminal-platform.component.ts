@@ -1,7 +1,7 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { SandboxTerminalSessionService } from '../../services/sandbox-terminal-session.service';
+import { SandboxTerminalSessionService } from '../../services/modules/sandbox-terminal-session.service';
 
 @Component({
   selector: 'app-terminal-platform',

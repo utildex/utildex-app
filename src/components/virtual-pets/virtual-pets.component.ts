@@ -10,11 +10,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ThemeService } from '../../services/theme.service';
-import { VirtualPetsService } from '../../services/virtual-pets.service';
-import { I18nService } from '@/src/services/i18n.service';
+import { ThemeService } from '../../services/ui/theme.service';
+import { VirtualPetsService } from '../../services/ui/virtual-pets.service';
+import { I18nService } from '@/src/services/ui/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { Pet } from '../../data/virtual-pets.types';
+import { Pet } from '../../apps/utildex/virtual-pets.types';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';

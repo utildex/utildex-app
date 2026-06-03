@@ -1,4 +1,4 @@
-Ôªøimport {
+import {
   Component,
   DestroyRef,
   ElementRef,
@@ -13,9 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ProcessingLoaderComponent } from '../../../../components/processing-loader';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
-import { DbService } from '../../../../services/db.service';
-import { ToastService } from '../../../../services/toast.service';
-import { ToolState } from '../../../../services/tool-state';
+import { DbService } from '../../../../services/data/db.service';
+import { ToastService } from '../../../../services/ui/toast.service';
+import { ToolState } from '../../../../services/data/tool-state';
 import {
   PRETTY_PLOT_SERIES_PALETTE,
   createPrettyPlot,
@@ -356,7 +356,7 @@ const DEFAULT_STATE: Simple2dState = {
                 class="text-slate-400 transition hover:text-slate-700 dark:hover:text-slate-200"
                 (click)="openDataMode()"
               >
-                √î√•√â {{ t.map()['BTN_BACK_TO_DATA'] }}
+                ‘Â… {{ t.map()['BTN_BACK_TO_DATA'] }}
               </button>
 
               <button

@@ -1,17 +1,17 @@
 import { Component, inject, output, signal, effect, ElementRef, viewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
-import { ThemeService, PrimaryColor } from '../../services/theme.service';
-import { I18nService, type LanguageInfo } from '../../services/i18n.service';
-//import { NetworkService } from '../../services/network.service';
-import { ToolService } from '../../services/tool.service';
-import { ClipboardService } from '../../services/clipboard.service';
-import { StorageManagerService, StorageStats } from '../../services/storage-manager.service';
+import { ThemeService, PrimaryColor } from '../../services/ui/theme.service';
+import { I18nService, type LanguageInfo } from '../../services/ui/i18n.service';
+//import { NetworkService } from '../../services/platform/network.service';
+import { ModuleService } from '../../services/modules/module.service';
+import { ClipboardService } from '../../services/data/clipboard.service';
+import { StorageManagerService, StorageStats } from '../../services/data/storage-manager.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
-import { ToastService } from '../../services/toast.service';
-import { OfflineManagerService } from '../../services/offline-manager.service'; // Added
-import { VirtualPetsService } from '../../services/virtual-pets.service';
-import { TourService } from '../../services/tour.service';
+import { ToastService } from '../../services/ui/toast.service';
+import { OfflineManagerService } from '../../services/platform/offline-manager.service'; // Added
+import { VirtualPetsService } from '../../services/ui/virtual-pets.service';
+import { TourService } from '../../services/ui/tour.service';
 import { TourTargetDirective } from '../../directives/tour-target.directive';
 import { APP_CONFIG } from '../../core/app.config';
 import { STORAGE_KEYS, getPrefKey } from '../../core/storage-keys';
@@ -655,7 +655,7 @@ export class SettingsModalComponent {
   t = inject(ScopedTranslationService);
   // network = inject(NetworkService);
   storage = inject(StorageManagerService);
-  tools = inject(ToolService);
+  tools = inject(ModuleService);
   clipboard = inject(ClipboardService);
   toast = inject(ToastService);
   offline = inject(OfflineManagerService);

@@ -1,12 +1,12 @@
-ï»¿import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ZonePickerComponent } from '../../../../components/zone-picker/zone-picker.component';
-import { PersistenceService } from '../../../../services/persistence.service';
-import { ClipboardService } from '../../../../services/clipboard.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
-import { I18nService } from '../../../../services/i18n.service';
+import { I18nService } from '../../../../services/ui/i18n.service';
 import {
   type ConvertedZone,
   convert,
@@ -220,9 +220,9 @@ function zoneLabel(zone: string): string {
                   {{ formatTimeDisplay(src.time) }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
-                  {{ formatDateDisplay(src.date) }} Â·
+                  {{ formatDateDisplay(src.date) }} ·
                   <span class="font-mono">{{ src.abbreviation }}</span>
-                  Â· UTC {{ src.offsetLabel }}
+                  · UTC {{ src.offsetLabel }}
                 </p>
                 @if (result().utcIso) {
                   <p class="mt-1 font-mono text-[11px] text-slate-400 dark:text-slate-500">
@@ -288,7 +288,7 @@ function zoneLabel(zone: string): string {
                       </p>
                       <p class="text-[10px] text-slate-400 dark:text-slate-500">
                         <span class="font-mono">{{ row.abbreviation }}</span>
-                        Â· UTC {{ row.offsetLabel }} Â· {{ dayDeltaLabel(row.dayDelta) }}
+                        · UTC {{ row.offsetLabel }} · {{ dayDeltaLabel(row.dayDelta) }}
                       </p>
                     </div>
                     <div class="text-right">
@@ -377,7 +377,7 @@ function zoneLabel(zone: string): string {
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>Â·</span>
+          <span>·</span>
           <span>{{ t.map()['DST_NOTE'] }}</span>
         </p>
       </div>
@@ -606,7 +606,7 @@ export class TimezoneConverterComponent {
           (row) =>
             `${this.formatTimeDisplay(row.time)} ${this.formatDateDisplay(row.date)} (${
               row.abbreviation
-            }) â€” ${zoneLabel(row.zone)}`,
+            }) — ${zoneLabel(row.zone)}`,
         )
         .join('\n');
     } else {

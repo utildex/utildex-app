@@ -9,8 +9,8 @@ import { ErrorHandler, isDevMode, provideZonelessChangeDetection } from '@angula
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withPreloading, NoPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { ${className} } from '../app.component.${options.id}';
-import { routes } from '../app.routes.${options.id}';
+import { ${className} } from '../shell/app.component';
+import { routes } from '../routing/app.routes';
 import { GlobalErrorHandler } from '../../../core/global-error-handler';
 import { TOUR_STEPS } from '../../../core/tour.config';
 
@@ -100,20 +100,20 @@ export function appComponentTsTemplate(options: AppScaffoldOptions): string {
   return `import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { AppUpdateService } from '../../services/app-update.service';
-import { AppConfigService } from '../../services/app-config.service';
+import { AppUpdateService } from '../../services/platform/app-update.service';
+import { AppConfigService } from '../../services/platform/app-config.service';
 import { BackgroundComponent } from '../../components/background/background.component';
 import { BubbleDirective } from '../../directives/bubble.directive';
 import { CommandPaletteComponent } from '../../components/command-palette/command-palette.component';
 import { ErrorOverlayComponent } from '../../components/error-overlay/error-overlay.component';
-import { FontLoaderService } from '../../services/font-loader.service';
-import { I18nService } from '../../services/i18n.service';
+import { FontLoaderService } from '../../services/platform/font-loader.service';
+import { I18nService } from '../../services/ui/i18n.service';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { NetworkStatusComponent } from '../../components/network-status/network-status.component';
-import { SeoService } from '../../services/seo.service';
+import { SeoService } from '../../services/platform/seo.service';
 import { SettingsModalComponent } from '../../components/settings-modal/settings-modal.component';
-import { ShortcutService } from '../../services/shortcut.service';
-import { ThemeService } from '../../services/theme.service';
+import { ShortcutService } from '../../services/platform/shortcut.service';
+import { ThemeService } from '../../services/ui/theme.service';
 import { ToastComponent } from '../../components/toast/toast.component';
 import { AppFooterComponent } from '../../components/app-footer/app-footer.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
@@ -136,7 +136,7 @@ ${languageImports}
     AppFooterComponent,
     LocalLinkPipe,
   ],
-  templateUrl: './app.component.${options.id}.html',
+  templateUrl: './app.component.html',
   providers: [provideTranslation({ ${translationLoaders} })],
 })
 export class ${className} implements OnInit {

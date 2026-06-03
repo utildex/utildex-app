@@ -1,11 +1,11 @@
-﻿import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, inject, signal, ViewChild } from '@angular/core';
 import { Router, RouterOutlet, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
-import { ThemeService } from '../../../services/theme.service';
-import { ToolService } from '../../../services/tool.service';
-import { I18nService } from '../../../services/i18n.service';
-import { ShortcutService } from '../../../services/shortcut.service';
-import { SeoService } from '../../../services/seo.service';
-import { NetworkService } from '../../../services/network.service';
+import { ThemeService } from '../../../services/ui/theme.service';
+import { ModuleService } from '../../../services/modules/module.service';
+import { I18nService } from '../../../services/ui/i18n.service';
+import { ShortcutService } from '../../../services/platform/shortcut.service';
+import { SeoService } from '../../../services/platform/seo.service';
+import { NetworkService } from '../../../services/platform/network.service';
 import { provideTranslation, ScopedTranslationService } from '../../../core/i18n';
 import { ToastComponent } from '../../../components/toast/toast.component';
 import { SettingsModalComponent } from '../../../components/settings-modal/settings-modal.component';
@@ -19,7 +19,7 @@ import { DownloadStatusComponent } from '../../../components/download-status/dow
 import { GuideComponent } from '../../../components/guide/guide.component';
 import { TourOverlayComponent } from '../../../components/tour-overlay/tour-overlay.component';
 import { TourTargetDirective } from '../../../directives/tour-target.directive';
-import { OfflineManagerService } from '../../../services/offline-manager.service';
+import { OfflineManagerService } from '../../../services/platform/offline-manager.service';
 import { BubbleDirective } from '../../../directives/bubble.directive';
 import { VirtualPetsComponent } from '../../../components/virtual-pets/virtual-pets.component';
 import { LocalLinkPipe } from '../../../core/pipes/local-link.pipe';
@@ -28,9 +28,9 @@ import fr from '../../../i18n/fr';
 import es from '../../../i18n/es';
 import zh from '../../../i18n/zh';
 import { filter } from 'rxjs/operators';
-import { TourService } from '../../../services/tour.service';
-import { FontLoaderService } from '../../../services/font-loader.service';
-import { AppUpdateService } from '../../../services/app-update.service';
+import { TourService } from '../../../services/ui/tour.service';
+import { FontLoaderService } from '../../../services/platform/font-loader.service';
+import { AppUpdateService } from '../../../services/platform/app-update.service';
 import { AppFooterComponent } from '../../../components/app-footer/app-footer.component';
 
 @Component({
@@ -62,7 +62,7 @@ import { AppFooterComponent } from '../../../components/app-footer/app-footer.co
 })
 export class AppComponent implements OnInit {
   themeService = inject(ThemeService);
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   i18nService = inject(I18nService);
   shortcutService = inject(ShortcutService);
   seoService = inject(SeoService);

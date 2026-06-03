@@ -1,10 +1,10 @@
-﻿import { Component, inject, signal, input, ElementRef, viewChild, computed } from '@angular/core';
+import { Component, inject, signal, input, ElementRef, viewChild, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
 import { FileDropDirective } from '../../../../directives/file-drop.directive';
-import { ToastService } from '../../../../services/toast.service';
+import { ToastService } from '../../../../services/ui/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { convertImagesToPdf, type PageSizeMode } from './img-to-pdf.kernel';
 import en from './i18n/en';

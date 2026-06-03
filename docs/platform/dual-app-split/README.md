@@ -33,16 +33,16 @@ Repository
 ├── app.config.ts              ← Utildex identity
 ├── app.config.synedex.ts      ← Synedex identity     (swaps app.config.ts)
 └── src/
-    ├── core/
-    │   ├── core-registry.ts           ← Utildex tool loaders
-    │   └── core-registry.synedex.ts   ← Synedex game loaders
-    │   ├── tool-registry.ts           ← Utildex component loaders
-    │   └── tool-registry.synedex.ts   ← Synedex component loaders
-    ├── data/
-    │   ├── tool-space-registry.ts           ← Utildex spaces
-    │   └── tool-space-registry.synedex.ts   ← Synedex spaces
-    └── services/
-        ├── offline-route-loaders.ts           ← Utildex offline routes
+    ├── apps/
+    │   ├── utildex/
+    │   │   ├── core-registry.ts       ← Utildex tool loaders
+    │   │   └── module-registry.ts     ← Utildex component loaders
+    │   ├── synedex/
+    │   │   ├── core-registry.synedex.ts ← Synedex game loaders
+    │   │   └── module-registry.ts     ← Synedex component loaders
+    │   └── simudex/
+    │       ├── core-registry.simudex.ts ← Simudex simulation loaders
+    │       └── module-registry.ts     ← Simudex component loaders
         └── offline-route-loaders.synedex.ts   ← Synedex offline routes
 ```
 
@@ -60,12 +60,12 @@ import { AppComponent } from './src/app.component';
 import { routes } from './src/app.routes';
 ```
 
-**Synedex** (`index.synedex.tsx`) bootstraps `SynedexAppComponent` with `routes` from `app.routes.synedex.ts`:
+**Synedex** (`index.tsx`) bootstraps `SynedexAppComponent` with `routes` from `app.routes.ts`:
 
 ```typescript
-// index.synedex.tsx (Synedex)
-import { SynedexAppComponent } from './src/app.component.synedex';
-import { routes } from './src/app.routes.synedex';
+// index.tsx (Synedex)
+import { SynedexAppComponent } from './src/apps/synedex/shell/app.component';
+import { routes } from './src/apps/synedex/routing/app.routes';
 ```
 
 Because the entry points are entirely separate, `app.routes.ts` is **never included** in the Synedex bundle, and vice versa. There is no runtime route filtering.
@@ -78,10 +78,10 @@ During the `synedex` build, Angular replaces these files before compilation:
 | --------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------- |
 | `index.tsx`                             | `index.synedex.tsx`                             | Bootstraps `SynedexAppComponent` and Synedex routes           |
 | `app.config.ts`                         | `app.config.synedex.ts`                         | Sets `appId`, `appName`, `toolsRouteSegment`, and hosting URL |
-| `src/core/core-registry.ts`             | `src/core/core-registry.synedex.ts`             | Declares game contract and kernel loaders                     |
-| `src/core/tool-registry.ts`             | `src/core/tool-registry.synedex.ts`             | Declares Angular component loaders for games                  |
-| `src/data/tool-space-registry.ts`       | `src/data/tool-space-registry.synedex.ts`       | Declares Synedex-specific tool spaces                         |
-| `src/services/offline-route-loaders.ts` | `src/services/offline-route-loaders.synedex.ts` | Offline precache scope for Synedex                            |
+| `src/core/core-registry.ts`             | `src/apps/synedex/core-registry.synedex.ts`       | Declares game contract and kernel loaders                     |
+| `src/core/tool-registry.ts`             | `src/apps/synedex/module-registry.ts`             | Declares Angular component loaders for games                  |
+| `src/data/tool-space-registry.ts`       | `src/apps/synedex/tool-space-registry.synedex.ts` | Declares Synedex-specific tool spaces                         |
+| `src/services/offline-route-loaders.ts` | `src/apps/synedex/offline-route-loaders.synedex.ts` | Offline precache scope for Synedex                          |
 
 Everything else — services, components, directives, i18n core, pipes, theme, storage layer — is compiled from the **same** source for both apps. APP_CONFIG (see below) is the mechanism that makes shared code behave differently at runtime.
 
@@ -224,7 +224,7 @@ var saved = localStorage.getItem(appId + '-state-theme');
 | `../../app.config`            | `app.config.ts`            | `app.config.synedex.ts`            |
 | Entry point                   | `index.tsx`                | `index.synedex.tsx`                |
 | `./core-registry`             | `core-registry.ts`         | `core-registry.synedex.ts`         |
-| `./tool-registry`             | `tool-registry.ts`         | `tool-registry.synedex.ts`         |
+| `./module-registry`          | `module-registry.ts`      | `module-registry.ts`               |
 | `../data/tool-space-registry` | `tool-space-registry.ts`   | `tool-space-registry.synedex.ts`   |
 | `./offline-route-loaders`     | `offline-route-loaders.ts` | `offline-route-loaders.synedex.ts` |
 
@@ -237,7 +237,7 @@ var saved = localStorage.getItem(appId + '-state-theme');
 
 ### Synedex-only (not bundled into Utildex)
 
-- `src/apps/synedex/app.component.synedex.ts` and `src/apps/synedex/app.routes.synedex.ts`
+- `src/apps/synedex/shell/app.component.ts` and `src/apps/synedex/routing/app.routes.ts`
 - `src/apps/synedex/games/` — all game components, contracts, kernels
 - `src/pages/synedex-welcome/` — Synedex landing page
 

@@ -1,4 +1,4 @@
-﻿import {
+import {
   Component,
   inject,
   signal,
@@ -10,7 +10,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
-import { ToolService } from '../../../../services/tool.service';
+import { ModuleService } from '../../../../services/modules/module.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { buildDiffRows, type DiffChange, type DiffMode, type DiffRow } from './diff-checker.kernel';
 import en from './i18n/en';
@@ -523,7 +523,7 @@ export class DiffCheckerComponent {
   widgetConfig = input<WidgetConfig | null>(null);
 
   t = inject(ScopedTranslationService);
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
 
   // State
   textA = signal('');
@@ -651,7 +651,7 @@ export class DiffCheckerComponent {
     if (this.isWidget()) {
       const cfg = this.widgetConfig();
       if (cfg && cfg.instanceId) {
-        this.toolService.updateWidgetData(cfg.instanceId, {
+        this.moduleService.updateWidgetData(cfg.instanceId, {
           diffData: {
             a: this.textA(),
             b: this.textB(),

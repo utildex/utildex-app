@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AppConfigService } from '../../services/app-config.service';
+import { AppConfigService } from '../../services/platform/app-config.service';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';

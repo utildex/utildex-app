@@ -1,9 +1,9 @@
-﻿import { Component, signal, computed, inject, input } from '@angular/core';
+import { Component, signal, computed, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
-import { ClipboardService } from '../../../../services/clipboard.service';
-import { PersistenceService } from '../../../../services/persistence.service';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { generatePassword, scorePasswordStrength } from './password-generator.kernel';
 import en from './i18n/en';

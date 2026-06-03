@@ -2,8 +2,8 @@ import { Component, input, inject, signal, effect, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { getModuleComponent } from '../../core/module-registry';
-import { ModuleService } from '../../services/module.service';
-import { I18nService } from '../../services/i18n.service';
+import { ModuleService } from '../../services/modules/module.service';
+import { I18nService } from '../../services/ui/i18n.service';
 import { APP_CONFIG } from '../../core/app.config';
 
 @Component({
@@ -50,7 +50,7 @@ export class ToolHostComponent {
   id = input.required<string>();
 
   moduleService = inject(ModuleService);
-  toolService = this.moduleService;
+  ModuleService = this.moduleService;
   router = inject(Router) as Router;
   i18n = inject(I18nService);
 

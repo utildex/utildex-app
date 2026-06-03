@@ -1,10 +1,10 @@
-ï»¿import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ZonePickerComponent } from '../../../../components/zone-picker/zone-picker.component';
-import { PersistenceService } from '../../../../services/persistence.service';
-import { ClipboardService } from '../../../../services/clipboard.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { convert, detectLocalZone, listSupportedZones } from './ics-event-generator.kernel';
 import en from './i18n/en';
@@ -335,7 +335,7 @@ function addHourToTime(t: string): string {
               <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
               {{ t.map()['PRIVACY_NOTE'] }}
             </span>
-            <span>Â·</span>
+            <span>·</span>
             <span>{{ t.map()['DST_NOTE'] }}</span>
           </p>
         </div>
@@ -380,7 +380,7 @@ function addHourToTime(t: string): string {
               <span class="font-semibold text-slate-700 dark:text-slate-200">{{
                 formatDuration(s.durationMinutes)
               }}</span>
-              Â· {{ t.map()['RESULT_RRULE'] }}:
+              · {{ t.map()['RESULT_RRULE'] }}:
               <span class="font-semibold text-slate-700 dark:text-slate-200">{{
                 s.rruleHuman ?? t.map()['RESULT_NO_RRULE']
               }}</span>

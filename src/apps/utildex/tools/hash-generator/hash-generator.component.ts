@@ -1,8 +1,8 @@
-ï»¿import { Component, signal, computed, inject, input, OnDestroy } from '@angular/core';
+import { Component, signal, computed, inject, input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
-import { ClipboardService } from '../../../../services/clipboard.service';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { compareHashes, formatFileSize, normalizeHash } from './hash-generator.kernel';
 import en from './i18n/en';
@@ -57,7 +57,7 @@ type InputMode = 'text' | 'file';
               class="flex-1 cursor-pointer overflow-auto rounded-lg bg-slate-100 p-2 font-mono text-xs break-all text-slate-800 transition-colors hover:bg-slate-200 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
               (click)="copyHash()"
             >
-              {{ hashResult() || 'â€”' }}
+              {{ hashResult() || '—' }}
             </div>
           </div>
         } @else {
@@ -90,7 +90,7 @@ type InputMode = 'text' | 'file';
             <div
               class="rounded-lg border border-slate-200 bg-slate-100 p-3 font-mono text-xs break-all text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
-              {{ hashResult() || 'â€”' }}
+              {{ hashResult() || '—' }}
             </div>
             <button
               (click)="copyHash()"
@@ -311,7 +311,7 @@ type InputMode = 'text' | 'file';
                 <code
                   class="font-mono text-sm break-all text-slate-800 select-all dark:text-slate-100"
                 >
-                  {{ hashResult() || 'â€”' }}
+                  {{ hashResult() || '—' }}
                 </code>
               }
             </div>

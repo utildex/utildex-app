@@ -187,10 +187,10 @@ function checkAngularConfig(): boolean {
       const expectedReplacements = [
         [canonicalEntryPoint, app.source.entryPointFile],
         [canonicalAppConfig, app.source.appConfigFile],
-        ['src/core/core-registry.ts', app.source.coreRegistryFile],
-        ['src/core/tool-registry.ts', app.source.moduleRegistryFile],
-        ['src/data/tool-space-registry.ts', app.source.toolSpaceRegistryFile],
-        ['src/services/offline-route-loaders.ts', app.source.offlineRouteLoadersFile],
+        ['src/apps/utildex/core-registry.ts', app.source.coreRegistryFile],
+        ['src/apps/utildex/module-registry.ts', app.source.moduleRegistryFile],
+        ['src/apps/utildex/tool-space-registry.ts', app.source.toolSpaceRegistryFile],
+        ['src/apps/utildex/offline-route-loaders.ts', app.source.offlineRouteLoadersFile],
       ];
 
       for (const [replace, withFile] of expectedReplacements) {

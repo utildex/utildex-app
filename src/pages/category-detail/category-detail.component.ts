@@ -1,7 +1,7 @@
 import { Component, inject, input, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { ToolService } from '../../services/tool.service';
+import { ModuleService } from '../../services/modules/module.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';
@@ -33,7 +33,7 @@ import zh from './i18n/zh';
         </a>
         <h1 class="flex items-center gap-3 text-3xl font-bold text-slate-900 dark:text-white">
           <span class="material-symbols-outlined text-primary text-3xl">folder_open</span>
-          {{ toolService.getCategoryName(categoryId()) }}
+          {{ moduleService.getCategoryName(categoryId()) }}
         </h1>
       </div>
 
@@ -50,20 +50,20 @@ import zh from './i18n/zh';
   `,
 })
 export class CategoryDetailComponent {
-  toolService = inject(ToolService);
+  moduleService = inject(ModuleService);
   t = inject(ScopedTranslationService);
 
   // Route param input
   categoryId = input.required<string>({ alias: 'id' });
 
   tools = computed(() => {
-    return this.toolService.getToolsByCategory(this.categoryId());
+    return this.moduleService.getToolsByCategory(this.categoryId());
   });
 
-  favorites = this.toolService.favorites;
+  favorites = this.moduleService.favorites;
 
   toggleFav(id: string) {
-    this.toolService.toggleFavorite(id);
+    this.moduleService.toggleFavorite(id);
   }
 
   isFav(id: string): boolean {

@@ -1,9 +1,9 @@
-﻿import { Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { DashboardComponent } from '../../../components/dashboard/dashboard.component';
 import { languageGuard } from '../../../core/guards/language.guard';
-import { I18nService } from '../../../services/i18n.service';
+import { I18nService } from '../../../services/ui/i18n.service';
 
 export const routes: Routes = [
   {

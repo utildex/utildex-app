@@ -1,9 +1,9 @@
-ï»¿import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
-import { PersistenceService } from '../../../../services/persistence.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import {
   classify,
@@ -559,7 +559,7 @@ export class BodyFatDeurenbergComponent {
 
   primaryDisplay = computed(() => {
     const v = this.results().bodyFatPercent;
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'â€”';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     return `${v.toFixed(1)}%`;
   });
 
@@ -627,7 +627,7 @@ export class BodyFatDeurenbergComponent {
     const map = this.t.map();
     const r = this.results();
     const fmt = (v: number | null, digits = 1) =>
-      v === null || !Number.isFinite(v) ? 'â€”' : v.toFixed(digits);
+      v === null || !Number.isFinite(v) ? '—' : v.toFixed(digits);
     const lines = [
       `${map['WEIGHT_LABEL']}: ${this.weightInput()} ${this.weightUnit()}`,
       `${map['HEIGHT_LABEL']}: ${this.heightInput()} ${this.heightUnit()}`,
@@ -638,7 +638,7 @@ export class BodyFatDeurenbergComponent {
       `${map['FAT_MASS_LABEL']}: ${this.formatMassDisplay(r.fatMassKg)}`,
       `${map['LEAN_MASS_LABEL']}: ${this.formatMassDisplay(r.leanMassKg)}`,
       '',
-      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} Â· ${map['PROFILE_AGE']}: ${this.age()}`,
+      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} · ${map['PROFILE_AGE']}: ${this.age()}`,
       '',
       map['DISCLAIMER'],
       map['PRIVACY_NOTE'],
@@ -653,13 +653,13 @@ export class BodyFatDeurenbergComponent {
   }
 
   formatNumber(v: number | null, digits = 1): string {
-    if (v === null || !Number.isFinite(v)) return 'â€”';
+    if (v === null || !Number.isFinite(v)) return '—';
     return v.toFixed(digits);
   }
 
   /** Display mass in the user's chosen weight unit. */
   formatMassDisplay(kg: number | null): string {
-    if (kg === null || !Number.isFinite(kg)) return 'â€”';
+    if (kg === null || !Number.isFinite(kg)) return '—';
     if (this.weightUnit() === 'lb') {
       return `${(kg / 0.45359237).toFixed(1)} lb`;
     }

@@ -1,9 +1,9 @@
-import { LANGUAGES } from '../../src/data/languages';
+import { LANGUAGES } from '../../src/core/types/languages';
 
 export const SCAFFOLD_LANGUAGE_CODES = LANGUAGES.map((language) => language.code);
 
 if (!SCAFFOLD_LANGUAGE_CODES.includes('en')) {
-  throw new Error('[scaffold] src/data/languages.ts must include "en" as fallback language.');
+  throw new Error('[scaffold] src/core/types/languages.ts must include "en" as fallback language.');
 }
 
 export function languageImportIdentifier(code: string): string {

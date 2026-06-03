@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { APP_IDS, getAppCatalogEntry } from '../src/core/app-catalog';
-import { LANGUAGES } from '../src/data/languages';
+import { LANGUAGES } from '../src/core/types/languages';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getKeys(obj: any, prefix = ''): string[] {
@@ -101,6 +101,41 @@ async function main() {
         }
       } else {
         console.warn(`[WARNING] Module ${root.label}/${moduleName} has no i18n folder.`);
+      }
+    }
+  }
+
+  // 3. Storage Key Namespacing
+  console.log('Checking Storage Key Namespacing...');
+  const srcDir = path.join(process.cwd(), 'src');
+  const allowedFiles = new Set([
+    path.join(srcDir, 'core', 'storage-keys.ts'),
+    path.join(srcDir, 'core', 'app-catalog.ts'),
+  ]);
+
+  function* walkFiles(dir: string): Generator<string> {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== 'assets') {
+        yield* walkFiles(full);
+      } else if (entry.isFile() && /\.(ts|tsx|html|js|mjs)$/.test(entry.name)) {
+        yield full;
+      }
+    }
+  }
+
+  for (const filePath of walkFiles(srcDir)) {
+    if (allowedFiles.has(filePath)) continue;
+
+    const content = fs.readFileSync(filePath, 'utf-8');
+    // Match 'utildex-*' string literals that are likely storage keys
+    const hardcodedKeys = content.match(/'utildex-[a-z][a-z0-9-]*'/g);
+    if (hardcodedKeys) {
+      for (const key of hardcodedKeys) {
+        console.error(
+          `[ERROR] [storage-keys] ${path.relative(process.cwd(), filePath)} hardcodes app-specific key ${key}. Use STORAGE_KEYS from src/core/storage-keys.ts instead.`,
+        );
+        success = false;
       }
     }
   }
