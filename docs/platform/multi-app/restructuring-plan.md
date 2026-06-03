@@ -183,8 +183,8 @@ src/
       games/                          # Module content root (kind: game)
         mental-math/
         sudoku/
-      core-registry.synedex.ts → core-registry.ts  (renamed in PR6)
-      module-registry.ts              (renamed from tool-registry.synedex.ts)
+      core-registry.synedex.ts
+      module-registry.ts
       tool-space-registry.synedex.ts
       offline-route-loaders.synedex.ts
     simudex/
@@ -194,8 +194,8 @@ src/
       seo/
       simulations/                    # Module content root (kind: simulation)
         minimal-debian-terminal/
-      core-registry.simudex.ts → core-registry.ts  (renamed in PR6)
-      module-registry.ts              (renamed from tool-registry.simudex.ts)
+      core-registry.simudex.ts
+      module-registry.ts
       tool-space-registry.simudex.ts
       offline-route-loaders.simudex.ts
 
@@ -222,9 +222,9 @@ src/
 
   services/                           # Organized into subdirectories in PR6
     data/                             # db, persistence, storage-manager, clipboard, tool-state
-    platform/                         # app-config, app-update, font-loader, global-error, network, offline-*, seo, shortcut
+    platform/                         # app-config, app-update, font-loader, global-error, network, offline-manager, seo, shortcut
     ui/                               # guide, i18n, theme, toast, tour, virtual-pets
-    modules/                          # module (tool.service), tool-spaces, article, sandbox-*
+    modules/                          # module, tool-spaces, article, sandbox-*
 
   components/                         # Shared UI components (24 component dirs)
   pages/                              # Shared page components (16 page dirs)
@@ -313,7 +313,7 @@ Migration map (current):
 | Simudex entry assets  | `index.simudex.tsx`, `index.simudex.html`, `app.config.simudex.ts`, `manifest.simudex.webmanifest`, `ngsw-config.simudex.json`                                                          | `src/apps/simudex/entry/`                                                                                                       |
 | Synedex runtime roots | `src/synedex-games`, root-level Synedex app/runtime files                                                                                                                               | `src/apps/synedex/games` and `src/apps/synedex/...`                                                                             |
 | Simudex runtime roots | `src/simudex-simulations`, root-level Simudex app/runtime files                                                                                                                         | `src/apps/simudex/simulations` and `src/apps/simudex/...`                                                                       |
-| Utildex runtime roots | `src/core/core-registry.ts`, `src/core/tool-registry.ts`, `src/data/tool-space-registry.ts`, `src/services/offline-route-loaders.ts`, `src/data/article-registry.ts`, `src/seo/utildex` | `src/apps/utildex/{core-registry.ts,tool-registry.ts,tool-space-registry.ts,offline-route-loaders.ts,article-registry.ts,seo/}` |
+| Utildex runtime roots | `src/core/core-registry.ts`, `src/core/tool-registry.ts`, `src/data/tool-space-registry.ts`, `src/services/offline-route-loaders.ts`, `src/data/article-registry.ts`, `src/seo/utildex` | `src/apps/utildex/{core-registry.ts,module-registry.ts,tool-space-registry.ts,offline-route-loaders.ts,article-registry.ts,seo/}` |
 | Utildex shell/routes  | `src/app.component.ts`, `src/app.component.html`, `src/app.routes.ts`                                                                                                                   | `src/apps/utildex/shell/` and `src/apps/utildex/routing/`                                                                       |
 | Utildex module root   | `src/utildex-tools`                                                                                                                                                                     | `src/apps/utildex/tools`                                                                                                        |
 
@@ -381,7 +381,7 @@ Done note:
 - `run-app-command` now enforces explicit argument contracts (`--app` vs `--all`) and avoids shell-based child process invocation for safer cross-platform execution.
 - Validation gates remain green after rewiring (`prebuild:checks` and `build:all`).
 
-### [ ] PR6 - Legacy Cleanup & Architecture Normalization
+### [x] PR6 - Legacy Cleanup & Architecture Normalization
 
 Objective:
 
@@ -391,6 +391,16 @@ Objective:
 - Rename remaining tool-centric filenames to module-centric vocabulary.
 - Fix cross-app storage key leaks introduced during the multi-app split.
 - Resolve cross-app concerns around TOUR_STEPS, Docker parity, and services organization.
+
+Done note:
+
+- Phase A: Deleted 7 compatibility shims, updated all consumers to canonical paths.
+- Phase B: Normalized Synedex/Simudex to `shell/` + `routing/` subdirectories matching Utildex.
+- Phase C: Renamed all `tool-registry.*.ts` → `module-registry.ts`, `tool.service.ts` → `module.service.ts`, dropped `ToolService` alias. Updated angular.json file replacements and ~25 consumers.
+- Phase D: Deleted `src/seo/`, moved `src/data/tool-spaces/` → `src/apps/utildex/tool-spaces/`, relocated `types.ts`/`languages.ts`/`virtual-pets.types.ts`/`articles/` to canonical homes. Removed empty `src/types/` and `src/data/`.
+- Phase E: ClipboardService and article-reader leaks already resolved. Added storage key namespacing guard to `check-integrity.ts`.
+- Phase F: Split `TOUR_STEPS` token from `DEFAULT_TOUR_STEPS`, added Simudex to `docker-compose.yml`, organized `src/services/` into `data/`, `platform/`, `ui/`, `modules/` subdirectories.
+- Phase G: Updated migration map and canonical target layout. All validation gates pass: zero shims, zero stale dirs, zero TODO(PR6), all builds green, headless tests pass, Docker Compose defines three services.
 
 ---
 
