@@ -1,11 +1,11 @@
-ï»¿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
-import { ClipboardService } from '../../../../services/clipboard.service';
-import { DbService } from '../../../../services/db.service';
-import { ToolState } from '../../../../services/tool-state';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
+import { DbService } from '../../../../services/data/db.service';
+import { ToolState } from '../../../../services/data/tool-state';
 import { decodeJwt, type JwtDecodeErrorCode, type JwtTemporalStatus } from './jwt-decoder.kernel';
 import en from './i18n/en';
 import fr from './i18n/fr';
@@ -304,10 +304,10 @@ import zh from './i18n/zh';
               </div>
               <div class="grid grid-cols-1 gap-1.5 text-sm text-slate-700 dark:text-slate-200">
                 <div>
-                  alg: <span class="font-mono">{{ decoded().algorithm || 'â€”' }}</span>
+                  alg: <span class="font-mono">{{ decoded().algorithm || '—' }}</span>
                 </div>
                 <div>
-                  typ: <span class="font-mono">{{ decoded().tokenType || 'â€”' }}</span>
+                  typ: <span class="font-mono">{{ decoded().tokenType || '—' }}</span>
                 </div>
                 <div>
                   {{ t.map()['CLAIM_IAT'] }}:
@@ -435,20 +435,20 @@ export class JwtDecoderComponent {
 
   claimText(name: string): string {
     const payload = this.decoded().payload;
-    if (!payload) return 'â€”';
+    if (!payload) return '—';
 
     const value = payload[name];
-    if (value === undefined || value === null) return 'â€”';
+    if (value === undefined || value === null) return '—';
     if (Array.isArray(value)) return value.join(', ');
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
   }
 
   timeText(value: number | null): string {
-    if (value === null) return 'â€”';
+    if (value === null) return '—';
 
     const dt = new Date(value * 1000);
-    if (Number.isNaN(dt.getTime())) return 'â€”';
+    if (Number.isNaN(dt.getTime())) return '—';
 
     return `${value} (${dt.toLocaleString()})`;
   }

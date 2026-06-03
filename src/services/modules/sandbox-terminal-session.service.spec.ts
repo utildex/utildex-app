@@ -5,7 +5,7 @@ import type {
   SessionBackendAdapter,
   TerminalBackendFeature,
   TerminalSessionCreateRequest,
-} from '../core/sandbox';
+} from '../../core/sandbox';
 import { SandboxPluginManagerService } from './sandbox-plugin-manager.service';
 import { SandboxTerminalSessionService } from './sandbox-terminal-session.service';
 
@@ -14,7 +14,7 @@ class SingleTabOnlyBackend implements SessionBackendAdapter {
   readonly version = '1.0.0';
 
   private sequence = 0;
-  private readonly sessions = new Map<string, import('../core/sandbox').TerminalSessionHandle>();
+  private readonly sessions = new Map<string, import('../../core/sandbox').TerminalSessionHandle>();
 
   async boot(context: SandboxBootContext): Promise<void> {
     void context;
@@ -22,10 +22,10 @@ class SingleTabOnlyBackend implements SessionBackendAdapter {
 
   async createSession(
     request: TerminalSessionCreateRequest,
-  ): Promise<import('../core/sandbox').TerminalSessionHandle> {
+  ): Promise<import('../../core/sandbox').TerminalSessionHandle> {
     this.sequence += 1;
     const sessionId = `single-tab-session-${this.sequence}`;
-    const snapshot: import('../core/sandbox').TerminalSessionSnapshot = {
+    const snapshot: import('../../core/sandbox').TerminalSessionSnapshot = {
       id: sessionId,
       tabId: request.tabId,
       status: 'ready',
@@ -37,11 +37,13 @@ class SingleTabOnlyBackend implements SessionBackendAdapter {
     };
 
     const outputListeners = new Set<
-      (chunk: import('../core/sandbox').TerminalOutputChunk) => void
+      (chunk: import('../../core/sandbox').TerminalOutputChunk) => void
     >();
-    const exitListeners = new Set<(event: import('../core/sandbox').TerminalExitEvent) => void>();
+    const exitListeners = new Set<
+      (event: import('../../core/sandbox').TerminalExitEvent) => void
+    >();
 
-    const handle: import('../core/sandbox').TerminalSessionHandle = {
+    const handle: import('../../core/sandbox').TerminalSessionHandle = {
       id: sessionId,
       tabId: request.tabId,
       getStatus: () => snapshot.status,
@@ -54,7 +56,7 @@ class SingleTabOnlyBackend implements SessionBackendAdapter {
       },
       dispose: async () => {
         snapshot.status = 'exited';
-        const event: import('../core/sandbox').TerminalExitEvent = {
+        const event: import('../../core/sandbox').TerminalExitEvent = {
           sessionId,
           code: 0,
           at: Date.now(),
@@ -77,11 +79,11 @@ class SingleTabOnlyBackend implements SessionBackendAdapter {
     return handle;
   }
 
-  getSession(sessionId: string): import('../core/sandbox').TerminalSessionHandle | null {
+  getSession(sessionId: string): import('../../core/sandbox').TerminalSessionHandle | null {
     return this.sessions.get(sessionId) ?? null;
   }
 
-  listSessions(): readonly import('../core/sandbox').TerminalSessionSnapshot[] {
+  listSessions(): readonly import('../../core/sandbox').TerminalSessionSnapshot[] {
     return Array.from(this.sessions.values()).map((session) => session.snapshot());
   }
 

@@ -2,10 +2,10 @@ import { Injectable, inject, effect } from '@angular/core';
 import { Title, Meta } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { ModuleService } from './module.service';
-import { ArticleService } from './article.service';
-import { I18nService } from './i18n.service';
-import { AppConfigService } from './app-config.service';
+import { ModuleService } from '../modules/module.service';
+import { ArticleService } from '../modules/article.service';
+import { I18nService } from '../ui/i18n.service';
+import { AppConfigService } from '../platform/app-config.service';
 import { filter } from 'rxjs/operators';
 
 @Injectable({

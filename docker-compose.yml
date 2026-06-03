@@ -16,3 +16,12 @@ services:
         APP_BASE_URL: ${SYNEDEX_APP_BASE_URL:-http://localhost:${SYNEDEX_PORT:-9527}}
     ports:
       - "${SYNEDEX_PORT:-9527}:80"
+
+  simudex:
+    build:
+      context: .
+      args:
+        APP_BUILD: simudex
+        APP_BASE_URL: ${SIMUDEX_APP_BASE_URL:-http://localhost:${SIMUDEX_PORT:-9528}}
+    ports:
+      - "${SIMUDEX_PORT:-9528}:80"

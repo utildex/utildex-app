@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { flushPromises } from '../testing/service-test-helpers';
-import { DbService } from './db.service';
-import { GuideService } from './guide.service';
+import { flushPromises } from '../../testing/service-test-helpers';
+import { DbService } from '../data/db.service';
+import { GuideService } from '../ui/guide.service';
 import { OfflineManagerService } from './offline-manager.service';
-import { PersistenceService } from './persistence.service';
+import { PersistenceService } from '../data/persistence.service';
 
 const offlineMocks = vi.hoisted(() => {
   const createEntry = () => ({

@@ -1,7 +1,7 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { ToastService } from './toast.service';
-import { DbService } from './db.service';
-import { STORAGE_KEYS } from '../core/storage-keys';
+import { ToastService } from '../ui/toast.service';
+import { DbService } from '../data/db.service';
+import { STORAGE_KEYS } from '../../core/storage-keys';
 
 export interface ClipboardItem {
   id: string;

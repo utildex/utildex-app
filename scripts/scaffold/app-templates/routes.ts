@@ -7,7 +7,7 @@ export function routesTemplate(options: AppScaffoldOptions): string {
 import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { languageGuard } from '../../core/guards/language.guard';
-import { I18nService } from '../../services/i18n.service';
+import { I18nService } from '../../services/ui/i18n.service';
 
 export const routes: Routes = [
   {
@@ -93,7 +93,7 @@ export function welcomeComponentTemplate(options: AppScaffoldOptions): string {
   const className = `${pascalCase(options.id)}WelcomeComponent`;
   return `import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AppConfigService } from '../../services/app-config.service';
+import { AppConfigService } from '../../services/platform/app-config.service';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 
 @Component({

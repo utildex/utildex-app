@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { APP_CONFIG } from '../core/app.config';
-import { flushPromises } from '../testing/service-test-helpers';
-import { DbService } from './db.service';
-import { I18nService } from './i18n.service';
+import { APP_CONFIG } from '../../core/app.config';
+import { flushPromises } from '../../testing/service-test-helpers';
+import { DbService } from '../data/db.service';
+import { I18nService } from '../ui/i18n.service';
 import { ModuleService } from './module.service';
 
 describe('ModuleService', () => {

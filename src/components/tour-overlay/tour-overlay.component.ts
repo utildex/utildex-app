@@ -10,7 +10,7 @@ import {
   signal,
   OnDestroy,
 } from '@angular/core';
-import { TourService } from '../../services/tour.service';
+import { TourService } from '../../services/ui/tour.service';
 import { ScopedTranslationService } from '../../core/i18n';
 import { NgStyle } from '@angular/common';
 import { computePosition, flip, shift, offset, autoUpdate, Placement } from '@floating-ui/dom';

@@ -4,12 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { getModuleComponent } from '../../core/module-registry';
-import { I18nService } from '../../services/i18n.service';
+import { I18nService } from '../../services/ui/i18n.service';
 import {
   ResolvedToolSpace,
   ResolvedToolSpaceGroup,
   ToolSpacesService,
-} from '../../services/tool-spaces.service';
+} from '../../services/modules/tool-spaces.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';

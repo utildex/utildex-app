@@ -1,9 +1,9 @@
-ï»¿import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
-import { PersistenceService } from '../../../../services/persistence.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import {
   classify,
@@ -625,7 +625,7 @@ export class BmiCalculatorComponent {
 
   primaryDisplay = computed(() => {
     const v = this.results().bmi;
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'â€”';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     return v.toFixed(1);
   });
 
@@ -668,9 +668,9 @@ export class BmiCalculatorComponent {
     if (this.weightUnit() === 'lb') {
       const minLb = range.min / 0.45359237;
       const maxLb = range.max / 0.45359237;
-      return `${minLb.toFixed(0)}Ã”Ã‡Ã´${maxLb.toFixed(0)} ${this.t.map()['UNIT_LB']}`;
+      return `${minLb.toFixed(0)}ÔÇô${maxLb.toFixed(0)} ${this.t.map()['UNIT_LB']}`;
     }
-    return `${range.min.toFixed(1)}Ã”Ã‡Ã´${range.max.toFixed(1)} ${this.t.map()['UNIT_KG']}`;
+    return `${range.min.toFixed(1)}ÔÇô${range.max.toFixed(1)} ${this.t.map()['UNIT_KG']}`;
   });
 
   interpretation = computed<{ summary: string; notes: string[] } | null>(() => {
@@ -699,7 +699,7 @@ export class BmiCalculatorComponent {
     const map = this.t.map();
     const r = this.results();
     const fmt = (v: number | null, digits = 1) =>
-      v === null || !Number.isFinite(v) ? 'â€”' : v.toFixed(digits);
+      v === null || !Number.isFinite(v) ? '—' : v.toFixed(digits);
     const range = r.heightMeters
       ? healthyWeightRangeKg(r.heightMeters, this.resolved().thresholds)
       : null;
@@ -707,13 +707,13 @@ export class BmiCalculatorComponent {
       `${map['HEIGHT_LABEL']}: ${this.heightInput()} ${this.heightUnit()}`,
       `${map['WEIGHT_LABEL']}: ${this.weightInput()} ${this.weightUnit()}`,
       '',
-      `${map['PRIMARY_RESULT_LABEL']}: ${fmt(r.bmi)} kg/mâ”¬â–“`,
+      `${map['PRIMARY_RESULT_LABEL']}: ${fmt(r.bmi)} kg/m-¦`,
       `${map['INTERPRETATION_HEADING']}: ${this.tierLabel()}`,
       range
-        ? `${map['HEALTHY_RANGE_LABEL']}: ${range.min.toFixed(1)}Ã”Ã‡Ã´${range.max.toFixed(1)} kg`
+        ? `${map['HEALTHY_RANGE_LABEL']}: ${range.min.toFixed(1)}ÔÇô${range.max.toFixed(1)} kg`
         : '',
       '',
-      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} Â· ${map['PROFILE_AGE']}: ${this.age()} Â· ${this.standard() === 'who' ? map['STANDARD_WHO'] : map['STANDARD_ASIA_PACIFIC']}`,
+      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} · ${map['PROFILE_AGE']}: ${this.age()} · ${this.standard() === 'who' ? map['STANDARD_WHO'] : map['STANDARD_ASIA_PACIFIC']}`,
       '',
       map['DISCLAIMER'],
       map['PRIVACY_NOTE'],

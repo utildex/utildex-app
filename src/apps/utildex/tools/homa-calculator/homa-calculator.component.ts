@@ -1,9 +1,9 @@
-Ôªøimport { Component, computed, effect, HostListener, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
-import { PersistenceService } from '../../../../services/persistence.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import {
   classifyHomaIr,
@@ -786,7 +786,7 @@ export class HomaCalculatorComponent {
 
   primaryDisplay = computed(() => {
     const v = this.primaryValue();
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '‚Äî';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'ó';
     if (this.method() === 'quicki') return v.toFixed(3);
     if (this.method() === 'homa-b' || this.method() === 'homa-s') {
       return `${v.toFixed(0)}%`;
@@ -821,7 +821,7 @@ export class HomaCalculatorComponent {
     return this.method() === 'homa-ir' || this.method() === 'quicki';
   });
 
-  /** Position 0..100 of the marker on the green‚Üíred gradient. */
+  /** Position 0..100 of the marker on the green?red gradient. */
   gradientPercent = computed<number | null>(() => {
     if (!this.axisVisible()) return null;
     const clamp = (n: number) => Math.max(0, Math.min(100, n));
@@ -916,18 +916,18 @@ export class HomaCalculatorComponent {
     if (this.showMenopauseField()) {
       parts.push(this.menopausalStatus() === 'pre' ? map['MENO_PRE'] : map['MENO_POST']);
     }
-    return parts.filter(Boolean).join(' ¬∑ ');
+    return parts.filter(Boolean).join(' ∑ ');
   });
 
   exportText = computed(() => {
     const map = this.t.map();
     const r = this.results();
     const fmt = (v: number | null, digits = 2, suffix = '') =>
-      v === null || !Number.isFinite(v) ? '‚Äî' : `${v.toFixed(digits)}${suffix}`;
+      v === null || !Number.isFinite(v) ? 'ó' : `${v.toFixed(digits)}${suffix}`;
     const lines = [
       `${map['CLINICAL_HEADING']}`,
       `  ${map['GLUCOSE_LABEL']}: ${this.glucoseInput()} ${this.glucoseUnit()}`,
-      `  ${map['INSULIN_LABEL']}: ${this.insulinInput()} ‚î¨√ÅU/mL`,
+      `  ${map['INSULIN_LABEL']}: ${this.insulinInput()} -¡U/mL`,
       '',
       `${map['PRIMARY_RESULT_LABEL']}`,
       `  HOMA-IR: ${fmt(r.homaIr)}`,
@@ -957,7 +957,7 @@ export class HomaCalculatorComponent {
 
   secondaryDisplay(method: Method): string {
     const r = this.results();
-    const placeholder = this.t.map()['RESULT_PLACEHOLDER'] ?? '‚Äî';
+    const placeholder = this.t.map()['RESULT_PLACEHOLDER'] ?? 'ó';
     if (!this.hasInputs()) return placeholder;
     switch (method) {
       case 'homa-ir':

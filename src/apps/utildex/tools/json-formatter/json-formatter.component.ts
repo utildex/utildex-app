@@ -1,4 +1,4 @@
-ï»¿import {
+import {
   Component,
   ElementRef,
   HostListener,
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
 import { FileDropDirective } from '../../../../directives/file-drop.directive';
-import { ToastService } from '../../../../services/toast.service';
+import { ToastService } from '../../../../services/ui/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import {
   formatJson,
@@ -213,7 +213,7 @@ import zh from './i18n/zh';
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
         >
           <span>
-            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} â€¢ {{ charCount() }}
+            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} • {{ charCount() }}
             {{ t.map()['STATUS_CHARS'] }}
           </span>
           @if (content().trim()) {
@@ -350,7 +350,7 @@ import zh from './i18n/zh';
           class="glass-subsection flex items-center justify-between border-t px-4 py-2 text-xs text-slate-500 dark:text-slate-400"
         >
           <span>
-            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} â€¢ {{ charCount() }}
+            {{ lineCount() }} {{ t.map()['STATUS_LINES'] }} • {{ charCount() }}
             {{ t.map()['STATUS_CHARS'] }}
           </span>
           @if (content().trim()) {

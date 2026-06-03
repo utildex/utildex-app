@@ -1,8 +1,8 @@
 import { Component, input, inject, computed, effect } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { ModuleService } from '../../services/module.service';
-import { I18nService } from '../../services/i18n.service';
+import { ModuleService } from '../../services/modules/module.service';
+import { I18nService } from '../../services/ui/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { APP_CONFIG } from '../../core/app.config';
 import en from './i18n/en';

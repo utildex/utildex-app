@@ -8,9 +8,9 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { PersistenceService } from './persistence.service';
+import { PersistenceService } from '../data/persistence.service';
 import { Subject } from 'rxjs';
-import { Pet } from '../apps/utildex/virtual-pets.types';
+import { Pet } from '../../apps/utildex/virtual-pets.types';
 
 /**
  * Service managing Virtual Pets activation/deactivation

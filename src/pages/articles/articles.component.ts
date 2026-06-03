@@ -1,10 +1,10 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ArticleService } from '../../services/article.service';
+import { ArticleService } from '../../services/modules/article.service';
 import { ArticleCardComponent } from '../../components/article-card/article-card.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { I18nService } from '../../services/i18n.service';
+import { I18nService } from '../../services/ui/i18n.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';

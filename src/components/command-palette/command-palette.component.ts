@@ -1,11 +1,11 @@
 import { Component, inject, signal, computed, ElementRef, viewChild, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ModuleService } from '../../services/module.service';
-import { ThemeService } from '../../services/theme.service';
-import { ShortcutService } from '../../services/shortcut.service';
-import { I18nService } from '../../services/i18n.service';
-import { ClipboardService } from '../../services/clipboard.service';
+import { ModuleService } from '../../services/modules/module.service';
+import { ThemeService } from '../../services/ui/theme.service';
+import { ShortcutService } from '../../services/platform/shortcut.service';
+import { I18nService } from '../../services/ui/i18n.service';
+import { ClipboardService } from '../../services/data/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import en from './i18n/en';
 import fr from './i18n/fr';

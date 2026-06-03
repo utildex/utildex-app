@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { APP_CONFIG } from '../core/app.config';
+import { APP_CONFIG } from '../../core/app.config';
 import {
   MockSessionBackendAdapter,
   type SessionBackendAdapter,
@@ -13,7 +13,7 @@ import {
   type TerminalTabCreateOptions,
   type TerminalTabDescriptor,
   type TerminalTabId,
-} from '../core/sandbox';
+} from '../../core/sandbox';
 import { SandboxPluginManagerService } from './sandbox-plugin-manager.service';
 
 @Injectable({ providedIn: 'root' })

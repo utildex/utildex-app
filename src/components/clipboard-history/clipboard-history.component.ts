@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ClipboardService } from '../../services/clipboard.service';
+import { ClipboardService } from '../../services/data/clipboard.service';
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import en from './i18n/en';
 import fr from './i18n/fr';

@@ -2,8 +2,8 @@ import { Component, inject, signal, computed, effect, input } from '@angular/cor
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
-import { ModuleService } from '../../../../services/module.service';
-import { AppConfigService } from '../../../../services/app-config.service';
+import { ModuleService } from '../../../../services/modules/module.service';
+import { AppConfigService } from '../../../../services/platform/app-config.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { generateQr, type QrType, type ErrorCorrectionLevel } from './qr-studio.kernel';
 import en from './i18n/en';

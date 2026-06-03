@@ -5,8 +5,8 @@ import {
   ToolMetadata,
   WidgetPreset,
   PendingPlacement,
-} from '../../services/module.service';
-import { I18nService } from '../../services/i18n.service';
+} from '../../services/modules/module.service';
+import { I18nService } from '../../services/ui/i18n.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 // Local translations for self-contained component
 import en from './i18n/en';

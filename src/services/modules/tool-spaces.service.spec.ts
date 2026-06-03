@@ -1,12 +1,12 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { AppConfigService } from './app-config.service';
-import { PersistenceService } from './persistence.service';
+import { AppConfigService } from '../platform/app-config.service';
+import { PersistenceService } from '../data/persistence.service';
 import { ModuleService } from './module.service';
 import { ToolSpacesService } from './tool-spaces.service';
-import type { ToolMetadata } from '../core/types/shared';
-import type { ToolSpaceDefinition } from '../core/tool-space';
+import type { ToolMetadata } from '../../core/types/shared';
+import type { ToolSpaceDefinition } from '../../core/tool-space';
 
 describe('ToolSpacesService', () => {
   const catalog: ToolMetadata[] = [

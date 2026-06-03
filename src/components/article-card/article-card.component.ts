@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { CommonModule, DatePipe, NgTemplateOutlet, NgOptimizedImage } from '@angular/common';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
 import { ArticleMetadata } from '../../apps/utildex/article-registry';
-import { I18nService } from '../../services/i18n.service';
+import { I18nService } from '../../services/ui/i18n.service';
 
 @Component({
   selector: 'app-article-card',

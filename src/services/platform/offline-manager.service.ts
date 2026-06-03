@@ -1,9 +1,9 @@
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
-import { MODULE_REGISTRY_MAP } from '../core/module-registry';
-import { PersistenceService } from './persistence.service';
-import { DbService } from './db.service';
-import { GuideService } from './guide.service';
-import { OFFLINE_ROUTE_LOADERS } from '../apps/utildex/offline-route-loaders';
+import { MODULE_REGISTRY_MAP } from '../../core/module-registry';
+import { PersistenceService } from '../data/persistence.service';
+import { DbService } from '../data/db.service';
+import { GuideService } from '../ui/guide.service';
+import { OFFLINE_ROUTE_LOADERS } from '../../apps/utildex/offline-route-loaders';
 
 @Injectable({
   providedIn: 'root',

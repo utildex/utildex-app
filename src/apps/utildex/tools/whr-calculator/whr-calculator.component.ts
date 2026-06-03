@@ -1,9 +1,9 @@
-ï»¿import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
+import { Component, computed, HostListener, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
-import { PersistenceService } from '../../../../services/persistence.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import {
   classify,
@@ -517,7 +517,7 @@ export class WhrCalculatorComponent {
 
   primaryDisplay = computed(() => {
     const v = this.results().whr;
-    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? 'â€”';
+    if (v === null || !Number.isFinite(v)) return this.t.map()['RESULT_PLACEHOLDER'] ?? '—';
     return v.toFixed(2);
   });
 
@@ -592,7 +592,7 @@ export class WhrCalculatorComponent {
     const map = this.t.map();
     const r = this.results();
     const fmt = (v: number | null, digits = 2) =>
-      v === null || !Number.isFinite(v) ? 'â€”' : v.toFixed(digits);
+      v === null || !Number.isFinite(v) ? '—' : v.toFixed(digits);
     const lines = [
       `${map['WAIST_LABEL']}: ${this.waistInput()} ${this.unit()}`,
       `${map['HIP_LABEL']}: ${this.hipInput()} ${this.unit()}`,
@@ -601,7 +601,7 @@ export class WhrCalculatorComponent {
       `${map['INTERPRETATION_HEADING']}: ${this.tierLabel()}`,
       r.waistCm !== null ? `${map['WAIST_CIRCUMFERENCE_LABEL']}: ${r.waistCm.toFixed(1)} cm` : '',
       '',
-      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} Â· ${map['PROFILE_AGE']}: ${this.age()}`,
+      `${map['PROFILE_HEADING']}: ${this.sex() === 'female' ? map['PROFILE_SEX_FEMALE'] : map['PROFILE_SEX_MALE']} · ${map['PROFILE_AGE']}: ${this.age()}`,
       '',
       map['DISCLAIMER'],
       map['PRIVACY_NOTE'],

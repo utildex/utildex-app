@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises } from '../testing/service-test-helpers';
-import { I18nService } from '../services/i18n.service';
+import { I18nService } from '../services/ui/i18n.service';
 import { I18N_MAP, ScopedTranslationService, type I18nMap } from './i18n';
 
 describe('ScopedTranslationService', () => {

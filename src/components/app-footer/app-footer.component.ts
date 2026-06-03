@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ScopedTranslationService } from '../../core/i18n';
 import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
-import { AppConfigService } from '../../services/app-config.service';
+import { AppConfigService } from '../../services/platform/app-config.service';
 
 @Component({
   selector: 'app-footer',

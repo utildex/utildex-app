@@ -1,11 +1,11 @@
-ï»¿import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
-import { PersistenceService } from '../../../../services/persistence.service';
-import { ClipboardService } from '../../../../services/clipboard.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
-import { I18nService } from '../../../../services/i18n.service';
+import { I18nService } from '../../../../services/ui/i18n.service';
 import {
   computeAdd,
   computeBetween,
@@ -237,7 +237,7 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
                     {{ t.map()['RESULT_DIFF_LABEL'] }}
                   </p>
                   <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {{ diff()?.years }}y Â· {{ diff()?.months }}m Â· {{ diff()?.days }}d
+                    {{ diff()?.years }}y · {{ diff()?.months }}m · {{ diff()?.days }}d
                   </p>
                 </div>
               </div>
@@ -251,7 +251,7 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
               <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
                 {{ resultWeekday() }}
                 @if (format() !== 'iso') {
-                  Â· <span class="font-mono">{{ resultIso() }}</span>
+                  · <span class="font-mono">{{ resultIso() }}</span>
                 }
               </p>
             }
@@ -303,7 +303,7 @@ const FORMAT_OPTIONS: { id: DateFormat; key: string }[] = [
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>Â·</span>
+          <span>·</span>
           <span>{{ t.map()['TZ_NOTE'] }}</span>
         </p>
       </div>
@@ -606,7 +606,7 @@ export class DateTimeCalculatorComponent {
         })}`;
       }
       case 'deadline': {
-        return `${result} â€” ${this.fillTemplate(map['PHRASE_DEADLINE'], {
+        return `${result} — ${this.fillTemplate(map['PHRASE_DEADLINE'], {
           amount: Math.abs(this.amount()),
           unit: this.unitLabel(this.deadlineUnit()),
           start: this.fmt(this.startDate()),

@@ -10,7 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
-import { ModuleService } from '../../../../services/module.service';
+import { ModuleService } from '../../../../services/modules/module.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { buildDiffRows, type DiffChange, type DiffMode, type DiffRow } from './diff-checker.kernel';
 import en from './i18n/en';

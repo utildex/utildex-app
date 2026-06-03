@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, effect, ElementRef, viewChild } from '@angular/core';
-import { ModuleService } from '../../services/module.service';
+import { ModuleService } from '../../services/modules/module.service';
 import { ToolCardComponent } from '../../components/tool-card/tool-card.component';
 import { FormsModule } from '@angular/forms';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';

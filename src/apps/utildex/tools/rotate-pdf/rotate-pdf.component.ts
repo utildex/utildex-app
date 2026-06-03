@@ -1,10 +1,10 @@
-﻿import { Component, inject, signal, input, ElementRef, viewChild } from '@angular/core';
+import { Component, inject, signal, input, ElementRef, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
 import { FileDropDirective } from '../../../../directives/file-drop.directive';
-import { ToastService } from '../../../../services/toast.service';
+import { ToastService } from '../../../../services/ui/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { rotatePdfBytes, type RotationMode } from './rotate-pdf.kernel';
 import en from './i18n/en';
@@ -132,7 +132,7 @@ import zh from './i18n/zh';
               </div>
               <div class="text-center">
                 <div class="font-bold text-slate-900 dark:text-white">{{ pdfFile()?.name }}</div>
-                <div class="text-sm text-slate-500">{{ totalRotation() }}┬░</div>
+                <div class="text-sm text-slate-500">{{ totalRotation() }}-�</div>
               </div>
 
               <!-- Configuration -->

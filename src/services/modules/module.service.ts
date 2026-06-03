@@ -1,16 +1,16 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { I18nService } from './i18n.service';
-import { DbService } from './db.service';
-import { MODULE_REGISTRY_MAP } from '../core/module-registry';
-import type { ModuleContract } from '../core/module-contract';
-import { APP_CONFIG } from '../core/app.config';
+import { I18nService } from '../ui/i18n.service';
+import { DbService } from '../data/db.service';
+import { MODULE_REGISTRY_MAP } from '../../core/module-registry';
+import type { ModuleContract } from '../../core/module-contract';
+import { APP_CONFIG } from '../../core/app.config';
 import {
   I18nText,
   WidgetPreset,
   WidgetCapability,
   ToolMetadata,
   WidgetLayout,
-} from '../core/types/shared';
+} from '../../core/types/shared';
 
 // Export types so they can be imported from ModuleService
 export type { I18nText, WidgetPreset, WidgetCapability, ToolMetadata, WidgetLayout };

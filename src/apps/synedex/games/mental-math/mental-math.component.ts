@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
-import { I18nService } from '../../../../services/i18n.service';
+import { I18nService } from '../../../../services/ui/i18n.service';
 import en from './i18n/en';
 import fr from './i18n/fr';
 import es from './i18n/es';

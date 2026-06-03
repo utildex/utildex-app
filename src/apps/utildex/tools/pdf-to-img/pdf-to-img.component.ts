@@ -1,9 +1,9 @@
-﻿import { Component, inject, signal, computed, input, ElementRef, viewChild } from '@angular/core';
+import { Component, inject, signal, computed, input, ElementRef, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { FileDropDirective } from '../../../../directives/file-drop.directive';
-import { ToastService } from '../../../../services/toast.service';
+import { ToastService } from '../../../../services/ui/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import JSZip from 'jszip';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -139,7 +139,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerSrc;
                   pdfFile()?.name
                 }}</span>
                 <span class="text-xs text-slate-500"
-                  >{{ pages().length }} {{ t.map()['PAGES'] }} • {{ selectedCount() }}
+                  >{{ pages().length }} {{ t.map()['PAGES'] }} � {{ selectedCount() }}
                   {{ t.map()['SELECTED'] }}</span
                 >
               </div>

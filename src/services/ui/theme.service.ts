@@ -1,6 +1,6 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
-import { PersistenceService } from './persistence.service';
-import { FontLoaderService } from './font-loader.service';
+import { PersistenceService } from '../data/persistence.service';
+import { FontLoaderService } from '../platform/font-loader.service';
 
 export type PrimaryColor = 'blue' | 'emerald' | 'violet' | 'amber' | 'rose';
 export type FontFamily = 'inter' | 'roboto' | 'system';

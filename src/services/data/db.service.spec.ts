@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { DbService, type DbRecord } from './db.service';
+import { DbService, type DbRecord } from '../data/db.service';
 
 describe('DbService', () => {
   const realIndexedDb = globalThis.indexedDB;

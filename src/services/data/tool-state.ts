@@ -1,5 +1,5 @@
 import { signal, WritableSignal, computed, Signal } from '@angular/core';
-import { DbService } from './db.service';
+import { DbService } from '../data/db.service';
 
 /**
  * A generic State Manager for tools backed by IndexedDB (records store).
@@ -12,7 +12,7 @@ import { DbService } from './db.service';
  *   inc() { this.state.update(s => ({ count: s.count + 1 })); }
  * }
  */
-import { APP_CONFIG } from '../core/app.config';
+import { APP_CONFIG } from '../../core/app.config';
 
 export class ToolState<T extends object> {
   private internalState: WritableSignal<T>;

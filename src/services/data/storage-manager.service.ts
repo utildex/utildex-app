@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { DbService, DbRecord } from './db.service';
-import { STORAGE_KEYS, getPrefKey } from '../core/storage-keys';
-import { APP_CONFIG } from '../core/app.config';
+import { DbService, DbRecord } from '../data/db.service';
+import { STORAGE_KEYS, getPrefKey } from '../../core/storage-keys';
+import { APP_CONFIG } from '../../core/app.config';
 
 export interface StorageCategory {
   id: string;

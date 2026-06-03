@@ -2,8 +2,8 @@ import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { ARTICLE_REGISTRY, ArticleMetadata } from '../apps/utildex/article-registry';
-import { I18nService, Language } from './i18n.service';
+import { ARTICLE_REGISTRY, ArticleMetadata } from '../../apps/utildex/article-registry';
+import { I18nService, Language } from '../ui/i18n.service';
 
 @Injectable({
   providedIn: 'root',

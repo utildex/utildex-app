@@ -12,9 +12,9 @@ import {
 import { NgComponentOutlet, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { getModuleComponent } from '../../core/module-registry';
-import { DashboardWidget } from '../../services/module.service';
-import { ModuleService } from '../../services/module.service';
-import { I18nService } from '../../services/i18n.service';
+import { DashboardWidget } from '../../services/modules/module.service';
+import { ModuleService } from '../../services/modules/module.service';
+import { I18nService } from '../../services/ui/i18n.service';
 
 @Component({
   selector: 'app-widget-host',

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { APP_CONFIG, getAppId, resolvePublicBaseUrl, toAbsoluteUrl } from '../core/app.config';
+import { APP_CONFIG, getAppId, resolvePublicBaseUrl, toAbsoluteUrl } from '../../core/app.config';
 
 @Injectable({
   providedIn: 'root',

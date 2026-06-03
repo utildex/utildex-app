@@ -1,5 +1,5 @@
 import { Injectable, InjectionToken, inject, signal, effect } from '@angular/core';
-import { I18nService } from '../services/i18n.service';
+import { I18nService } from '../services/ui/i18n.service';
 
 type TranslationModule = Record<string, string> | { default: Record<string, string> };
 export type I18nMap = Record<string, () => Promise<TranslationModule> | TranslationModule>;

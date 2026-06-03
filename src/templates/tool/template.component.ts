@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../components/tool-layout/tool-layout.component';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
-import { ToastService } from '../../services/toast.service';
+import { ToastService } from '../../services/ui/toast.service';
 import { BubbleDirective } from '../../directives/bubble.directive';
-import { ToolState } from '../../services/tool-state';
-import { DbService } from '../../services/db.service';
+import { ToolState } from '../../services/data/tool-state';
+import { DbService } from '../../services/data/db.service';
 
 import en from './i18n/en';
 import fr from './i18n/fr';

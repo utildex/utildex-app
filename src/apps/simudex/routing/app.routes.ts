@@ -2,7 +2,7 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { languageGuard } from '../../../core/guards/language.guard';
-import { I18nService } from '../../../services/i18n.service';
+import { I18nService } from '../../../services/ui/i18n.service';
 import { type Language } from '../../../core/types/languages';
 
 function isLanguage(value: string): value is Language {

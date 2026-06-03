@@ -1,9 +1,9 @@
-﻿import { Component, inject, signal, computed, effect, input } from '@angular/core';
+import { Component, inject, signal, computed, effect, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ActionBarComponent } from '../../../../components/action-bar/action-bar.component';
-import { PersistenceService } from '../../../../services/persistence.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import { ALL_UNITS, convertUnits, type UnitType } from './unit-converter.kernel';
 import en from './i18n/en';

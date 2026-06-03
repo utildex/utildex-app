@@ -2,10 +2,10 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getPrefKey } from '../core/storage-keys';
-import { createRouteSnapshot, flushPromises } from '../testing/service-test-helpers';
-import { DbService } from './db.service';
-import { PersistenceService } from './persistence.service';
+import { getPrefKey } from '../../core/storage-keys';
+import { createRouteSnapshot, flushPromises } from '../../testing/service-test-helpers';
+import { DbService } from '../data/db.service';
+import { PersistenceService } from '../data/persistence.service';
 
 describe('PersistenceService', () => {
   let db: {

@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, OnInit, OnDestroy, inject } from '@angular/core';
-import { TourService } from '../services/tour.service';
+import { TourService } from '../services/ui/tour.service';
 
 @Directive({
   selector: '[appTourTarget]',

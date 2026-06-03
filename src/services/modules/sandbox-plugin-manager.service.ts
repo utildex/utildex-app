@@ -1,5 +1,5 @@
 import { Injectable, computed, signal } from '@angular/core';
-import { APP_CONFIG } from '../core/app.config';
+import { APP_CONFIG } from '../../core/app.config';
 import {
   noopSandboxPlugin,
   type SandboxFileExportEvent,
@@ -11,7 +11,7 @@ import {
   type SandboxPluginInvocationRecord,
   type SandboxPluginRegistrationResult,
   type SandboxTabEvent,
-} from '../core/sandbox';
+} from '../../core/sandbox';
 
 type PluginInvoker = (plugin: SandboxPlugin, context: SandboxPluginContext) => Promise<void> | void;
 

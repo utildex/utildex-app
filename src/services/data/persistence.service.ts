@@ -1,7 +1,7 @@
 import { Injectable, inject, WritableSignal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DbService } from './db.service';
-import { STORAGE_KEYS } from '../core/storage-keys';
+import { DbService } from '../data/db.service';
+import { STORAGE_KEYS } from '../../core/storage-keys';
 
 export interface StorageOptions {
   type?: 'string' | 'number' | 'boolean' | 'object';

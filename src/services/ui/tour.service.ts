@@ -1,11 +1,11 @@
 import { Injectable, signal, inject, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { DbService } from './db.service';
-import { I18nService } from './i18n.service';
-import { LocalLinkPipe } from '../core/pipes/local-link.pipe';
-import { TOUR_STEPS } from '../core/tour.config';
+import { DbService } from '../data/db.service';
+import { I18nService } from '../ui/i18n.service';
+import { LocalLinkPipe } from '../../core/pipes/local-link.pipe';
+import { TOUR_STEPS } from '../../core/tour.config';
 import { Subject } from 'rxjs';
-import { APP_CONFIG } from '../core/app.config';
+import { APP_CONFIG } from '../../core/app.config';
 
 @Injectable({
   providedIn: 'root',

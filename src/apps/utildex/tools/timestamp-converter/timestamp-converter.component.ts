@@ -1,10 +1,10 @@
-ï»¿import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolLayoutComponent } from '../../../../components/tool-layout/tool-layout.component';
 import { ZonePickerComponent } from '../../../../components/zone-picker/zone-picker.component';
-import { PersistenceService } from '../../../../services/persistence.service';
-import { ClipboardService } from '../../../../services/clipboard.service';
+import { PersistenceService } from '../../../../services/data/persistence.service';
+import { ClipboardService } from '../../../../services/data/clipboard.service';
 import { provideTranslation, ScopedTranslationService } from '../../../../core/i18n';
 import {
   type EpochUnit,
@@ -238,7 +238,7 @@ interface CopyRow {
                   {{ f.zoneTime }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
-                  {{ f.zoneDate }} Â· {{ f.weekday }} Â· UTC {{ f.offsetLabel }}
+                  {{ f.zoneDate }} · {{ f.weekday }} · UTC {{ f.offsetLabel }}
                 </p>
               </div>
               <div
@@ -251,7 +251,7 @@ interface CopyRow {
                   {{ f.localTime }}
                 </p>
                 <p class="text-xs text-slate-500 dark:text-slate-400">
-                  {{ f.localDate }} Â·
+                  {{ f.localDate }} ·
                   <span class="italic">{{ f.relative }}</span>
                 </p>
               </div>
@@ -326,7 +326,7 @@ interface CopyRow {
             <span class="material-symbols-outlined text-xs" aria-hidden="true">lock</span>
             {{ t.map()['PRIVACY_NOTE'] }}
           </span>
-          <span>Â·</span>
+          <span>·</span>
           <span>{{ t.map()['DST_NOTE'] }}</span>
         </p>
       </div>

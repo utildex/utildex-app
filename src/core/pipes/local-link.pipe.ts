@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
-import { I18nService } from '../../services/i18n.service';
+import { I18nService } from '../../services/ui/i18n.service';
 
 @Pipe({
   name: 'localLink',

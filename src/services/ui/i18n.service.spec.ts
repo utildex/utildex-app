@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getPrefKey } from '../core/storage-keys';
-import { createRouteSnapshot } from '../testing/service-test-helpers';
-import { DbService } from './db.service';
-import { I18nService } from './i18n.service';
+import { getPrefKey } from '../../core/storage-keys';
+import { createRouteSnapshot } from '../../testing/service-test-helpers';
+import { DbService } from '../data/db.service';
+import { I18nService } from '../ui/i18n.service';
 
 describe('I18nService', () => {
   let events: Subject<unknown>;

@@ -1,10 +1,10 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { ToolMetadata } from '../core/types/shared';
+import { ToolMetadata } from '../../core/types/shared';
 import {
   ToolSpaceDefinition,
   ToolSpaceIssue,
   validateToolSpaceDefinitions,
-} from '../core/tool-space';
+} from '../../core/tool-space';
 import {
   collectToolSpaceRuntimeIssues,
   getFallbackToolSpaceId,
@@ -12,14 +12,14 @@ import {
   getResolvedToolSpaceMap,
   pruneInvalidToolSelections,
   resolveToolSpaces,
-} from '../core/tool-space-resolver';
-import type { ResolvedToolSpace } from '../core/tool-space-resolver';
-import { DEFAULT_TOOL_SPACE_ID, getToolSpacesForApp } from '../apps/utildex/tool-space-registry';
-import { PersistenceService } from './persistence.service';
+} from '../../core/tool-space-resolver';
+import type { ResolvedToolSpace } from '../../core/tool-space-resolver';
+import { DEFAULT_TOOL_SPACE_ID, getToolSpacesForApp } from '../../apps/utildex/tool-space-registry';
+import { PersistenceService } from '../data/persistence.service';
 import { ModuleService } from './module.service';
-import { AppConfigService } from './app-config.service';
+import { AppConfigService } from '../platform/app-config.service';
 
-export type { ResolvedToolSpace, ResolvedToolSpaceGroup } from '../core/tool-space-resolver';
+export type { ResolvedToolSpace, ResolvedToolSpaceGroup } from '../../core/tool-space-resolver';
 
 const SELECTED_SPACE_STORAGE_KEY = 'tool-space';
 const LAST_SELECTED_TOOLS_STORAGE_KEY = 'tool-space-last-tools';

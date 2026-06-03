@@ -1,5 +1,5 @@
 import { Component, inject, computed } from '@angular/core';
-import { ModuleService } from '../../services/module.service';
+import { ModuleService } from '../../services/modules/module.service';
 import { ToolCardComponent } from '../tool-card/tool-card.component';
 import { CarouselComponent } from '../carousel/carousel.component';
 import { RouterLink } from '@angular/router';

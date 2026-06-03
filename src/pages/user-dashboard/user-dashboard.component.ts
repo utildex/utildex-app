@@ -9,10 +9,14 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ModuleService, DashboardWidget, PendingPlacement } from '../../services/module.service';
+import {
+  ModuleService,
+  DashboardWidget,
+  PendingPlacement,
+} from '../../services/modules/module.service';
 import { WidgetHostComponent } from '../../components/widget-host/widget-host.component';
-import { I18nService } from '../../services/i18n.service';
-import { ToastService } from '../../services/toast.service';
+import { I18nService } from '../../services/ui/i18n.service';
+import { ToastService } from '../../services/ui/toast.service';
 import { provideTranslation, ScopedTranslationService } from '../../core/i18n';
 import { TourTargetDirective } from '../../directives/tour-target.directive';
 import en from './i18n/en';
@@ -20,7 +24,7 @@ import fr from './i18n/fr';
 import es from './i18n/es';
 import zh from './i18n/zh';
 
-import { TourService } from '../../services/tour.service';
+import { TourService } from '../../services/ui/tour.service';
 
 @Component({
   selector: 'app-user-dashboard',

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
-import type { SandboxPlugin, SandboxTabEvent } from '../core/sandbox';
+import type { SandboxPlugin, SandboxTabEvent } from '../../core/sandbox';
 import { SandboxPluginManagerService } from './sandbox-plugin-manager.service';
 
 function createTabEvent(): SandboxTabEvent {

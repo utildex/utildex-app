@@ -5,7 +5,7 @@ import {
   DebianSessionBackendAdapter,
   MINIMAL_DEBIAN_RUNTIME_MANIFEST,
 } from '../../../../core/sandbox';
-import { SandboxTerminalSessionService } from '../../../../services/sandbox-terminal-session.service';
+import { SandboxTerminalSessionService } from '../../../../services/modules/sandbox-terminal-session.service';
 
 @Component({
   selector: 'app-minimal-debian-terminal',
