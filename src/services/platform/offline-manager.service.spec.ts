@@ -22,11 +22,11 @@ const offlineMocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../core/module-registry', () => ({
+vi.mock('../../core/module-registry', () => ({
   MODULE_REGISTRY_MAP: offlineMocks.registry,
 }));
 
-vi.mock('./offline-route-loaders', () => ({
+vi.mock('../../apps/utildex/offline-route-loaders', () => ({
   OFFLINE_ROUTE_LOADERS: [offlineMocks.routeLoader],
 }));
 
