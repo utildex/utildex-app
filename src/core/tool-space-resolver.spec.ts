@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ToolMetadata } from '../data/types';
+import type { ToolMetadata } from './types/shared';
 import type { ToolSpaceDefinition } from './tool-space';
 import {
   collectToolSpaceRuntimeIssues,

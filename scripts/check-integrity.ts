@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { APP_IDS, getAppCatalogEntry } from '../src/core/app-catalog';
-import { LANGUAGES } from '../src/data/languages';
+import { LANGUAGES } from '../src/core/types/languages';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getKeys(obj: any, prefix = ''): string[] {

@@ -1,5 +1,5 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { ToolMetadata } from '../data/types';
+import { ToolMetadata } from '../core/types/shared';
 import {
   ToolSpaceDefinition,
   ToolSpaceIssue,

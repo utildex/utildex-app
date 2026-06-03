@@ -5,7 +5,7 @@ import { AppConfigService } from './app-config.service';
 import { PersistenceService } from './persistence.service';
 import { ModuleService } from './module.service';
 import { ToolSpacesService } from './tool-spaces.service';
-import type { ToolMetadata } from '../data/types';
+import type { ToolMetadata } from '../core/types/shared';
 import type { ToolSpaceDefinition } from '../core/tool-space';
 
 describe('ToolSpacesService', () => {

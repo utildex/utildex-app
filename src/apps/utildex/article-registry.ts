@@ -1,5 +1,5 @@
-import { I18nText } from '../../data/types';
-import { articleRegistryI18n } from '../../data/articles/i18n/article-registry.i18n';
+import { I18nText } from '../../core/types/shared';
+import { articleRegistryI18n } from './articles/i18n/article-registry.i18n';
 import type { AppId } from '../../core/app.config';
 
 export type ArticleType = 'internal' | 'external';

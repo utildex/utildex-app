@@ -10,7 +10,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { PersistenceService } from './persistence.service';
 import { Subject } from 'rxjs';
-import { Pet } from '../data/virtual-pets.types';
+import { Pet } from '../apps/utildex/virtual-pets.types';
 
 /**
  * Service managing Virtual Pets activation/deactivation

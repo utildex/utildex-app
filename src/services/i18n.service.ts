@@ -1,7 +1,7 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { LANGUAGES, type Language, type LanguageInfo } from '../data/languages';
+import { LANGUAGES, type Language, type LanguageInfo } from '../core/types/languages';
 import { DbService } from './db.service';
 import { getPrefKey } from '../core/storage-keys';
 

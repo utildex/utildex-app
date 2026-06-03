@@ -1,6 +1,6 @@
-import type { ToolSpaceDefinition } from '../../../core/tool-space';
+import type { ToolSpaceDefinition } from '../../../../core/tool-space';
 import { contractI18n } from './i18n/contract.i18n';
-import { mapLocalizedField, mapLocalizedNestedField } from '../../../core/i18n-mapper';
+import { mapLocalizedField, mapLocalizedNestedField } from '../../../../core/i18n-mapper';
 
 export const officeToolSpaceContract: ToolSpaceDefinition = {
   id: 'office',

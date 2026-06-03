@@ -10,7 +10,7 @@ import {
   WidgetCapability,
   ToolMetadata,
   WidgetLayout,
-} from '../data/types';
+} from '../core/types/shared';
 
 // Export types so they can be imported from ModuleService
 export type { I18nText, WidgetPreset, WidgetCapability, ToolMetadata, WidgetLayout };

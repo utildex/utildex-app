@@ -3,7 +3,7 @@ import { isDevMode, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { languageGuard } from '../../../core/guards/language.guard';
 import { I18nService } from '../../../services/i18n.service';
-import { type Language } from '../../../data/languages';
+import { type Language } from '../../../core/types/languages';
 
 function isLanguage(value: string): value is Language {
   return value === 'en' || value === 'fr' || value === 'es' || value === 'zh';

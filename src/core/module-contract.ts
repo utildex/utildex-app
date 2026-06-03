@@ -6,7 +6,7 @@
 
 import { Trait } from './types/traits';
 import { FormatId } from './types/formats';
-import { I18nText, WidgetCapability } from '../data/types';
+import { I18nText, WidgetCapability } from './types/shared';
 import type { AppId } from './app.config';
 import type { z } from 'zod';
 

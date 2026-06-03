@@ -1,4 +1,4 @@
-import { I18nText } from '../data/types';
+import { I18nText } from './types/shared';
 import type { AppId } from './app.config';
 
 export interface ToolSpaceGroupDefinition {

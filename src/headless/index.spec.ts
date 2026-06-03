@@ -4,7 +4,7 @@ import { z } from 'zod';
 import type { ModuleContract } from '../core/module-contract';
 import type { ToolSpaceDefinition } from '../core/tool-space';
 import type { CoreRegistryEntry } from '../apps/utildex/core-registry';
-import type { ToolMetadata } from '../data/types';
+import type { ToolMetadata } from '../core/types/shared';
 
 type HeadlessModule = typeof import('./index');
 type MockRegistry = Record<string, CoreRegistryEntry>;

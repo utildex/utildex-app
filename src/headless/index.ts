@@ -12,7 +12,7 @@ import {
 import type { ModuleContract } from '../core/module-contract';
 import type { ResolvedToolSpace } from '../core/tool-space-resolver';
 import { getToolSpacesForApp } from '../apps/utildex/tool-space-registry';
-import type { ToolMetadata } from '../data/types';
+import type { ToolMetadata } from '../core/types/shared';
 
 type KernelRun = (input: unknown) => unknown | Promise<unknown>;
 
