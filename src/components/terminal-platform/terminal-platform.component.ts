@@ -16,6 +16,9 @@ import { TerminalControlPanelComponent } from './terminal-control-panel.componen
       class="flex min-h-[28rem] w-full flex-col overflow-hidden rounded-lg border border-slate-800 bg-slate-950 text-slate-100 shadow-xl"
       aria-label="Terminal platform"
     >
+      <!-- Control Panel (always visible at top) -->
+      <app-terminal-control-panel />
+
       <header class="flex min-h-11 items-center gap-2 border-b border-slate-800 bg-slate-900 px-2">
         <div class="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
           @for (tab of terminal.tabs(); track tab.id) {
@@ -130,9 +133,6 @@ import { TerminalControlPanelComponent } from './terminal-control-panel.componen
           />
           <span class="text-xs text-slate-500">{{ statusLabel() }}</span>
         </form>
-
-        <!-- Control Panel -->
-        <app-terminal-control-panel />
       </main>
     </section>
   `,
