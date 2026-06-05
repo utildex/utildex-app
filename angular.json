@@ -251,6 +251,11 @@
                   "output": "."
                 },
                 {
+                  "glob": "_routes.json",
+                  "input": "src",
+                  "output": "."
+                },
+                {
                   "glob": "*",
                   "input": "src/apps/simudex/seo",
                   "output": "."
