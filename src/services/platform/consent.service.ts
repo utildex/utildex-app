@@ -118,10 +118,16 @@ export class ConsentService {
     this.state.set(null);
   }
 
-  /** Update download progress (0–100). Safe to call from any context. */
+  /** Update download progress (0–100). Automatically transitions to verifying phase when appropriate. */
   reportProgress(pct: number): void {
     const clamped = Math.max(0, Math.min(100, pct));
-    this.state.update((s) => (s ? { ...s, progress: clamped } : null));
+    this.state.update((s) => {
+      if (!s) return null;
+      // Transition to verifying when download is essentially done (>= 90%).
+      const phase =
+        s.phase === 'downloading' && clamped >= 90 ? 'verifying' : s.phase;
+      return { ...s, phase, progress: clamped };
+    });
   }
 
   /** Forget a consent decision so the user is asked again. */

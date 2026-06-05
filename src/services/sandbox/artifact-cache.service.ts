@@ -139,7 +139,8 @@ export class ArtifactCacheService {
           chunkIndex += 1;
 
           await this.updateDownloadedBytes(db, artifact.id, downloadedBytes);
-          onProgress(Math.round((downloadedBytes / totalBytes) * 100));
+          // Download reports 0–90%, verification reports 90–100%.
+          onProgress(Math.round((downloadedBytes / totalBytes) * 90));
         }
       }
 
@@ -154,7 +155,15 @@ export class ArtifactCacheService {
 
       // ── Verify SHA-256 ────────────────────────────────────────────
       if (sha256 && typeof crypto !== 'undefined' && crypto.subtle) {
-        const computed = await this.computeSha256(db, artifact.id, totalChunks, totalBytes);
+        const computed = await this.computeSha256(
+          db,
+          artifact.id,
+          totalChunks,
+          totalBytes,
+          (verifiedChunks) => {
+            onProgress(90 + Math.round((verifiedChunks / totalChunks) * 10));
+          },
+        );
         if (computed !== sha256.toLowerCase()) {
           throw new Error(
             `SHA-256 mismatch. Expected ${sha256}, got ${computed}. The download may be corrupted.`,
@@ -328,12 +337,12 @@ export class ArtifactCacheService {
     index: number,
     buffer: ArrayBuffer,
   ): Promise<void> {
-    return this.promisifyIDBRequest(
+    return this.promisifyIDBRequest<IDBValidKey>(
       db
         .transaction(STORE_CHUNKS, 'readwrite')
         .objectStore(STORE_CHUNKS)
         .put(buffer, this.chunkKey(artifactId, index)),
-    );
+    ).then(() => undefined);
   }
 
   private readChunk(
@@ -353,12 +362,12 @@ export class ArtifactCacheService {
     db: IDBDatabase,
     artifactId: string,
   ): Promise<string[]> {
-    const allKeys = await this.promisifyIDBRequest<string[]>(
+    const allKeys = await this.promisifyIDBRequest<IDBValidKey[]>(
       db.transaction(STORE_CHUNKS, 'readonly').objectStore(STORE_CHUNKS).getAllKeys(),
     );
 
     const prefix = `${artifactId}/`;
-    return (allKeys ?? []).filter((k) => k.startsWith(prefix));
+    return (allKeys ?? []).filter((k): k is string => typeof k === 'string' && k.startsWith(prefix));
   }
 
   private deleteChunks(db: IDBDatabase, keys: string[]): Promise<void> {
@@ -382,12 +391,12 @@ export class ArtifactCacheService {
     artifactId: string,
     record: CacheManifestRecord,
   ): Promise<void> {
-    return this.promisifyIDBRequest(
+    return this.promisifyIDBRequest<IDBValidKey>(
       db
         .transaction(STORE_MANIFESTS, 'readwrite')
         .objectStore(STORE_MANIFESTS)
         .put(record, artifactId),
-    );
+    ).then(() => undefined);
   }
 
   private async readManifest(
@@ -452,7 +461,9 @@ export class ArtifactCacheService {
     artifactId: string,
     totalChunks: number,
     totalBytes: number,
+    onChunkVerified?: (index: number) => void,
   ): Promise<string> {
+    this.hashState = null;
     let bytesHashed = 0;
 
     for (let i = 0; i < totalChunks; i += 1) {
@@ -462,11 +473,12 @@ export class ArtifactCacheService {
       }
 
       const toHash = bytesHashed + chunk.byteLength > totalBytes
-        ? chunk.slice(0, totalBytes - bytesHashed)
-        : chunk;
+        ? new Uint8Array(chunk.slice(0, totalBytes - bytesHashed))
+        : new Uint8Array(chunk);
 
       await this.incrementalHash(toHash);
       bytesHashed += toHash.byteLength;
+      onChunkVerified?.(i);
     }
 
     return this.finalizeHash();
@@ -488,7 +500,10 @@ export class ArtifactCacheService {
   private async finalizeHash(): Promise<string> {
     if (!this.hashState) return '';
 
-    const hashBuffer = await crypto.subtle.digest('SHA-256', this.hashState.buffer);
+    const hashBuffer = await crypto.subtle.digest(
+      'SHA-256',
+      this.hashState.buffer as unknown as ArrayBuffer,
+    );
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
 

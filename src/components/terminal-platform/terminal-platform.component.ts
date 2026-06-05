@@ -2,11 +2,15 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SandboxTerminalSessionService } from '../../services/modules/sandbox-terminal-session.service';
+import { ConsentService } from '../../services/platform/consent.service';
+import { ArtifactCacheService } from '../../services/sandbox/artifact-cache.service';
+import { DEBIAN_ROOTFS_ARTIFACT } from '../../core/debian-artifact';
+import { TerminalControlPanelComponent } from './terminal-control-panel.component';
 
 @Component({
   selector: 'app-terminal-platform',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TerminalControlPanelComponent],
   template: `
     <section
       class="flex min-h-[28rem] w-full flex-col overflow-hidden rounded-lg border border-slate-800 bg-slate-950 text-slate-100 shadow-xl"
@@ -48,7 +52,45 @@ import { SandboxTerminalSessionService } from '../../services/modules/sandbox-te
 
       <main class="flex min-h-0 flex-1 flex-col">
         <div class="min-h-0 flex-1 overflow-y-auto px-4 py-3 font-mono text-sm leading-6">
-          @if (terminal.activeOutput().length === 0) {
+          @if (terminalRefused()) {
+            <div class="flex flex-col items-center gap-3 py-8 text-center">
+              <span class="material-symbols-outlined text-3xl text-slate-500">download_off</span>
+              <p class="text-slate-400">
+                Download was skipped. The Debian terminal cannot start without its system
+                files.
+              </p>
+              <button
+                type="button"
+                (click)="startDownload()"
+                class="rounded-lg bg-slate-800 px-4 py-2 text-xs font-medium text-slate-300 transition-colors hover:bg-slate-700"
+              >
+                Download system files
+              </button>
+            </div>
+          } @else if (checkingPresence()) {
+            <p class="text-slate-500">Checking local data…</p>
+          } @else if (terminal.tabs().length === 0) {
+            <div class="flex flex-col items-center gap-4 py-8 text-center">
+              <span class="material-symbols-outlined text-4xl text-slate-600">terminal</span>
+              <div>
+                <p class="text-slate-300 font-medium">Debian system files not yet downloaded</p>
+                <p class="text-slate-500 text-xs mt-1">~629 MB · one-time download</p>
+              </div>
+              <button
+                type="button"
+                (click)="startDownload()"
+                [disabled]="downloading()"
+                class="bg-primary hover:bg-primary-dark flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white transition-colors disabled:opacity-50"
+              >
+                <span class="material-symbols-outlined text-lg">download</span>
+                @if (downloading()) { Downloading… } @else { Download system files }
+              </button>
+              <p class="text-xs text-slate-600 max-w-xs">
+                Once downloaded, the terminal works fully offline. Your changes are saved locally and
+                never leave this device.
+              </p>
+            </div>
+          } @else if (terminal.activeOutput().length === 0) {
             <p class="text-slate-500">Starting terminal session...</p>
           } @else {
             @for (line of terminal.activeOutput(); track line.id) {
@@ -88,23 +130,31 @@ import { SandboxTerminalSessionService } from '../../services/modules/sandbox-te
           />
           <span class="text-xs text-slate-500">{{ statusLabel() }}</span>
         </form>
+
+        <!-- Control Panel -->
+        <app-terminal-control-panel />
       </main>
     </section>
   `,
 })
 export class TerminalPlatformComponent implements OnInit {
   terminal = inject(SandboxTerminalSessionService);
+  private readonly consent = inject(ConsentService);
+  private readonly cache = inject(ArtifactCacheService);
   command = signal('');
   terminalError = signal<string | null>(null);
+  terminalRefused = signal(false);
+  downloading = signal(false);
+  checkingPresence = signal(true);
   private readonly historyByTab = new Map<string, string[]>();
   private readonly historyCursorByTab = new Map<string, number>();
 
   statusLabel = computed(() => this.terminal.activeSession()?.status ?? 'idle');
 
   async ngOnInit(): Promise<void> {
-    if (this.terminal.tabs().length === 0) {
-      await this.createTab();
-    }
+    this.checkingPresence.set(true);
+    await this.checkArtifactPresence();
+    this.checkingPresence.set(false);
   }
 
   async createTab(): Promise<void> {
@@ -115,6 +165,72 @@ export class TerminalPlatformComponent implements OnInit {
       this.terminalError.set(
         error instanceof Error ? error.message : 'Unable to create a terminal session.',
       );
+    }
+  }
+
+  /**
+   * Trigger the artifact download flow (consent + cache).
+   * Called when the user clicks "Download Now" in the placeholder.
+   */
+  async startDownload(): Promise<void> {
+    const artifact = DEBIAN_ROOTFS_ARTIFACT;
+
+    // Already cached — just boot.
+    if (await this.cache.isCached(artifact.id)) {
+      this.terminalRefused.set(false);
+      await this.terminal.createTab();
+      return;
+    }
+
+    this.downloading.set(true);
+
+    try {
+      const result = await this.consent.ask({
+        scope: artifact.id,
+        title: 'Download Required',
+        description:
+          'The Debian terminal needs its operating system files to run. ' +
+          'This is a one-time download.',
+        sizeLabel: '~629 MB',
+        storageLabel: 'stored securely in your browser',
+        icon: 'terminal',
+        downloadAction: (onProgress) => this.cache.download(artifact, onProgress),
+        refuseMessage:
+          'Without these files, the Debian terminal cannot start. ' +
+          'You can try again by clicking Download.',
+        preDownloadNote:
+          'Once downloaded, the terminal works fully offline. ' +
+          'Your changes are saved locally and never leave this device.',
+      });
+
+      if (result.consented) {
+        this.terminalRefused.set(false);
+        await this.terminal.createTab();
+      } else {
+        this.terminalRefused.set(true);
+      }
+    } catch (error) {
+      this.terminalError.set(
+        error instanceof Error ? error.message : 'Download failed.',
+      );
+    } finally {
+      this.downloading.set(false);
+    }
+  }
+
+  /** Whether the artifact is cached. */
+  async checkArtifactPresence(): Promise<void> {
+    try {
+      const cached = await this.cache.isCached(DEBIAN_ROOTFS_ARTIFACT.id);
+      if (cached) {
+        // Already cached — boot the terminal immediately.
+        this.terminalRefused.set(false);
+        if (this.terminal.tabs().length === 0) {
+          await this.terminal.createTab();
+        }
+      }
+    } catch {
+      // Silently ignore — user may be offline.
     }
   }
 

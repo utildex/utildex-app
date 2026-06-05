@@ -63,9 +63,15 @@ function mockStreamBody(data: Uint8Array, chunkSize = 512 * 1024) {
         },
         cancel: vi.fn(),
         releaseLock: vi.fn(),
+        closed: Promise.resolve(undefined),
       } as ReadableStreamDefaultReader<Uint8Array>;
     },
   };
+}
+
+/** Extract the URL string from a fetch() input argument. */
+function fetchUrl(input: RequestInfo | URL): string {
+  return typeof input === 'string' ? input : (input as Request).url;
 }
 
 // ---------------------------------------------------------------------------
@@ -99,7 +105,7 @@ describe('ArtifactCacheService', () => {
 
     // Mock manifest fetch.
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -143,7 +149,7 @@ describe('ArtifactCacheService', () => {
     const data = makeBytes(totalBytes);
 
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -211,7 +217,7 @@ describe('ArtifactCacheService', () => {
 
   it('should throw when download response is not ok', async () => {
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -239,7 +245,7 @@ describe('ArtifactCacheService', () => {
     const data = makeBytes(CHUNK_SIZE);
 
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -277,7 +283,7 @@ describe('ArtifactCacheService', () => {
     const data = makeBytes(CHUNK_SIZE);
 
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -327,7 +333,7 @@ describe('ArtifactCacheService', () => {
 
     // Download two artifacts with different IDs.
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         const manifestUrl = url;
@@ -383,7 +389,7 @@ describe('ArtifactCacheService', () => {
     const data = makeBytes(CHUNK_SIZE);
 
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -415,7 +421,7 @@ describe('ArtifactCacheService', () => {
     const data = makeBytes(CHUNK_SIZE);
 
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -451,7 +457,7 @@ describe('ArtifactCacheService', () => {
     const data = makeBytes(CHUNK_SIZE);
 
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       return Promise.resolve(
         new Response(
@@ -495,7 +501,7 @@ describe('ArtifactCacheService', () => {
     let chunkFetches = 0;
 
     vi.spyOn(globalThis, 'fetch').mockImplementation((input) => {
-      const url = typeof input === 'string' ? input : input.url;
+      const url = fetchUrl(input);
 
       if (url.includes('manifest.json')) {
         return Promise.resolve(
@@ -534,3 +540,4 @@ describe('ArtifactCacheService', () => {
     // deduplicated. The key assertion: two downloads succeed without corruption.
   });
 });
+

@@ -120,6 +120,32 @@ import zh from './i18n/zh';
             </div>
           }
 
+          <!-- ──────── VERIFYING PHASE ──────── -->
+          @if (s.phase === 'verifying') {
+            <div class="flex flex-col gap-5 p-6 text-center">
+              <div class="flex justify-center">
+                <span class="material-symbols-outlined animate-spin text-4xl text-primary">
+                  progress_activity
+                </span>
+              </div>
+              <h2 class="text-lg font-bold text-slate-900 dark:text-white">
+                {{ t.map()['VERIFYING_TITLE'] }}
+              </h2>
+              <p class="text-sm text-slate-500">{{ t.map()['VERIFYING_MESSAGE'] }}</p>
+
+              <!-- Verification progress bar (partial) -->
+              <div class="flex flex-col gap-2">
+                <div class="h-2 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+                  <div
+                    class="bg-primary h-full rounded-full transition-all duration-300 ease-out"
+                    [style.width.%]="s.progress"
+                  ></div>
+                </div>
+                <span class="text-xs text-slate-500">{{ s.progress }}%</span>
+              </div>
+            </div>
+          }
+
           <!-- ──────── COMPLETE PHASE ──────── -->
           @if (s.phase === 'complete') {
             <div class="flex flex-col items-center gap-4 p-6 text-center">

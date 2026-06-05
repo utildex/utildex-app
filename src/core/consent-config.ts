@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------------------
 
 /** Visual phase of the consent modal. */
-export type ConsentPhase = 'prompt' | 'downloading' | 'complete' | 'refused' | 'error';
+export type ConsentPhase = 'prompt' | 'downloading' | 'verifying' | 'complete' | 'refused' | 'error';
 
 /**
  * Configuration a feature passes to ConsentService.ask().

@@ -10,6 +10,10 @@ export default {
   DOWNLOADING_TITLE: 'Downloading…',
   CANCEL_BUTTON: 'Cancel',
 
+  // Verifying phase
+  VERIFYING_TITLE: 'Verifying integrity…',
+  VERIFYING_MESSAGE: 'Checking the download to make sure nothing was corrupted.',
+
   // Complete phase
   COMPLETE_TITLE: 'Ready',
   COMPLETE_MESSAGE: 'Everything is set up. You can now use this feature offline.',

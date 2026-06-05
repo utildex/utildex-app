@@ -8,6 +8,9 @@ export default {
   DOWNLOADING_TITLE: 'Téléchargement…',
   CANCEL_BUTTON: 'Annuler',
 
+  VERIFYING_TITLE: 'Vérification de l\'intégrité…',
+  VERIFYING_MESSAGE: 'Vérification du téléchargement pour s\'assurer qu\'il n\'est pas corrompu.',
+
   COMPLETE_TITLE: 'Prêt',
   COMPLETE_MESSAGE: 'Tout est configuré. Vous pouvez maintenant utiliser cette fonction hors ligne.',
 

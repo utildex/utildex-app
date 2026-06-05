@@ -8,6 +8,9 @@ export default {
   DOWNLOADING_TITLE: '下载中…',
   CANCEL_BUTTON: '取消',
 
+  VERIFYING_TITLE: '正在验证完整性…',
+  VERIFYING_MESSAGE: '正在检查下载内容，确保没有损坏。',
+
   COMPLETE_TITLE: '就绪',
   COMPLETE_MESSAGE: '一切就绪。您现在可以离线使用此功能。',
 

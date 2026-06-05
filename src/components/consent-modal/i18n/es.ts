@@ -8,6 +8,9 @@ export default {
   DOWNLOADING_TITLE: 'Descargando…',
   CANCEL_BUTTON: 'Cancelar',
 
+  VERIFYING_TITLE: 'Verificando integridad…',
+  VERIFYING_MESSAGE: 'Comprobando la descarga para asegurar que no esté dañada.',
+
   COMPLETE_TITLE: 'Listo',
   COMPLETE_MESSAGE: 'Todo está configurado. Ya puedes usar esta función sin conexión.',
 
