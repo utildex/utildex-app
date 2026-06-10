@@ -5,6 +5,7 @@ import type {
   ArtifactCacheStats,
   CacheManifestRecord,
 } from '../../core/sandbox-artifact';
+import type { DeletionReport, StorageBreakdown } from '../../core/artifact-lifecycle';
 
 // ---------------------------------------------------------------------------
 // Constants
@@ -57,6 +58,7 @@ export class ArtifactCacheService {
   async download(
     artifact: SandboxArtifact,
     onProgress: (pct: number) => void,
+    lifecycle?: { heartbeat: (id: string) => void },
   ): Promise<void> {
     // ── Resolve manifest ────────────────────────────────────────────
     const manifest = await this.fetchManifest(artifact.manifestUrl);
@@ -141,6 +143,7 @@ export class ArtifactCacheService {
           await this.updateDownloadedBytes(db, artifact.id, downloadedBytes);
           // Download reports 0–90%, verification reports 90–100%.
           onProgress(Math.round((downloadedBytes / totalBytes) * 90));
+          lifecycle?.heartbeat(artifact.id);
         }
       }
 
@@ -219,10 +222,85 @@ export class ArtifactCacheService {
     }
   }
 
-  /** Total bytes stored across all cached artifacts. */
+  /** Total bytes stored across all cached artifacts AND overlay databases. */
   async getTotalUsage(): Promise<number> {
     const stats = await this.getAllStats();
-    return stats.reduce((sum, s) => sum + s.downloadedBytes, 0);
+    const artifactBytes = stats.reduce((sum, s) => sum + s.downloadedBytes, 0);
+    const overlayBytes = await this.getOverlayUsage();
+    return artifactBytes + overlayBytes;
+  }
+
+  /**
+   * Check whether there's enough quota to download `bytesNeeded` more.
+   * Returns false if the download would exceed available storage.
+   */
+  async checkQuota(bytesNeeded: number): Promise<boolean> {
+    try {
+      const est = await navigator.storage?.estimate();
+      if (!est?.quota || est.usage === undefined) return true; // Can't determine — allow.
+      return est.quota - est.usage > bytesNeeded * 1.1; // 10% safety margin.
+    } catch {
+      return true; // Can't determine — allow.
+    }
+  }
+
+  /**
+   * Point-in-time storage breakdown for all artifacts.
+   */
+  async usage(): Promise<StorageBreakdown> {
+    const stats = await this.getAllStats();
+    const artifacts = await Promise.all(
+      stats.map(async (s) => {
+        const overlayBytes = await this.getOverlayUsage();
+        return {
+          artifactId: s.artifactId,
+          name: s.name,
+          rootfsBytes: s.downloadedBytes,
+          overlayBytes,
+          totalBytes: s.downloadedBytes + overlayBytes,
+          phase: s.complete ? ('ready' as const) : ('acquiring' as const),
+        };
+      }),
+    );
+
+    const grandTotalBytes = artifacts.reduce((sum, a) => sum + a.totalBytes, 0);
+    let quotaBytes = 0;
+    let quotaUsedBytes = 0;
+    let quotaPercent = 0;
+
+    try {
+      const est = await navigator.storage?.estimate();
+      quotaBytes = est?.quota ?? 0;
+      quotaUsedBytes = est?.usage ?? 0;
+      quotaPercent = quotaBytes > 0 ? Math.round((quotaUsedBytes / quotaBytes) * 100) : 0;
+    } catch {
+      // Best effort.
+    }
+
+    return {
+      artifacts,
+      grandTotalBytes,
+      appStorageBytes: 0, // Filled by StorageManagerService.
+      quotaBytes,
+      quotaUsedBytes,
+      quotaPercent,
+    };
+  }
+
+  /** Estimate total bytes used by CheerpX overlay databases. */
+  async getOverlayUsage(): Promise<number> {
+    try {
+      const dbs = await indexedDB.databases();
+      let total = 0;
+      for (const info of dbs) {
+        if (info.name?.includes('simudex-') && info.name?.includes('overlay')) {
+          total += await this.estimateDbSize(info.name);
+        }
+      }
+      return total;
+    } catch {
+      return 0;
+    }
   }
 
   // ─── Public: Lifecycle ─────────────────────────────────────────────────
@@ -244,20 +322,79 @@ export class ArtifactCacheService {
     }
   }
 
-  /** Delete all cached artifacts. */
-  async evictAll(): Promise<void> {
+  /**
+   * Nuclear switch — obliterates ALL artifact traces.
+   * Returns a DeletionReport per artifact. Never throws; errors are in the report.
+   */
+  async nuke(): Promise<DeletionReport[]> {
     for (const controller of this.abortControllers.values()) {
       controller.abort();
     }
     this.abortControllers.clear();
 
+    const reports: DeletionReport[] = [];
+
+    // Collect manifest records before clearing.
     const db = await this.openDB();
+    let manifests: CacheManifestRecord[] = [];
+    try {
+      manifests = await this.readAllManifests(db);
+    } catch {
+      // If we can't read manifests, still try to nuke what we can.
+    }
+
+    // Clear artifact cache stores.
     try {
       await this.clearStore(db, STORE_CHUNKS);
       await this.clearStore(db, STORE_MANIFESTS);
+    } catch (err) {
+      // Record the error and continue.
     } finally {
       db.close();
     }
+
+    // Clear CheerpX overlay databases.
+    for (const m of manifests) {
+      const report: DeletionReport = {
+        artifactId: m.artifact.id,
+        name: m.artifact.name,
+        chunksDeleted: Math.ceil(m.totalBytes / CHUNK_BYTES),
+        overlayDeleted: false,
+        consentReset: false,
+        bytesFreed: m.downloadedBytes,
+        errors: [],
+      };
+
+      try {
+        const dbs = await indexedDB.databases();
+        for (const info of dbs) {
+          if (info.name?.includes('simudex-') && info.name?.includes('overlay')) {
+            indexedDB.deleteDatabase(info.name);
+          }
+        }
+        report.overlayDeleted = true;
+      } catch (err) {
+        report.errors.push(`Overlay cleanup failed: ${String(err)}`);
+      }
+
+      reports.push(report);
+    }
+
+    // If no manifests were found, still try to wipe overlay DBs.
+    if (manifests.length === 0) {
+      try {
+        const dbs = await indexedDB.databases();
+        for (const info of dbs) {
+          if (info.name?.includes('simudex-') && info.name?.includes('overlay')) {
+            indexedDB.deleteDatabase(info.name);
+          }
+        }
+      } catch {
+        // Best effort.
+      }
+    }
+
+    return reports;
   }
 
   // ─── Internal: Manifest fetch ──────────────────────────────────────────
@@ -532,6 +669,45 @@ export class ArtifactCacheService {
     return new Promise((resolve, reject) => {
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error);
+    });
+  }
+
+  /** Rough estimate of an IDB database's size by summing entry counts. */
+  private estimateDbSize(dbName: string): Promise<number> {
+    return new Promise((resolve) => {
+      const req = indexedDB.open(dbName);
+      req.onsuccess = () => {
+        const db = req.result;
+        let size = 0;
+        const storeNames = Array.from(db.objectStoreNames);
+        let pending = storeNames.length;
+        if (pending === 0) {
+          db.close();
+          resolve(0);
+          return;
+        }
+        for (const name of storeNames) {
+          const tx = db.transaction(name, 'readonly');
+          const store = tx.objectStore(name);
+          const countReq = store.count();
+          countReq.onsuccess = () => {
+            size += countReq.result * 1024;
+            pending -= 1;
+            if (pending === 0) {
+              db.close();
+              resolve(size);
+            }
+          };
+          countReq.onerror = () => {
+            pending -= 1;
+            if (pending === 0) {
+              db.close();
+              resolve(size);
+            }
+          };
+        }
+      };
+      req.onerror = () => resolve(0);
     });
   }
 }

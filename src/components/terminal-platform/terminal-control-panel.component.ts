@@ -1,8 +1,7 @@
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnDestroy, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ArtifactCacheService } from '../../services/sandbox/artifact-cache.service';
+import { ArtifactLifecycleService } from '../../services/sandbox/artifact-lifecycle.service';
 import { DEBIAN_ROOTFS_ARTIFACT } from '../../core/debian-artifact';
-import type { ArtifactCacheStats } from '../../core/sandbox-artifact';
 
 @Component({
   selector: 'app-terminal-control-panel',
@@ -20,8 +19,14 @@ import type { ArtifactCacheStats } from '../../core/sandbox-artifact';
         <span class="material-symbols-outlined text-base">terminal</span>
         <span class="font-medium text-slate-300">Debian</span>
         @if (debianStats(); as s) {
-          @if (s.complete) {
-            <span class="text-green-400 font-medium">{{ formatBytes(s.totalBytes) }} ✓</span>
+          @if (s.phase === 'ready') {
+            <span class="text-green-400 font-medium">{{ formatBytes(s.stats?.totalBytes ?? 0) }} ✓</span>
+          } @else if (s.phase === 'acquiring') {
+            <span class="text-amber-400">{{ s.progress }}%</span>
+          } @else if (s.phase === 'verifying') {
+            <span class="text-amber-400">Verifying… {{ s.progress }}%</span>
+          } @else if (s.phase === 'failed') {
+            <span class="text-red-400" [title]="s.error">Failed</span>
           } @else {
             <span class="text-red-400">Not cached</span>
           }
@@ -43,7 +48,7 @@ import type { ArtifactCacheStats } from '../../core/sandbox-artifact';
       </div>
 
       <!-- Runtime version -->
-      @if (debianStats()?.version; as v) {
+      @if (debianStats()?.stats?.version; as v) {
         <span class="text-slate-700 select-none">│</span>
         <div class="flex items-center gap-1.5 shrink-0" title="Debian runtime version">
           <span class="material-symbols-outlined text-base">info</span>
@@ -54,12 +59,12 @@ import type { ArtifactCacheStats } from '../../core/sandbox-artifact';
   `,
 })
 export class TerminalControlPanelComponent implements OnDestroy {
-  private readonly cache = inject(ArtifactCacheService);
+  private readonly lifecycle = inject(ArtifactLifecycleService);
 
   protected readonly isOnline = signal(navigator.onLine);
-  protected readonly debianStats = signal<ArtifactCacheStats | null>(null);
-
-  private refreshTimer: ReturnType<typeof setInterval> | null = null;
+  protected readonly debianStats = computed(() =>
+    this.lifecycle.all().find((s) => s.artifactId === DEBIAN_ROOTFS_ARTIFACT.id) ?? null,
+  );
 
   private readonly onOnline = () => this.isOnline.set(true);
   private readonly onOffline = () => this.isOnline.set(false);
@@ -67,26 +72,19 @@ export class TerminalControlPanelComponent implements OnDestroy {
   constructor() {
     window.addEventListener('online', this.onOnline);
     window.addEventListener('offline', this.onOffline);
-
-    void this.refresh();
-    this.refreshTimer = setInterval(() => {
-      void this.refresh();
-    }, 5000);
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('online', this.onOnline);
     window.removeEventListener('offline', this.onOffline);
-    if (this.refreshTimer) {
-      clearInterval(this.refreshTimer);
-    }
   }
 
   protected debianTooltip(): string {
     const s = this.debianStats();
     if (!s) return 'Debian artifact status';
-    if (s.complete) return `Debian rootfs cached (${this.formatBytes(s.totalBytes)}). Version ${s.version ?? 'unknown'}.`;
-    return 'Debian rootfs not yet downloaded. Click to download.';
+    if (s.phase === 'ready') return `Debian rootfs cached (${this.formatBytes(s.stats?.totalBytes ?? 0)}). Version ${s.stats?.version ?? 'unknown'}.`;
+    if (s.phase === 'acquiring') return `Downloading… ${s.progress}%`;
+    return 'Debian rootfs not yet downloaded.';
   }
 
   protected formatBytes(bytes: number): string {
@@ -94,14 +92,5 @@ export class TerminalControlPanelComponent implements OnDestroy {
     const units = ['B', 'KB', 'MB', 'GB'];
     const i = Math.min(Math.floor(Math.log10(bytes) / 3), units.length - 1);
     return `${(bytes / 1000 ** i).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
-  }
-
-  private async refresh(): Promise<void> {
-    try {
-      const s = await this.cache.getStats(DEBIAN_ROOTFS_ARTIFACT.id);
-      this.debianStats.set(s);
-    } catch {
-      // Silently ignore.
-    }
   }
 }

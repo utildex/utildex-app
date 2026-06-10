@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SandboxTerminalSessionService } from '../../services/modules/sandbox-terminal-session.service';
 import { ConsentService } from '../../services/platform/consent.service';
 import { ArtifactCacheService } from '../../services/sandbox/artifact-cache.service';
+import { ArtifactLifecycleService } from '../../services/sandbox/artifact-lifecycle.service';
 import { DEBIAN_ROOTFS_ARTIFACT } from '../../core/debian-artifact';
 import { TerminalControlPanelComponent } from './terminal-control-panel.component';
 
@@ -141,6 +142,7 @@ export class TerminalPlatformComponent implements OnInit {
   terminal = inject(SandboxTerminalSessionService);
   private readonly consent = inject(ConsentService);
   private readonly cache = inject(ArtifactCacheService);
+  private readonly lifecycle = inject(ArtifactLifecycleService);
   command = signal('');
   terminalError = signal<string | null>(null);
   terminalRefused = signal(false);
@@ -182,9 +184,26 @@ export class TerminalPlatformComponent implements OnInit {
       return;
     }
 
+    // Try to acquire the lock. Fail gracefully if another tab is downloading.
+    if (!this.lifecycle.tryAcquireLock(artifact.id, artifact)) {
+      this.terminalError.set(
+        'Download already in progress in another tab. Please switch to that tab.',
+      );
+      return;
+    }
+
     this.downloading.set(true);
 
     try {
+      // Check quota before starting.
+      if (!(await this.cache.checkQuota(650_000_000))) {
+        this.lifecycle.releaseLock(artifact.id, 'absent');
+        this.terminalError.set(
+          'Not enough storage space. Please free up space and try again.',
+        );
+        return;
+      }
+
       const result = await this.consent.ask({
         scope: artifact.id,
         title: 'Download Required',
@@ -194,7 +213,10 @@ export class TerminalPlatformComponent implements OnInit {
         sizeLabel: '~629 MB',
         storageLabel: 'stored securely in your browser',
         icon: 'terminal',
-        downloadAction: (onProgress) => this.cache.download(artifact, onProgress),
+        downloadAction: (onProgress) =>
+          this.cache.download(artifact, onProgress, {
+            heartbeat: (id) => this.lifecycle.heartbeat(id),
+          }),
         refuseMessage:
           'Without these files, the Debian terminal cannot start. ' +
           'You can try again by clicking Download.',
@@ -204,12 +226,20 @@ export class TerminalPlatformComponent implements OnInit {
       });
 
       if (result.consented) {
+        this.lifecycle.releaseLock(artifact.id, 'ready', {
+          stats: { totalBytes: 629_145_600, downloadedBytes: 629_145_600 },
+          progress: 100,
+        });
         this.terminalRefused.set(false);
         await this.terminal.createTab();
       } else {
+        this.lifecycle.releaseLock(artifact.id, 'absent');
         this.terminalRefused.set(true);
       }
     } catch (error) {
+      this.lifecycle.releaseLock(artifact.id, 'failed', {
+        error: error instanceof Error ? error.message : 'Download failed.',
+      });
       this.terminalError.set(
         error instanceof Error ? error.message : 'Download failed.',
       );
