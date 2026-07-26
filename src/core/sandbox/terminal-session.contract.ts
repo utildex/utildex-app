@@ -2,12 +2,7 @@ export type TerminalTabId = string;
 export type TerminalSessionId = string;
 
 export type TerminalSessionStatus =
-  | 'idle'
-  | 'starting'
-  | 'ready'
-  | 'exited'
-  | 'error'
-  | 'disposing';
+  'idle' | 'starting' | 'ready' | 'exited' | 'error' | 'disposing';
 
 export type TerminalOutputStream = 'stdout' | 'stderr' | 'system';
 

@@ -136,8 +136,7 @@ import zh from './i18n/zh';
               } @else {
                 <pre
                   class="font-mono text-[10px] break-words whitespace-pre-wrap text-slate-700 dark:text-slate-100"
-                  >{{ widgetTabContent() || t.map()['EMPTY_HINT'] }}</pre
-                >
+                  >{{ widgetTabContent() || t.map()['EMPTY_HINT'] }}</pre>
               }
             </div>
           </div>
@@ -230,8 +229,7 @@ import zh from './i18n/zh';
             </div>
             <pre
               class="h-56 overflow-auto p-4 font-mono text-xs break-words whitespace-pre-wrap text-slate-800 dark:text-slate-100"
-              >{{ decoded().headerText || t.map()['EMPTY_HINT'] }}</pre
-            >
+              >{{ decoded().headerText || t.map()['EMPTY_HINT'] }}</pre>
           </section>
 
           <section class="glass-surface rounded-xl">
@@ -249,8 +247,7 @@ import zh from './i18n/zh';
             </div>
             <pre
               class="h-56 overflow-auto p-4 font-mono text-xs break-words whitespace-pre-wrap text-slate-800 dark:text-slate-100"
-              >{{ decoded().payloadText || t.map()['EMPTY_HINT'] }}</pre
-            >
+              >{{ decoded().payloadText || t.map()['EMPTY_HINT'] }}</pre>
           </section>
 
           <section class="glass-surface rounded-xl lg:col-span-2">
@@ -268,8 +265,7 @@ import zh from './i18n/zh';
             </div>
             <pre
               class="overflow-auto p-4 font-mono text-xs break-words whitespace-pre-wrap text-slate-800 dark:text-slate-100"
-              >{{ signatureValue() || t.map()['NO_SIGNATURE'] }}</pre
-            >
+              >{{ signatureValue() || t.map()['NO_SIGNATURE'] }}</pre>
           </section>
         </div>
 
@@ -304,10 +300,10 @@ import zh from './i18n/zh';
               </div>
               <div class="grid grid-cols-1 gap-1.5 text-sm text-slate-700 dark:text-slate-200">
                 <div>
-                  alg: <span class="font-mono">{{ decoded().algorithm || '—' }}</span>
+                  alg: <span class="font-mono">{{ decoded().algorithm || 'ï¿½' }}</span>
                 </div>
                 <div>
-                  typ: <span class="font-mono">{{ decoded().tokenType || '—' }}</span>
+                  typ: <span class="font-mono">{{ decoded().tokenType || 'ï¿½' }}</span>
                 </div>
                 <div>
                   {{ t.map()['CLAIM_IAT'] }}:
@@ -435,20 +431,20 @@ export class JwtDecoderComponent {
 
   claimText(name: string): string {
     const payload = this.decoded().payload;
-    if (!payload) return '—';
+    if (!payload) return 'ï¿½';
 
     const value = payload[name];
-    if (value === undefined || value === null) return '—';
+    if (value === undefined || value === null) return 'ï¿½';
     if (Array.isArray(value)) return value.join(', ');
     if (typeof value === 'object') return JSON.stringify(value);
     return String(value);
   }
 
   timeText(value: number | null): string {
-    if (value === null) return '—';
+    if (value === null) return 'ï¿½';
 
     const dt = new Date(value * 1000);
-    if (Number.isNaN(dt.getTime())) return '—';
+    if (Number.isNaN(dt.getTime())) return 'ï¿½';
 
     return `${value} (${dt.toLocaleString()})`;
   }

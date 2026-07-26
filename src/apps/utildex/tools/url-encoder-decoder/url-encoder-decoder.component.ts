@@ -103,8 +103,7 @@ import zh from './i18n/zh';
                 </div>
                 <pre
                   class="min-h-0 flex-1 overflow-auto p-2 font-mono text-[11px] break-words whitespace-pre-wrap text-slate-700 dark:text-slate-100"
-                  >{{ output() || t.map()['OUTPUT_PLACEHOLDER'] }}</pre
-                >
+                  >{{ output() || t.map()['OUTPUT_PLACEHOLDER'] }}</pre>
               </div>
             </div>
 
@@ -240,7 +239,7 @@ import zh from './i18n/zh';
                 }}</span>
               </div>
               <span class="text-[11px] text-slate-500 dark:text-slate-300"
-                >{{ inputLength() }} {{ t.map()['STATUS_CHARS'] }} • {{ inputBytes() }}
+                >{{ inputLength() }} {{ t.map()['STATUS_CHARS'] }} ï¿½ {{ inputBytes() }}
                 {{ t.map()['STATUS_BYTES'] }}</span
               >
             </div>
@@ -270,15 +269,14 @@ import zh from './i18n/zh';
                 <span class="material-symbols-outlined text-xs text-slate-400">lock</span>
               </div>
               <span class="text-[11px] text-slate-500 dark:text-slate-300"
-                >{{ outputLength() }} {{ t.map()['STATUS_CHARS'] }} • {{ outputBytes() }}
+                >{{ outputLength() }} {{ t.map()['STATUS_CHARS'] }} ï¿½ {{ outputBytes() }}
                 {{ t.map()['STATUS_BYTES'] }}</span
               >
             </div>
             <div class="h-72 overflow-auto p-4">
               <pre
                 class="cursor-not-allowed font-mono text-sm break-words whitespace-pre-wrap text-slate-800 dark:text-slate-100"
-                >{{ output() || t.map()['OUTPUT_PLACEHOLDER'] }}</pre
-              >
+                >{{ output() || t.map()['OUTPUT_PLACEHOLDER'] }}</pre>
             </div>
           </section>
         </div>

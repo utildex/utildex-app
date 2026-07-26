@@ -1,10 +1,7 @@
 export type SharedExportFormat = 'png' | 'jpg' | 'svg' | 'gif';
 
 export type SharedExportBackgroundId =
-  | 'app-starfield-dark'
-  | 'app-starfield-light'
-  | 'solid-color'
-  | 'transparent';
+  'app-starfield-dark' | 'app-starfield-light' | 'solid-color' | 'transparent';
 
 export type SharedExportBackgroundSpec =
   | { id: 'app-starfield-dark' }
