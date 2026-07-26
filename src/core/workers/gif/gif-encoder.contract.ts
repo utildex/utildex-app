@@ -54,5 +54,4 @@ export interface RuntimeGifEncodeWorkerFailure {
 }
 
 export type RuntimeGifEncodeWorkerResponse =
-  | RuntimeGifEncodeWorkerSuccess
-  | RuntimeGifEncodeWorkerFailure;
+  RuntimeGifEncodeWorkerSuccess | RuntimeGifEncodeWorkerFailure;

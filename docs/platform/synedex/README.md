@@ -56,7 +56,6 @@ Synedex has its own product and game UX contract. These documents are the target
 | [Design Contract](./design.md)                    | Product identity, UI tone, layout principles, and anti-patterns |
 | [Game Lifecycle](./game-lifecycle.md)             | Shared Discover -> Prepare -> Play -> Complete flow             |
 | [Game Module Contract](./game-module-contract.md) | Metadata and UX requirements for contributed games              |
-| [Sudoku Design Target](./sudoku.design.md)        | First concrete game UX specification                            |
 
 ---
 

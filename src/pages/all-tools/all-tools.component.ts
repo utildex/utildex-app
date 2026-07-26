@@ -58,7 +58,7 @@ import zh from './i18n/zh';
               ]"
               [value]="sortOrder()"
               [selectedLabel]="getSortLabel()"
-              (valueChange)="moduleService.setSort($event)"
+              (valueChange)="moduleService.setSort($any($event))"
             ></app-dropdown>
           </div>
         </div>

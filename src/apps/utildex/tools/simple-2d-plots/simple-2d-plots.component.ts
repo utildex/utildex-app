@@ -184,7 +184,7 @@ const DEFAULT_STATE: Simple2dState = {
                 <app-plot-dropdown
                   [value]="preset()"
                   [options]="presetOptions()"
-                  (valueChange)="setPreset($event)"
+                  (valueChange)="setPreset($any($event))"
                 />
               </div>
               <button
@@ -231,7 +231,7 @@ const DEFAULT_STATE: Simple2dState = {
                   <app-plot-dropdown
                     [value]="curve()"
                     [options]="curveOptions()"
-                    (valueChange)="setCurve($event)"
+                    (valueChange)="setCurve($any($event))"
                   />
                 </div>
 
@@ -356,7 +356,7 @@ const DEFAULT_STATE: Simple2dState = {
                 class="text-slate-400 transition hover:text-slate-700 dark:hover:text-slate-200"
                 (click)="openDataMode()"
               >
-                ÔåÉ {{ t.map()['BTN_BACK_TO_DATA'] }}
+                ï¿½ï¿½ï¿½ {{ t.map()['BTN_BACK_TO_DATA'] }}
               </button>
 
               <button

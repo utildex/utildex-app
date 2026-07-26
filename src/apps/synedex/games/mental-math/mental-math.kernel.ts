@@ -3,12 +3,7 @@ export type MentalMathOperation = 'add' | 'subtract' | 'multiply' | 'divide';
 export type MentalMathMistakeHandling = 'none' | 'minusOne' | 'threeStrikes';
 export type MentalMathFontSize = 's' | 'm' | 'l';
 export type MentalMathDifficulty =
-  | 'initiate'
-  | 'apprentice'
-  | 'adept'
-  | 'expert'
-  | 'master'
-  | 'custom';
+  'initiate' | 'apprentice' | 'adept' | 'expert' | 'master' | 'custom';
 
 export interface OperandRange {
   min: number;

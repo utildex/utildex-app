@@ -228,7 +228,7 @@ import zh from './i18n/zh';
                 <div class="flex flex-wrap justify-center gap-3">
                   @for (lang of alternativeLangs(); track lang) {
                     <button
-                      (click)="overrideLang.set(lang)"
+                      (click)="overrideLang.set($any(lang))"
                       class="glass-control hover:border-primary hover:ring-primary hover:bg-primary/5 group flex cursor-pointer items-center gap-3 rounded-xl px-5 py-3 transition-all hover:ring-1"
                     >
                       <img

@@ -6,11 +6,7 @@ import type {
 } from './terminal-session.contract';
 
 export type TerminalBackendFeature =
-  | 'multi-tab'
-  | 'filesystem-import'
-  | 'filesystem-export'
-  | 'session-restore'
-  | 'plugin-hooks';
+  'multi-tab' | 'filesystem-import' | 'filesystem-export' | 'session-restore' | 'plugin-hooks';
 
 export interface SandboxBootContext {
   sandboxId: string;
