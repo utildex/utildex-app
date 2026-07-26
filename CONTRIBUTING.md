@@ -9,11 +9,12 @@ Utildex is a **local-first**, **zoneless** Angular application designed for modu
 
 ## Architecture Overview
 
-Utildex is structured as a **Dual-App** repository:
+Utildex is structured as a **Multi-App** repository:
 1. **Utildex:** The main utility platform. Tools are located in `src/apps/utildex/tools/`.
 2. **Synedex:** A cognitive wellness and games platform. Games are located in `src/apps/synedex/games/`.
+3. **Simudex:** A simulation platform with sandboxed Linux terminals via CheerpX/WebVM. Simulations are located in `src/apps/simudex/simulations/`.
 
-Both apps share the same core engine, services, and UI components. The separation is achieved through Angular build configurations and file replacements (e.g., `index.synedex.tsx`, `app.config.synedex.ts`). When adding a new feature, make sure it is placed in the correct directory.
+All three apps share the same core engine, services, and UI components. The separation is achieved through Angular build configurations and file replacements (`angular.json`). When adding a new feature, make sure it is placed in the correct directory.
 
 To keep the application fast and lightweight, both apps use a specific architectural pattern:
 

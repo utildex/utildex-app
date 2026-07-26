@@ -1,6 +1,7 @@
 {
   "name": "Utildex",
-  "description": "A local-first, modular toolbox web application featuring independent utilities like generators and converters.",
+  "description": "A local-first, modular multi-app platform: Utildex (tools), Synedex (mindful games), and Simudex (simulations).",
+  "_note": "This metadata.json is application-level metadata. The canonical multi-app catalog lives in src/core/app-catalog.ts.",
   "requestFramePermissions": [],
   "mcpDiscoveryManifest": "/assets/mcp/manifest.json"
 }

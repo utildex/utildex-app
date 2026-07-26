@@ -1,5 +1,7 @@
 # Temporary i18n Full Traversal Checklist
 
+> **⚠️ Stale — last updated 2026-06-01 (7+ weeks ago).** Only 33 of 254 target files reviewed (zh.ts under tools). This checklist needs completion or archival. Do not treat as current.
+
 This is a temporary cross-session checklist for validating and fixing translations across all four runtime languages (en, fr, es, zh).
 
 Generated: 2026-06-01T08:59:46.970Z
