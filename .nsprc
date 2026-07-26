@@ -1,0 +1,5 @@
+{
+  "GHSA-mh99-v99m-4gvg": {
+    "reason": "Transitive dev dependency via @analogjs/vite-plugin-angular → ts-morph → minimatch → brace-expansion@2.1.2. The v2.x line has no patched release; only v5.0.8+ is fixed, but minimatch@9.x requires brace-expansion@^2. No user input reaches this path — it only processes glob patterns during Angular template compilation at build time."
+  }
+}

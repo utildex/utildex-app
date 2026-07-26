@@ -30,6 +30,7 @@ class TestResizeObserver implements ResizeObserver {
 class TestIntersectionObserver implements IntersectionObserver {
   readonly root = null;
   readonly rootMargin = '';
+  readonly scrollMargin = '';
   readonly thresholds = [];
 
   observe = vi.fn();

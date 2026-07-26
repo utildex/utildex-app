@@ -12,6 +12,9 @@
   "engines": {
     "node": ">=24"
   },
+  "overrides": {
+    "@hono/node-server": "^2.0.5"
+  },
   "scripts": {
     "dev": "ng serve",
     "prepare:simudex-cheerpx": "tsx scripts/sync-cheerpx-runtime.ts",
@@ -62,19 +65,20 @@
     "sitemap:synedex": "tsx scripts/generate-sitemap.ts --app=synedex",
     "sitemap:simudex": "tsx scripts/generate-sitemap.ts --app=simudex",
     "generate:mcp-manifest": "tsx scripts/generate-mcp-manifest.ts",
+    "audit": "better-npm-audit audit",
     "lint": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.mjs,.cjs --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,html,css,scss,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,html,css,scss,json,md}\""
   },
   "dependencies": {
-    "@angular/common": "21.2.8",
-    "@angular/compiler": "21.2.8",
-    "@angular/core": "21.2.8",
-    "@angular/forms": "21.2.8",
-    "@angular/platform-browser": "21.2.8",
-    "@angular/router": "21.2.8",
-    "@angular/service-worker": "21.2.8",
+    "@angular/common": "^22.0.8",
+    "@angular/compiler": "^22.0.8",
+    "@angular/core": "^22.0.8",
+    "@angular/forms": "^22.0.8",
+    "@angular/platform-browser": "^22.0.8",
+    "@angular/router": "^22.0.8",
+    "@angular/service-worker": "^22.0.8",
     "@codemirror/lang-css": "^6.3.1",
     "@codemirror/lang-html": "^6.4.11",
     "@codemirror/lang-java": "^6.0.2",
@@ -112,11 +116,11 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@analogjs/vite-plugin-angular": "^2.5.0",
-    "@analogjs/vitest-angular": "^2.5.0",
-    "@angular/build": "21.2.7",
-    "@angular/cli": "21.2.7",
-    "@angular/compiler-cli": "21.2.8",
+    "@analogjs/vite-plugin-angular": "^2.6.4",
+    "@analogjs/vitest-angular": "^2.6.4",
+    "@angular/build": "^22.0.8",
+    "@angular/cli": "^22.0.8",
+    "@angular/compiler-cli": "^22.0.8",
     "@eslint/js": "^10.0.1",
     "@tailwindcss/postcss": "^4.1.18",
     "@tailwindcss/typography": "^0.5.19",
@@ -129,6 +133,7 @@
     "@types/qrcode": "^1.5.6",
     "@vitest/coverage-v8": "^4.1.6",
     "autoprefixer": "^10.4.23",
+    "better-npm-audit": "^3.11.0",
     "eslint": "^10.0.1",
     "fake-indexeddb": "^6.2.5",
     "globals": "^16.5.0",
@@ -138,7 +143,7 @@
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.21.0",
-    "typescript": "~5.9.0",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.50.1",
     "vite": "^6.2.0",
     "vitest": "^4.1.6",

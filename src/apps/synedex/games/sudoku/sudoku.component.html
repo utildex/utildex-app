@@ -749,7 +749,7 @@
               <textarea
                 [placeholder]="t.map()['PLACEHOLDER_IMPORT_JSON']"
                 [ngModel]="importJson()"
-                (ngModelChange)="importJson.set(String($event ?? ''))"
+                (ngModelChange)="importJson.set($any($event) ?? '')"
               ></textarea>
             </label>
 
@@ -1025,7 +1025,7 @@
             <textarea
               [placeholder]="t.map()['PLACEHOLDER_IMPORT_JSON']"
               [ngModel]="importJson()"
-              (ngModelChange)="importJson.set(String($event ?? ''))"
+              (ngModelChange)="importJson.set($any($event) ?? '')"
             ></textarea>
           </label>
           @if (error()) {
