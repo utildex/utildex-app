@@ -30,6 +30,8 @@ const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('./tools/code-snippet-viewer/code-snippet-viewer.component').then(
       (m) => m.CodeSnippetViewerComponent,
     ),
+  'compress-pdf': () =>
+    import('./tools/compress-pdf/compress-pdf.component').then((m) => m.CompressPdfComponent),
   'diff-checker': () =>
     import('./tools/diff-checker/diff-checker.component').then((m) => m.DiffCheckerComponent),
   'hash-generator': () =>

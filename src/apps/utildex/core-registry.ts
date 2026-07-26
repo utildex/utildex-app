@@ -22,6 +22,10 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       import('./tools/code-snippet-viewer/code-snippet-viewer.contract').then((m) => m.contract),
     kernel: () => import('./tools/code-snippet-viewer/code-snippet-viewer.kernel'),
   },
+  'compress-pdf': {
+    contract: () => import('./tools/compress-pdf/compress-pdf.contract').then((m) => m.contract),
+    kernel: () => import('./tools/compress-pdf/compress-pdf.kernel'),
+  },
   'diff-checker': {
     contract: () => import('./tools/diff-checker/diff-checker.contract').then((m) => m.contract),
     kernel: () => import('./tools/diff-checker/diff-checker.kernel'),
