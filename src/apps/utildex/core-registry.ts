@@ -131,6 +131,11 @@ export const CORE_REGISTRY: Record<string, CoreRegistryEntry> = {
       import('./tools/unit-converter/unit-converter.contract').then((m) => m.contract),
     kernel: () => import('./tools/unit-converter/unit-converter.kernel'),
   },
+  'uniformize-pdf': {
+    contract: () =>
+      import('./tools/uniformize-pdf/uniformize-pdf.contract').then((m) => m.contract),
+    kernel: () => import('./tools/uniformize-pdf/uniformize-pdf.kernel'),
+  },
   'url-encoder-decoder': {
     contract: () =>
       import('./tools/url-encoder-decoder/url-encoder-decoder.contract').then((m) => m.contract),

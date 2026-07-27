@@ -12,7 +12,15 @@ export const officeToolSpaceContract: ToolSpaceDefinition = {
     {
       id: 'pdf-workflow',
       label: mapLocalizedNestedField(contractI18n, 'groups', 'pdfWorkflow'),
-      toolIds: ['merge-pdf', 'split-pdf', 'rotate-pdf', 'compress-pdf', 'img-to-pdf', 'pdf-to-img'],
+      toolIds: [
+        'merge-pdf',
+        'split-pdf',
+        'rotate-pdf',
+        'compress-pdf',
+        'uniformize-pdf',
+        'img-to-pdf',
+        'pdf-to-img',
+      ],
     },
     {
       id: 'productivity',

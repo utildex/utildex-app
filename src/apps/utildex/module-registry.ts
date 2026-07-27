@@ -92,6 +92,8 @@ const MODULE_COMPONENT_LOADERS: Record<string, ComponentLoader> = {
     import('./tools/split-pdf/split-pdf.component').then((m) => m.SplitPdfComponent),
   'unit-converter': () =>
     import('./tools/unit-converter/unit-converter.component').then((m) => m.UnitConverterComponent),
+  'uniformize-pdf': () =>
+    import('./tools/uniformize-pdf/uniformize-pdf.component').then((m) => m.UniformizePdfComponent),
   'url-encoder-decoder': () =>
     import('./tools/url-encoder-decoder/url-encoder-decoder.component').then(
       (m) => m.UrlEncoderDecoderComponent,
