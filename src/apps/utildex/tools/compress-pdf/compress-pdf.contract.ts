@@ -20,6 +20,9 @@ export const contract: ModuleContract = {
     output: { format: 'pdf' },
   },
   schema,
+  mcp: {
+    compatible: false,
+  },
   widget: {
     supported: true,
     defaultCols: 2,

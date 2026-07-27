@@ -1,6 +1,8 @@
 import type { z } from 'zod';
 import { schema } from './compress-pdf.schema';
 
+export const mcpCompatible = false;
+
 export type CompressionMode = 'standard' | 'image-optimize' | 'maximum';
 
 function base64ToArrayBuffer(base64: string): ArrayBuffer {

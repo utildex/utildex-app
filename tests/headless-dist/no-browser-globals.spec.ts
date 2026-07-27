@@ -14,6 +14,7 @@ const FORBIDDEN_PATTERNS = [
 ] as const;
 
 const BROWSER_ONLY_KERNEL_SECTIONS = new Set([
+  'src/apps/utildex/tools/compress-pdf/compress-pdf.kernel.ts',
   'src/apps/utildex/tools/image-converter/image-converter.kernel.ts',
   'src/apps/utildex/tools/image-resizer/image-resizer.kernel.ts',
   'src/apps/utildex/tools/pdf-to-img/pdf-to-img.kernel.ts',
