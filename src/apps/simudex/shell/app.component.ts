@@ -12,6 +12,7 @@ import { provideTranslation, ScopedTranslationService } from '../../../core/i18n
 import { BackgroundComponent } from '../../../components/background/background.component';
 import { ToastComponent } from '../../../components/toast/toast.component';
 import { SettingsModalComponent } from '../../../components/settings-modal/settings-modal.component';
+import { ConsentModalComponent } from '../../../components/consent-modal/consent-modal.component';
 import { CommandPaletteComponent } from '../../../components/command-palette/command-palette.component';
 import { ErrorOverlayComponent } from '../../../components/error-overlay/error-overlay.component';
 import { NetworkStatusComponent } from '../../../components/network-status/network-status.component';
@@ -36,6 +37,7 @@ import zh from '../../../i18n/zh';
     NetworkStatusComponent,
     ErrorOverlayComponent,
     SettingsModalComponent,
+    ConsentModalComponent,
     BubbleDirective,
     AppFooterComponent,
     LocalLinkPipe,

@@ -26,6 +26,7 @@ export default {
   CAT_GAMES: '游戏状态',
   CAT_PETS: '恐龙宠物',
   CAT_FILES: '文件',
+  CAT_ARTIFACTS: '沙盒数据',
 
   BTN_VIEW: '查看详情',
   BTN_DELETE: '清除数据',

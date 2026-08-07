@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { DbService, DbRecord } from '../data/db.service';
 import { STORAGE_KEYS, getPrefKey } from '../../core/storage-keys';
 import { APP_CONFIG } from '../../core/app.config';
+import { ArtifactCacheService } from '../sandbox/artifact-cache.service';
 
 export interface StorageCategory {
   id: string;
@@ -30,6 +31,7 @@ type StorageDefinition = {
 })
 export class StorageManagerService {
   private db = inject(DbService);
+  private artifactCache = inject(ArtifactCacheService);
 
   private getDefinitions() {
     const capabilities = APP_CONFIG.capabilities;
@@ -89,6 +91,13 @@ export class StorageManagerService {
         icon: 'folder',
         patterns: [/^app_blobs/],
         enabled: capabilities.fileBlobs,
+      },
+      {
+        id: 'artifacts',
+        labelKey: 'CAT_ARTIFACTS',
+        icon: 'cloud_download',
+        patterns: [], // Not key-based — populated from ArtifactCacheService.
+        enabled: true,
       },
     ];
 
@@ -154,6 +163,29 @@ export class StorageManagerService {
       }
     } catch (e) {
       console.error('Failed to calculate stats', e);
+    }
+
+    // 4. ARTIFACTS — from ArtifactCacheService (includes overlays)
+    try {
+      const artifactStats = await this.artifactCache.getAllStats();
+      const artifactCat = stats.categories.find((c) => c.id === 'artifacts');
+      if (artifactCat && artifactStats.length > 0) {
+        for (const a of artifactStats) {
+          artifactCat.keys.push(a.artifactId);
+          artifactCat.sizeBytes += a.downloadedBytes;
+          artifactCat.count += 1;
+          stats.totalBytes += a.downloadedBytes;
+        }
+      }
+
+      // Include overlay DB usage in the artifacts category.
+      const overlayBytes = await this.artifactCache.getOverlayUsage();
+      if (overlayBytes > 0 && artifactCat) {
+        artifactCat.sizeBytes += overlayBytes;
+        stats.totalBytes += overlayBytes;
+      }
+    } catch {
+      // Silently ignore — artifacts DB may not be available.
     }
 
     return stats;
@@ -238,13 +270,30 @@ export class StorageManagerService {
       );
       if (keys) {
         for (const key of keys) {
-          // We can't easily show content, but we can show metadata
-          // Since this is just for inspection, showing the key is sufficient
           const blob = await this.db.blobs.get(key);
           const size = blob?.size ? this.formatBytes(blob.size) : 'Unknown';
           const type = blob?.type || 'Unknown Type';
           details.push({ key: key, value: `[File] ${type} (${size})` });
         }
+      }
+    }
+
+    // Sandbox Artifacts — stored in a separate IDB.
+    if (categoryId === 'artifacts') {
+      try {
+        const stats = await this.artifactCache.getAllStats();
+        for (const s of stats) {
+          const status = s.complete
+            ? `Cached · ${this.formatBytes(s.downloadedBytes)}`
+            : `Incomplete · ${this.formatBytes(s.downloadedBytes)} / ${this.formatBytes(s.totalBytes)}`;
+          const versionInfo = s.version ? ` · v${s.version}` : '';
+          details.push({
+            key: `${s.name} (${s.artifactId})`,
+            value: `${status}${versionInfo}`,
+          });
+        }
+      } catch {
+        // Silently ignore.
       }
     }
 
@@ -292,9 +341,13 @@ export class StorageManagerService {
     try {
       console.warn('Initiating Factory Reset...');
 
+      // Nuclear switch — obliterates all artifact traces.
+      await this.artifactCache.nuke();
+
       // Clear categories dynamically based on app definitions
       const defs = this.getDefinitions();
       for (const def of defs) {
+        if (def.id === 'artifacts') continue; // Already nuked above.
         await this.clearCategory(def.id);
       }
 

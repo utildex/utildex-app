@@ -26,6 +26,7 @@ export default {
   CAT_GAMES: 'Game States',
   CAT_PETS: 'Virtual Pets',
   CAT_FILES: 'Files',
+  CAT_ARTIFACTS: 'Sandbox Artifacts',
 
   BTN_VIEW: 'Inspect Data',
   BTN_DELETE: 'Clear Data',

@@ -10,6 +10,8 @@ import { StorageManagerService, StorageStats } from '../../services/data/storage
 import { ScopedTranslationService, provideTranslation } from '../../core/i18n';
 import { ToastService } from '../../services/ui/toast.service';
 import { OfflineManagerService } from '../../services/platform/offline-manager.service'; // Added
+import { ArtifactCacheService } from '../../services/sandbox/artifact-cache.service';
+import { ConsentService } from '../../services/platform/consent.service';
 import { VirtualPetsService } from '../../services/ui/virtual-pets.service';
 import { TourService } from '../../services/ui/tour.service';
 import { TourTargetDirective } from '../../directives/tour-target.directive';
@@ -661,6 +663,8 @@ export class SettingsModalComponent {
   offline = inject(OfflineManagerService);
   tour = inject(TourService);
   petsService = inject(VirtualPetsService);
+  artifactCache = inject(ArtifactCacheService);
+  consentService = inject(ConsentService);
   private router = inject(Router);
   appConfig = APP_CONFIG;
 
@@ -762,6 +766,14 @@ export class SettingsModalComponent {
         break;
       case 'pets':
         this.petsService.clearPets(); // Clears in-memory dinos immediately
+        break;
+      case 'artifacts':
+        // Reset consent for each artifact scope before clearing.
+        const artifactStats = await this.artifactCache.getAllStats();
+        for (const a of artifactStats) {
+          await this.consentService.resetConsent(a.artifactId);
+        }
+        await this.artifactCache.nuke();
         break;
     }
 
